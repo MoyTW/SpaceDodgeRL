@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scenes/components/PositionComponent.cs" type="Script" id=1]
+[ext_resource path="res://resources/curses_vector_24x36.png" type="Texture" id=2]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 48, 0, 24, 36 )
+
+[node name="PositionComponent" type="Sprite"]
+texture = SubResource( 1 )
+script = ExtResource( 1 )
