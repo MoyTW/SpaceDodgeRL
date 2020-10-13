@@ -4,59 +4,12 @@ using System;
 public class EncounterState : Node {
 
   public InputHandler inputHandlerRef = null;
+  public EntityBuilder entityBuilderRef = null;
 
-  private PackedScene _entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
-  // Component prefabs
-  private PackedScene _positionComponentPrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
-  private PackedScene _playerComponentPrefab = GD.Load<PackedScene>("res://scenes/components/PlayerComponent.tscn");
-  private PackedScene _testAIComponentPrefab = GD.Load<PackedScene>("res://scenes/components/AI/TestAIComponent.tscn");
+  // TODO: Save/Load/Proper New Game
+  private bool hasCreated = false;
 
-  // TODO: Bake the sub-textures into their own resources and load them instead of doing this Very Silly process
-  private string _sPath = "res://resources/atlas_s.tres";
-  private string _AtSignPath = "res://resources/atlas_@.tres";
-
-  // TODO: Move this out of EncounterState, create a better way of selecting the sprite than "hey an arbitrary rect"
-  private Entity CreateEntity(string id, string name, GamePosition pos, string texturePath) {
-    Entity newEntity = _entityPrefab.Instance() as Entity;
-    newEntity.Init(id, name);
-
-    var positionComponent = _positionComponentPrefab.Instance() as PositionComponent;
-    positionComponent.Init(pos, GD.Load<Texture>(texturePath));
-
-    newEntity.AddChild(positionComponent);
-
-    return newEntity;
-  }
-
-  public override void _Ready() {
-    // ===== PLAYER HACK CREATION
-    var player = this.CreateEntity("uuid#1", "player", new GamePosition(3, 5), _AtSignPath);
-    // TODO: Entity & Component hooks into add/remove, so we can use groupings properly!
-    player.AddChild(this._playerComponentPrefab.Instance());
-    player.AddToGroup("player");
-    this.AddChild(player);
-
-    // ===== AI SCOUT HACK CREATION
-    var scout = this.CreateEntity("uuid#2", "scout", new GamePosition(5, 5), _sPath);
-    scout.AddChild(this._testAIComponentPrefab.Instance());
-    this.AddChild(scout);
-
-    /*
-    Entity testEntity = entityPrefab.Instance() as Entity;
-    testEntity.Init("whoo", "blah");
-    newEntity.AddChild(testEntity);
-
-    var entities = GetTree().GetNodesInGroup(Entity.ENTITY_GROUP);
-    for( int i = 0; i < entities.Count; i++ ) {
-      var e = entities[i] as Entity;
-      if (this == e.GetParent()) {
-        GD.Print(entities[i] + " is a child of EncounterState");
-      } else {
-        GD.Print(entities[i] + " is a grandchild of EncounterState");
-      }
-    }
-    */
-  }
+  public override void _Ready() { }
 
   public Entity Player {
     // TODO: player group in player component
@@ -72,6 +25,19 @@ public class EncounterState : Node {
   }
 
   public override void _Process(float delta) {
+    if (!this.hasCreated) {
+      this.AddChild(entityBuilderRef.CreatePlayerEntity(new GamePosition(3, 5)));
+      this.AddChild(entityBuilderRef.CreateScoutEntity(new GamePosition(5, 5)));
+
+      // TODO: Attaching camera to the player like this is extremely jank! ALSO, it's causing a weird jumping behaviour where the
+      // camera moves milliseconds after the player teleports to the next position!
+      var camera = this.GetNode<Camera2D>("EncounterCamera");
+      this.RemoveChild(camera);
+      this.Player.GetNode<PositionComponent>("PositionComponent").AddChild(camera);
+
+      this.hasCreated = true;
+    }
+
     var action = this.inputHandlerRef.PopQueue();
     // Super not a fan of the awkwardness of checking this twice! Switch string -> enum, maybe?
     if (action == InputHandler.ActionMapping.MOVE_N) {
