@@ -6,7 +6,7 @@
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 48, 0, 24, 36 )
+region = Rect2( 360, 108, 24, 36 )
 
 [node name="PositionComponent" type="Sprite"]
 texture = SubResource( 1 )
