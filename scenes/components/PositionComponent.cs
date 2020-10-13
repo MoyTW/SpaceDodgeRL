@@ -8,10 +8,18 @@ public class PositionComponent : Sprite {
   public const int STEP_X = 26;
   public const int STEP_Y = 34;
 
-  private Position _position;
+  public static Position DefaultPosition = new Position(int.MinValue, int.MinValue);
+
+  private Position _position = DefaultPosition;
 
   public void Init(Position pos) {
     this.SetPosition(pos);
+  }
+
+  public override void _Ready() {
+    if (this._position.Equals(DefaultPosition)) {
+      throw new NotImplementedException();
+    }
   }
 
   public void SetPosition(Position pos) {

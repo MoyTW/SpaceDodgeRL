@@ -12,6 +12,8 @@ public class Entity : Node {
   }
 
   public override void _Ready() {
-    GD.Print("Entity is ready!");
+    if (this._id == null || this._name == null) {
+      throw new NotImplementedException("call Init() on your entities!");
+    }
   }
 }

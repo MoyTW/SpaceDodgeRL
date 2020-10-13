@@ -2,13 +2,17 @@ using Godot;
 using System;
 
 public class ActionTimeComponent : Node {
-  private SpeedComponent _speedComponent = null;
-
-  private int _ticksUntilTurn = 0;
+  private int _ticksUntilTurn = int.MinValue;
   public int TicketsUntilTurn { get => _ticksUntilTurn; }
 
-  public void Init(SpeedComponent speedComponent) {
-    this._speedComponent = speedComponent;
+  public void Init(int ticksUntilTurn = 0) {
+    this._ticksUntilTurn = ticksUntilTurn;
+  }
+
+  public override void _Ready() {
+    if (this._ticksUntilTurn == int.MinValue) {
+      throw new NotImplementedException();
+    }
   }
 
   public bool IsReady() { return _ticksUntilTurn == 0; }
@@ -20,7 +24,7 @@ public class ActionTimeComponent : Node {
     this._ticksUntilTurn -= ticks;
   }
 
-  public void EndTurn() {
-    this._ticksUntilTurn = _speedComponent.Speed;
+  public void EndTurn(SpeedComponent speedComponent) {
+    this._ticksUntilTurn = speedComponent.Speed;
   }
 }
