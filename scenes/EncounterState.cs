@@ -9,6 +9,7 @@ public class EncounterState : Node {
   private PackedScene _entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
   private PackedScene _positionComponentPrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
   private PackedScene _playerComponentPrefab = GD.Load<PackedScene>("res://scenes/components/PlayerComponent.tscn");
+  private PackedScene _testAIComponentPrefab = GD.Load<PackedScene>("res://scenes/components/AI/TestAIComponent.tscn");
   // TODO: Bake the sub-textures into their own resources and load them instead of doing this Very Silly process
   private string _atlasPath = "res://resources/atlas_@.tres";
   private Rect2 _AtSignRect2 = new Rect2(new Vector2(0, 4 * 36), new Vector2(24, 36));
@@ -30,12 +31,17 @@ public class EncounterState : Node {
   }
 
   public override void _Ready() {
+    // ===== PLAYER HACK CREATION
     var player = this.CreateEntity("uuid#1", "player", new GamePosition(3, 5), _AtSignRect2);
     // TODO: Entity & Component hooks into add/remove, so we can use groupings properly!
     player.AddChild(this._playerComponentPrefab.Instance());
     player.AddToGroup("player");
     this.AddChild(player);
-    this.AddChild(this.CreateEntity("uuid#2", "scout", new GamePosition(5, 5), new Rect2(new Vector2(3 * 24, 7 * 36), new Vector2(24, 36))));
+
+    // ===== AI SCOUT HACK CREATION
+    var scout = this.CreateEntity("uuid#2", "scout", new GamePosition(5, 5), new Rect2(new Vector2(3 * 24, 7 * 36), new Vector2(24, 36)));
+    scout.AddChild(this._testAIComponentPrefab.Instance());
+    this.AddChild(scout);
 
     /*
     Entity testEntity = entityPrefab.Instance() as Entity;
@@ -55,6 +61,7 @@ public class EncounterState : Node {
   }
 
   public Entity Player {
+    // TODO: player group in player component
     get => this.GetTree().GetNodesInGroup("player")[0] as Entity;
   }
 
