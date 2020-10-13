@@ -2,41 +2,33 @@ using Godot;
 using System;
 
 public class EncounterState : Node {
-  public override void _Ready() {
-    // We're gonna build our entity on the fly here
-    PackedScene entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
-    PackedScene positionComponentPrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
 
-    // ==================== CREATE PLAYER ====================
-    // There's a lot of lines of code to build any entity of any size here!
-    Entity newEntity = entityPrefab.Instance() as Entity;
-    newEntity.Init("really should be a uuid", "the player!");
+  // TODO: Move this out of EncounterState
+  private PackedScene _entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
+  private PackedScene _positionComponentPrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
+  // TODO: Bake the sub-textures into their own resources and load them instead of doing this Very Silly process
+  private string _atlasPath = "res://resources/atlas_@.tres";
+  private Rect2 _AtSignRect2 = new Rect2(new Vector2(0, 4 * 36), new Vector2(24, 36));
 
-    var positionComponent = positionComponentPrefab.Instance() as PositionComponent;
-    positionComponent.Init(new Position(3, 5));
-    // This is an extremely hilarious and awkward sequence.
+  // TODO: Move this out of EncounterState, create a better way of selecting the sprite than "hey an arbitrary rect"
+  private Entity CreateEntity(string id, string name, Position pos, Rect2 atlasRegion) {
+    Entity newEntity = _entityPrefab.Instance() as Entity;
+    newEntity.Init(id, name);
+
+    var positionComponent = _positionComponentPrefab.Instance() as PositionComponent;
     AtlasTexture atlas = new AtlasTexture();
-    atlas.Atlas = GD.Load<AtlasTexture>("res://resources/atlas_@.tres");
-    atlas.Region = new Rect2(new Vector2(0, 4 * 36), new Vector2(24, 36));
+    atlas.Atlas = GD.Load<AtlasTexture>(_atlasPath);
+    atlas.Region = atlasRegion;
+    positionComponent.Init(pos, atlas);
+
     newEntity.AddChild(positionComponent);
 
-    this.AddChild(newEntity);
+    return newEntity;
+  }
 
-    // ==================== CREATE PLAYER ====================
-    // Create an enemy
-    newEntity = entityPrefab.Instance() as Entity;
-    newEntity.Init("uuid#2", "the enemy scout");
-
-    positionComponent = positionComponentPrefab.Instance() as PositionComponent;
-    positionComponent.Init(new Position(5, 5));
-    // This is real jankity!
-    atlas = new AtlasTexture();
-    atlas.Atlas = GD.Load<AtlasTexture>("res://resources/atlas_@.tres");
-    atlas.Region = new Rect2(new Vector2(3 * 24, 7 * 36), new Vector2(24, 36));
-    positionComponent.Texture = atlas;
-    newEntity.AddChild(positionComponent);
-
-    this.AddChild(newEntity);
+  public override void _Ready() {
+    this.AddChild(this.CreateEntity("uuid#1", "player", new Position(3, 5), _AtSignRect2));
+    this.AddChild(this.CreateEntity("uuid#2", "scout", new Position(5, 5), new Rect2(new Vector2(3 * 24, 7 * 36), new Vector2(24, 36))));
 
     /*
     Entity testEntity = entityPrefab.Instance() as Entity;

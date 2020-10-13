@@ -12,8 +12,9 @@ public class PositionComponent : Sprite {
 
   private Position _position = DefaultPosition;
 
-  public void Init(Position pos) {
+  public void Init(Position pos, Texture texture) {
     this.SetPosition(pos);
+    this.Texture = texture;
   }
 
   public override void _Ready() {
