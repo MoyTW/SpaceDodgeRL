@@ -8,24 +8,26 @@ public class PositionComponent : Sprite {
   public const int STEP_X = 26;
   public const int STEP_Y = 34;
 
-  public static Position DefaultPosition = new Position(int.MinValue, int.MinValue);
+  public static GamePosition DefaultGamePosition = new GamePosition(int.MinValue, int.MinValue);
 
-  private Position _position = DefaultPosition;
+  private GamePosition _gamePosition = DefaultGamePosition;
+  public GamePosition GamePosition {
+    get => _gamePosition;
+    set {
+      this._gamePosition = value;
+      this.Position = IndexToVector(value.X, value.Y);
+    }
+  }
 
-  public void Init(Position pos, Texture texture) {
-    this.SetPosition(pos);
+  public void Init(GamePosition pos, Texture texture) {
+    this.GamePosition = pos;
     this.Texture = texture;
   }
 
   public override void _Ready() {
-    if (this._position.Equals(DefaultPosition)) {
+    if (this._gamePosition.Equals(DefaultGamePosition)) {
       throw new NotImplementedException();
     }
-  }
-
-  public void SetPosition(Position pos) {
-    this._position = pos;
-    this.Position = IndexToVector(pos.X, pos.Y);
   }
 
   private static Vector2 IndexToVector(int x, int y, int xOffset=0, int yOffset=0) {
