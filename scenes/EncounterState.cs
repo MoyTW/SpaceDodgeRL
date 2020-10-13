@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class HelloWorld : Node2D {
+public class EncounterState : Node {
   public override void _Ready() {
     // We're gonna build our entity on the fly here
     PackedScene entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
@@ -37,5 +37,21 @@ public class HelloWorld : Node2D {
     newEntity.AddChild(positionComponent);
 
     this.AddChild(newEntity);
+
+    /*
+    Entity testEntity = entityPrefab.Instance() as Entity;
+    testEntity.Init("whoo", "blah");
+    newEntity.AddChild(testEntity);
+
+    var entities = GetTree().GetNodesInGroup(Entity.ENTITY_GROUP);
+    for( int i = 0; i < entities.Count; i++ ) {
+      var e = entities[i] as Entity;
+      if (this == e.GetParent()) {
+        GD.Print(entities[i] + " is a child of EncounterState");
+      } else {
+        GD.Print(entities[i] + " is a grandchild of EncounterState");
+      }
+    }
+    */
   }
 }
