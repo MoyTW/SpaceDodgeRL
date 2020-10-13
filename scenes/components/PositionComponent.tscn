@@ -11,3 +11,5 @@ region = Rect2( 360, 108, 24, 36 )
 [node name="PositionComponent" type="Sprite"]
 texture = SubResource( 1 )
 script = ExtResource( 1 )
+
+[node name="Tween" type="Tween" parent="."]

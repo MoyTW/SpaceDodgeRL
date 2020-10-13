@@ -15,12 +15,19 @@ public class PositionComponent : Sprite {
     get => _gamePosition;
     set {
       this._gamePosition = value;
-      this.Position = IndexToVector(value.X, value.Y);
+      this.Tween(IndexToVector(value.X, value.Y));
     }
   }
 
+  private void Tween(Vector2 newPosition) {
+    var tween = this.GetNode<Tween>("Tween");
+    tween.InterpolateProperty(this, "position", this.Position, newPosition, 0.05f);
+    tween.Start();
+  }
+
   public void Init(GamePosition pos, Texture texture) {
-    this.GamePosition = pos;
+    this._gamePosition = pos;
+    this.Position = IndexToVector(pos.X, pos.Y);
     this.Texture = texture;
   }
 
