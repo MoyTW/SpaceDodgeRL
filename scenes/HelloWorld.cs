@@ -7,6 +7,7 @@ public class HelloWorld : Node2D {
     PackedScene entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
     PackedScene positionComponentPrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
 
+    // ==================== CREATE PLAYER ====================
     // There's a lot of lines of code to build any entity of any size here!
     Entity newEntity = entityPrefab.Instance() as Entity;
     newEntity.Init("really should be a uuid", "the player!");
@@ -21,6 +22,7 @@ public class HelloWorld : Node2D {
 
     this.AddChild(newEntity);
 
+    // ==================== CREATE PLAYER ====================
     // Create an enemy
     newEntity = entityPrefab.Instance() as Entity;
     newEntity.Init("uuid#2", "the enemy scout");
