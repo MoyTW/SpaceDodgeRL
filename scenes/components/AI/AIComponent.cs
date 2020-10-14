@@ -1,8 +1,7 @@
-using Godot;
-using System;
+using System.Collections.Generic;
 
 public interface AIComponent {
   bool IsActive { get; }
   // TODO: Return a list of actions
-  void DecideNextAction(EncounterState state);
+  List<EncounterAction> DecideNextAction(EncounterState state);
 }

@@ -14,6 +14,17 @@ public class EncounterState : Node {
     get => this.GetTree().GetNodesInGroup(PlayerComponent.ENTITY_GROUP)[0] as Entity;
   }
 
+  public Entity GetEntityById(string entityId) {
+    var entities = this.GetTree().GetNodesInGroup(Entity.ENTITY_GROUP);
+    // It kinda chafes that Godot arrays don't have all the fancy utility functions C# collections do.
+    foreach (Entity entity in entities) {
+      if (entity.EntityId == entityId) {
+        return entity;
+      }
+    }
+    return null;
+  }
+
   // TODO: cache, maybe & also tag entities with groups per component
   public Godot.Collections.Array ActionEntities() {
     return this.GetTree().GetNodesInGroup(ActionTimeComponent.ENTITY_GROUP);
@@ -110,8 +121,8 @@ public class EncounterState : Node {
       // TODO: Take actions & do them!
       var children = entity.GetChildren();
       AIComponent aIComponent = entity.GetNode<TestAIComponent>("TestAIComponent");
-      aIComponent.DecideNextAction(this);
-      actionTimeComponent.EndTurn(entity.GetNode<SpeedComponent>("SpeedComponent"));
+      var aIActions = aIComponent.DecideNextAction(this);
+      Rulebook.ResolveActions(aIActions, this);
     }
   }
 
