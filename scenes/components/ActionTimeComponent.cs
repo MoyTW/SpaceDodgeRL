@@ -3,7 +3,7 @@ using System;
 
 public class ActionTimeComponent : Node {
   private int _ticksUntilTurn = int.MinValue;
-  public int TicketsUntilTurn { get => _ticksUntilTurn; }
+  public int TicksUntilTurn { get => _ticksUntilTurn; }
 
   public void Init(int ticksUntilTurn = 0) {
     this._ticksUntilTurn = ticksUntilTurn;

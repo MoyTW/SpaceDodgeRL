@@ -2,5 +2,5 @@
 
 [ext_resource path="res://scenes/components/AI/TestAIComponent.cs" type="Script" id=1]
 
-[node name="Node" type="Node"]
+[node name="TestAIComponent" type="Node"]
 script = ExtResource( 1 )
