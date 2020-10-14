@@ -1,15 +1,20 @@
 using Godot;
+using SpaceDodgeRL.library.encounter.rulebook;
+using SpaceDodgeRL.scenes.entities;
 using System.Collections.Generic;
 
-public class TestAIComponent : Node, Component, AIComponent {
-  public static string ENTITY_GROUP = "TEST_AI_COMPONENT_GROUP";
-  public string EntityGroup => ENTITY_GROUP;
+namespace SpaceDodgeRL.scenes.components.AI {
 
-  // TODO: sight-lines & group activation
-  public bool IsActive => true;
+  public class TestAIComponent : Node, Component, AIComponent {
+    public static string ENTITY_GROUP = "TEST_AI_COMPONENT_GROUP";
+    public string EntityGroup => ENTITY_GROUP;
 
-  public List<EncounterAction> DecideNextAction(EncounterState state) {
-    // TODO: Provide nicer syntax for a component to get its parents maybe...?
-    return new List<EncounterAction>() { new EndTurnAction((this.GetParent() as Entity).EntityId) };
+    // TODO: sight-lines & group activation
+    public bool IsActive => true;
+
+    public List<EncounterAction> DecideNextAction(EncounterState state) {
+      // TODO: Provide nicer syntax for a component to get its parents maybe...?
+      return new List<EncounterAction>() { new EndTurnAction((GetParent() as Entity).EntityId) };
+    }
   }
 }

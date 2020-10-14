@@ -1,9 +1,12 @@
-public struct GamePosition {
-  public int X { get; }
-  public int Y { get; }
+namespace SpaceDodgeRL.library.encounter {
 
-  public GamePosition(int x, int y) {
-    this.X = x;
-    this.Y = y;
+  public struct GamePosition {
+    public int X { get; }
+    public int Y { get; }
+
+    public GamePosition(int x, int y) {
+      X = x;
+      Y = y;
+    }
   }
 }

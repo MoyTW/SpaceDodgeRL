@@ -1,3 +1,6 @@
+using SpaceDodgeRL.library.encounter;
+using SpaceDodgeRL.library.encounter.rulebook;
+
 public class MoveAction : EncounterAction {
 
   public GamePosition TargetPosition { get; private set; }

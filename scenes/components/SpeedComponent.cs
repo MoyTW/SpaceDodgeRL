@@ -1,22 +1,25 @@
 using Godot;
 using System;
 
-public class SpeedComponent : Node, Component {
-  public static string ENTITY_GROUP = "SPEED_COMPONENT_GROUP";
-  public string EntityGroup => ENTITY_GROUP;
+namespace SpaceDodgeRL.scenes.components {
 
-  private int _baseSpeed = int.MinValue;
-  public int BaseSpeed { get => _baseSpeed; }
-  // TODO: Buffs
-  public int Speed { get => _baseSpeed ; }
+  public class SpeedComponent : Node, Component {
+    public static string ENTITY_GROUP = "SPEED_COMPONENT_GROUP";
+    public string EntityGroup => ENTITY_GROUP;
 
-  public void Init(int baseSpeed) {
-    this._baseSpeed = baseSpeed;
-  }
+    private int _baseSpeed = int.MinValue;
+    public int BaseSpeed { get => _baseSpeed; }
+    // TODO: Buffs
+    public int Speed { get => _baseSpeed; }
 
-  public override void _Ready() {
-    if (this._baseSpeed == int.MinValue) {
-      throw new NotImplementedException();
+    public void Init(int baseSpeed) {
+      _baseSpeed = baseSpeed;
+    }
+
+    public override void _Ready() {
+      if (_baseSpeed == int.MinValue) {
+        throw new NotImplementedException();
+      }
     }
   }
 }

@@ -1,11 +1,14 @@
 using Godot;
-using System;
+using SpaceDodgeRL.scenes.entities;
 
-public class MainScene : Node2D {
-  public override void _Ready() {
-    var encounterState = GetNode<EncounterState>("EncounterState");
+namespace SpaceDodgeRL.scenes {
 
-    encounterState.entityBuilderRef = GetNode<EntityBuilder>("EntityBuilder");
-    encounterState.inputHandlerRef = GetNode<InputHandler>("InputHandler");
+  public class MainScene : Node2D {
+    public override void _Ready() {
+      var encounterState = GetNode<EncounterState>("EncounterState");
+
+      encounterState.entityBuilderRef = GetNode<EntityBuilder>("EntityBuilder");
+      encounterState.inputHandlerRef = GetNode<InputHandler>("InputHandler");
+    }
   }
 }
