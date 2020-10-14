@@ -45,16 +45,12 @@ public class EncounterState : Node {
 
   public override void _Ready() { }
 
-  // TODO: Proper actions
+  // TODO: Create EncounterRunner & pull Rulebook & all logic outta the state, it should be just data read/write
   // TODO: Invert the Y-axis?
   private void TemporaryPlayerMoveFn(int dx, int dy) {
     var positionComponent = this.Player.GetNode<PositionComponent>("PositionComponent");
-    var gamePosition = positionComponent.GamePosition;
-    positionComponent.GamePosition = new GamePosition(gamePosition.X + dx, gamePosition.Y + dy);
-
-    // TODO: Action!
-    var actionTimeComponent = this.Player.GetNode<ActionTimeComponent>("ActionTimeComponent");
-    actionTimeComponent.EndTurn(this.Player.GetNode<SpeedComponent>("SpeedComponent"));
+    var oldPos = positionComponent.GamePosition;
+    Rulebook.ResolveAction(new MoveAction(this.Player.EntityId, new GamePosition(oldPos.X + dx, oldPos.Y + dy)), this);
   }
 
   // TODO: Move into map gen & save/load
