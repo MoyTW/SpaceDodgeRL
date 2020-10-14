@@ -11,23 +11,12 @@ public class EncounterState : Node {
   private bool hasCreated = false;
 
   public Entity Player {
-    // TODO: player group in player component
-    get => this.GetTree().GetNodesInGroup("player")[0] as Entity;
+    get => this.GetTree().GetNodesInGroup(PlayerComponent.ENTITY_GROUP)[0] as Entity;
   }
 
   // TODO: cache, maybe & also tag entities with groups per component
-  public List<Entity> ActionEntities() {
-    List<Entity> actionEntities = new List<Entity>();
-    
-    // TODO: Tag entities with component tags!
-    var nodes = this.GetTree().GetNodesInGroup(Entity.ENTITY_GROUP);
-    foreach(Node node in nodes) {
-      if ((node as Entity).GetNode<ActionTimeComponent>("ActionTimeComponent") != null) {
-        actionEntities.Add(node as Entity);
-      }
-    }
-    
-    return actionEntities;
+  public Godot.Collections.Array ActionEntities() {
+    return this.GetTree().GetNodesInGroup(ActionTimeComponent.ENTITY_GROUP);
   }
 
   public Entity NextEntity() {

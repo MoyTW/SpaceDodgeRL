@@ -19,4 +19,17 @@ public class Entity : Node {
       throw new NotImplementedException("call Init() on your entities!");
     }
   }
+
+  public new void AddChild(Node node, bool legibleUniqueName = false) {
+    if (!(node is Component)) {
+      throw new NotImplementedException();
+    }
+    base.AddChild(node, legibleUniqueName);
+    this.AddToGroup((node as Component).EntityGroup);
+  }
+
+  public new void RemoveChild(Node node) {
+    base.RemoveChild(node);
+    this.RemoveFromGroup((node as Component).EntityGroup);
+  }
 }

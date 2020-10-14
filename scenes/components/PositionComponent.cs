@@ -1,7 +1,10 @@
 using Godot;
 using System;
 
-public class PositionComponent : Sprite {
+public class PositionComponent : Sprite, Component {
+  public static string ENTITY_GROUP = "POSITION_COMPONENT_GROUP";
+  public string EntityGroup => ENTITY_GROUP;
+
   // TODO: Don't put this here
   public const int START_X = 50;
   public const int START_Y = 54;
