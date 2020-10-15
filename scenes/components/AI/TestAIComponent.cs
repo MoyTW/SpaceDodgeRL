@@ -6,14 +6,14 @@ using System.Collections.Generic;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class TestAIComponent : Node, Component, AIComponent {
+  public class TestAIComponent : AIComponent {
     public static readonly string ENTITY_GROUP = "TEST_AI_COMPONENT_GROUP";
-    public string EntityGroup => ENTITY_GROUP;
+    public override string EntityGroup => ENTITY_GROUP;
 
     // TODO: sight-lines & group activation
-    public bool IsActive => true;
+    public override bool IsActive => true;
 
-    public List<EncounterAction> DecideNextAction(EncounterState state) {
+    public override List<EncounterAction> DecideNextAction(EncounterState state) {
       // TODO: Provide nicer syntax for a component to get its parents maybe...?
       return new List<EncounterAction>() { new EndTurnAction((GetParent() as Entity).EntityId) };
     }

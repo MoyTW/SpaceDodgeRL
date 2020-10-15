@@ -4,11 +4,11 @@ using System;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class PositionComponent : Sprite, Component {
+  public class PositionComponent : Component {
     private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
 
     public static readonly string ENTITY_GROUP = "POSITION_COMPONENT_GROUP";
-    public string EntityGroup => ENTITY_GROUP;
+    public override string EntityGroup => ENTITY_GROUP;
 
     // TODO: Don't put this here
     public const int START_X = 50;
@@ -29,15 +29,17 @@ namespace SpaceDodgeRL.scenes.components {
       var component = _componentPrefab.Instance() as PositionComponent;
 
       component._encounterPosition = position;
-      component.Position = IndexToVector(position.X, position.Y);
-      component.Texture = texture;
+      var sprite = component.GetNode<Sprite>("Sprite");
+      sprite.Position = IndexToVector(position.X, position.Y);
+      sprite.Texture = texture;
 
       return component;
     }
 
     private void Tween(Vector2 newPosition) {
       var tween = GetNode<Tween>("Tween");
-      tween.InterpolateProperty(this, "position", Position, newPosition, 0.05f);
+      var sprite = GetNode<Sprite>("Sprite");
+      tween.InterpolateProperty(sprite, "position", sprite.Position, newPosition, 0.05f);
       tween.Start();
     }
 

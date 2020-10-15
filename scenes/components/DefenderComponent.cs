@@ -2,11 +2,11 @@ using Godot;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class DefenderComponent : Node, Component {
+  public class DefenderComponent : Component {
     private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/DefenderComponent.tscn");
 
     public static readonly string ENTITY_GROUP = "DEFENDER_COMPONENT_GROUP";
-    public string EntityGroup => ENTITY_GROUP;
+    public override string EntityGroup => ENTITY_GROUP;
 
     public int BaseDefense { get; private set; }
     public int MaxHp { get; private set; }

@@ -120,7 +120,8 @@ namespace SpaceDodgeRL.scenes.encounter {
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       var camera = GetNode<Camera2D>("EncounterCamera");
       RemoveChild(camera);
-      Player.GetComponent<PositionComponent>().AddChild(camera);
+      // TODO: VERY DEFINITELY DON'T KEEP DOING THIS!!!
+      Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
     }
   }
 }

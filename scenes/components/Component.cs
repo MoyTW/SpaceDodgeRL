@@ -1,6 +1,8 @@
+using Godot;
+
 namespace SpaceDodgeRL.scenes.components {
 
-  public interface Component {
-    string EntityGroup { get; }
+  abstract public class Component: Node {
+    public virtual string EntityGroup { get; }
   }
 }

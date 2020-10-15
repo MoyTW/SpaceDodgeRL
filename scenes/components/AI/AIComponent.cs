@@ -4,9 +4,9 @@ using SpaceDodgeRL.scenes.encounter;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public interface AIComponent {
-    bool IsActive { get; }
+  abstract public class AIComponent: Component {
+    abstract public bool IsActive { get; }
     // TODO: Return a list of actions
-    List<EncounterAction> DecideNextAction(EncounterState state);
+    abstract public List<EncounterAction> DecideNextAction(EncounterState state);
   }
 }
