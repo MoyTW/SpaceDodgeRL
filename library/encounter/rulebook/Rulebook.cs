@@ -24,13 +24,22 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       _actionMapping[action.ActionType].Invoke(action, state);
 
       var entity = state.GetEntityById(action.ActorId);
-      GD.Print(string.Format("Processing action type {0} for entity {1}:{2}", action.ActionType, entity.Name, entity.EntityId));
+      GD.Print(string.Format("Processing action type {0} for entity {1}:{2}", action.ActionType, entity.EntityName, entity.EntityId));
     }
 
     private static void ResolveMove(MoveAction action, EncounterState state) {
+      var entity = state.GetEntityById(action.ActorId);
       var positionComponent = state.GetEntityById(action.ActorId).GetNode<PositionComponent>("PositionComponent");
-      positionComponent.EncounterPosition = action.TargetPosition;
-      ResolveEndTurn(new EndTurnAction(action.ActorId), state);
+
+      if (positionComponent.EncounterPosition == action.TargetPosition) {
+        GD.PrintErr(string.Format("Entity {0}:{1} tried to move to its current position {2}", entity.EntityName, entity.EntityId, action.TargetPosition));
+      } else if (state.IsPositionBlocked(action.TargetPosition)) {
+        // TODO: Resolve attacks
+        GD.PrintErr(string.Format("Entity {0}:{1} could not move to {2}, blocked!", entity.EntityName, entity.EntityId, action.TargetPosition));
+      } else {
+        state.TeleportEntity(entity, action.TargetPosition);
+        ResolveAction(new EndTurnAction(action.ActorId), state);
+      }
     }
 
     private static void ResolveEndTurn(EndTurnAction action, EncounterState state) {

@@ -27,9 +27,20 @@ namespace SpaceDodgeRL.scenes.encounter {
       return null;
     }
 
-    // TODO: cache, maybe & also tag entities with groups per component
+    /**
+    * Note that this will fetch sub-entities as well (for example, if somebody implements an Inventory component which stores
+    * the inventory elements via AddChild(...)) - this might be desirable (you want time to tick for items in the inventory) or
+    * it might not! Who knows?
+    */
     public Godot.Collections.Array ActionEntities() {
       return GetTree().GetNodesInGroup(ActionTimeComponent.ENTITY_GROUP);
+    }
+
+    /**
+    * Here we assume that it's impossible for there to be nested child nodes with Position entities.
+    */
+    public Godot.Collections.Array PositionEntities() {
+      return GetTree().GetNodesInGroup(PositionComponent.ENTITY_GROUP);
     }
 
     public Entity NextEntity() {
@@ -55,12 +66,30 @@ namespace SpaceDodgeRL.scenes.encounter {
 
       return next;
     }
+
+    // Positional Queries
+
+    // TODO: Maintain a internal representation
+    // TODO: Just, like...definte a couple of extension functions on Godot.Collections.Array or something maybe?
+    public bool IsPositionBlocked(EncounterPosition position) {
+      // TODO: Distinguish between blocking/non-blocking entities
+      foreach (Entity entity in this.PositionEntities()) {
+        if (position == entity.GetNode<PositionComponent>("PositionComponent").EncounterPosition) {
+          return true;
+        }
+      }
+      return false;
+    }
  
     // ##########################################################################################################################
     #endregion
     // ##########################################################################################################################
 
-    public void PlaceEntity(Entity entity, GamePosition targetPosition) {
+    public void PlaceEntity(Entity entity, EncounterPosition targetPosition) {
+      if (IsPositionBlocked(targetPosition)) {
+        throw new NotImplementedException("probably handle this more gracefully than exploding");
+      }
+
       var spriteData = entity.GetNode<SpriteDataComponent>("SpriteDataComponent");
       
       var positionComponent = PositionComponent.Create(targetPosition, spriteData.Texture);
@@ -71,6 +100,16 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     public void RemoveEntity(Entity entity) {
       RemoveChild(entity);
+    }
+
+    /**
+    * Disregards intervening terrain; only checks for collisions at the target position.
+    */
+    public void TeleportEntity(Entity entity, EncounterPosition targetPosition) {
+      if (IsPositionBlocked(targetPosition)) {
+        throw new NotImplementedException("probably handle this more gracefully than exploding");
+      }
+      entity.GetNode<PositionComponent>("PositionComponent").EncounterPosition = targetPosition;
     }
 
     // TODO: Move into map gen & save/load
