@@ -4,22 +4,21 @@ using System;
 namespace SpaceDodgeRL.scenes.components {
 
   public class SpeedComponent : Node, Component {
+    private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/SpeedComponent.tscn");
+
     public static readonly string ENTITY_GROUP = "SPEED_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
-    private int _baseSpeed = int.MinValue;
-    public int BaseSpeed { get => _baseSpeed; }
+    public int BaseSpeed { get; private set; }
     // TODO: Buffs
-    public int Speed { get => _baseSpeed; }
+    public int Speed { get => BaseSpeed; }
 
-    public void Init(int baseSpeed) {
-      _baseSpeed = baseSpeed;
-    }
+    public static SpeedComponent Create(int baseSpeed) {
+      var component = _componentPrefab.Instance() as SpeedComponent;
 
-    public override void _Ready() {
-      if (_baseSpeed == int.MinValue) {
-        throw new NotImplementedException();
-      }
+      component.BaseSpeed = baseSpeed;
+
+      return component;
     }
   }
 }

@@ -4,35 +4,32 @@ using System;
 namespace SpaceDodgeRL.scenes.components {
 
   public class ActionTimeComponent : Node, Component {
+    private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/ActionTimeComponent.tscn");
+
     public static readonly string ENTITY_GROUP = "ACTION_TIME_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
-    private int _ticksUntilTurn = int.MinValue;
-    public int TicksUntilTurn { get => _ticksUntilTurn; }
+    public int TicksUntilTurn { get; private set; }
 
+    public static ActionTimeComponent Create(int ticksUntilTurn = 0) {
+      var component = _componentPrefab.Instance() as ActionTimeComponent;
 
+      component.TicksUntilTurn = ticksUntilTurn;
 
-    public void Init(int ticksUntilTurn = 0) {
-      _ticksUntilTurn = ticksUntilTurn;
+      return component;
     }
 
-    public override void _Ready() {
-      if (_ticksUntilTurn == int.MinValue) {
-        throw new NotImplementedException();
-      }
-    }
-
-    public bool IsReady() { return _ticksUntilTurn == 0; }
+    public bool IsReady() { return this.TicksUntilTurn == 0; }
 
     public void PassTime(int ticks) {
-      if (_ticksUntilTurn < 0) {
+      if (this.TicksUntilTurn < 0) {
         throw new NotImplementedException("Couldn't pass ticks!");
       }
-      _ticksUntilTurn -= ticks;
+      this.TicksUntilTurn -= ticks;
     }
 
     public void EndTurn(SpeedComponent speedComponent) {
-      _ticksUntilTurn = speedComponent.Speed;
+      this.TicksUntilTurn = speedComponent.Speed;
     }
   }
 }
