@@ -39,25 +39,27 @@ namespace SpaceDodgeRL.scenes.entities {
     }
 
     public Entity CreatePlayerEntity() {
-      var player = CreateEntity("uuid#1", "player");
+      var e = CreateEntity("uuid#1", "player");
 
-      AddActionTimeComponent(player);
-      AddPlayerComponent(player);
-      player.AddChild(SpriteDataComponent.Create(_AtSignPath));
-      AddSpeedComponent(player, 100);
+      AddActionTimeComponent(e);
+      e.AddChild(DefenderComponent.Create(0, 100));
+      AddPlayerComponent(e);
+      e.AddChild(SpriteDataComponent.Create(_AtSignPath));
+      AddSpeedComponent(e, 100);
 
-      return player;
+      return e;
     }
 
     public Entity CreateScoutEntity() {
-      var scout = CreateEntity("uuid#2", "scout");
+      var e = CreateEntity("uuid#2", "scout");
 
-      scout.AddChild(_testAIComponentPrefab.Instance());
-      AddActionTimeComponent(scout);
-      scout.AddChild(SpriteDataComponent.Create(_sPath));
-      AddSpeedComponent(scout, 50);
+      e.AddChild(_testAIComponentPrefab.Instance());
+      AddActionTimeComponent(e);
+      e.AddChild(DefenderComponent.Create(0, 100));
+      e.AddChild(SpriteDataComponent.Create(_sPath));
+      AddSpeedComponent(e, 50);
 
-      return scout;
+      return e;
     }
   }
 }

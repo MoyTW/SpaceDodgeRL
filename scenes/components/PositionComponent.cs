@@ -16,9 +16,7 @@ namespace SpaceDodgeRL.scenes.components {
     public const int STEP_X = 26;
     public const int STEP_Y = 34;
 
-    public static EncounterPosition DefaultEncounterPosition = new EncounterPosition(int.MinValue, int.MinValue);
-
-    private EncounterPosition _encounterPosition = DefaultEncounterPosition;
+    private EncounterPosition _encounterPosition = new EncounterPosition(int.MinValue, int.MinValue);
     public EncounterPosition EncounterPosition {
       get => _encounterPosition;
       set {
@@ -41,12 +39,6 @@ namespace SpaceDodgeRL.scenes.components {
       var tween = GetNode<Tween>("Tween");
       tween.InterpolateProperty(this, "position", Position, newPosition, 0.05f);
       tween.Start();
-    }
-
-    public override void _Ready() {
-      if (_encounterPosition.Equals(DefaultEncounterPosition)) {
-        throw new NotImplementedException();
-      }
     }
 
     private static Vector2 IndexToVector(int x, int y, int xOffset = 0, int yOffset = 0) {

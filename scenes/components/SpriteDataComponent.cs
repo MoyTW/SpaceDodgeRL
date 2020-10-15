@@ -20,11 +20,5 @@ namespace SpaceDodgeRL.scenes.components {
 
       return component;
     }
-
-    public override void _Ready() {
-      if (TexturePath == null || Texture == null) {
-        throw new NotImplementedException();
-      }
-    }
   }
 }
