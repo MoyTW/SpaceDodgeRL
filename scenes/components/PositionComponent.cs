@@ -16,21 +16,21 @@ namespace SpaceDodgeRL.scenes.components {
     public const int STEP_X = 26;
     public const int STEP_Y = 34;
 
-    public static GamePosition DefaultGamePosition = new GamePosition(int.MinValue, int.MinValue);
+    public static EncounterPosition DefaultEncounterPosition = new EncounterPosition(int.MinValue, int.MinValue);
 
-    private GamePosition _gamePosition = DefaultGamePosition;
-    public GamePosition GamePosition {
-      get => _gamePosition;
+    private EncounterPosition _encounterPosition = DefaultEncounterPosition;
+    public EncounterPosition EncounterPosition {
+      get => _encounterPosition;
       set {
-        _gamePosition = value;
+        _encounterPosition = value;
         Tween(IndexToVector(value.X, value.Y));
       }
     }
 
-    public static PositionComponent Create(GamePosition position, Texture texture) {
+    public static PositionComponent Create(EncounterPosition position, Texture texture) {
       var component = _componentPrefab.Instance() as PositionComponent;
 
-      component._gamePosition = position;
+      component._encounterPosition = position;
       component.Position = IndexToVector(position.X, position.Y);
       component.Texture = texture;
 
@@ -44,7 +44,7 @@ namespace SpaceDodgeRL.scenes.components {
     }
 
     public override void _Ready() {
-      if (_gamePosition.Equals(DefaultGamePosition)) {
+      if (_encounterPosition.Equals(DefaultEncounterPosition)) {
         throw new NotImplementedException();
       }
     }

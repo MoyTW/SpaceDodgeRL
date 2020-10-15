@@ -2,22 +2,22 @@ using System;
 
 namespace SpaceDodgeRL.library.encounter {
 
-  public struct GamePosition: IEquatable<GamePosition> {
+  public struct EncounterPosition: IEquatable<EncounterPosition> {
     public int X { get; }
     public int Y { get; }
 
-    public GamePosition(int x, int y) {
+    public EncounterPosition(int x, int y) {
       X = x;
       Y = y;
     }
 
-    public bool Equals(GamePosition other) {
+    public bool Equals(EncounterPosition other) {
       return other.X == this.X && other.Y == this.Y;
     }
 
     public override bool Equals(object obj) {
-      if (!(obj is GamePosition)) { return false; }
-      return ((GamePosition)obj).X == this.X && ((GamePosition)obj).Y == this.Y;
+      if (!(obj is EncounterPosition)) { return false; }
+      return ((EncounterPosition)obj).X == this.X && ((EncounterPosition)obj).Y == this.Y;
     }
 
     public override int GetHashCode() {
@@ -28,11 +28,11 @@ namespace SpaceDodgeRL.library.encounter {
       return string.Format("[{0}, {1}]", this.X, this.Y);
     }
 
-    public static bool operator ==(GamePosition left, GamePosition right) {
+    public static bool operator ==(EncounterPosition left, EncounterPosition right) {
       return left.Equals(right);
     }
 
-    public static bool operator !=(GamePosition left, GamePosition right) {
+    public static bool operator !=(EncounterPosition left, EncounterPosition right) {
       return !left.Equals(right);
     }
   }

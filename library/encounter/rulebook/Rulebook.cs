@@ -29,7 +29,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
     private static void ResolveMove(MoveAction action, EncounterState state) {
       var positionComponent = state.GetEntityById(action.ActorId).GetNode<PositionComponent>("PositionComponent");
-      positionComponent.GamePosition = action.TargetPosition;
+      positionComponent.EncounterPosition = action.TargetPosition;
       ResolveEndTurn(new EndTurnAction(action.ActorId), state);
     }
 

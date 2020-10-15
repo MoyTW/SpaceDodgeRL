@@ -21,8 +21,8 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     private static void MovePlayer(EncounterState state, int dx, int dy) {
       var positionComponent = state.Player.GetNode<PositionComponent>("PositionComponent");
-      var oldPos = positionComponent.GamePosition;
-      Rulebook.ResolveAction(new MoveAction(state.Player.EntityId, new GamePosition(oldPos.X + dx, oldPos.Y + dy)), state);
+      var oldPos = positionComponent.EncounterPosition;
+      Rulebook.ResolveAction(new MoveAction(state.Player.EntityId, new EncounterPosition(oldPos.X + dx, oldPos.Y + dy)), state);
     }
 
     private static void PassTime(EncounterState state, int time) {
