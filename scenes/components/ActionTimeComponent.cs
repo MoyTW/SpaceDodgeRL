@@ -4,7 +4,7 @@ using System;
 namespace SpaceDodgeRL.scenes.components {
 
   public class ActionTimeComponent : Node, Component {
-    public static string ENTITY_GROUP = "ACTION_TIME_COMPONENT_GROUP";
+    public static readonly string ENTITY_GROUP = "ACTION_TIME_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
     private int _ticksUntilTurn = int.MinValue;

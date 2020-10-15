@@ -6,7 +6,7 @@ namespace SpaceDodgeRL.scenes.components {
   public class SpriteDataComponent : Node, Component {
     private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/SpriteDataComponent.tscn");
 
-    const string ENTITY_GROUP = "SPRITE_DATA_COMPONENT_GROUP";
+    public static readonly string ENTITY_GROUP = "SPRITE_DATA_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
     public string TexturePath { get; private set; }

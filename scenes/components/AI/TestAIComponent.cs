@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace SpaceDodgeRL.scenes.components.AI {
 
   public class TestAIComponent : Node, Component, AIComponent {
-    public static string ENTITY_GROUP = "TEST_AI_COMPONENT_GROUP";
+    public static readonly string ENTITY_GROUP = "TEST_AI_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
     // TODO: sight-lines & group activation

@@ -6,7 +6,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
   public class Entity : Node {
 
-    public static string ENTITY_GROUP = "groupEntity";
+    public static readonly string ENTITY_GROUP = "groupEntity";
 
     private string _id, _name;
     public string EntityId { get => _id; }

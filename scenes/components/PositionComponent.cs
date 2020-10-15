@@ -7,7 +7,7 @@ namespace SpaceDodgeRL.scenes.components {
   public class PositionComponent : Sprite, Component {
     private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
 
-    const string ENTITY_GROUP = "POSITION_COMPONENT_GROUP";
+    public static readonly string ENTITY_GROUP = "POSITION_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
     // TODO: Don't put this here
