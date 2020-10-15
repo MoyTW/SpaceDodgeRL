@@ -6,11 +6,11 @@ namespace SpaceDodgeRL.library.encounter {
   /**
    * Data class to represent a series of [x, y] coordinate pairs over a time period.
    */
-  public class Path {
+  public class EncounterPath {
     private int _currentStep = 0;
     private List<EncounterPosition> _fullPath;
 
-    public Path(List<EncounterPosition> path) {
+    public EncounterPath(List<EncounterPosition> path) {
       this._fullPath = path;
     }
 
