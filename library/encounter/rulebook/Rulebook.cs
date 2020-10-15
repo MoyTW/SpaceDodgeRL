@@ -1,6 +1,6 @@
 using Godot;
-using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.components;
+using SpaceDodgeRL.scenes.encounter;
 using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;

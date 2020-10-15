@@ -1,5 +1,6 @@
 using Godot;
 using SpaceDodgeRL.library.encounter.rulebook;
+using SpaceDodgeRL.scenes.encounter;
 using SpaceDodgeRL.scenes.entities;
 using System.Collections.Generic;
 
