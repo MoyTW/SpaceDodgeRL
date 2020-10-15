@@ -36,5 +36,20 @@ namespace SpaceDodgeRL.scenes.entities {
       base.RemoveChild(node);
       RemoveFromGroup((node as Component).EntityGroup);
     }
+
+    public new T GetNode<T>(NodePath path) where T: class {
+      throw new InvalidOperationException("Use GetComponent<T>() instead!");
+    }
+
+    // TODO: It may be a problem if I end up having Too Many components in each Entity and this slows down.
+    public T GetComponent<T>() where T: Node {
+      string entityGroup = typeof(T).GetField("ENTITY_GROUP").GetValue(null) as string;
+      foreach (Node child in this.GetChildren()) {
+        if ((child as Component).EntityGroup == entityGroup) {
+          return child as T;
+        }
+      }
+      return default(T);
+    }
   }
 }

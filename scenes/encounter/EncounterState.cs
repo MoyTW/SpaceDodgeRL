@@ -52,7 +52,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       var children = GetChildren();
       foreach (Node node in children) {
         if (node.IsInGroup(Entity.ENTITY_GROUP)) {
-          var actionTimeComponent = (node as Entity).GetNode<ActionTimeComponent>("ActionTimeComponent");
+          var actionTimeComponent = (node as Entity).GetComponent<ActionTimeComponent>();
           if (actionTimeComponent != null && actionTimeComponent.TicksUntilTurn < lowestTTL) {
             lowestTTL = actionTimeComponent.TicksUntilTurn;
             next = node as Entity;
@@ -74,7 +74,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     public bool IsPositionBlocked(EncounterPosition position) {
       // TODO: Distinguish between blocking/non-blocking entities
       foreach (Entity entity in this.PositionEntities()) {
-        if (position == entity.GetNode<PositionComponent>("PositionComponent").EncounterPosition) {
+        if (position == entity.GetComponent<PositionComponent>().EncounterPosition) {
           return true;
         }
       }
@@ -90,7 +90,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
 
-      var spriteData = entity.GetNode<SpriteDataComponent>("SpriteDataComponent");
+      var spriteData = entity.GetComponent<SpriteDataComponent>();
       
       var positionComponent = PositionComponent.Create(targetPosition, spriteData.Texture);
       entity.AddChild(positionComponent);
@@ -109,7 +109,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       if (IsPositionBlocked(targetPosition)) {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
-      entity.GetNode<PositionComponent>("PositionComponent").EncounterPosition = targetPosition;
+      entity.GetComponent<PositionComponent>().EncounterPosition = targetPosition;
     }
 
     // TODO: Move into map gen & save/load
@@ -120,7 +120,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       var camera = GetNode<Camera2D>("EncounterCamera");
       RemoveChild(camera);
-      Player.GetNode<PositionComponent>("PositionComponent").AddChild(camera);
+      Player.GetComponent<PositionComponent>().AddChild(camera);
     }
   }
 }

@@ -20,7 +20,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     private static void MovePlayer(EncounterState state, int dx, int dy) {
-      var positionComponent = state.Player.GetNode<PositionComponent>("PositionComponent");
+      var positionComponent = state.Player.GetComponent<PositionComponent>();
       var oldPos = positionComponent.EncounterPosition;
       Rulebook.ResolveAction(new MoveAction(state.Player.EntityId, new EncounterPosition(oldPos.X + dx, oldPos.Y + dy)), state);
     }
@@ -28,14 +28,14 @@ namespace SpaceDodgeRL.scenes.encounter {
     private static void PassTime(EncounterState state, int time) {
       var actionEntities = state.ActionEntities();
       foreach (Entity entity in actionEntities) {
-        var actionTimeComponent = entity.GetNode<ActionTimeComponent>("ActionTimeComponent");
+        var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
         actionTimeComponent.PassTime(time);
       }
     }
 
     private static void RunTurn(EncounterState state, InputHandler inputHandler) {
       var entity = state.NextEntity();
-      var actionTimeComponent = entity.GetNode<ActionTimeComponent>("ActionTimeComponent");
+      var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
       if (actionTimeComponent.TicksUntilTurn > 0) {
         EncounterRunner.PassTime(state, actionTimeComponent.TicksUntilTurn);
       }
@@ -62,7 +62,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         }
       } else {
         // TODO: Take any AI component & restrict it to direct children
-        AIComponent aIComponent = entity.GetNode<TestAIComponent>("TestAIComponent");
+        AIComponent aIComponent = entity.GetComponent<TestAIComponent>();
         var aIActions = aIComponent.DecideNextAction(state);
         Rulebook.ResolveActions(aIActions, state);
       }

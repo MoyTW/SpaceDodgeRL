@@ -29,7 +29,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
     private static void ResolveMove(MoveAction action, EncounterState state) {
       var entity = state.GetEntityById(action.ActorId);
-      var positionComponent = state.GetEntityById(action.ActorId).GetNode<PositionComponent>("PositionComponent");
+      var positionComponent = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>();
 
       if (positionComponent.EncounterPosition == action.TargetPosition) {
         GD.PrintErr(string.Format("Entity {0}:{1} tried to move to its current position {2}", entity.EntityName, entity.EntityId, action.TargetPosition));
@@ -44,8 +44,8 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
     private static void ResolveEndTurn(EndTurnAction action, EncounterState state) {
       Entity entity = state.GetEntityById(action.ActorId);
-      var actionTimeComponent = entity.GetNode<ActionTimeComponent>("ActionTimeComponent");
-      actionTimeComponent.EndTurn(entity.GetNode<SpeedComponent>("SpeedComponent"));
+      var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
+      actionTimeComponent.EndTurn(entity.GetComponent<SpeedComponent>());
     }
   }
 }
