@@ -67,7 +67,5 @@ namespace SpaceDodgeRL.scenes.encounter {
         Rulebook.ResolveActions(aIActions, state);
       }
     }
-
-
   }
 }

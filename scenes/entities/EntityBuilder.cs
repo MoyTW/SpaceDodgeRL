@@ -8,7 +8,6 @@ namespace SpaceDodgeRL.scenes.entities {
     // I assume these are all loaded at the same time as _Ready()?
     private PackedScene _entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
     // Component prefabs
-    private PackedScene _positionComponentPrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
     private PackedScene _playerComponentPrefab = GD.Load<PackedScene>("res://scenes/components/PlayerComponent.tscn");
     private PackedScene _testAIComponentPrefab = GD.Load<PackedScene>("res://scenes/components/AI/TestAIComponent.tscn");
     private PackedScene _actionTimeComponentPrefab = GD.Load<PackedScene>("res://scenes/components/ActionTimeComponent.tscn");
@@ -31,14 +30,6 @@ namespace SpaceDodgeRL.scenes.entities {
 
     private void AddPlayerComponent(Entity entity) {
       entity.AddChild(_playerComponentPrefab.Instance());
-      // TODO: Add/Remove hooks & components can define their own groups!
-      entity.AddToGroup("player");
-    }
-
-    private void AddPositionComponent(Entity entity, GamePosition position, string texturePath) {
-      var c = _positionComponentPrefab.Instance() as PositionComponent;
-      c.Init(position, GD.Load<Texture>(texturePath));
-      entity.AddChild(c);
     }
 
     private void AddSpeedComponent(Entity entity, int baseSpeed) {
@@ -47,23 +38,23 @@ namespace SpaceDodgeRL.scenes.entities {
       entity.AddChild(c);
     }
 
-    public Entity CreatePlayerEntity(GamePosition pos) {
+    public Entity CreatePlayerEntity() {
       var player = CreateEntity("uuid#1", "player");
 
       AddActionTimeComponent(player);
       AddPlayerComponent(player);
-      AddPositionComponent(player, pos, _AtSignPath);
+      player.AddChild(SpriteDataComponent.Create(_AtSignPath));
       AddSpeedComponent(player, 100);
 
       return player;
     }
 
-    public Entity CreateScoutEntity(GamePosition pos) {
+    public Entity CreateScoutEntity() {
       var scout = CreateEntity("uuid#2", "scout");
 
       scout.AddChild(_testAIComponentPrefab.Instance());
       AddActionTimeComponent(scout);
-      AddPositionComponent(scout, pos, _sPath);
+      scout.AddChild(SpriteDataComponent.Create(_sPath));
       AddSpeedComponent(scout, 50);
 
       return scout;

@@ -5,6 +5,7 @@ using System;
 namespace SpaceDodgeRL.scenes.entities {
 
   public class Entity : Node {
+
     public static string ENTITY_GROUP = "groupEntity";
 
     private string _id, _name;

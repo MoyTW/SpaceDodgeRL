@@ -8,8 +8,9 @@ namespace SpaceDodgeRL.scenes.encounter {
 
   public class EncounterState : Node {
 
-    // TODO: Save/Load/Proper New Game
-    private bool hasCreated = false;
+    // ##########################################################################################################################
+    #region Data Access
+    // ##########################################################################################################################
 
     public Entity Player {
       get => GetTree().GetNodesInGroup(PlayerComponent.ENTITY_GROUP)[0] as Entity;
@@ -54,19 +55,33 @@ namespace SpaceDodgeRL.scenes.encounter {
 
       return next;
     }
+ 
+    // ##########################################################################################################################
+    #endregion
+    // ##########################################################################################################################
+
+    public void PlaceEntity(Entity entity, GamePosition targetPosition) {
+      var spriteData = entity.GetNode<SpriteDataComponent>("SpriteDataComponent");
+      
+      var positionComponent = PositionComponent.Create(targetPosition, spriteData.Texture);
+      entity.AddChild(positionComponent);
+
+      AddChild(entity);
+    }
+
+    public void RemoveEntity(Entity entity) {
+      RemoveChild(entity);
+    }
 
     // TODO: Move into map gen & save/load
     public void InitState(EntityBuilder entityBuilder) {
-      AddChild(entityBuilder.CreatePlayerEntity(new GamePosition(3, 5)));
-      AddChild(entityBuilder.CreateScoutEntity(new GamePosition(5, 5)));
+      PlaceEntity(entityBuilder.CreatePlayerEntity(), new GamePosition(3, 5));
+      PlaceEntity(entityBuilder.CreateScoutEntity(), new GamePosition(5, 5));
 
-      // TODO: Attaching camera to the player like this is extremely jank! ALSO, it's causing a weird jumping behaviour where the
-      // camera moves milliseconds after the player teleports to the next position!
+      // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       var camera = GetNode<Camera2D>("EncounterCamera");
       RemoveChild(camera);
       Player.GetNode<PositionComponent>("PositionComponent").AddChild(camera);
-
-      hasCreated = true;
     }
   }
 }

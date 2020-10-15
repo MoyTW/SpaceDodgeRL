@@ -5,7 +5,9 @@ using System;
 namespace SpaceDodgeRL.scenes.components {
 
   public class PositionComponent : Sprite, Component {
-    public static string ENTITY_GROUP = "POSITION_COMPONENT_GROUP";
+    private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
+
+    const string ENTITY_GROUP = "POSITION_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
     // TODO: Don't put this here
@@ -25,16 +27,20 @@ namespace SpaceDodgeRL.scenes.components {
       }
     }
 
+    public static PositionComponent Create(GamePosition position, Texture texture) {
+      var component = _componentPrefab.Instance() as PositionComponent;
+
+      component._gamePosition = position;
+      component.Position = IndexToVector(position.X, position.Y);
+      component.Texture = texture;
+
+      return component;
+    }
+
     private void Tween(Vector2 newPosition) {
       var tween = GetNode<Tween>("Tween");
       tween.InterpolateProperty(this, "position", Position, newPosition, 0.05f);
       tween.Start();
-    }
-
-    public void Init(GamePosition pos, Texture texture) {
-      _gamePosition = pos;
-      Position = IndexToVector(pos.X, pos.Y);
-      Texture = texture;
     }
 
     public override void _Ready() {
