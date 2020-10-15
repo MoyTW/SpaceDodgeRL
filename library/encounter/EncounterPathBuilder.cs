@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SpaceDodgeRL.library.encounter {
 
-  public static class PathBuilder {
+  public static class EncounterPathBuilder {
 
     public static EncounterPath BuildStraightLinePath(EncounterPosition start, EncounterPosition target, int numSteps = 100) {
       return new EncounterPath(StraightLine(start, target, numSteps));
