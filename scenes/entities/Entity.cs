@@ -43,11 +43,8 @@ namespace SpaceDodgeRL.scenes.entities {
 
     // TODO: It may be a problem if I end up having Too Many components in each Entity and this slows down.
     public T GetComponent<T>() where T: Node {
-      string entityGroup = typeof(T).GetField("ENTITY_GROUP").GetValue(null) as string;
       foreach (Node child in this.GetChildren()) {
-        if ((child as Component).EntityGroup == entityGroup) {
-          return child as T;
-        }
+        if (child is T) { return child as T; }
       }
       return default(T);
     }
