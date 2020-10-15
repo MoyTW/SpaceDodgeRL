@@ -1,6 +1,8 @@
 using System;
 using Godot;
+using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.scenes.components;
+using SpaceDodgeRL.scenes.components.AI;
 
 namespace SpaceDodgeRL.scenes.entities {
 
@@ -37,6 +39,19 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddChild(_testAIComponentPrefab.Instance()); // we'll delete it in a bit anyways
       e.AddChild(ActionTimeComponent.Create(0));
       e.AddChild(DefenderComponent.Create(0, 100));
+      e.AddChild(SpriteDataComponent.Create(_sPath));
+      e.AddChild(SpeedComponent.Create(250));
+
+      return e;
+    }
+
+    public Entity CreateTestProjectileEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "test projectile");
+
+      var arbitraryPath = EncounterPathBuilder.BuildStraightLinePath(new EncounterPosition(6,8), new EncounterPosition(13, 42), 5);
+      e.AddChild(PathAIComponent.Create(arbitraryPath));
+
+      e.AddChild(ActionTimeComponent.Create(0));
       e.AddChild(SpriteDataComponent.Create(_sPath));
       e.AddChild(SpeedComponent.Create(50));
 

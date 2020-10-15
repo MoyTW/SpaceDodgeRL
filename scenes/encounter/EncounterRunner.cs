@@ -62,7 +62,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         }
       } else {
         // TODO: Take any AI component & restrict it to direct children
-        AIComponent aIComponent = entity.GetComponent<TestAIComponent>();
+        AIComponent aIComponent = entity.GetComponent<AIComponent>();
         var aIActions = aIComponent.DecideNextAction(state);
         Rulebook.ResolveActions(aIActions, state);
       }
