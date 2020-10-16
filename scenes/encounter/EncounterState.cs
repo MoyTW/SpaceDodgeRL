@@ -81,9 +81,9 @@ namespace SpaceDodgeRL.scenes.encounter {
 
       for (int x = position.X - 1; x <= position.X + 1; x++) {
         for (int y = position.Y - 1; y <= position.Y + 1; y++) {
-          var p = new EncounterPosition(x, y);
-          if (p != position && !IsPositionBlocked(p)) {
-            adjacent.Add(position);
+          var newPosition = new EncounterPosition(x, y);
+          if (newPosition != position) {
+            adjacent.Add(newPosition);
           }
         }
       }

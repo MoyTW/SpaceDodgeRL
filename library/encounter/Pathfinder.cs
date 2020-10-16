@@ -16,7 +16,12 @@ namespace SpaceDodgeRL.library.encounter {
      * Returns a path from start to end, exclusive - that is, the start and end nodes are *not* listed in the path. Does a full
      * naive search every time.
      */
-    public static List<EncounterPosition> AStarWithNewGrid(EncounterPosition start, EncounterPosition end, EncounterState state) {
+    public static List<EncounterPosition> AStarWithNewGrid(
+      EncounterPosition start,
+      EncounterPosition end,
+      EncounterState state,
+      int maxAreaToExplore = 500
+    ) {
       SimplePriorityQueue<EncounterPosition> frontier = new SimplePriorityQueue<EncounterPosition>();
       frontier.Enqueue(start, 0f);
 
@@ -25,12 +30,12 @@ namespace SpaceDodgeRL.library.encounter {
       var costSoFar = new Dictionary<EncounterPosition, float>();
       costSoFar[start] = 0f;
 
-      while (frontier.Count > 0) {
+      while (frontier.Count > 0 && cameFrom.Count < maxAreaToExplore) {
         var currentPosition = frontier.Dequeue();
         var adjacentPositions = state.AdjacentPositions(currentPosition);
 
-        if (adjacentPositions.Contains(currentPosition)) {
-          var path = new List<EncounterPosition>() { end, currentPosition };
+        if (adjacentPositions.Contains(end)) {
+          var path = new List<EncounterPosition>() { currentPosition };
 
           EncounterPosition cameFromPos;
           while (cameFrom.TryGetValue(path[path.Count - 1], out cameFromPos) && (cameFromPos != start)) {
