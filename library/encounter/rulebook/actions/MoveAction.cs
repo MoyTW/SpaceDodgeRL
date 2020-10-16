@@ -1,11 +1,14 @@
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.library.encounter.rulebook;
 
-public class MoveAction : EncounterAction {
+namespace SpaceDodgeRL.library.encounter.rulebook.actions {
 
-  public EncounterPosition TargetPosition { get; private set; }
+  public class MoveAction : EncounterAction {
 
-  public MoveAction(string actorId, EncounterPosition targetPosition) : base(actorId, ActionType.MOVE) {
-    this.TargetPosition = targetPosition;
+    public EncounterPosition TargetPosition { get; private set; }
+
+    public MoveAction(string actorId, EncounterPosition targetPosition) : base(actorId, ActionType.MOVE) {
+      TargetPosition = targetPosition;
+    }
   }
 }

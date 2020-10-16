@@ -2,6 +2,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
   public enum ActionType {
     END_TURN,
-    MOVE
+    MOVE,
+    SELF_DESTRUCT
   }
 }

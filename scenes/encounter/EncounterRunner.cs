@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.library.encounter.rulebook;
+using SpaceDodgeRL.library.encounter.rulebook.actions;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
 using SpaceDodgeRL.scenes.entities;

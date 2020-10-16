@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.library.encounter.rulebook;
+using SpaceDodgeRL.library.encounter.rulebook.actions;
 using SpaceDodgeRL.scenes.encounter;
 using SpaceDodgeRL.scenes.entities;
 using System.Collections.Generic;
@@ -27,9 +28,8 @@ namespace SpaceDodgeRL.scenes.components.AI {
     }
 
     public override List<EncounterAction> DecideNextAction(EncounterState state) {
-      // TODO: Clean up path projectile instead of just making it sit there!
       if (_path.AtEnd) {
-        return new List<EncounterAction>() { new EndTurnAction((GetParent() as Entity).EntityId) };
+        return new List<EncounterAction>() { new SelfDestructAction((GetParent() as Entity).EntityId) };
       } else {
         var nextPosition = _path.Step();
         return new List<EncounterAction>() { new MoveAction((GetParent() as Entity).EntityId, nextPosition) };
