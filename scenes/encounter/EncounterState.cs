@@ -85,8 +85,8 @@ namespace SpaceDodgeRL.scenes.encounter {
     #endregion
     // ##########################################################################################################################
 
-    public void PlaceEntity(Entity entity, EncounterPosition targetPosition) {
-      if (IsPositionBlocked(targetPosition)) {
+    public void PlaceEntity(Entity entity, EncounterPosition targetPosition, bool ignoreCollision = false) {
+      if (!ignoreCollision && IsPositionBlocked(targetPosition)) {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
 
@@ -113,10 +113,10 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     // TODO: Move into map gen & save/load
-    public void InitState(EntityBuilder entityBuilder) {
-      PlaceEntity(entityBuilder.CreatePlayerEntity(), new EncounterPosition(3, 5));
-      PlaceEntity(entityBuilder.CreateScoutEntity(), new EncounterPosition(5, 5));
-      PlaceEntity(entityBuilder.CreateTestProjectileEntity(), new EncounterPosition(0, 0));
+    public void InitState() {
+      PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(3, 5));
+      PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(5, 5));
+      PlaceEntity(EntityBuilder.CreateTestProjectileEntity(), new EncounterPosition(0, 0));
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       var camera = GetNode<Camera2D>("EncounterCamera");

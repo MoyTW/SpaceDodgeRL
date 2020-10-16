@@ -9,7 +9,7 @@ namespace SpaceDodgeRL.scenes {
     public override void _Ready() {
       // TODO: Proper state initialization & building & such!
       var encounterState = GetNode<EncounterState>("EncounterState");
-      encounterState.InitState(GetNode<EntityBuilder>("EntityBuilder"));
+      encounterState.InitState();
 
       var encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
       encounterRunner.inputHandlerRef = GetNode<InputHandler>("InputHandler");

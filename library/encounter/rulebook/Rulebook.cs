@@ -12,7 +12,9 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     // ...can't I just do <> like I can in Kotlin? C# why you no let me do this. Probably because "evolving languages are hard".
     private static Dictionary<ActionType, Action<EncounterAction, EncounterState>> _actionMapping = new Dictionary<ActionType, Action<EncounterAction, EncounterState>>() {
     { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
+    // TODO: Make END_TURN internal & mark actions as free/non-free & provide WAIT instead
     { ActionType.END_TURN, (a, s) => ResolveEndTurn(a as EndTurnAction, s) },
+    { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
     { ActionType.SELF_DESTRUCT, (a, s) => ResolveSelfDestruct(a as SelfDestructAction, s) }
   };
 
@@ -21,8 +23,8 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     }
 
     public static void ResolveAction(EncounterAction action, EncounterState state) {
-      var entity = state.GetEntityById(action.ActorId);
-      GD.Print(string.Format("Processing action type {0} for entity {1}:{2}", action.ActionType, entity.EntityName, entity.EntityId));
+      // var entity = state.GetEntityById(action.ActorId);
+      // GD.Print(string.Format("Processing action type {0} for entity {1}:{2}", action.ActionType, entity.EntityName, entity.EntityId));
 
       // If I had C# 8.0 I'd use the new, nifty switch! I'm using a dictionary because I *always* forget to break; out of a switch
       // and that usually causes an annoying bug that I spend way too long mucking around with. Instead here it will just EXPLODE!
@@ -48,6 +50,13 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       Entity entity = state.GetEntityById(action.ActorId);
       var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
       actionTimeComponent.EndTurn(entity.GetComponent<SpeedComponent>());
+    }
+
+    private static void ResolveFireProjectile(FireProjectileAction action, EncounterState state) {
+      Entity actor = state.GetEntityById(action.ActorId);
+      Entity projectile = EntityBuilder.CreateProjectileEntity(action.Power, action.Path, action.Speed);
+      state.PlaceEntity(projectile, actor.GetComponent<PositionComponent>().EncounterPosition, true);
+      ResolveAction(new EndTurnAction(action.ActorId), state);
     }
 
     private static void ResolveSelfDestruct(SelfDestructAction action, EncounterState state) {
