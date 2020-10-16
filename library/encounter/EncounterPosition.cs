@@ -11,6 +11,15 @@ namespace SpaceDodgeRL.library.encounter {
       Y = y;
     }
 
+    /**
+     * Straight-line distance, not path distance. Thankfullky there are no walls in space!
+     */
+    public float DistanceTo(EncounterPosition other) {
+      float dx = (this.X - other.X);
+      float dy = (this.Y - other.Y);
+      return MathF.Sqrt(dx * dx + dy * dy);
+    }
+
     public bool Equals(EncounterPosition other) {
       return other.X == this.X && other.Y == this.Y;
     }

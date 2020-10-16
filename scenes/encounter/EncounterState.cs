@@ -3,6 +3,7 @@ using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.entities;
 using System;
+using System.Collections.Generic;
 
 namespace SpaceDodgeRL.scenes.encounter {
 
@@ -68,6 +69,27 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     // Positional Queries
+
+    public bool ArePositionsAdjacent(EncounterPosition left, EncounterPosition right) {
+      var dx = Math.Abs(left.X - right.X);
+      var dy = Math.Abs(left.Y - right.Y);
+      return dx < 2 && dy < 2 && (dx + dy != 0);
+    }
+
+    public List<EncounterPosition> AdjacentPositions(EncounterPosition position) {
+      var adjacent = new List<EncounterPosition>();
+
+      for (int x = position.X - 1; x <= position.X + 1; x++) {
+        for (int y = position.Y - 1; y <= position.Y + 1; y++) {
+          var p = new EncounterPosition(x, y);
+          if (p != position && !IsPositionBlocked(p)) {
+            adjacent.Add(position);
+          }
+        }
+      }
+
+      return adjacent;
+    }
 
     // TODO: Maintain a internal representation
     // TODO: Just, like...definte a couple of extension functions on Godot.Collections.Array or something maybe?
