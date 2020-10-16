@@ -138,7 +138,6 @@ namespace SpaceDodgeRL.scenes.encounter {
     public void InitState() {
       PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(3, 5));
       PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(5, 5));
-      PlaceEntity(EntityBuilder.CreateTestProjectileEntity(), new EncounterPosition(0, 0));
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       var camera = GetNode<Camera2D>("EncounterCamera");

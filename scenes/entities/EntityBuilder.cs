@@ -56,18 +56,5 @@ namespace SpaceDodgeRL.scenes.entities {
 
       return e;
     }
-
-    public static Entity CreateTestProjectileEntity() {
-      var e = CreateEntity(Guid.NewGuid().ToString(), "test projectile");
-
-      var arbitraryPath = EncounterPathBuilder.BuildStraightLinePath(new EncounterPosition(6,8), new EncounterPosition(13, 42), 5);
-      e.AddChild(PathAIComponent.Create(arbitraryPath));
-
-      e.AddChild(ActionTimeComponent.Create(0));
-      e.AddChild(SpriteDataComponent.Create(_StarPath));
-      e.AddChild(SpeedComponent.Create(50));
-
-      return e;
-    }
   }
 }
