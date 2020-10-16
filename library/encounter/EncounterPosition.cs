@@ -17,7 +17,8 @@ namespace SpaceDodgeRL.library.encounter {
     public float DistanceTo(EncounterPosition other) {
       float dx = (this.X - other.X);
       float dy = (this.Y - other.Y);
-      return MathF.Sqrt(dx * dx + dy * dy);
+      // RIP MathF, casulaty of the runtime confusion.
+      return (float)Math.Sqrt(dx * dx + dy * dy);
     }
 
     public bool Equals(EncounterPosition other) {
