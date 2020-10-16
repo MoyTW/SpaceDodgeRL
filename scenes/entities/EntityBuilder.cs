@@ -12,6 +12,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
     private string _sPath = "res://resources/atlas_s.tres";
     private string _AtSignPath = "res://resources/atlas_@.tres";
+    private string _StarPath = "res://resources/atlas_*.tres";
 
     private Entity CreateEntity(string id, string name) {
       Entity newEntity = _entityPrefab.Instance() as Entity;
@@ -50,7 +51,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddChild(PathAIComponent.Create(arbitraryPath));
 
       e.AddChild(ActionTimeComponent.Create(0));
-      e.AddChild(SpriteDataComponent.Create(_sPath));
+      e.AddChild(SpriteDataComponent.Create(_StarPath));
       e.AddChild(SpeedComponent.Create(50));
 
       return e;

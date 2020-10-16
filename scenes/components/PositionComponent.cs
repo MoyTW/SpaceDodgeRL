@@ -39,7 +39,7 @@ namespace SpaceDodgeRL.scenes.components {
     private void Tween(Vector2 newPosition) {
       var tween = GetNode<Tween>("Tween");
       var sprite = GetNode<Sprite>("Sprite");
-      tween.InterpolateProperty(sprite, "position", sprite.Position, newPosition, 0.05f);
+      tween.InterpolateProperty(sprite, "position", sprite.Position, newPosition, 0.1f);
       tween.Start();
     }
 
