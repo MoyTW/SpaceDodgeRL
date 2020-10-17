@@ -62,7 +62,6 @@ namespace SpaceDodgeRL.scenes.encounter {
           MovePlayer(state, -1, -1);
         }
       } else {
-        // TODO: Take any AI component & restrict it to direct children
         AIComponent aIComponent = entity.GetComponent<AIComponent>();
         var aIActions = aIComponent.DecideNextAction(state);
         Rulebook.ResolveActions(aIActions, state);
