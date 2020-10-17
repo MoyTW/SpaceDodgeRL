@@ -27,6 +27,7 @@ namespace SpaceDodgeRL.scenes.components.AI {
       return component;
     }
 
+    // TODO: For some reason projectiles throw up "moving to own position" errors!?
     public override List<EncounterAction> DecideNextAction(EncounterState state) {
       if (_path.AtEnd) {
         return new List<EncounterAction>() { new SelfDestructAction((GetParent() as Entity).EntityId) };

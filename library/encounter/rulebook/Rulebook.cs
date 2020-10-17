@@ -32,16 +32,24 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     }
 
     private static void ResolveMove(MoveAction action, EncounterState state) {
-      Entity entity = state.GetEntityById(action.ActorId);
+      Entity actor = state.GetEntityById(action.ActorId);
       var positionComponent = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>();
 
       if (positionComponent.EncounterPosition == action.TargetPosition) {
-        GD.PrintErr(string.Format("Entity {0}:{1} tried to move to its current position {2}", entity.EntityName, entity.EntityId, action.TargetPosition));
+        GD.PrintErr(string.Format("Entity {0}:{1} tried to move to its current position {2}", actor.EntityName, actor.EntityId, action.TargetPosition));
       } else if (state.IsPositionBlocked(action.TargetPosition)) {
-        // TODO: Resolve attacks
-        GD.PrintErr(string.Format("Entity {0}:{1} could not move to {2}, blocked!", entity.EntityName, entity.EntityId, action.TargetPosition));
+        var blocker = state.BlockingEntityAtPosition(action.TargetPosition);
+        var actorCollision = actor.GetComponent<CollisionComponent>();
+
+        if (actorCollision.OnCollisionAttack) {
+          GD.PrintErr(string.Format("Entity {0}:{1} can't attack to {2}, not implemented!", actor.EntityName, actor.EntityId, action.TargetPosition));
+        }
+        // TODO: This causes the projectile to vanish, which is...awkward, visually, since we're Tweening it at the time!
+        if (actorCollision.OnCollisionSelfDestruct) {
+          ResolveAction(new SelfDestructAction(action.ActorId), state);
+        }
       } else {
-        state.TeleportEntity(entity, action.TargetPosition);
+        state.TeleportEntity(actor, action.TargetPosition);
         ResolveAction(new EndTurnAction(action.ActorId), state);
       }
     }

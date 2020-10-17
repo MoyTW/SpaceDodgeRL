@@ -24,6 +24,7 @@ namespace SpaceDodgeRL.scenes.entities {
       var e = CreateEntity(Guid.NewGuid().ToString(), "player");
 
       e.AddChild(ActionTimeComponent.Create(0));
+      e.AddChild(CollisionComponent.Create(true, false));
       e.AddChild(DefenderComponent.Create(0, 100));
       e.AddChild(PlayerComponent.Create());
       e.AddChild(SpriteDataComponent.Create(_AtSignPath));
@@ -36,7 +37,9 @@ namespace SpaceDodgeRL.scenes.entities {
       var e = CreateEntity(Guid.NewGuid().ToString(), "scout");
 
       e.AddChild(ScoutAIComponent.Create());
+
       e.AddChild(ActionTimeComponent.Create(0));
+      e.AddChild(CollisionComponent.Create(true, false));
       e.AddChild(DefenderComponent.Create(0, 100));
       e.AddChild(SpriteDataComponent.Create(_sPath));
       e.AddChild(SpeedComponent.Create(250));
@@ -51,6 +54,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
       e.AddChild(ActionTimeComponent.Create(0)); // Should it go instantly or should it wait for its turn...?
       e.AddChild(AttackerComponent.Create(power));
+      e.AddChild(CollisionComponent.Create(false, false, true, true));
       e.AddChild(SpriteDataComponent.Create(_StarPath));
       e.AddChild(SpeedComponent.Create(speed));
 

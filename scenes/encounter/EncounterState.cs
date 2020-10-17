@@ -91,16 +91,19 @@ namespace SpaceDodgeRL.scenes.encounter {
       return adjacent;
     }
 
-    // TODO: Maintain a internal representation
-    // TODO: Just, like...definte a couple of extension functions on Godot.Collections.Array or something maybe?
     public bool IsPositionBlocked(EncounterPosition position) {
-      // TODO: Distinguish between blocking/non-blocking entities
+      return BlockingEntityAtPosition(position) != null;
+    }
+
+    // TODO: Maintain an internal representation
+    public Entity BlockingEntityAtPosition(EncounterPosition position) {
       foreach (Entity entity in this.PositionEntities()) {
-        if (position == entity.GetComponent<PositionComponent>().EncounterPosition) {
-          return true;
+        if (position == entity.GetComponent<PositionComponent>().EncounterPosition &&
+            entity.GetComponent<CollisionComponent>().BlocksMovement) {
+          return entity;
         }
       }
-      return false;
+      return null;
     }
  
     // ##########################################################################################################################
