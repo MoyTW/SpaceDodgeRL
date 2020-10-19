@@ -9,21 +9,27 @@ namespace SpaceDodgeRL.scenes.components {
     public override string EntityGroup => ENTITY_GROUP;
 
     public int BaseDefense { get; private set; }
+    // Right now we don't do defense buffs, but we could later!
+    public int Defense { get => this.BaseDefense; }
     public int MaxHp { get; private set; }
     public int CurrentHp { get; private set; }
 
-    public static DefenderComponent Create(int baseDefense, int maxHP, int currentHP = int.MinValue) {
+    public static DefenderComponent Create(int baseDefense, int maxHp, int currentHp = int.MinValue) {
       var component = _componentPrefab.Instance() as DefenderComponent;
 
       component.BaseDefense = baseDefense;
-      component.MaxHp = maxHP;
-      if (currentHP == int.MinValue) {
+      component.MaxHp = maxHp;
+      if (currentHp == int.MinValue) {
         component.CurrentHp = component.MaxHp;
       } else {
-        component.CurrentHp = currentHP;
+        component.CurrentHp = currentHp;
       }
 
       return component;
+    }
+
+    public void RemoveHp(int hp) {
+      this.CurrentHp -= hp;
     }
   }
 }

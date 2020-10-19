@@ -31,6 +31,19 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       _actionMapping[action.ActionType].Invoke(action, state);
     }
 
+    private static void Attack(Entity attacker, Entity defender, EncounterState state) {
+      var attackerComponent = attacker.GetComponent<AttackerComponent>();
+      var defenderComponent = defender.GetComponent<DefenderComponent>();
+
+      // We don't allow underflow damage, though that could be a pretty comical mechanic...
+      int damage = Math.Max(0, attackerComponent.Power - defenderComponent.Defense);
+      defenderComponent.RemoveHp(damage);
+      if (defenderComponent.CurrentHp <= 0) {
+        // TODO: Change "SelfDestructAction" to "RemoveAction" or something & add a toggle/line for log text?
+        ResolveAction(new SelfDestructAction(defender.EntityId), state);
+      }
+    }
+
     private static void ResolveMove(MoveAction action, EncounterState state) {
       Entity actor = state.GetEntityById(action.ActorId);
       var positionComponent = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>();
@@ -42,7 +55,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         var actorCollision = actor.GetComponent<CollisionComponent>();
 
         if (actorCollision.OnCollisionAttack) {
-          GD.PrintErr(string.Format("Entity {0}:{1} can't attack to {2}, not implemented!", actor.EntityName, actor.EntityId, action.TargetPosition));
+          Attack(actor, blocker, state);
         }
         // TODO: This causes the projectile to vanish, which is...awkward, visually, since we're Tweening it at the time!
         if (actorCollision.OnCollisionSelfDestruct) {
