@@ -1,10 +1,9 @@
 using Godot;
 using SpaceDodgeRL.scenes.encounter;
-using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes {
 
-  public class MainScene : Node2D {
+  public class EncounterScene : Node2D {
 
     public override void _Ready() {
       // TODO: Proper state initialization & building & such!
