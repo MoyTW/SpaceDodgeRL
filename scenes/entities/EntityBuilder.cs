@@ -42,7 +42,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddChild(CollisionComponent.Create(true, false));
       e.AddChild(DefenderComponent.Create(0, 100));
       e.AddChild(SpriteDataComponent.Create(_sPath));
-      e.AddChild(SpeedComponent.Create(250));
+      e.AddChild(SpeedComponent.Create(200));
 
       return e;
     }

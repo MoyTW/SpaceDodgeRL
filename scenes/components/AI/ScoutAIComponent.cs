@@ -42,7 +42,8 @@ namespace SpaceDodgeRL.scenes.components.AI {
       // Always fire
       var fire = new FireProjectileAction(
         parent.EntityId,
-        1, EncounterPathBuilder.BuildStraightLinePath(parentPos, playerPos, 25),
+        1,
+        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, playerPos, 25),
         20,
         ProjectileType.SMALL_SHOTGUN
       );

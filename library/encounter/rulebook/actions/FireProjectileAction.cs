@@ -1,3 +1,5 @@
+using System;
+
 namespace SpaceDodgeRL.library.encounter.rulebook.actions {
 
   // Move this to its own file!
@@ -8,19 +10,20 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
   public class FireProjectileAction : EncounterAction {
 
     public int Power { get; private set; }
-    public EncounterPath Path { get; private set; }
+    // A function that takes the source position
+    public Func<EncounterPosition, EncounterPath> PathFunction { get; private set; }
     public int Speed { get; private set; }
     public ProjectileType ProjectileType { get; private set; }
 
     public FireProjectileAction(
       string actorId,
       int power,
-      EncounterPath path,
+      Func<EncounterPosition, EncounterPath> pathFunction,
       int speed,
       ProjectileType projectileType
     ) : base(actorId, ActionType.FIRE_PROJECTILE) {
       this.Power = power;
-      this.Path = path;
+      this.PathFunction = pathFunction;
       this.Speed = speed;
       this.ProjectileType = projectileType;
     }
