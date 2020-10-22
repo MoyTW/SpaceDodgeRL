@@ -40,13 +40,7 @@ namespace SpaceDodgeRL.scenes.components.AI {
         }
       }
       // Always fire
-      var fire = new FireProjectileAction(
-        parent.EntityId,
-        1,
-        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, playerPos, 25),
-        20,
-        ProjectileType.SMALL_SHOTGUN
-      );
+      var fire = FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos);
       actions.Add(fire);
 
       return actions;

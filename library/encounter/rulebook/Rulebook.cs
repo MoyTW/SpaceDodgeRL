@@ -80,7 +80,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
     private static void ResolveFireProjectile(FireProjectileAction action, EncounterState state) {
       var actorPosition = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>().EncounterPosition;
-      Entity projectile = EntityBuilder.CreateProjectileEntity(action.Power, action.PathFunction(actorPosition), action.Speed);
+      Entity projectile = EntityBuilder.CreateProjectileEntity(action.ProjectileName, action.Power, action.PathFunction(actorPosition), action.Speed);
       state.PlaceEntity(projectile, actorPosition, true);
       ResolveAction(new EndTurnAction(action.ActorId), state);
     }

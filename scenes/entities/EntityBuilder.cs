@@ -47,8 +47,8 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    public static Entity CreateProjectileEntity(int power, EncounterPath path, int speed) {
-      var e = CreateEntity(Guid.NewGuid().ToString(), "TODO: nicer names for projectiles");
+    public static Entity CreateProjectileEntity(string projectileName, int power, EncounterPath path, int speed) {
+      var e = CreateEntity(Guid.NewGuid().ToString(), projectileName);
 
       e.AddChild(PathAIComponent.Create(path));
 
