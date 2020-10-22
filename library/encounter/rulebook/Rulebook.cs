@@ -39,8 +39,11 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       int damage = Math.Max(0, attackerComponent.Power - defenderComponent.Defense);
       defenderComponent.RemoveHp(damage);
       if (defenderComponent.CurrentHp <= 0) {
+        state.LogMessage("TEMP LOG DEFENDER IS DEAD");
         // TODO: Change "SelfDestructAction" to "RemoveAction" or something & add a toggle/line for log text?
         ResolveAction(new SelfDestructAction(defender.EntityId), state);
+      } else {
+        state.LogMessage(string.Format("TEMP LOG DEFENDER IS DAMAGED FOR {0}", damage));
       }
     }
 

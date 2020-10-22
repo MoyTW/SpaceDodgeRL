@@ -5,10 +5,17 @@ using SpaceDodgeRL.scenes.components.AI;
 using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace SpaceDodgeRL.scenes.encounter {
 
   public class EncounterState : Control {
+
+    public int EncounterLogSize = 50;
+    private List<string> _encounterLog;
+    public ReadOnlyCollection<string> EncounterLog { get => _encounterLog.AsReadOnly(); }
+    [Signal]
+    public delegate void EncounterLogMessageAdded(string message, int encounterLogSize);
 
     // ##########################################################################################################################
     #region Data Access
@@ -155,6 +162,15 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
     }
 
+    public void LogMessage(string bbCodeMessage) {
+      // TODO: Emit the signal for the encounter log
+      if (this._encounterLog.Count >= this.EncounterLogSize) {
+        this._encounterLog.RemoveAt(0);
+      }
+      this._encounterLog.Add(bbCodeMessage);
+      this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, this.EncounterLogSize);
+    }
+
     // TODO: Move into map gen & save/load
     public void InitState() {
       PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(0, 0));
@@ -165,6 +181,9 @@ namespace SpaceDodgeRL.scenes.encounter {
       RemoveChild(camera);
       // TODO: VERY DEFINITELY DON'T KEEP DOING THIS!!!
       Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
+
+      this._encounterLog = new List<string>();
+      this.LogMessage("Encounter started!");
     }
   }
 }
