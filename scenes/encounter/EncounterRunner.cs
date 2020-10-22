@@ -42,12 +42,6 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
 
       if (entity.IsInGroup(PlayerComponent.ENTITY_GROUP)) {
-        // TODO: dirty bit so it shows firing as well & not just instant vanish
-        if (state.DangerMapDirty) {
-          state.UpdateDangerMap();
-          state.DangerMapDirty = false;
-        }
-
         var action = inputHandler.PopQueue();
         // Super not a fan of the awkwardness of checking this twice! Switch string -> enum, maybe?
         if (action == InputHandler.ActionMapping.MOVE_N) {
@@ -67,13 +61,11 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action == InputHandler.ActionMapping.MOVE_NW) {
           MovePlayer(state, -1, -1);
         }
-        if (action != null) {
-          state.DangerMapDirty = true;
-        }
       } else {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();
         var aIActions = aIComponent.DecideNextAction(state);
         Rulebook.ResolveActions(aIActions, state);
+        state.UpdateDangerMap();
       }
     }
   }

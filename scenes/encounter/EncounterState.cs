@@ -14,8 +14,6 @@ namespace SpaceDodgeRL.scenes.encounter {
     #region Data Access
     // ##########################################################################################################################
 
-    public bool DangerMapDirty = true;
-
     public Entity Player {
       get => GetTree().GetNodesInGroup(PlayerComponent.ENTITY_GROUP)[0] as Entity;
     }
