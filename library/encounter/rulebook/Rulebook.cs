@@ -11,21 +11,30 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
   public static class Rulebook {
     // ...can't I just do <> like I can in Kotlin? C# why you no let me do this. Probably because "evolving languages are hard".
     private static Dictionary<ActionType, Action<EncounterAction, EncounterState>> _actionMapping = new Dictionary<ActionType, Action<EncounterAction, EncounterState>>() {
-    { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
-    // TODO: Make END_TURN internal & mark actions as free/non-free & provide WAIT instead
-    { ActionType.END_TURN, (a, s) => ResolveEndTurn(a as EndTurnAction, s) },
-    { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
-    { ActionType.SELF_DESTRUCT, (a, s) => ResolveSelfDestruct(a as SelfDestructAction, s) }
-  };
+      { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
+      { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
+      { ActionType.SELF_DESTRUCT, (a, s) => ResolveSelfDestruct(a as SelfDestructAction, s) },
+      { ActionType.WAIT, (a, s) => ResolveWait(a as WaitAction, s) }
+    };
+
+    private static void EndTurnIfStillExists(string entityId, EncounterState state) {
+      Entity entity = state.GetEntityById(entityId);
+      if (entity != null) {
+        var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
+        actionTimeComponent.EndTurn(entity.GetComponent<SpeedComponent>());
+      }
+    }
 
     public static void ResolveActions(List<EncounterAction> actions, EncounterState state) {
       actions.ForEach((action) => ResolveAction(action, state));
+      if (actions.Count > 0) {
+        EndTurnIfStillExists(actions[0].ActorId, state);
+      } else {
+        throw new NotImplementedException("should never resolve zero actions");
+      }
     }
 
-    public static void ResolveAction(EncounterAction action, EncounterState state) {
-      // var entity = state.GetEntityById(action.ActorId);
-      // GD.Print(string.Format("Processing action type {0} for entity {1}:{2}", action.ActionType, entity.EntityName, entity.EntityId));
-
+    private static void ResolveAction(EncounterAction action, EncounterState state) {
       // If I had C# 8.0 I'd use the new, nifty switch! I'm using a dictionary because I *always* forget to break; out of a switch
       // and that usually causes an annoying bug that I spend way too long mucking around with. Instead here it will just EXPLODE!
       _actionMapping[action.ActionType].Invoke(action, state);
@@ -68,21 +77,15 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         }
       } else {
         state.TeleportEntity(actor, action.TargetPosition);
-        ResolveAction(new EndTurnAction(action.ActorId), state);
       }
     }
 
-    private static void ResolveEndTurn(EndTurnAction action, EncounterState state) {
-      Entity entity = state.GetEntityById(action.ActorId);
-      var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
-      actionTimeComponent.EndTurn(entity.GetComponent<SpeedComponent>());
-    }
+    private static void ResolveWait(WaitAction action, EncounterState state) { }
 
     private static void ResolveFireProjectile(FireProjectileAction action, EncounterState state) {
       var actorPosition = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>().EncounterPosition;
       Entity projectile = EntityBuilder.CreateProjectileEntity(action.ProjectileName, action.Power, action.PathFunction(actorPosition), action.Speed);
       state.PlaceEntity(projectile, actorPosition, true);
-      ResolveAction(new EndTurnAction(action.ActorId), state);
     }
 
     private static void ResolveSelfDestruct(SelfDestructAction action, EncounterState state) {

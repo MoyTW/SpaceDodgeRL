@@ -24,7 +24,7 @@ namespace SpaceDodgeRL.scenes.components.AI {
     public override List<EncounterAction> DecideNextAction(EncounterState state) {
       Entity parent = GetParent() as Entity;
 
-      if (!IsActive) { return new List<EncounterAction>() { new EndTurnAction(parent.EntityId) }; }
+      if (!IsActive) { return new List<EncounterAction>() { new WaitAction(parent.EntityId) }; }
 
       var actions = new List<EncounterAction>();
 

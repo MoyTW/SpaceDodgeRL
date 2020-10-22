@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.library.encounter.rulebook;
@@ -20,18 +21,19 @@ namespace SpaceDodgeRL.scenes.encounter {
       EncounterRunner.RunTurn(this._encounterState, inputHandlerRef);
     }
 
-    private static void MovePlayer(EncounterState state, int dx, int dy) {
-      var positionComponent = state.Player.GetComponent<PositionComponent>();
-      var oldPos = positionComponent.EncounterPosition;
-      Rulebook.ResolveAction(new MoveAction(state.Player.EntityId, new EncounterPosition(oldPos.X + dx, oldPos.Y + dy)), state);
-    }
-
     private static void PassTime(EncounterState state, int time) {
       var actionEntities = state.ActionEntities();
       foreach (Entity entity in actionEntities) {
         var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
         actionTimeComponent.PassTime(time);
       }
+    }
+
+    private static void MovePlayer(EncounterState state, int dx, int dy) {
+      var positionComponent = state.Player.GetComponent<PositionComponent>();
+      var oldPos = positionComponent.EncounterPosition;
+      var moveAction = new MoveAction(state.Player.EntityId, new EncounterPosition(oldPos.X + dx, oldPos.Y + dy));
+      Rulebook.ResolveActions(new List<EncounterAction>() { moveAction }, state);
     }
 
     private static void RunTurn(EncounterState state, InputHandler inputHandler) {
