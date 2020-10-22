@@ -7,7 +7,7 @@ namespace SpaceDodgeRL.scenes {
 
     public override void _Ready() {
       // TODO: Proper state initialization & building & such!
-      var encounterState = GetNode<EncounterState>("VBoxContainer/ViewportContainer/Viewport/EncounterState");
+      var encounterState = GetNode<EncounterState>("VBoxContainer/ViewportContainer/EncounterViewport/EncounterState");
       encounterState.InitState();
 
       var encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
