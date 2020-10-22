@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.scenes.components;
+using SpaceDodgeRL.scenes.components.AI;
 using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace SpaceDodgeRL.scenes.encounter {
     // ##########################################################################################################################
     #region Data Access
     // ##########################################################################################################################
+
+    public bool DangerMapDirty = true;
 
     public Entity Player {
       get => GetTree().GetNodesInGroup(PlayerComponent.ENTITY_GROUP)[0] as Entity;
@@ -110,10 +113,6 @@ namespace SpaceDodgeRL.scenes.encounter {
     #endregion
     // ##########################################################################################################################
 
-    public override void _Ready() {
-      GetNode<TileMap>("DangerMap").SetCell(10, 5, 0);
-    }
-
     public void PlaceEntity(Entity entity, EncounterPosition targetPosition, bool ignoreCollision = false) {
       if (!ignoreCollision && IsPositionBlocked(targetPosition)) {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
@@ -139,6 +138,23 @@ namespace SpaceDodgeRL.scenes.encounter {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
       entity.GetComponent<PositionComponent>().EncounterPosition = targetPosition;
+    }
+
+    public void UpdateDangerMap() {
+      var dangerMap = GetNode<TileMap>("DangerMap");
+      var pathEntities = GetTree().GetNodesInGroup(PathAIComponent.ENTITY_GROUP);
+      var timeToNextPlayerMove = this.Player.GetComponent<SpeedComponent>().Speed;
+
+      dangerMap.Clear();
+      foreach (Entity pathEntity in pathEntities) {
+        var pathEntitySpeed = pathEntity.GetComponent<SpeedComponent>().Speed;
+        var path = pathEntity.GetComponent<PathAIComponent>().Path;
+        var dangerPositions = path.Project(timeToNextPlayerMove / pathEntitySpeed);
+
+        foreach (EncounterPosition dangerPosition in dangerPositions) {
+          dangerMap.SetCell(dangerPosition.X, dangerPosition.Y, 0);
+        }
+      }
     }
 
     // TODO: Move into map gen & save/load

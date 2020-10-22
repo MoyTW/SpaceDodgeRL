@@ -17,21 +17,21 @@ namespace SpaceDodgeRL.scenes.components.AI {
     // Preset path AIs are always active
     public override bool IsActive => true;
 
-    private EncounterPath _path;
+    public EncounterPath Path { get; private set; }
 
     public static PathAIComponent Create(EncounterPath path) {
       var component = _componentPrefab.Instance() as PathAIComponent;
 
-      component._path = path;
+      component.Path = path;
 
       return component;
     }
 
     public override List<EncounterAction> DecideNextAction(EncounterState state) {
-      if (_path.AtEnd) {
+      if (Path.AtEnd) {
         return new List<EncounterAction>() { new SelfDestructAction((GetParent() as Entity).EntityId) };
       } else {
-        var nextPosition = _path.Step();
+        var nextPosition = Path.Step();
         return new List<EncounterAction>() { new MoveAction((GetParent() as Entity).EntityId, nextPosition) };
       }
     }
