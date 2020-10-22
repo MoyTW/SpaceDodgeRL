@@ -27,7 +27,7 @@ namespace SpaceDodgeRL.scenes {
       if (encounterLogLabel.GetLineCount() > encounterLogSize) {
         encounterLogLabel.RemoveLine(0);
       }
-      encounterLogLabel.AddText(bbCodeMessage + "\n");
+      encounterLogLabel.AppendBbcode(bbCodeMessage + "\n");
     }
   }
 }
