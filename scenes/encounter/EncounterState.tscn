@@ -72,7 +72,6 @@ tile_set = SubResource( 1 )
 cell_size = Vector2( 24, 36 )
 cell_custom_transform = Transform2D( 24, 0, 0, 36, 0, 0 )
 format = 1
-tile_data = PoolIntArray( 196616, 0, 0, 196617, 1, 0, 196618, 0, 0, 196619, 1, 0, 262154, 3, 0, 262155, 2, 0 )
 __meta__ = {
 "_edit_lock_": true
 }

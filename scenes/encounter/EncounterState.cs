@@ -105,10 +105,14 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
       return null;
     }
- 
+
     // ##########################################################################################################################
     #endregion
     // ##########################################################################################################################
+
+    public override void _Ready() {
+      GetNode<TileMap>("DangerMap").SetCell(10, 5, 0);
+    }
 
     public void PlaceEntity(Entity entity, EncounterPosition targetPosition, bool ignoreCollision = false) {
       if (!ignoreCollision && IsPositionBlocked(targetPosition)) {
