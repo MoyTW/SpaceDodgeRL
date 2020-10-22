@@ -3,11 +3,11 @@ using SpaceDodgeRL.scenes.encounter;
 
 namespace SpaceDodgeRL.scenes {
 
-  public class EncounterScene : Node2D {
+  public class EncounterScene : Container {
 
     public override void _Ready() {
       // TODO: Proper state initialization & building & such!
-      var encounterState = GetNode<EncounterState>("EncounterState");
+      var encounterState = GetNode<EncounterState>("VBoxContainer/ViewportContainer/Viewport/EncounterState");
       encounterState.InitState();
 
       var encounterRunner = GetNode<EncounterRunner>("EncounterRunner");

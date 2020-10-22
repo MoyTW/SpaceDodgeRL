@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace SpaceDodgeRL.scenes.encounter {
 
-  public class EncounterState : Node {
+  public class EncounterState : Control {
 
     // ##########################################################################################################################
     #region Data Access
@@ -157,8 +157,8 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     // TODO: Move into map gen & save/load
     public void InitState() {
-      PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(10, 5));
-      PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(5, 5));
+      PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(0, 0));
+      PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(10, 5));
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       var camera = GetNode<Camera2D>("EncounterCamera");
