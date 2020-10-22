@@ -29,11 +29,16 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
     }
 
-    private static void MovePlayer(EncounterState state, int dx, int dy) {
+    private static void PlayerMove(EncounterState state, int dx, int dy) {
       var positionComponent = state.Player.GetComponent<PositionComponent>();
       var oldPos = positionComponent.EncounterPosition;
       var moveAction = new MoveAction(state.Player.EntityId, new EncounterPosition(oldPos.X + dx, oldPos.Y + dy));
       Rulebook.ResolveActions(new List<EncounterAction>() { moveAction }, state);
+    }
+
+    private static void PlayerWait(EncounterState state) {
+      var waitAction = new WaitAction(state.Player.EntityId);
+      Rulebook.ResolveActions(new List<EncounterAction>() { waitAction }, state);
     }
 
     private static void RunTurn(EncounterState state, InputHandler inputHandler) {
@@ -47,21 +52,23 @@ namespace SpaceDodgeRL.scenes.encounter {
         var action = inputHandler.PopQueue();
         // Super not a fan of the awkwardness of checking this twice! Switch string -> enum, maybe?
         if (action == InputHandler.ActionMapping.MOVE_N) {
-          MovePlayer(state, 0, -1);
+          PlayerMove(state, 0, -1);
         } else if (action == InputHandler.ActionMapping.MOVE_NE) {
-          MovePlayer(state, 1, -1);
+          PlayerMove(state, 1, -1);
         } else if (action == InputHandler.ActionMapping.MOVE_E) {
-          MovePlayer(state, 1, 0);
+          PlayerMove(state, 1, 0);
         } else if (action == InputHandler.ActionMapping.MOVE_SE) {
-          MovePlayer(state, 1, 1);
+          PlayerMove(state, 1, 1);
         } else if (action == InputHandler.ActionMapping.MOVE_S) {
-          MovePlayer(state, 0, 1);
+          PlayerMove(state, 0, 1);
         } else if (action == InputHandler.ActionMapping.MOVE_SW) {
-          MovePlayer(state, -1, 1);
+          PlayerMove(state, -1, 1);
         } else if (action == InputHandler.ActionMapping.MOVE_W) {
-          MovePlayer(state, -1, 0);
+          PlayerMove(state, -1, 0);
         } else if (action == InputHandler.ActionMapping.MOVE_NW) {
-          MovePlayer(state, -1, -1);
+          PlayerMove(state, -1, -1);
+        } else if (action == InputHandler.ActionMapping.WAIT) {
+          PlayerWait(state);
         }
       } else {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();

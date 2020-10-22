@@ -13,8 +13,9 @@ namespace SpaceDodgeRL.scenes {
       public static string MOVE_SW = "move_sw";
       public static string MOVE_W = "move_w";
       public static string MOVE_NW = "move_nw";
+      public static string WAIT = "encounter_wait";
 
-      public static string[] MoveActionMappings = new string[] { MOVE_N, MOVE_NE, MOVE_E, MOVE_SE, MOVE_S, MOVE_SW, MOVE_W, MOVE_NW };
+      public static string[] AllMappings = new string[] { MOVE_N, MOVE_NE, MOVE_E, MOVE_SE, MOVE_S, MOVE_SW, MOVE_W, MOVE_NW, WAIT };
     }
 
     private int _queueSize = 2;
@@ -26,7 +27,7 @@ namespace SpaceDodgeRL.scenes {
 
     public override void _UnhandledKeyInput(InputEventKey @event) {
       // I don't like iterating over every single possible action every time - surely there's a nicer way to do this?
-      foreach (string mapping in ActionMapping.MoveActionMappings) {
+      foreach (string mapping in ActionMapping.AllMappings) {
         if (@event.IsActionPressed(mapping, true) && _playerMappingQueue.Count < _queueSize) {
           _playerMappingQueue.Add(mapping);
           return;
