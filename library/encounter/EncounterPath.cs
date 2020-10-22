@@ -27,7 +27,7 @@ namespace SpaceDodgeRL.library.encounter {
 
     public List<EncounterPosition> Project(int steps) {
       var stepsLeft = _fullPath.Count - (_currentStep + 1);
-      return _fullPath.GetRange(_currentStep, Math.Min(steps, stepsLeft));
+      return _fullPath.GetRange(_currentStep + 1, Math.Min(steps, stepsLeft));
     }
   }
 }
