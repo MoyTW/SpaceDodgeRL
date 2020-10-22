@@ -139,7 +139,7 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     // TODO: Move into map gen & save/load
     public void InitState() {
-      PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(3, 5));
+      PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(10, 5));
       PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(5, 5));
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?

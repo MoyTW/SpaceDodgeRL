@@ -13,8 +13,8 @@ namespace SpaceDodgeRL.scenes.components {
     // TODO: Don't put this here
     public const int START_X = 50;
     public const int START_Y = 54;
-    public const int STEP_X = 26;
-    public const int STEP_Y = 34;
+    public const int STEP_X = 24;
+    public const int STEP_Y = 36;
 
     private EncounterPosition _encounterPosition = new EncounterPosition(int.MinValue, int.MinValue);
     public EncounterPosition EncounterPosition {
