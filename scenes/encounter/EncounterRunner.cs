@@ -31,7 +31,8 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     // TODO: Write a system that has a component which does this instead of hard-coding it into the player's turn end
     private static void PlayerExecuteTurnEndingAction(EncounterAction action, EncounterState state) {
-      var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
+      var player = state.Player;
+      var playerPosition = player.GetComponent<PositionComponent>().EncounterPosition;
       var actions = new List<EncounterAction>() { action };
 
       // TODO: Pick a target in range and fire the projectile
@@ -50,7 +51,8 @@ namespace SpaceDodgeRL.scenes.encounter {
         }
       }
       if (closestEnemyPosition != null) {
-        var fireAction = FireProjectileAction.CreateSmallShotgunAction(state.Player.EntityId, closestEnemyPosition.EncounterPosition);
+        var playerPower = player.GetComponent<PlayerComponent>().Power;
+        var fireAction = FireProjectileAction.CreateCuttingLaserAction(player.EntityId, playerPower, closestEnemyPosition.EncounterPosition);
         actions.Add(fireAction);
       }
 

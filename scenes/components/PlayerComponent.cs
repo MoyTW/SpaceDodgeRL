@@ -8,8 +8,13 @@ namespace SpaceDodgeRL.scenes.components {
     public static readonly string ENTITY_GROUP = "PLAYER_COMPONENT_GROUP";
     public override string EntityGroup => ENTITY_GROUP;
 
-    public static PlayerComponent Create() {
-      return _componentPrefab.Instance() as PlayerComponent;
+    // Right now the player is a special case in that they're the only entity with variable-power weaponry!
+    public int Power { get; private set; }
+
+    public static PlayerComponent Create(int power = 26) {
+      var component = _componentPrefab.Instance() as PlayerComponent;
+      component.Power = power;
+      return component;
     }
   }
 }

@@ -4,7 +4,8 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
 
   // Move this to its own file!
   public enum ProjectileType {
-      SMALL_SHOTGUN
+    CUTTING_LASER,
+    SMALL_SHOTGUN
   }
 
   public class FireProjectileAction : EncounterAction {
@@ -29,6 +30,18 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
       this.PathFunction = pathFunction;
       this.Speed = speed;
       this.ProjectileType = projectileType;
+    }
+
+    public static FireProjectileAction CreateCuttingLaserAction(string playerId, int playerPower, EncounterPosition targetPosition) {
+      return new FireProjectileAction(
+        playerId,
+        "cutting laser",
+        playerPower,
+        // TODO: Cutting laser range
+        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
+        1, // TODO: If the player fires on the same tick that the enemy moves, the enemy will move before the laser gets a chance, causing a miss!
+        ProjectileType.CUTTING_LASER
+      );
     }
 
     public static FireProjectileAction CreateSmallShotgunAction(string actorId, EncounterPosition targetPosition) {
