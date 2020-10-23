@@ -6,16 +6,46 @@ using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SpaceDodgeRL.scenes.encounter {
 
+  public class EncounterTile {
+    public bool BlocksMovement { get {
+      return this._entities.Any(e => {
+        var component = e.GetComponent<CollisionComponent>();
+        return component != null && component.BlocksMovement;
+      });
+    } }
+    public bool BlocksVision { get {
+      return this._entities.Any(e => {
+        var component = e.GetComponent<CollisionComponent>();
+        return component != null && component.BlocksVision;
+      });
+    } }
+
+    private List<Entity> _entities = new List<Entity>();
+    public ReadOnlyCollection<Entity> Entities { get => _entities.AsReadOnly(); }
+
+    public void AddEntity(Entity entity) {
+      this._entities.Add(entity);
+    }
+    public void RemoveEntity(Entity entity) {
+      this._entities.Remove(entity);
+    }
+  }
+
   public class EncounterState : Control {
 
+    // Encounter Log
     public int EncounterLogSize = 50;
     private List<string> _encounterLog;
     public ReadOnlyCollection<string> EncounterLog { get => _encounterLog.AsReadOnly(); }
     [Signal]
     public delegate void EncounterLogMessageAdded(string message, int encounterLogSize);
+
+    // Encounter Map
+    EncounterTile[,] _encounterTiles;
 
     // ##########################################################################################################################
     #region Data Access
@@ -111,15 +141,10 @@ namespace SpaceDodgeRL.scenes.encounter {
       return BlockingEntityAtPosition(position) != null;
     }
 
-    // TODO: Maintain an internal representation
     public Entity BlockingEntityAtPosition(EncounterPosition position) {
-      foreach (Entity entity in this.PositionEntities()) {
-        if (position == entity.GetComponent<PositionComponent>().EncounterPosition &&
-            entity.GetComponent<CollisionComponent>().BlocksMovement) {
-          return entity;
-        }
-      }
-      return null;
+      return this._encounterTiles[position.X, position.Y].Entities.FirstOrDefault<Entity>(e => {
+        return e.GetComponent<CollisionComponent>().BlocksMovement;
+      });
     }
 
     // ##########################################################################################################################
@@ -136,11 +161,18 @@ namespace SpaceDodgeRL.scenes.encounter {
       var positionComponent = PositionComponent.Create(targetPosition, spriteData.Texture);
       entity.AddChild(positionComponent);
 
+      var entityPosition = positionComponent.EncounterPosition;
       AddChild(entity);
+      this._encounterTiles[entityPosition.X, entityPosition.Y].AddEntity(entity);
     }
 
     public void RemoveEntity(Entity entity) {
+      var positionComponent = entity.GetComponent<PositionComponent>();
+      entity.RemoveChild(positionComponent);
+
+      var entityPosition = positionComponent.EncounterPosition;
       RemoveChild(entity);
+      this._encounterTiles[entityPosition.X, entityPosition.Y].RemoveEntity(entity);
     }
 
     /**
@@ -150,7 +182,12 @@ namespace SpaceDodgeRL.scenes.encounter {
       if (IsPositionBlocked(targetPosition)) {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
-      entity.GetComponent<PositionComponent>().EncounterPosition = targetPosition;
+      var positionComponent = entity.GetComponent<PositionComponent>();
+      var oldPosition = positionComponent.EncounterPosition;
+
+      this._encounterTiles[oldPosition.X, oldPosition.Y].RemoveEntity(entity);
+      positionComponent.EncounterPosition = targetPosition;
+      this._encounterTiles[targetPosition.X, targetPosition.Y].AddEntity(entity);
     }
 
     public void UpdateDangerMap() {
@@ -186,6 +223,11 @@ namespace SpaceDodgeRL.scenes.encounter {
           }
         }
       }
+
+      // TODO: Fog of War overlay
+      // In order to get this, we want an actual list of [x][y] explored coordinates, which I think means it's a good time to
+      // actually implement a tile map state!
+
     }
 
     public void LogMessage(string bbCodeMessage) {
@@ -199,6 +241,13 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     // TODO: Move into map gen & save/load
     public void InitState(int width, int height) {
+      this._encounterTiles = new EncounterTile[width, height];
+      for (int x = 0; x < width; x++) {
+        for (int y = 0; y < width; y++) {
+          this._encounterTiles[x, y] = new EncounterTile();
+        }
+      }
+
       PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(1, 1));
       PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(10, 5));
 
