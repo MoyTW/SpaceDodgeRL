@@ -29,16 +29,44 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
     }
 
+    // TODO: Write a system that has a component which does this instead of hard-coding it into the player's turn end
+    private static void PlayerExecuteTurnEndingAction(EncounterAction action, EncounterState state) {
+      var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
+      var actions = new List<EncounterAction>() { action };
+
+      // TODO: Pick a target in range and fire the projectile
+      // TODO: Create a Faction component?
+      // TODO: Iterating literally every action entity every time is very silly
+      PositionComponent closestEnemyPosition = null;
+      float closestEnemyDistance = int.MaxValue;
+      foreach (Entity actionEntity in state.ActionEntities()) {
+        if (actionEntity.GetComponent<AIComponent>() != null && actionEntity.GetComponent<PathAIComponent>() == null) {
+          var actionEntityPositionComponent = actionEntity.GetComponent<PositionComponent>();
+          var distance = actionEntityPositionComponent.EncounterPosition.DistanceTo(playerPosition);
+          if (distance < closestEnemyDistance) {
+            closestEnemyPosition = actionEntityPositionComponent;
+            closestEnemyDistance = distance;
+          }
+        }
+      }
+      if (closestEnemyPosition != null) {
+        var fireAction = FireProjectileAction.CreateSmallShotgunAction(state.Player.EntityId, closestEnemyPosition.EncounterPosition);
+        actions.Add(fireAction);
+      }
+
+      Rulebook.ResolveActions(actions, state);
+    }
+
     private static void PlayerMove(EncounterState state, int dx, int dy) {
       var positionComponent = state.Player.GetComponent<PositionComponent>();
       var oldPos = positionComponent.EncounterPosition;
       var moveAction = new MoveAction(state.Player.EntityId, new EncounterPosition(oldPos.X + dx, oldPos.Y + dy));
-      Rulebook.ResolveActions(new List<EncounterAction>() { moveAction }, state);
+      PlayerExecuteTurnEndingAction(moveAction, state);
     }
 
     private static void PlayerWait(EncounterState state) {
       var waitAction = new WaitAction(state.Player.EntityId);
-      Rulebook.ResolveActions(new List<EncounterAction>() { waitAction }, state);
+      PlayerExecuteTurnEndingAction(waitAction, state);
     }
 
     private static void RunTurn(EncounterState state, InputHandler inputHandler) {
