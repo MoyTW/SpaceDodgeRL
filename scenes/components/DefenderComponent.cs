@@ -13,7 +13,7 @@ namespace SpaceDodgeRL.scenes.components {
     public int Defense { get => this.BaseDefense; }
     public int MaxHp { get; private set; }
     public int CurrentHp { get; private set; }
-    public bool LogDamage { get; private set; }
+    public bool ShouldLogDamage { get; private set; }
     public bool IsInvincible { get; private set; }
 
     public static DefenderComponent Create(int baseDefense, int maxHp, int currentHp = int.MinValue, bool logDamage = true, bool isInvincible = false) {
@@ -26,12 +26,15 @@ namespace SpaceDodgeRL.scenes.components {
       } else {
         component.CurrentHp = currentHp;
       }
-      component.LogDamage = logDamage;
+      component.ShouldLogDamage = logDamage;
       component.IsInvincible = isInvincible;
 
       return component;
     }
 
+    /**
+     * Directly removes HP, without any checks
+     */
     public void RemoveHp(int hp) {
       this.CurrentHp -= hp;
     }

@@ -40,21 +40,35 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       _actionMapping[action.ActionType].Invoke(action, state);
     }
 
+    private static void LogAttack(DefenderComponent defenderComponent, string message, EncounterState state) {
+      if (defenderComponent.ShouldLogDamage) {
+        state.LogMessage(message);
+      }
+    }
+
     private static void Attack(Entity attacker, Entity defender, EncounterState state) {
       var attackerComponent = attacker.GetComponent<AttackerComponent>();
       var defenderComponent = defender.GetComponent<DefenderComponent>();
 
-      // We don't allow underflow damage, though that could be a pretty comical mechanic...
-      int damage = Math.Max(0, attackerComponent.Power - defenderComponent.Defense);
-      defenderComponent.RemoveHp(damage);
-      if (defenderComponent.CurrentHp <= 0) {
-        state.LogMessage(string.Format("[b]{0}[/b] hits [b]{1}[/b] for {2} damage, destroying it!",
-          attacker.EntityName, defender.EntityName, damage));
-        // TODO: Change "SelfDestructAction" to "RemoveAction" or something & add a toggle/line for log text?
-        ResolveAction(new SelfDestructAction(defender.EntityId), state);
+      if(defenderComponent.IsInvincible) {
+        var logMessage = string.Format("[b]{0}[/b] hits [b]{1}[/b], but the attack has no effect!",
+          attacker.EntityId, defender.EntityId);
+        LogAttack(defenderComponent, logMessage, state);
       } else {
-        state.LogMessage(string.Format("[b]{0}[/b] hits [b]{1}[/b] for {2} damage!",
-          attacker.EntityName, defender.EntityName, damage));
+        // We don't allow underflow damage, though that could be a pretty comical mechanic...
+        int damage = Math.Max(0, attackerComponent.Power - defenderComponent.Defense);
+        defenderComponent.RemoveHp(damage);
+        if (defenderComponent.CurrentHp <= 0) {
+          var logMessage = string.Format("[b]{0}[/b] hits [b]{1}[/b] for {2} damage, destroying it!",
+            attacker.EntityName, defender.EntityName, damage);
+          LogAttack(defenderComponent, logMessage, state);
+          // TODO: Change "SelfDestructAction" to "RemoveAction" or something & add a toggle/line for log text?
+          ResolveAction(new SelfDestructAction(defender.EntityId), state);
+        } else {
+          var logMessage = string.Format("[b]{0}[/b] hits [b]{1}[/b] for {2} damage!",
+            attacker.EntityName, defender.EntityName, damage);
+            LogAttack(defenderComponent, logMessage, state);
+        }
       }
     }
 
@@ -68,7 +82,6 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         var blocker = state.BlockingEntityAtPosition(action.TargetPosition);
         var actorCollision = actor.GetComponent<CollisionComponent>();
 
-        // TODO: Map wall shouldn't log or attack
         if (actorCollision.OnCollisionAttack) {
           Attack(actor, blocker, state);
         }
