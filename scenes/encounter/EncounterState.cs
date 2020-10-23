@@ -170,6 +170,22 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
     }
 
+    public void UpdatePlayerOverlays() {
+      var overlaysMap = GetNode<TileMap>("PlayerOverlays");
+      overlaysMap.Clear();
+
+      // Range indicator
+      var laserRange = this.Player.GetComponent<PlayerComponent>().CuttingLaserRange;
+      var playerPos = this.Player.GetComponent<PositionComponent>().EncounterPosition;
+      for (int x = playerPos.X - laserRange; x <= playerPos.X + laserRange; x++) {
+        for (int y = playerPos.Y - laserRange; y <= playerPos.Y + laserRange; y++) {
+          if (playerPos.DistanceTo(new EncounterPosition(x, y)) <= laserRange) {
+            overlaysMap.SetCell(x, y, 0);
+          }
+        }
+      }
+    }
+
     public void LogMessage(string bbCodeMessage) {
       // TODO: Emit the signal for the encounter log
       if (this._encounterLog.Count >= this.EncounterLogSize) {

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/encounter/EncounterState.cs" type="Script" id=1]
 [ext_resource path="res://resources/red_yellow_24x36.png" type="Texture" id=2]
+[ext_resource path="res://resources/targeting_overlay_24x36.png" type="Texture" id=3]
 
 [sub_resource type="TileSet" id=1]
 0/name = "red_yellow_24x36.png 0"
@@ -61,6 +62,22 @@
 3/shapes = [  ]
 3/z_index = 0
 
+[sub_resource type="TileSet" id=2]
+0/name = "targeting_overlay_24x36.png 0"
+0/texture = ExtResource( 3 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 24, 36 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
+
 [node name="EncounterState" type="Control"]
 script = ExtResource( 1 )
 __meta__ = {
@@ -72,6 +89,15 @@ current = true
 
 [node name="DangerMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
+cell_size = Vector2( 24, 36 )
+cell_custom_transform = Transform2D( 24, 0, 0, 36, 0, 0 )
+format = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="PlayerOverlays" type="TileMap" parent="."]
+tile_set = SubResource( 2 )
 cell_size = Vector2( 24, 36 )
 cell_custom_transform = Transform2D( 24, 0, 0, 36, 0, 0 )
 format = 1
