@@ -12,7 +12,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
     private static string _sPath = "res://resources/atlas_s.tres";
     private static string _AtSignPath = "res://resources/atlas_@.tres";
-    private static string _StarPath = "res://resources/atlas_*.tres";
+    private static string _StarPath = "res://resources/atlas_Star.tres";
 
     private static Entity CreateEntity(string id, string name) {
       Entity newEntity = _entityPrefab.Instance() as Entity;
