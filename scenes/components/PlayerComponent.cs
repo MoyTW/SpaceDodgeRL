@@ -9,11 +9,15 @@ namespace SpaceDodgeRL.scenes.components {
     public override string EntityGroup => ENTITY_GROUP;
 
     // Right now the player is a special case in that they're the only entity with variable-power weaponry!
-    public int Power { get; private set; }
+    public int CuttingLaserRange { get; private set; }
+    public int CuttingLaserPower { get; private set; }
 
-    public static PlayerComponent Create(int power = 26) {
+    public static PlayerComponent Create(int cuttingLaserRange = 3, int cuttingLaserPower = 26) {
       var component = _componentPrefab.Instance() as PlayerComponent;
-      component.Power = power;
+
+      component.CuttingLaserRange = cuttingLaserRange;
+      component.CuttingLaserPower = cuttingLaserPower;
+
       return component;
     }
   }

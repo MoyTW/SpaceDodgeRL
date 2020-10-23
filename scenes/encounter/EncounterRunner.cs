@@ -50,9 +50,10 @@ namespace SpaceDodgeRL.scenes.encounter {
           }
         }
       }
-      if (closestEnemyPosition != null) {
-        var playerPower = player.GetComponent<PlayerComponent>().Power;
-        var fireAction = FireProjectileAction.CreateCuttingLaserAction(player.EntityId, playerPower, closestEnemyPosition.EncounterPosition);
+      var playerComponent = player.GetComponent<PlayerComponent>();
+      if (closestEnemyPosition != null && closestEnemyDistance <= playerComponent.CuttingLaserRange) {
+        var fireAction = FireProjectileAction.CreateCuttingLaserAction(
+          player.EntityId, playerComponent.CuttingLaserPower, closestEnemyPosition.EncounterPosition);
         actions.Add(fireAction);
       }
 
