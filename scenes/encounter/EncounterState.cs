@@ -180,9 +180,18 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     // TODO: Move into map gen & save/load
-    public void InitState() {
-      PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(0, 0));
+    public void InitState(int width, int height) {
+      PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(1, 1));
       PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(10, 5));
+
+      // Create border walls to prevent objects running off the map
+      for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+          if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+            PlaceEntity(EntityBuilder.CreateMapWallEntity(), new EncounterPosition(x, y));
+          }
+        }
+      }
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       var camera = GetNode<Camera2D>("EncounterCamera");

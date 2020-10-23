@@ -68,6 +68,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         var blocker = state.BlockingEntityAtPosition(action.TargetPosition);
         var actorCollision = actor.GetComponent<CollisionComponent>();
 
+        // TODO: Map wall shouldn't log or attack
         if (actorCollision.OnCollisionAttack) {
           Attack(actor, blocker, state);
         }

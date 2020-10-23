@@ -60,5 +60,15 @@ namespace SpaceDodgeRL.scenes.entities {
 
       return e;
     }
+
+    public static Entity CreateMapWallEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "map wall");
+
+      e.AddChild(CollisionComponent.Create(true, false));
+      e.AddChild(DefenderComponent.Create(0, 100, logDamage: false, isInvincible: true));
+      e.AddChild(SpriteDataComponent.Create(_StarPath));
+
+      return e;
+    }
   }
 }
