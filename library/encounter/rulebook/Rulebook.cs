@@ -52,7 +52,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
       if(defenderComponent.IsInvincible) {
         var logMessage = string.Format("[b]{0}[/b] hits [b]{1}[/b], but the attack has no effect!",
-          attacker.EntityId, defender.EntityId);
+          attacker.EntityName, defender.EntityName);
         LogAttack(defenderComponent, logMessage, state);
       } else {
         // We don't allow underflow damage, though that could be a pretty comical mechanic...
