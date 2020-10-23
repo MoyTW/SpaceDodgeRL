@@ -21,8 +21,16 @@ namespace SpaceDodgeRL.scenes.encounter {
     #region Data Access
     // ##########################################################################################################################
 
+    private Entity _player;
     public Entity Player {
-      get => GetTree().GetNodesInGroup(PlayerComponent.ENTITY_GROUP)[0] as Entity;
+      get {
+        if (_player != null) {
+          return _player;
+        } else {
+          _player = GetTree().GetNodesInGroup(PlayerComponent.ENTITY_GROUP)[0] as Entity;
+          return _player;
+        }
+      }
     }
 
     public Entity GetEntityById(string entityId) {
