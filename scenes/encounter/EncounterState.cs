@@ -75,8 +75,8 @@ namespace SpaceDodgeRL.scenes.encounter {
       List<EncounterPosition> visibleCells = new List<EncounterPosition>();
 
       // TODO: Implement actual FoV calculations
-      for (int x = center.X - radius; x < center.X + radius; x++) {
-        for (int y = center.Y - radius; y < center.Y + radius; y++) {
+      for (int x = center.X - radius; x <= center.X + radius; x++) {
+        for (int y = center.Y - radius; y <= center.Y + radius; y++) {
           if (center.DistanceTo(x, y) <= radius && state.IsInBounds(x, y)) {
             visibleCells.Add(new EncounterPosition(x, y));
           }
@@ -88,6 +88,9 @@ namespace SpaceDodgeRL.scenes.encounter {
   }
 
   public class EncounterState : Control {
+
+    // TODO: put this somewhere proper!
+    public static int PLAYER_VISION_RADIUS = 10;
 
     // Encounter Log
     public int EncounterLogSize = 50;
@@ -258,14 +261,45 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
     }
 
+    private void InitFoWOverlay() {
+      var overlaysMap = GetNode<TileMap>("FoWOverlay");
+
+      for (int x = 0; x < this.MapWidth; x++) {
+        for (int y = 0; y < this.MapWidth; y++) {
+          overlaysMap.SetCell(x, y, 2);
+        }
+      }
+    }
+
+    private void UpdateFoWOverlay() {
+      var overlaysMap = GetNode<TileMap>("FoWOverlay");
+      var playerPos = this.Player.GetComponent<PositionComponent>().EncounterPosition;
+
+      // TODO: When you move sometimes long vertical lines appear, there was something about that in a tutorial - hunt that down
+      for (int x = playerPos.X - PLAYER_VISION_RADIUS - 1; x <= playerPos.X + PLAYER_VISION_RADIUS; x++) {
+        for (int y = playerPos.Y - PLAYER_VISION_RADIUS - 1; y <= playerPos.Y + PLAYER_VISION_RADIUS; y++) {
+          if (!this.IsInBounds(x, y)) {
+            // If you're out of bounds no-op
+          } else if (this.FoVCache.Contains(x, y)) {
+            overlaysMap.SetCell(x, y, -1);
+          } else if (this._encounterTiles[x, y].Explored) {
+            overlaysMap.SetCell(x, y, 1);
+          } else {
+            overlaysMap.SetCell(x, y, 2);
+          }
+        }
+      }
+    }
+
     // Those are very similar but the same, but anywhere you'd want to update your FoV you'd want to update your FoW;
     // contemplating just eliding one of the two in names?
     public void UpdateFoVAndFoW() {
       // TODO: Appropriate vision radius
-      this.FoVCache = FoVCache.ComputeFoV(this, this.Player.GetComponent<PositionComponent>().EncounterPosition, 10);
+      this.FoVCache = FoVCache.ComputeFoV(this, this.Player.GetComponent<PositionComponent>().EncounterPosition, PLAYER_VISION_RADIUS);
       foreach (EncounterPosition position in this.FoVCache.VisibleCells) {
         this._encounterTiles[position.X, position.Y].Explored = true;
       }
+      this.UpdateFoWOverlay();
     }
 
     // TODO: I should roll all this into one singular "Update for end turn" function taking (player=false)
@@ -296,31 +330,14 @@ namespace SpaceDodgeRL.scenes.encounter {
       var overlaysMap = GetNode<TileMap>("PlayerOverlays");
       overlaysMap.Clear();
 
-      var playerPos = this.Player.GetComponent<PositionComponent>().EncounterPosition;
-
-      // Range indicator
-      // TODO: Have it respect FoV restrictions (? or not, it seems...fine?)
+      // Update the range indicator
       var laserRange = this.Player.GetComponent<PlayerComponent>().CuttingLaserRange;
+      var playerPos = this.Player.GetComponent<PositionComponent>().EncounterPosition;
       for (int x = playerPos.X - laserRange; x <= playerPos.X + laserRange; x++) {
         for (int y = playerPos.Y - laserRange; y <= playerPos.Y + laserRange; y++) {
           var distance = playerPos.DistanceTo(x, y);
           if (distance <= laserRange && distance > laserRange - 1 && IsInBounds(x, y)) {
             overlaysMap.SetCell(x, y, 0);
-          }
-        }
-      }
-
-      // TODO: Fog of War overlay marks explored and doesn't just have black tiles
-      // TODO: When you move sometimes long vertical lines appear, there was something about that in a tutorial - hunt that down
-      // If we have perf issues we could change only the parts of the overlay that were changed in the FoV recalc
-      for (int x = 0; x < this.MapWidth; x++) {
-        for (int y = 0; y < this.MapHeight; y++) {
-          if (this.FoVCache.Contains(x, y)) {
-            // The space is visible and we do not mask it
-          } else if (this._encounterTiles[x, y].Explored) {
-            overlaysMap.SetCell(x, y, 1);
-          } else {
-            overlaysMap.SetCell(x, y, 2);
           }
         }
       }
@@ -335,7 +352,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, this.EncounterLogSize);
     }
 
-    public static void DoTempMapGen(EncounterState state, int width = 50, int height = 50, int maxZones = 10, int maxZoneGenAttempts = 100) {
+    public static void DoTempMapGen(EncounterState state, int width = 300, int height = 300, int maxZones = 10, int maxZoneGenAttempts = 100) {
       // Initialize the map with empty tiles
       state.MapWidth = width;
       state.MapHeight = height;
@@ -373,6 +390,8 @@ namespace SpaceDodgeRL.scenes.encounter {
       this._encounterLog = new List<string>();
       this.LogMessage("Encounter started!");
       this.CalculateNextEntity();
+      // Init FoW overlay as all back
+      this.InitFoWOverlay();
       this.UpdateFoVAndFoW();
       this.UpdatePlayerOverlays();
     }

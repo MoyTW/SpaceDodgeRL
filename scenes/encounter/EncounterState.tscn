@@ -133,3 +133,13 @@ format = 1
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="FoWOverlay" type="TileMap" parent="."]
+z_index = 1
+tile_set = SubResource( 2 )
+cell_size = Vector2( 24, 36 )
+cell_custom_transform = Transform2D( 24, 0, 0, 36, 0, 0 )
+format = 1
+__meta__ = {
+"_edit_lock_": true
+}
