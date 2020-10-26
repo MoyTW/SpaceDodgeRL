@@ -62,6 +62,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       Rulebook.ResolveActions(actions, state);
 
       // After the player executes their turn we need to update the UI
+      state.CalculateNextEntity();
       state.UpdateFoVAndFoW();
       state.UpdatePlayerOverlays();
     }
@@ -79,7 +80,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     private static void RunTurn(EncounterState state, InputHandler inputHandler) {
-      var entity = state.NextEntity();
+      var entity = state.NextEntity;
       var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
       if (actionTimeComponent.TicksUntilTurn > 0) {
         EncounterRunner.PassTime(state, actionTimeComponent.TicksUntilTurn);
@@ -112,6 +113,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();
         var aIActions = aIComponent.DecideNextAction(state);
         Rulebook.ResolveActions(aIActions, state);
+        state.CalculateNextEntity();
         state.UpdateDangerMap();
       }
     }

@@ -118,6 +118,8 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
     }
 
+    public Entity NextEntity { get; private set; }
+
     public Entity GetEntityById(string entityId) {
       var entities = GetTree().GetNodesInGroup(Entity.ENTITY_GROUP);
       // It kinda chafes that Godot arrays don't have all the fancy utility functions C# collections do.
@@ -143,29 +145,6 @@ namespace SpaceDodgeRL.scenes.encounter {
     */
     public Godot.Collections.Array PositionEntities() {
       return GetTree().GetNodesInGroup(PositionComponent.ENTITY_GROUP);
-    }
-
-    public Entity NextEntity() {
-      int lowestTTL = int.MaxValue;
-      Entity next = null;
-
-      // TODO: This is slow because we can all ActionTimeComponents every time, whereas we should maintain an internal representation
-      // TODO: Also this code is really awful!
-      foreach (Node node in GetTree().GetNodesInGroup(ActionTimeComponent.ENTITY_GROUP)) {
-        if (node.GetParent() == this) {
-          var ticksUntilTurn = (node as Entity).GetComponent<ActionTimeComponent>().TicksUntilTurn;
-          if (ticksUntilTurn < lowestTTL) {
-            lowestTTL = ticksUntilTurn;
-            next = node as Entity;
-          }
-        }
-      }
-
-      if (lowestTTL == int.MaxValue) {
-        throw new NotImplementedException();
-      }
-
-      return next;
     }
 
     // Positional Queries
@@ -289,6 +268,30 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
     }
 
+    // TODO: I should roll all this into one singular "Update for end turn" function taking (player=false)
+    public void CalculateNextEntity() {
+      int lowestTTL = int.MaxValue;
+      Entity next = null;
+
+      // TODO: This is slow because we can all ActionTimeComponents every time, whereas we should maintain an internal representation
+      // TODO: Also this code is really awful!
+      foreach (Node node in GetTree().GetNodesInGroup(ActionTimeComponent.ENTITY_GROUP)) {
+        if (node.GetParent() == this) {
+          var ticksUntilTurn = (node as Entity).GetComponent<ActionTimeComponent>().TicksUntilTurn;
+          if (ticksUntilTurn < lowestTTL) {
+            lowestTTL = ticksUntilTurn;
+            next = node as Entity;
+          }
+        }
+      }
+
+      if (lowestTTL == int.MaxValue) {
+        throw new NotImplementedException();
+      }
+
+      this.NextEntity = next;
+    }
+
     public void UpdatePlayerOverlays() {
       var overlaysMap = GetNode<TileMap>("PlayerOverlays");
       overlaysMap.Clear();
@@ -369,6 +372,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       // Populate all our initial caches
       this._encounterLog = new List<string>();
       this.LogMessage("Encounter started!");
+      this.CalculateNextEntity();
       this.UpdateFoVAndFoW();
       this.UpdatePlayerOverlays();
     }
