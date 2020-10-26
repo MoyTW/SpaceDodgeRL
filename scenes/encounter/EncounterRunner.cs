@@ -108,6 +108,8 @@ namespace SpaceDodgeRL.scenes.encounter {
           PlayerMove(state, -1, -1);
         } else if (action == InputHandler.ActionMapping.WAIT) {
           PlayerWait(state);
+        } else if (action == InputHandler.ActionMapping.AUTOPILOT) {
+          GD.Print("We should open up the autopilot menu!");
         }
       } else {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();

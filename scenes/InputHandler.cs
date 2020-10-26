@@ -14,16 +14,12 @@ namespace SpaceDodgeRL.scenes {
       public static string MOVE_W = "move_w";
       public static string MOVE_NW = "move_nw";
       public static string WAIT = "encounter_wait";
-
-      public static string[] AllMappings = new string[] { MOVE_N, MOVE_NE, MOVE_E, MOVE_SE, MOVE_S, MOVE_SW, MOVE_W, MOVE_NW, WAIT };
+      public static string AUTOPILOT = "encounter_autopilot_menu";
+      public static string[] AllMappings = new string[] { MOVE_N, MOVE_NE, MOVE_E, MOVE_SE, MOVE_S, MOVE_SW, MOVE_W, MOVE_NW, WAIT, AUTOPILOT };
     }
 
     private int _queueSize = 2;
     private List<string> _playerMappingQueue = new List<string>();
-
-    public override void _Ready() {
-
-    }
 
     public override void _UnhandledKeyInput(InputEventKey @event) {
       // I don't like iterating over every single possible action every time - surely there's a nicer way to do this?
