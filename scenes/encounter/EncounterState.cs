@@ -416,11 +416,9 @@ namespace SpaceDodgeRL.scenes.encounter {
       // Add the player to the map.
       var playerZone = seededRand.Next(0, zones.Count);
       var zoneCenter = zones[playerZone].Center;
-      if (zones.Count == 0) {
-        state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), zoneCenter);
-        // TODO: This is just a test scout, ignore this for now
-        state.PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(zoneCenter.X + 5, zoneCenter.Y + 5));
-      }
+      state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), zoneCenter);
+      // TODO: This is just a test scout, ignore this for now
+      state.PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(zoneCenter.X + 5, zoneCenter.Y + 5));
     }
 
     // TODO: Move into map gen & save/load
