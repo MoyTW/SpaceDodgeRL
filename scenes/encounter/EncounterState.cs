@@ -36,6 +36,29 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
   }
 
+  /**
+   * An EncounterZone indicates a region of the map which is analagous to a room in a dungeon. It is essentially a POI and
+   * contains zero or more of enemies, items, interactables, or doodads. They are currently all recntangular but that's an
+   * artifact of development not a design decision. Zones also serve as autopilot points, and have a string name and summary.
+   */
+  // TODO: Add all the features of the EncounterZone aside from layout!
+  public class EncounterZone {
+    public EncounterPosition Position { get; private set; }
+    public int Width { get; private set; }
+    public int Height { get; private set; }
+    public string Name { get; private set; }
+    // public string Summary { get; private set; }
+
+    public EncounterZone(EncounterPosition position, int width, int height, string name) {
+      this.Position = position;
+      this.Width = width;
+      this.Height = height;
+      this.Name = "Zone " + name;
+    }
+
+    // TODO: Populate with encounter and items! When this is done it should also incoroporate a builder!
+  }
+
   public class FoVCache {
     private List<EncounterPosition> _visibleCells;
     public ReadOnlyCollection<EncounterPosition> VisibleCells { get => this._visibleCells.AsReadOnly(); }
