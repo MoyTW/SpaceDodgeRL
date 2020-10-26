@@ -310,29 +310,33 @@ namespace SpaceDodgeRL.scenes.encounter {
       this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, this.EncounterLogSize);
     }
 
-    // TODO: Move into map gen & save/load
-    public void InitState(int width, int height) {
+    public static void DoTempMapGen(EncounterState state, int width = 300, int height = 300, int maxZones = 10, int maxZoneGenAttempts = 100) {
       // Initialize the map with empty tiles
-      this.MapWidth = width;
-      this.MapHeight = height;
-      this._encounterTiles = new EncounterTile[width, height];
+      state.MapWidth = width;
+      state.MapHeight = height;
+      state._encounterTiles = new EncounterTile[width, height];
       for (int x = 0; x < width; x++) {
         for (int y = 0; y < width; y++) {
-          this._encounterTiles[x, y] = new EncounterTile();
+          state._encounterTiles[x, y] = new EncounterTile();
         }
       }
 
-      PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(1, 1));
-      PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(10, 5));
+      state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(1, 1));
+      state.PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(10, 5));
 
       // Create border walls to prevent objects running off the map
       for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
           if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-            PlaceEntity(EntityBuilder.CreateMapWallEntity(), new EncounterPosition(x, y));
+            state.PlaceEntity(EntityBuilder.CreateMapWallEntity(), new EncounterPosition(x, y));
           }
         }
       }
+    }
+
+    // TODO: Move into map gen & save/load
+    public void InitState() {
+      DoTempMapGen(this);
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       var camera = GetNode<Camera2D>("EncounterCamera");

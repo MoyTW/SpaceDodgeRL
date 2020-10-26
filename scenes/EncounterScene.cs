@@ -19,7 +19,7 @@ namespace SpaceDodgeRL.scenes {
       encounterState.Connect("EncounterLogMessageAdded", this, "OnEncounterLogMessageAdded");
 
       // TODO: Proper state initialization & building & such!
-      encounterState.InitState(20, 20);
+      encounterState.InitState();
     }
 
     // TODO: Decide if this is better placed directly onto the log label
