@@ -182,6 +182,10 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     public Entity BlockingEntityAtPosition(EncounterPosition position) {
+      if (!IsInBounds(position)) {
+        throw new NotImplementedException("out of bounds");
+      }
+
       return this._encounterTiles[position.X, position.Y].Entities.FirstOrDefault<Entity>(e => {
         return e.GetComponent<CollisionComponent>().BlocksMovement;
       });
@@ -192,6 +196,9 @@ namespace SpaceDodgeRL.scenes.encounter {
     // ##########################################################################################################################
 
     public void PlaceEntity(Entity entity, EncounterPosition targetPosition, bool ignoreCollision = false) {
+      if (!IsInBounds(targetPosition)) {
+        throw new NotImplementedException("out of bounds");
+      }
       if (!ignoreCollision && IsPositionBlocked(targetPosition)) {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
@@ -219,6 +226,9 @@ namespace SpaceDodgeRL.scenes.encounter {
     * Disregards intervening terrain; only checks for collisions at the target position.
     */
     public void TeleportEntity(Entity entity, EncounterPosition targetPosition) {
+      if (!IsInBounds(targetPosition)) {
+        throw new NotImplementedException("out of bounds");
+      }
       if (IsPositionBlocked(targetPosition)) {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
