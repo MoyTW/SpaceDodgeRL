@@ -333,7 +333,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, this.EncounterLogSize);
     }
 
-    public static void DoTempMapGen(EncounterState state, int width = 300, int height = 300, int maxZones = 10, int maxZoneGenAttempts = 100) {
+    public static void DoTempMapGen(EncounterState state, int width = 50, int height = 50, int maxZones = 10, int maxZoneGenAttempts = 100) {
       // Initialize the map with empty tiles
       state.MapWidth = width;
       state.MapHeight = height;
