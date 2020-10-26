@@ -40,6 +40,10 @@ namespace SpaceDodgeRL.scenes.encounter {
     private List<EncounterPosition> _visibleCells;
     public ReadOnlyCollection<EncounterPosition> VisibleCells { get => this._visibleCells.AsReadOnly(); }
 
+    public bool Contains(int x, int y) {
+      return this._visibleCells.Contains(new EncounterPosition(x, y));
+    }
+
     protected FoVCache(List<EncounterPosition> visibleCells) {
       this._visibleCells = visibleCells;
     }
@@ -50,7 +54,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       // TODO: Implement actual FoV calculations
       for (int x = center.X - radius; x < center.X + radius; x++) {
         for (int y = center.Y - radius; y < center.Y + radius; y++) {
-          if (center.DistanceTo(x, y) <= radius) {
+          if (center.DistanceTo(x, y) <= radius && state.IsInBounds(x, y)) {
             visibleCells.Add(new EncounterPosition(x, y));
           }
         }
@@ -73,6 +77,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     public int MapWidth { get; private set; }
     public int MapHeight { get; private set; }
     EncounterTile[,] _encounterTiles;
+    public FoVCache FoVCache { get; private set; }
 
     // ##########################################################################################################################
     #region Data Access
@@ -142,6 +147,14 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     // Positional Queries
+
+    public bool IsInBounds(int x, int y) {
+      return x >= 0 && x < this.MapWidth && y >= 0 && y < this.MapHeight;
+    }
+
+    public bool IsInBounds(EncounterPosition position) {
+      return IsInBounds(position.X, position.Y);
+    }
 
     public bool ArePositionsAdjacent(EncounterPosition left, EncounterPosition right) {
       var dx = Math.Abs(left.X - right.X);
@@ -234,6 +247,16 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
     }
 
+    // Those are very similar but the same, but anywhere you'd want to update your FoV you'd want to update your FoW;
+    // contemplating just eliding one of the two in names?
+    public void UpdateFoVAndFoW() {
+      // TODO: Appropriate vision radius
+      this.FoVCache = FoVCache.ComputeFoV(this, this.Player.GetComponent<PositionComponent>().EncounterPosition, 10);
+      foreach (EncounterPosition position in this.FoVCache.VisibleCells) {
+        this._encounterTiles[position.X, position.Y].Explored = true;
+      }
+    }
+
     public void UpdatePlayerOverlays() {
       var overlaysMap = GetNode<TileMap>("PlayerOverlays");
       overlaysMap.Clear();
@@ -241,12 +264,12 @@ namespace SpaceDodgeRL.scenes.encounter {
       var playerPos = this.Player.GetComponent<PositionComponent>().EncounterPosition;
 
       // Range indicator
-      // TODO: Have it respect FoV restrictions
+      // TODO: Have it respect FoV restrictions (? or not, it seems...fine?)
       var laserRange = this.Player.GetComponent<PlayerComponent>().CuttingLaserRange;
       for (int x = playerPos.X - laserRange; x <= playerPos.X + laserRange; x++) {
         for (int y = playerPos.Y - laserRange; y <= playerPos.Y + laserRange; y++) {
           var distance = playerPos.DistanceTo(x, y);
-          if (distance <= laserRange && distance > laserRange - 1) {
+          if (distance <= laserRange && distance > laserRange - 1 && IsInBounds(x, y)) {
             overlaysMap.SetCell(x, y, 0);
           }
         }
@@ -255,10 +278,13 @@ namespace SpaceDodgeRL.scenes.encounter {
       // TODO: Fog of War overlay marks explored and doesn't just have black tiles
       // TODO: When you move sometimes long vertical lines appear, there was something about that in a tutorial - hunt that down
       // If we have perf issues we could change only the parts of the overlay that were changed in the FoV recalc
-      var newFoV = FoVCache.ComputeFoV(this, playerPos, 10); // TODO: Appropriate vision radius
       for (int x = 0; x < this.MapWidth; x++) {
         for (int y = 0; y < this.MapHeight; y++) {
-          if (!newFoV.VisibleCells.Contains(new EncounterPosition(x, y))) {
+          if (this.FoVCache.Contains(x, y)) {
+            // The space is visible and we do not mask it
+          } else if (this._encounterTiles[x, y].Explored) {
+            overlaysMap.SetCell(x, y, 1);
+          } else {
             overlaysMap.SetCell(x, y, 2);
           }
         }
@@ -304,8 +330,11 @@ namespace SpaceDodgeRL.scenes.encounter {
       // TODO: VERY DEFINITELY DON'T KEEP DOING THIS!!!
       Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
 
+      // Populate all our initial caches
       this._encounterLog = new List<string>();
       this.LogMessage("Encounter started!");
+      this.UpdateFoVAndFoW();
+      this.UpdatePlayerOverlays();
     }
   }
 }

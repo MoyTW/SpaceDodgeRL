@@ -60,6 +60,10 @@ namespace SpaceDodgeRL.scenes.encounter {
       // TODO: This actually doesn't fire on moving towards an enemy, because the "determine fire" happens BEFORE you enter the radius
       // so if you spend a turn moving in, you don't know to fire! this is badly incorrect!
       Rulebook.ResolveActions(actions, state);
+
+      // After the player executes their turn we need to update the UI
+      state.UpdateFoVAndFoW();
+      state.UpdatePlayerOverlays();
     }
 
     private static void PlayerMove(EncounterState state, int dx, int dy) {
@@ -83,7 +87,6 @@ namespace SpaceDodgeRL.scenes.encounter {
 
       if (entity.IsInGroup(PlayerComponent.ENTITY_GROUP)) {
         // TODO: Not on every process()
-        state.UpdatePlayerOverlays();
         var action = inputHandler.PopQueue();
         // Super not a fan of the awkwardness of checking this twice! Switch string -> enum, maybe?
         if (action == InputHandler.ActionMapping.MOVE_N) {
