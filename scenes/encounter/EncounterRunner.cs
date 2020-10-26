@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Godot;
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.library.encounter.rulebook;
@@ -10,6 +11,9 @@ using SpaceDodgeRL.scenes.entities;
 namespace SpaceDodgeRL.scenes.encounter {
   public class EncounterRunner : Node {
 
+    [Signal]
+    public delegate void AutopilotMenuRequested(List<EncounterZone> zones);
+
     public InputHandler inputHandlerRef = null;
 
     private EncounterState _encounterState;
@@ -18,7 +22,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     public override void _Process(float delta) {
-      EncounterRunner.RunTurn(this._encounterState, inputHandlerRef);
+      this.RunTurn(this._encounterState, inputHandlerRef);
     }
 
     private static void PassTime(EncounterState state, int time) {
@@ -79,7 +83,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       PlayerExecuteTurnEndingAction(waitAction, state);
     }
 
-    private static void RunTurn(EncounterState state, InputHandler inputHandler) {
+    private void RunTurn(EncounterState state, InputHandler inputHandler) {
       var entity = state.NextEntity;
       var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
       if (actionTimeComponent.TicksUntilTurn > 0) {
@@ -110,6 +114,7 @@ namespace SpaceDodgeRL.scenes.encounter {
           PlayerWait(state);
         } else if (action == InputHandler.ActionMapping.AUTOPILOT) {
           GD.Print("We should open up the autopilot menu!");
+          this.EmitSignal("AutopilotMenuRequested", this._encounterState.Zones);
         }
       } else {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();
@@ -118,6 +123,10 @@ namespace SpaceDodgeRL.scenes.encounter {
         state.CalculateNextEntity();
         state.UpdateDangerMap();
       }
+    }
+
+    private void OnAutopilotMenuClosed(EncounterZone chosenZone) {
+      GD.Print("Zone: ", chosenZone);
     }
   }
 }

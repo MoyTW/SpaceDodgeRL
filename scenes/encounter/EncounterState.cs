@@ -42,7 +42,7 @@ namespace SpaceDodgeRL.scenes.encounter {
    * artifact of development not a design decision. Zones also serve as autopilot points, and have a string name and summary.
    */
   // TODO: Add all the features of the EncounterZone aside from layout!
-  public class EncounterZone {
+  public class EncounterZone: Godot.Object {
     public EncounterPosition Position { get; private set; }
     public int Width { get; private set; }
     public int Height { get; private set; }
@@ -123,8 +123,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     public int MapHeight { get; private set; }
     EncounterTile[,] _encounterTiles;
     public FoVCache FoVCache { get; private set; }
-    private List<EncounterZone> _zones;
-    public ReadOnlyCollection<EncounterZone> Zones { get => _zones.AsReadOnly(); }
+    public List<EncounterZone> Zones { get; private set; } // I wanted ReadOnlyCollection but Signals apparently can't take it.
 
     // ##########################################################################################################################
     #region Data Access
@@ -411,7 +410,7 @@ namespace SpaceDodgeRL.scenes.encounter {
           zones.Add(newZone);
         }
       }
-      state._zones = zones;
+      state.Zones = zones;
 
       // Add the player to the map.
       var playerZone = seededRand.Next(0, zones.Count);
@@ -425,7 +424,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     public void InitState() {
       // TODO: Map gen seed properly
       DoTempMapGen(this, new Random(1));
-      foreach (EncounterZone zone in this._zones) {
+      foreach (EncounterZone zone in this.Zones) {
         GD.Print(zone);
       }
 
