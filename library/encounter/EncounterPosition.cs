@@ -12,13 +12,18 @@ namespace SpaceDodgeRL.library.encounter {
     }
 
     /**
-     * Straight-line distance, not path distance. Thankfullky there are no walls in space!
+     * Straight-line distance, not path distance. Thankfullky there are no walls in space! Also, as implied by float, it's NOT
+     * Fire Emblem distance ("int representing number of steps to get here").
      */
-    public float DistanceTo(EncounterPosition other) {
-      float dx = (this.X - other.X);
-      float dy = (this.Y - other.Y);
+    public float DistanceTo(int x, int y) {
+      float dx = (this.X - x);
+      float dy = (this.Y - y);
       // RIP MathF, casulaty of the runtime confusion.
       return (float)Math.Sqrt(dx * dx + dy * dy);
+    }
+
+    public float DistanceTo(EncounterPosition other) {
+      return this.DistanceTo(other.X, other.Y);
     }
 
     public bool Equals(EncounterPosition other) {

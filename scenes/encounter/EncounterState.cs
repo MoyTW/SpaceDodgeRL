@@ -23,6 +23,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         return component != null && component.BlocksVision;
       });
     } }
+    public bool Explored { get; set; } = false;
 
     private List<Entity> _entities = new List<Entity>();
     public ReadOnlyCollection<Entity> Entities { get => _entities.AsReadOnly(); }
@@ -32,6 +33,30 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
     public void RemoveEntity(Entity entity) {
       this._entities.Remove(entity);
+    }
+  }
+
+  public class FoVCache {
+    private List<EncounterPosition> _visibleCells;
+    public ReadOnlyCollection<EncounterPosition> VisibleCells { get => this._visibleCells.AsReadOnly(); }
+
+    protected FoVCache(List<EncounterPosition> visibleCells) {
+      this._visibleCells = visibleCells;
+    }
+
+    public static FoVCache ComputeFoV(EncounterState state, EncounterPosition center, int radius) {
+      List<EncounterPosition> visibleCells = new List<EncounterPosition>();
+
+      // TODO: Implement actual FoV calculations
+      for (int x = center.X - radius; x < center.X + radius; x++) {
+        for (int y = center.Y - radius; y < center.Y + radius; y++) {
+          if (center.DistanceTo(x, y) <= radius) {
+            visibleCells.Add(new EncounterPosition(x, y));
+          }
+        }
+      }
+
+      return new FoVCache(visibleCells);
     }
   }
 
@@ -45,6 +70,8 @@ namespace SpaceDodgeRL.scenes.encounter {
     public delegate void EncounterLogMessageAdded(string message, int encounterLogSize);
 
     // Encounter Map
+    public int MapWidth { get; private set; }
+    public int MapHeight { get; private set; }
     EncounterTile[,] _encounterTiles;
 
     // ##########################################################################################################################
@@ -211,23 +238,32 @@ namespace SpaceDodgeRL.scenes.encounter {
       var overlaysMap = GetNode<TileMap>("PlayerOverlays");
       overlaysMap.Clear();
 
+      var playerPos = this.Player.GetComponent<PositionComponent>().EncounterPosition;
+
       // Range indicator
       // TODO: Have it respect FoV restrictions
       var laserRange = this.Player.GetComponent<PlayerComponent>().CuttingLaserRange;
-      var playerPos = this.Player.GetComponent<PositionComponent>().EncounterPosition;
       for (int x = playerPos.X - laserRange; x <= playerPos.X + laserRange; x++) {
         for (int y = playerPos.Y - laserRange; y <= playerPos.Y + laserRange; y++) {
-          var distance = playerPos.DistanceTo(new EncounterPosition(x, y));
+          var distance = playerPos.DistanceTo(x, y);
           if (distance <= laserRange && distance > laserRange - 1) {
             overlaysMap.SetCell(x, y, 0);
           }
         }
       }
 
-      // TODO: Fog of War overlay
-      // In order to get this, we want an actual list of [x][y] explored coordinates, which I think means it's a good time to
-      // actually implement a tile map state!
-
+      // TODO: Fog of War overlay marks explored and doesn't just have black tiles
+      // TODO: When you move sometimes long vertical lines appear, there was something about that in a tutorial - hunt that down
+      // TODO: This doesn't actually block entities from rendering, which is...hmm. I want this "over" the entities right?
+      // If we have perf issues we could change only the parts of the overlay that were changed in the FoV recalc
+      var newFoV = FoVCache.ComputeFoV(this, playerPos, 10); // TODO: Appropriate vision radius
+      for (int x = 0; x < this.MapWidth; x++) {
+        for (int y = 0; y < this.MapHeight; y++) {
+          if (!newFoV.VisibleCells.Contains(new EncounterPosition(x, y))) {
+            overlaysMap.SetCell(x, y, 1);
+          }
+        }
+      }
     }
 
     public void LogMessage(string bbCodeMessage) {
@@ -241,6 +277,9 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     // TODO: Move into map gen & save/load
     public void InitState(int width, int height) {
+      // Initialize the map with empty tiles
+      this.MapWidth = width;
+      this.MapHeight = height;
       this._encounterTiles = new EncounterTile[width, height];
       for (int x = 0; x < width; x++) {
         for (int y = 0; y < width; y++) {
