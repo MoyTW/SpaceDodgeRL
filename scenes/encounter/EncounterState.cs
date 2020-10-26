@@ -49,11 +49,28 @@ namespace SpaceDodgeRL.scenes.encounter {
     public string Name { get; private set; }
     // public string Summary { get; private set; }
 
+    public int X1 { get => Position.X; }
+    public int X2 { get => Position.X + Width; }
+    public int Y1 { get => Position.Y; }
+    public int Y2 { get => Position.Y + Height; }
+    public EncounterPosition Center { get; private set; }
+
     public EncounterZone(EncounterPosition position, int width, int height, string name) {
+      GD.Print("position: ", position, " width: ", width, " height: ", height, " name: ", name);
       this.Position = position;
       this.Width = width;
       this.Height = height;
       this.Name = "Zone " + name;
+
+      this.Center = new EncounterPosition((this.X1 + this.X2) / 2, (this.Y1 + this.Y2) / 2);
+    }
+
+    public bool Intersects(EncounterZone other) {
+      return this.X1 <= other.X2 && this.X2 >= other.X1 && this.Y1 <= other.Y2 && this.Y2 >= other.Y1;
+    }
+
+    public override string ToString() {
+      return string.Format("[{0} - [({1},{2}), ({3},{4})]]", this.Name, this.X1, this.Y1, this.X2, this.Y2);
     }
 
     // TODO: Populate with encounter and items! When this is done it should also incoroporate a builder!
@@ -91,6 +108,8 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     // TODO: put this somewhere proper!
     public static int PLAYER_VISION_RADIUS = 10;
+    public static int ZONE_MIN_SIZE = 20;
+    public static int ZONE_MAX_SIZE = 40;
 
     // Encounter Log
     public int EncounterLogSize = 50;
@@ -104,6 +123,8 @@ namespace SpaceDodgeRL.scenes.encounter {
     public int MapHeight { get; private set; }
     EncounterTile[,] _encounterTiles;
     public FoVCache FoVCache { get; private set; }
+    private List<EncounterZone> _zones;
+    public ReadOnlyCollection<EncounterZone> Zones { get => _zones.AsReadOnly(); }
 
     // ##########################################################################################################################
     #region Data Access
@@ -352,7 +373,9 @@ namespace SpaceDodgeRL.scenes.encounter {
       this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, this.EncounterLogSize);
     }
 
-    public static void DoTempMapGen(EncounterState state, int width = 300, int height = 300, int maxZones = 10, int maxZoneGenAttempts = 100) {
+    // TODO: Seeded rand
+    public static void DoTempMapGen(EncounterState state, Random seededRand, int width = 300, int height = 300,
+        int maxZones = 10, int maxZoneGenAttempts = 100) {
       // Initialize the map with empty tiles
       state.MapWidth = width;
       state.MapHeight = height;
@@ -363,9 +386,6 @@ namespace SpaceDodgeRL.scenes.encounter {
         }
       }
 
-      state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), new EncounterPosition(1, 1));
-      state.PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(10, 5));
-
       // Create border walls to prevent objects running off the map
       for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
@@ -374,11 +394,42 @@ namespace SpaceDodgeRL.scenes.encounter {
           }
         }
       }
+
+      // Place each empty zone onto the map
+      int zoneGenAttemps = 0;
+      List<EncounterZone> zones = new List<EncounterZone>();
+      while (zoneGenAttemps < maxZoneGenAttempts && zones.Count < maxZones) {
+        int zoneWidth = seededRand.Next(ZONE_MIN_SIZE, ZONE_MAX_SIZE + 1);
+        int zoneHeight = seededRand.Next(ZONE_MIN_SIZE, ZONE_MAX_SIZE + 1);
+        int zoneX = seededRand.Next(1, state.MapWidth - zoneWidth);
+        int zoneY = seededRand.Next(1, state.MapHeight - zoneHeight);
+
+        var newZone = new EncounterZone(new EncounterPosition(zoneX, zoneY), zoneWidth, zoneHeight, zones.Count.ToString());
+
+        bool overlaps = zones.Any(existing => existing.Intersects(newZone));
+        if (!overlaps) {
+          zones.Add(newZone);
+        }
+      }
+      state._zones = zones;
+
+      // Add the player to the map.
+      var playerZone = seededRand.Next(0, zones.Count);
+      var zoneCenter = zones[playerZone].Center;
+      if (zones.Count == 0) {
+        state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), zoneCenter);
+        // TODO: This is just a test scout, ignore this for now
+        state.PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(zoneCenter.X + 5, zoneCenter.Y + 5));
+      }
     }
 
     // TODO: Move into map gen & save/load
     public void InitState() {
-      DoTempMapGen(this);
+      // TODO: Map gen seed properly
+      DoTempMapGen(this, new Random(1));
+      foreach (EncounterZone zone in this._zones) {
+        GD.Print(zone);
+      }
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       var camera = GetNode<Camera2D>("EncounterCamera");
