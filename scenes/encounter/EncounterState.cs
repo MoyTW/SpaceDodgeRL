@@ -254,13 +254,12 @@ namespace SpaceDodgeRL.scenes.encounter {
 
       // TODO: Fog of War overlay marks explored and doesn't just have black tiles
       // TODO: When you move sometimes long vertical lines appear, there was something about that in a tutorial - hunt that down
-      // TODO: This doesn't actually block entities from rendering, which is...hmm. I want this "over" the entities right?
       // If we have perf issues we could change only the parts of the overlay that were changed in the FoV recalc
       var newFoV = FoVCache.ComputeFoV(this, playerPos, 10); // TODO: Appropriate vision radius
       for (int x = 0; x < this.MapWidth; x++) {
         for (int y = 0; y < this.MapHeight; y++) {
           if (!newFoV.VisibleCells.Contains(new EncounterPosition(x, y))) {
-            overlaysMap.SetCell(x, y, 1);
+            overlaysMap.SetCell(x, y, 2);
           }
         }
       }
