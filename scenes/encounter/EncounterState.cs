@@ -149,14 +149,13 @@ namespace SpaceDodgeRL.scenes.encounter {
       int lowestTTL = int.MaxValue;
       Entity next = null;
 
-      // TODO: We're doing a full scan every time right now; we should store these in a sorted list!
+      // TODO: This is slow because we can all ActionTimeComponents every time, whereas we should maintain an internal representation
       // TODO: Also this code is really awful!
-      var children = GetChildren();
-      foreach (Node node in children) {
-        if (node.IsInGroup(Entity.ENTITY_GROUP)) {
-          var actionTimeComponent = (node as Entity).GetComponent<ActionTimeComponent>();
-          if (actionTimeComponent != null && actionTimeComponent.TicksUntilTurn < lowestTTL) {
-            lowestTTL = actionTimeComponent.TicksUntilTurn;
+      foreach (Node node in GetTree().GetNodesInGroup(ActionTimeComponent.ENTITY_GROUP)) {
+        if (node.GetParent() == this) {
+          var ticksUntilTurn = (node as Entity).GetComponent<ActionTimeComponent>().TicksUntilTurn;
+          if (ticksUntilTurn < lowestTTL) {
+            lowestTTL = ticksUntilTurn;
             next = node as Entity;
           }
         }
