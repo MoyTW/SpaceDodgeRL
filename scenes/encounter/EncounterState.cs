@@ -297,8 +297,8 @@ namespace SpaceDodgeRL.scenes.encounter {
       var playerPos = this.Player.GetComponent<PositionComponent>().EncounterPosition;
 
       // TODO: When you move sometimes long vertical lines appear, there was something about that in a tutorial - hunt that down
-      for (int x = playerPos.X - PLAYER_VISION_RADIUS - 1; x <= playerPos.X + PLAYER_VISION_RADIUS; x++) {
-        for (int y = playerPos.Y - PLAYER_VISION_RADIUS - 1; y <= playerPos.Y + PLAYER_VISION_RADIUS; y++) {
+      for (int x = playerPos.X - PLAYER_VISION_RADIUS - 1; x <= playerPos.X + PLAYER_VISION_RADIUS + 1; x++) {
+        for (int y = playerPos.Y - PLAYER_VISION_RADIUS - 1; y <= playerPos.Y + PLAYER_VISION_RADIUS + 1; y++) {
           if (!this.IsInBounds(x, y)) {
             // If you're out of bounds no-op
           } else if (this.FoVCache.Contains(x, y)) {
