@@ -1,4 +1,5 @@
 using Godot;
+using SpaceDodgeRL.library.encounter;
 
 namespace SpaceDodgeRL.scenes.components {
 
@@ -12,13 +13,26 @@ namespace SpaceDodgeRL.scenes.components {
     public int CuttingLaserRange { get; private set; }
     public int CuttingLaserPower { get; private set; }
 
-    public static PlayerComponent Create(int cuttingLaserRange = 3, int cuttingLaserPower = 26) {
+    // Autopilot data
+    public bool IsAutopiloting { get => this.AutopilotPath != null; }
+    public EncounterPath AutopilotPath { get; private set; }
+
+    public static PlayerComponent Create(int cuttingLaserRange = 3, int cuttingLaserPower = 26, EncounterPath autopilotPath = null) {
       var component = _componentPrefab.Instance() as PlayerComponent;
 
       component.CuttingLaserRange = cuttingLaserRange;
       component.CuttingLaserPower = cuttingLaserPower;
+      component.AutopilotPath = autopilotPath;
 
       return component;
+    }
+
+    public void LayInAutopilotPath(EncounterPath path) {
+      this.AutopilotPath = path;
+    }
+
+    public void StopAutopiloting() {
+      this.AutopilotPath = null;
     }
   }
 }

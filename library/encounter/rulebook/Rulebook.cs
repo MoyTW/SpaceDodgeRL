@@ -11,6 +11,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
   public static class Rulebook {
     // ...can't I just do <> like I can in Kotlin? C# why you no let me do this. Probably because "evolving languages are hard".
     private static Dictionary<ActionType, Action<EncounterAction, EncounterState>> _actionMapping = new Dictionary<ActionType, Action<EncounterAction, EncounterState>>() {
+      { ActionType.AUTOPILOT, (a, s) => ResolveAutopilot(a as AutopilotAction, s) },
       { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
       { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
       { ActionType.SELF_DESTRUCT, (a, s) => ResolveSelfDestruct(a as SelfDestructAction, s) },
@@ -38,6 +39,16 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       // If I had C# 8.0 I'd use the new, nifty switch! I'm using a dictionary because I *always* forget to break; out of a switch
       // and that usually causes an annoying bug that I spend way too long mucking around with. Instead here it will just EXPLODE!
       _actionMapping[action.ActionType].Invoke(action, state);
+    }
+
+    private static void ResolveAutopilot(AutopilotAction action, EncounterState state) {
+      GD.Print("IN RESOLVE AUTOPILOT");
+      var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
+      EncounterZone zone = state.GetZoneById(action.ZoneId);
+
+      var path = new EncounterPath(Pathfinder.AStarWithNewGrid(playerPosition, zone.Center, state, 600));
+      GD.Print("AFTER A STAR WITH NEW GRID");
+      state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(path);
     }
 
     private static void LogAttack(DefenderComponent defenderComponent, string message, EncounterState state) {

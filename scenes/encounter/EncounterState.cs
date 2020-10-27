@@ -43,10 +43,11 @@ namespace SpaceDodgeRL.scenes.encounter {
    */
   // TODO: Add all the features of the EncounterZone aside from layout!
   public class EncounterZone: Godot.Object {
-    public EncounterPosition Position { get; private set; }
-    public int Width { get; private set; }
-    public int Height { get; private set; }
-    public string Name { get; private set; }
+    public string ZoneId { get; }
+    public EncounterPosition Position { get; }
+    public int Width { get; }
+    public int Height { get; }
+    public string Name { get; }
     // public string Summary { get; private set; }
 
     public int X1 { get => Position.X; }
@@ -55,8 +56,8 @@ namespace SpaceDodgeRL.scenes.encounter {
     public int Y2 { get => Position.Y + Height; }
     public EncounterPosition Center { get; private set; }
 
-    public EncounterZone(EncounterPosition position, int width, int height, string name) {
-      GD.Print("position: ", position, " width: ", width, " height: ", height, " name: ", name);
+    public EncounterZone(string zoneId, EncounterPosition position, int width, int height, string name) {
+      this.ZoneId = zoneId;
       this.Position = position;
       this.Width = width;
       this.Height = height;
@@ -150,6 +151,16 @@ namespace SpaceDodgeRL.scenes.encounter {
       foreach (Entity entity in entities) {
         if (entity.EntityId == entityId) {
           return entity;
+        }
+      }
+      return null;
+    }
+
+    public EncounterZone GetZoneById(string zoneId) {
+      // Yes we're iterating them all at one time but there's only, like...10 zones, so...computers are fast right?
+      foreach (EncounterZone zone in _zones) {
+        if (zone.ZoneId == zoneId) {
+          return zone;
         }
       }
       return null;
@@ -404,7 +415,8 @@ namespace SpaceDodgeRL.scenes.encounter {
         int zoneX = seededRand.Next(1, state.MapWidth - zoneWidth);
         int zoneY = seededRand.Next(1, state.MapHeight - zoneHeight);
 
-        var newZone = new EncounterZone(new EncounterPosition(zoneX, zoneY), zoneWidth, zoneHeight, zones.Count.ToString());
+        var newZone = new EncounterZone(Guid.NewGuid().ToString(), new EncounterPosition(zoneX, zoneY), zoneWidth, zoneHeight,
+          zones.Count.ToString());
 
         bool overlaps = zones.Any(existing => existing.Intersects(newZone));
         if (!overlaps) {
