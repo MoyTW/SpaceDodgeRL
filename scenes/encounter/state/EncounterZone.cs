@@ -7,7 +7,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
    * artifact of development not a design decision. Zones also serve as autopilot points, and have a string name and summary.
    */
   // TODO: Add all the features of the EncounterZone aside from layout!
-  public class EncounterZone {
+  public class EncounterZone: Godot.Object {
     public string ZoneId { get; }
     public EncounterPosition Position { get; }
     public int Width { get; }
@@ -20,6 +20,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public int Y1 { get => Position.Y; }
     public int Y2 { get => Position.Y + Height; }
     public EncounterPosition Center { get; private set; }
+
+    // This is required for Godot.Object
+    public EncounterZone() { }
 
     public EncounterZone(string zoneId, EncounterPosition position, int width, int height, string name) {
       this.ZoneId = zoneId;
