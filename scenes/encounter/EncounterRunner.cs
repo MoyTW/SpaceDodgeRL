@@ -143,7 +143,6 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     public void HandleAutopilotSelection(EncounterZone selectedZone) {
-      GD.Print(this._encounterState.Player.EntityId);
       var actions = new List<EncounterAction>() { new AutopilotAction(this._encounterState.Player.EntityId, selectedZone.ZoneId) };
       Rulebook.ResolveActions(actions, this._encounterState);
     }

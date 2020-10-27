@@ -42,12 +42,10 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     }
 
     private static void ResolveAutopilot(AutopilotAction action, EncounterState state) {
-      GD.Print("IN RESOLVE AUTOPILOT");
       var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
       EncounterZone zone = state.GetZoneById(action.ZoneId);
 
       var path = new EncounterPath(Pathfinder.AStarWithNewGrid(playerPosition, zone.Center, state, 600));
-      GD.Print("AFTER A STAR WITH NEW GRID");
       state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(path);
     }
 

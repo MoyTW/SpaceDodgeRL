@@ -440,9 +440,6 @@ namespace SpaceDodgeRL.scenes.encounter {
 
       // TODO: Map gen seed properly
       DoTempMapGen(this, new Random(1));
-      foreach (EncounterZone zone in this._zones) {
-        GD.Print(zone);
-      }
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       var camera = GetNode<Camera2D>("EncounterCamera");
