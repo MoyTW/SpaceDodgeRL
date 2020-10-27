@@ -21,8 +21,8 @@ namespace SpaceDodgeRL.scenes {
       this._autopilotMenu = GD.Load<PackedScene>("res://scenes/encounter/AutopilotMenu.tscn").Instance() as AutopilotMenu;
     }
 
-    public void ShowAutopilotMenu(ReadOnlyCollection<EncounterZone> zones) {
-      this._autopilotMenu.Zones = zones;
+    public void ShowAutopilotMenu(EncounterState state) {
+      this._autopilotMenu.PrepMenu(state);
       CallDeferred(nameof(DeferredSwitchScene), this._autopilotMenu);
     }
 

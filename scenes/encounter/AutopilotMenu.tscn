@@ -44,10 +44,21 @@ AUTOPILOT
 Press the designated button to autopilot to the target zone"
 fit_content_height = true
 
-[node name="ButtonConsole" type="HBoxContainer" parent="SidebarContainer"]
+[node name="YouAreHereLabel" type="RichTextLabel" parent="SidebarContainer"]
 margin_top = 109.0
 margin_right = 340.0
-margin_bottom = 129.0
+margin_bottom = 151.0
+custom_fonts/bold_font = ExtResource( 2 )
+custom_fonts/normal_font = ExtResource( 3 )
+bbcode_enabled = true
+bbcode_text = "You are currently in [b]An Unknown Zone[/b]"
+text = "You are currently in An Unknown Zone"
+fit_content_height = true
+
+[node name="ButtonConsole" type="HBoxContainer" parent="SidebarContainer"]
+margin_top = 155.0
+margin_right = 340.0
+margin_bottom = 175.0
 
 [node name="DynamicButtonsContainer" type="VBoxContainer" parent="SidebarContainer/ButtonConsole"]
 margin_right = 258.0
@@ -62,7 +73,7 @@ size_flags_vertical = 3
 text = "Close Map"
 
 [node name="BottomSpacer" type="Control" parent="SidebarContainer"]
-margin_top = 133.0
+margin_top = 179.0
 margin_right = 340.0
 margin_bottom = 600.0
 size_flags_horizontal = 3

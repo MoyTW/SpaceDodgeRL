@@ -123,7 +123,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     private void ShowAutopilotMenu(EncounterState state) {
       // TODO: We could probably make the cleaner by using signals?
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-      sceneManager.ShowAutopilotMenu(state.Zones);
+      sceneManager.ShowAutopilotMenu(state);
     }
 
     public void HandleAutopilotSelection(EncounterZone selectedZone) {
