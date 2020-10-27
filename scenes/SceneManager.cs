@@ -1,5 +1,5 @@
 using Godot;
-using SpaceDodgeRL.scenes.encounter;
+using SpaceDodgeRL.scenes.encounter.state;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

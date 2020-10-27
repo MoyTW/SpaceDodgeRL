@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace SpaceDodgeRL.scenes.encounter {
+namespace SpaceDodgeRL.scenes.encounter.state {
 
   public class EncounterTile {
     public bool BlocksMovement { get {

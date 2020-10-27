@@ -1,5 +1,6 @@
 using Godot;
 using SpaceDodgeRL.scenes.encounter;
+using SpaceDodgeRL.scenes.encounter.state;
 
 namespace SpaceDodgeRL.scenes {
 

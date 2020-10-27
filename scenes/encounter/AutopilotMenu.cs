@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using Godot;
 using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.components;
-using SpaceDodgeRL.scenes.encounter;
+using SpaceDodgeRL.scenes.encounter.state;
 
 public class AutopilotMenu : HBoxContainer {
 

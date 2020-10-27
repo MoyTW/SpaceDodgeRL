@@ -2,7 +2,7 @@ using Godot;
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.library.encounter.rulebook;
 using SpaceDodgeRL.library.encounter.rulebook.actions;
-using SpaceDodgeRL.scenes.encounter;
+using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
 using System.Collections.Generic;
 

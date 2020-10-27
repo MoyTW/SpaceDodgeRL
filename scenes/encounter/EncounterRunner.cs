@@ -5,6 +5,7 @@ using SpaceDodgeRL.library.encounter.rulebook;
 using SpaceDodgeRL.library.encounter.rulebook.actions;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
+using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.encounter {

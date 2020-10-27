@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using SpaceDodgeRL.library.encounter.rulebook;
-using SpaceDodgeRL.scenes.encounter;
+using SpaceDodgeRL.scenes.encounter.state;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 

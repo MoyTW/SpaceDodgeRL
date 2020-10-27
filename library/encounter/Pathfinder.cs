@@ -1,7 +1,7 @@
 using Priority_Queue;
 using System.Collections.Generic;
-using SpaceDodgeRL.scenes.encounter;
 using System.Linq;
+using SpaceDodgeRL.scenes.encounter.state;
 
 namespace SpaceDodgeRL.library.encounter {
 

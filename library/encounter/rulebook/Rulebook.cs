@@ -1,7 +1,7 @@
 using Godot;
 using SpaceDodgeRL.library.encounter.rulebook.actions;
 using SpaceDodgeRL.scenes.components;
-using SpaceDodgeRL.scenes.encounter;
+using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;
