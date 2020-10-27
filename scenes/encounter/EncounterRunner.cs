@@ -71,6 +71,10 @@ namespace SpaceDodgeRL.scenes.encounter {
       var positionComponent = state.Player.GetComponent<PositionComponent>();
       var oldPos = positionComponent.EncounterPosition;
       var moveAction = new MoveAction(state.Player.EntityId, new EncounterPosition(oldPos.X + dx, oldPos.Y + dy));
+      PlayerMove(state, moveAction);
+    }
+
+    private static void PlayerMove(EncounterState state, MoveAction moveAction) {
       PlayerExecuteTurnEndingAction(moveAction, state);
     }
 
@@ -110,6 +114,18 @@ namespace SpaceDodgeRL.scenes.encounter {
           PlayerWait(state);
         } else if (action == InputHandler.ActionMapping.AUTOPILOT) {
           ShowAutopilotMenu(state);
+        } else if (entity.GetComponent<PlayerComponent>().IsAutopiloting) {
+          // TODO: Allow player to interrupt to turn off autopiloting
+          // TODO: If your machine is slow and you buffer your move inputs/use autopilot the targeting reticule and FoW sort
+          // of don't keep up!
+          // TODO: Add in termination condition of "enemy enters FoV"
+          var path = entity.GetComponent<PlayerComponent>().AutopilotPath;
+          if (!path.AtEnd) {
+            PlayerMove(state, new MoveAction(entity.EntityId, path.Step()));
+          } else {
+            // TODO: STOP_AUTOPILOTING action, don't state change here
+            entity.GetComponent<PlayerComponent>().StopAutopiloting();
+          }
         }
       } else {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();

@@ -126,6 +126,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     public FoVCache FoVCache { get; private set; }
     private List<EncounterZone> _zones;
     public ReadOnlyCollection<EncounterZone> Zones { get => _zones.AsReadOnly(); }
+    private Dictionary<string, Entity> _entitiesById;
 
     // ##########################################################################################################################
     #region Data Access
@@ -145,15 +146,11 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     public Entity NextEntity { get; private set; }
 
+    /**
+     * Only returns direct child entities.
+     */
     public Entity GetEntityById(string entityId) {
-      var entities = GetTree().GetNodesInGroup(Entity.ENTITY_GROUP);
-      // It kinda chafes that Godot arrays don't have all the fancy utility functions C# collections do.
-      foreach (Entity entity in entities) {
-        if (entity.EntityId == entityId) {
-          return entity;
-        }
-      }
-      return null;
+      return _entitiesById[entityId];
     }
 
     public EncounterZone GetZoneById(string zoneId) {
@@ -247,6 +244,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       var entityPosition = positionComponent.EncounterPosition;
       AddChild(entity);
       this._encounterTiles[entityPosition.X, entityPosition.Y].AddEntity(entity);
+      this._entitiesById[entity.EntityId] = entity;
     }
 
     public void RemoveEntity(Entity entity) {
@@ -256,6 +254,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       var entityPosition = positionComponent.EncounterPosition;
       RemoveChild(entity);
       this._encounterTiles[entityPosition.X, entityPosition.Y].RemoveEntity(entity);
+      this._entitiesById.Remove(entity.EntityId);
     }
 
     /**
@@ -435,6 +434,10 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     // TODO: Move into map gen & save/load
     public void InitState() {
+      // This class is kinda becoming a monster WRT "here's a cached thing for perf/getting around Godot reasons!"
+      this._encounterLog = new List<string>();
+      this._entitiesById = new Dictionary<string, Entity>();
+
       // TODO: Map gen seed properly
       DoTempMapGen(this, new Random(1));
       foreach (EncounterZone zone in this._zones) {
@@ -448,7 +451,6 @@ namespace SpaceDodgeRL.scenes.encounter {
       Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
 
       // Populate all our initial caches
-      this._encounterLog = new List<string>();
       this.LogMessage("Encounter started!");
       this.CalculateNextEntity();
       // Init FoW overlay as all back
