@@ -5,13 +5,14 @@ namespace SpaceDodgeRL.scenes {
 
   public class EncounterScene : Container {
     EncounterState encounterState;
+    EncounterRunner encounterRunner;
     RichTextLabel encounterLogLabel;
 
     public override void _Ready() {
       encounterState = GetNode<EncounterState>("VBoxContainer/ViewportContainer/EncounterViewport/EncounterState");
       encounterLogLabel = GetNode<RichTextLabel>("VBoxContainer/HBoxContainer/EncounterLogLabel");
 
-      var encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
+      encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
       encounterRunner.inputHandlerRef = GetNode<InputHandler>("InputHandler");
       encounterRunner.SetEncounterState(encounterState);
 
@@ -28,6 +29,12 @@ namespace SpaceDodgeRL.scenes {
         encounterLogLabel.RemoveLine(0);
       }
       encounterLogLabel.AppendBbcode(bbCodeMessage + "\n");
+    }
+
+    public void HandleAutopilotMenuClosed(EncounterZone selectedZone) {
+      if (selectedZone != null) {
+        encounterRunner.HandleAutopilotSelection(selectedZone);
+      }
     }
   }
 }

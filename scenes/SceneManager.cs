@@ -31,11 +31,10 @@ namespace SpaceDodgeRL.scenes {
     }
 
     private void DeferredCloseAutopilotMenu(EncounterZone selectedZone) {
-      // TODO: Actually push the selected zone back!
-      GD.Print("Called ", nameof(DeferredCloseAutopilotMenu), " with ", selectedZone);
-
-      var previousScene = sceneStack[sceneStack.Count - 1];
+      var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
       sceneStack.RemoveAt(sceneStack.Count - 1);
+
+      previousScene.HandleAutopilotMenuClosed(selectedZone);
       DeferredSwitchScene(previousScene);
     }
 

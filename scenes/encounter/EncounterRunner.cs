@@ -109,9 +109,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action == InputHandler.ActionMapping.WAIT) {
           PlayerWait(state);
         } else if (action == InputHandler.ActionMapping.AUTOPILOT) {
-          // TODO: We could probably make the cleaner by using signals?
-          var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-          sceneManager.ShowAutopilotMenu(state.Zones);
+          ShowAutopilotMenu(state);
         }
       } else {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();
@@ -120,6 +118,16 @@ namespace SpaceDodgeRL.scenes.encounter {
         state.CalculateNextEntity();
         state.UpdateDangerMap();
       }
+    }
+
+    private void ShowAutopilotMenu(EncounterState state) {
+      // TODO: We could probably make the cleaner by using signals?
+      var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+      sceneManager.ShowAutopilotMenu(state.Zones);
+    }
+
+    public void HandleAutopilotSelection(EncounterZone selectedZone) {
+      GD.Print("Zone selected was, ", selectedZone, " should initiate autopilot now");
     }
   }
 }
