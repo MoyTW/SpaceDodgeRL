@@ -18,6 +18,10 @@ _global_script_class_icons={
 config/name="SpaceDodgeRL"
 run/main_scene="res://scenes/EncounterScene.tscn"
 
+[autoload]
+
+SceneManager="*res://scenes/SceneManager.cs"
+
 [input]
 
 move_n={

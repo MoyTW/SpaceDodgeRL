@@ -18,7 +18,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     public override void _Process(float delta) {
-      EncounterRunner.RunTurn(this._encounterState, inputHandlerRef);
+      RunTurn(this._encounterState, inputHandlerRef);
     }
 
     private static void PassTime(EncounterState state, int time) {
@@ -79,7 +79,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       PlayerExecuteTurnEndingAction(waitAction, state);
     }
 
-    private static void RunTurn(EncounterState state, InputHandler inputHandler) {
+    private void RunTurn(EncounterState state, InputHandler inputHandler) {
       var entity = state.NextEntity;
       var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
       if (actionTimeComponent.TicksUntilTurn > 0) {
@@ -109,7 +109,9 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action == InputHandler.ActionMapping.WAIT) {
           PlayerWait(state);
         } else if (action == InputHandler.ActionMapping.AUTOPILOT) {
-          GD.Print("We should open up the autopilot menu!");
+          // TODO: We could probably make the cleaner by using signals?
+          var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+          sceneManager.ShowAutopilotMenu(state.Zones);
         }
       } else {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();
