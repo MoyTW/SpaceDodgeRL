@@ -418,7 +418,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       var zoneCenter = zones[playerZone].Center;
       state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), zoneCenter);
       // TODO: This is just a test scout, ignore this for now
-      state.PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(zoneCenter.X + 5, zoneCenter.Y + 5));
+      // state.PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(zoneCenter.X + 5, zoneCenter.Y + 5));
     }
 
     // TODO: Move into map gen & save/load
