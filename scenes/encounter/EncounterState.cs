@@ -42,7 +42,7 @@ namespace SpaceDodgeRL.scenes.encounter {
    * artifact of development not a design decision. Zones also serve as autopilot points, and have a string name and summary.
    */
   // TODO: Add all the features of the EncounterZone aside from layout!
-  public class EncounterZone {
+  public class EncounterZone: Godot.Object {
     public EncounterPosition Position { get; private set; }
     public int Width { get; private set; }
     public int Height { get; private set; }
