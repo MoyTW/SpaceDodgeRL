@@ -13,6 +13,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _sPath = "res://resources/atlas_s.tres";
     private static string _AtSignPath = "res://resources/atlas_@.tres";
     private static string _StarPath = "res://resources/atlas_Star.tres";
+    private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
 
     private static Entity CreateEntity(string id, string name) {
       Entity newEntity = _entityPrefab.Instance() as Entity;
@@ -67,6 +68,16 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddChild(CollisionComponent.Create(true, false));
       e.AddChild(DefenderComponent.Create(0, 100, logDamage: false, isInvincible: true));
       e.AddChild(SpriteDataComponent.Create(_StarPath));
+
+      return e;
+    }
+
+    public static Entity CreateSatelliteEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "satellite");
+
+      e.AddChild(CollisionComponent.Create(blocksMovement: true, blocksVision: true));
+      e.AddChild(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, logDamage: false));
+      e.AddChild(SpriteDataComponent.Create(_hashSignPath));
 
       return e;
     }

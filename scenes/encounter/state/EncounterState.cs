@@ -288,7 +288,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     public void LogMessage(string bbCodeMessage) {
-      // TODO: Emit the signal for the encounter log
       if (this._encounterLog.Count >= this.EncounterLogSize) {
         this._encounterLog.RemoveAt(0);
       }
@@ -300,7 +299,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // Add satellites
       int numSatellites = 3; // TODO: Populate from the level
       for (int i = 0; i < numSatellites; i++) {
-        GD.Print("Add a satellite");
+        var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
+        var satellite = EntityBuilder.CreateSatelliteEntity();
+        state.PlaceEntity(satellite, unblockedPosition);
       }
 
       string encounterName;
@@ -370,8 +371,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // Add the player to the map
       var playerZoneIdx = seededRand.Next(0, zones.Count);
       state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), zones[playerZoneIdx].Center);
-      // TODO: This is just a test scout, ignore this for now
-      // state.PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(zoneCenter.X + 5, zoneCenter.Y + 5));
 
       // Add all the various zone features to the map
 

@@ -42,8 +42,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       while (attempts < MAX_UNBLOCKED_POSITION_ATTEMPTS) {
         int x = seededRand.Next(this.Width);
         int y = seededRand.Next(this.Height);
-        if (!state.IsPositionBlocked(x, y)) {
-          return new EncounterPosition(x, y);
+
+        if (!state.IsPositionBlocked(this.X1 + x, this.Y1 + y)) {
+          return new EncounterPosition(this.X1 + x, this.Y1 + y);
         } else {
           attempts++;
         }
