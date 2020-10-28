@@ -87,6 +87,7 @@ namespace SpaceDodgeRL.scenes.entities {
       var e = CreateEntity(Guid.NewGuid().ToString(), "jump point");
 
       e.AddChild(SpriteDataComponent.Create(_JPath));
+      e.AddChild(StairsComponent.Create());
 
       return e;
     }

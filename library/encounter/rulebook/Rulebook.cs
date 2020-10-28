@@ -5,6 +5,7 @@ using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SpaceDodgeRL.library.encounter.rulebook {
 
@@ -15,6 +16,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
       { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
       { ActionType.SELF_DESTRUCT, (a, s) => ResolveSelfDestruct(a as SelfDestructAction, s) },
+      { ActionType.USE_STAIRS, (a, s) => ResolveUseStairs(a as UseStairsAction, s) },
       { ActionType.WAIT, (a, s) => ResolveWait(a as WaitAction, s) }
     };
 
@@ -102,6 +104,17 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         }
       } else {
         state.TeleportEntity(actor, action.TargetPosition);
+      }
+    }
+
+    private static void ResolveUseStairs(UseStairsAction action, EncounterState state) {
+      var actorPosition = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>().EncounterPosition;
+      var stairs = state.EntitiesAtPosition(actorPosition.X, actorPosition.Y)
+                        .FirstOrDefault(e => e.GetComponent<StairsComponent>() != null);
+      if (stairs != null) {
+        GD.Print("TODO: Generate a new level and toss the player into it");
+      } else {
+        GD.Print("TODO: Make this not eat your turn!");
       }
     }
 

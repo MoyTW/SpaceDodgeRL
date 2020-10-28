@@ -15,7 +15,11 @@ namespace SpaceDodgeRL.scenes {
       public static string MOVE_NW = "move_nw";
       public static string WAIT = "encounter_wait";
       public static string AUTOPILOT = "encounter_autopilot_menu";
-      public static string[] AllMappings = new string[] { MOVE_N, MOVE_NE, MOVE_E, MOVE_SE, MOVE_S, MOVE_SW, MOVE_W, MOVE_NW, WAIT, AUTOPILOT };
+      public static string USE_STAIRS = "encounter_use_stairs";
+      // TODO: make a set if perf bad?
+      public static string[] AllMappings = new string[] { MOVE_N, MOVE_NE, MOVE_E, MOVE_SE, MOVE_S, MOVE_SW, MOVE_W, MOVE_NW,
+        WAIT, AUTOPILOT, USE_STAIRS
+      };
     }
 
     private int _queueSize = 2;

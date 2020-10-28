@@ -128,6 +128,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return IsPositionBlocked(position.X, position.Y);
     }
 
+    public ReadOnlyCollection<Entity> EntitiesAtPosition(int x, int y) {
+      if (!IsInBounds(x, y)) {
+        throw new NotImplementedException("out of bounds");
+      }
+
+      return this._encounterTiles[x, y].Entities;
+    }
+
     public Entity BlockingEntityAtPosition(int x, int y) {
       if (!IsInBounds(x, y)) {
         throw new NotImplementedException("out of bounds");

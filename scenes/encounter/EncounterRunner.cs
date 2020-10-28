@@ -115,6 +115,9 @@ namespace SpaceDodgeRL.scenes.encounter {
           PlayerWait(state);
         } else if (action == InputHandler.ActionMapping.AUTOPILOT) {
           ShowAutopilotMenu(state);
+        } else if (action == InputHandler.ActionMapping.USE_STAIRS) {
+          // TODO: Attempting to use stairs definitely shouldn't end your turn lol
+          PlayerExecuteTurnEndingAction(new UseStairsAction(entity.EntityId), state);
         } else if (entity.GetComponent<PlayerComponent>().IsAutopiloting) {
           // TODO: Allow player to interrupt to turn off autopiloting
           // TODO: If your machine is slow and you buffer your move inputs/use autopilot the targeting reticule and FoW sort
