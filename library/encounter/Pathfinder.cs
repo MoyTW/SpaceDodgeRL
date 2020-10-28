@@ -20,7 +20,7 @@ namespace SpaceDodgeRL.library.encounter {
       EncounterPosition start,
       EncounterPosition end,
       EncounterState state,
-      int maxAreaToExplore = 500
+      int maxAreaToExplore = 950
     ) {
       SimplePriorityQueue<EncounterPosition> frontier = new SimplePriorityQueue<EncounterPosition>();
       frontier.Enqueue(start, 0f);

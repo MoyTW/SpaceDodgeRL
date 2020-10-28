@@ -88,7 +88,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       if (positionComponent.EncounterPosition == action.TargetPosition) {
         GD.PrintErr(string.Format("Entity {0}:{1} tried to move to its current position {2}", actor.EntityName, actor.EntityId, action.TargetPosition));
       } else if (state.IsPositionBlocked(action.TargetPosition)) {
-        var blocker = state.BlockingEntityAtPosition(action.TargetPosition);
+        var blocker = state.BlockingEntityAtPosition(action.TargetPosition.X, action.TargetPosition.Y);
         var actorCollision = actor.GetComponent<CollisionComponent>();
 
         if (actorCollision.OnCollisionAttack) {

@@ -55,7 +55,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
      * Only returns direct child entities.
      */
     public Entity GetEntityById(string entityId) {
-      return _entitiesById[entityId];
+      if (_entitiesById.ContainsKey(entityId)) {
+        return _entitiesById[entityId];
+      } else {
+        return null;
+      }
     }
 
     public EncounterZone GetZoneById(string zoneId) {
@@ -115,16 +119,20 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return adjacent;
     }
 
-    public bool IsPositionBlocked(EncounterPosition position) {
-      return BlockingEntityAtPosition(position) != null;
+    public bool IsPositionBlocked(int x, int y) {
+      return BlockingEntityAtPosition(x, y) != null;
     }
 
-    public Entity BlockingEntityAtPosition(EncounterPosition position) {
-      if (!IsInBounds(position)) {
+    public bool IsPositionBlocked(EncounterPosition position) {
+      return IsPositionBlocked(position.X, position.Y);
+    }
+
+    public Entity BlockingEntityAtPosition(int x, int y) {
+      if (!IsInBounds(x, y)) {
         throw new NotImplementedException("out of bounds");
       }
 
-      return this._encounterTiles[position.X, position.Y].Entities.FirstOrDefault<Entity>(e => {
+      return this._encounterTiles[x, y].Entities.FirstOrDefault<Entity>(e => {
         return e.GetComponent<CollisionComponent>().BlocksMovement;
       });
     }
@@ -288,6 +296,36 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, this.EncounterLogSize);
     }
 
+    private static void PopulateZone(EncounterZone zone, Random seededRand, EncounterState state, bool safe=false) {
+      // Add satellites
+      int numSatellites = 3; // TODO: Populate from the level
+      for (int i = 0; i < numSatellites; i++) {
+        GD.Print("Add a satellite");
+      }
+
+      string encounterName;
+      if (!safe) {
+        // TODO: Encounters
+        encounterName = "TEST ENCOUNTER";
+      } else {
+        encounterName = "EMPTY ENCOUNTER";
+      }
+
+      List<string> chosenEnemyDefs = new List<string>() { "SCOUT", "SCOUT" }; // TODO: Pick from the table given the encounter
+      foreach (string chosenEnemyDef in chosenEnemyDefs) {
+        var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
+
+        Entity enemy;
+        if (chosenEnemyDef == "SCOUT") {
+          enemy = EntityBuilder.CreateScoutEntity();
+        } else {
+          throw new NotImplementedException("No enemy tag for " + chosenEnemyDefs);
+        }
+        
+        state.PlaceEntity(enemy, unblockedPosition);
+      }
+    }
+
     // TODO: Seeded rand
     public static void DoTempMapGen(EncounterState state, Random seededRand, int width = 300, int height = 300,
         int maxZones = 10, int maxZoneGenAttempts = 100) {
@@ -329,12 +367,22 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
       state._zones = zones;
 
-      // Add the player to the map.
-      var playerZone = seededRand.Next(0, zones.Count);
-      var zoneCenter = zones[playerZone].Center;
-      state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), zoneCenter);
+      // Add the player to the map
+      var playerZoneIdx = seededRand.Next(0, zones.Count);
+      state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), zones[playerZoneIdx].Center);
       // TODO: This is just a test scout, ignore this for now
       // state.PlaceEntity(EntityBuilder.CreateScoutEntity(), new EncounterPosition(zoneCenter.X + 5, zoneCenter.Y + 5));
+
+      // Add all the various zone features to the map
+
+      // Populate each zone with an encounter
+      foreach (EncounterZone zone in zones) {
+        if (zone == zones[playerZoneIdx]) {
+          PopulateZone(zone, seededRand, state, safe: true);
+        } else {
+          PopulateZone(zone, seededRand, state);
+        }
+      }
     }
 
     // TODO: Move into map gen & save/load

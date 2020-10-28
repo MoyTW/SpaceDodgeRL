@@ -1,3 +1,4 @@
+using System;
 using SpaceDodgeRL.library.encounter;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
@@ -8,6 +9,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
    */
   // TODO: Add all the features of the EncounterZone aside from layout!
   public class EncounterZone: Godot.Object {
+    public static int MAX_UNBLOCKED_POSITION_ATTEMPTS = 250;
+
     public string ZoneId { get; }
     public EncounterPosition Position { get; }
     public int Width { get; }
@@ -32,6 +35,20 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.Name = "Zone " + name;
 
       this.Center = new EncounterPosition((this.X1 + this.X2) / 2, (this.Y1 + this.Y2) / 2);
+    }
+
+    public EncounterPosition RandomUnblockedPosition(Random seededRand, EncounterState state) {
+      int attempts = 0;
+      while (attempts < MAX_UNBLOCKED_POSITION_ATTEMPTS) {
+        int x = seededRand.Next(this.Width);
+        int y = seededRand.Next(this.Height);
+        if (!state.IsPositionBlocked(x, y)) {
+          return new EncounterPosition(x, y);
+        } else {
+          attempts++;
+        }
+      }
+      throw new NotImplementedException("ok really we should probably handle this sanely but 250 attemps it a lotta attempts!");
     }
 
     public bool Intersects(EncounterZone other) {
