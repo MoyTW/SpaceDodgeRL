@@ -56,6 +56,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
+    // TODO: Implement XP and player level up
     private static void Attack(Entity attacker, Entity defender, EncounterState state) {
       var attackerComponent = attacker.GetComponent<AttackerComponent>();
       var defenderComponent = defender.GetComponent<DefenderComponent>();

@@ -307,6 +307,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         state.PlaceEntity(satellite, unblockedPosition);
       }
 
+      // TODO: Add the data into the Zone & display it all pretty like if you have intel
       EncounterDef encounterDef;
       if (safe) {
         encounterDef = LevelData.GetEncounterDefById(EncounterDefId.EMPTY_ENCOUNTER);
@@ -409,6 +410,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), zones[playerZoneIdx].Center);
 
       // Add all the various zone features to the map
+      // TODO: Handle last level & add diplomat
+      // TODO: Generate & implement stairs
+      // TODO: Generate & implement Intel
 
       // Populate each zone with an encounter
       foreach (EncounterZone zone in zones) {
