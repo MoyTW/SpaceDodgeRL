@@ -41,6 +41,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       _actionMapping[action.ActionType].Invoke(action, state);
     }
 
+    // TODO: If you autopilot to your current position, then autopilot somewhere else, it explodes with a could not pass time error
     private static void ResolveAutopilot(AutopilotAction action, EncounterState state) {
       var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
       EncounterZone zone = state.GetZoneById(action.ZoneId);
