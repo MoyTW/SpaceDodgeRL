@@ -1,5 +1,6 @@
 using Godot;
 using SpaceDodgeRL.library.encounter;
+using SpaceDodgeRL.resources.gamedata;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
 using SpaceDodgeRL.scenes.entities;
@@ -304,26 +305,43 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         state.PlaceEntity(satellite, unblockedPosition);
       }
 
-      string encounterName;
-      if (!safe) {
-        // TODO: Encounters
-        encounterName = "TEST ENCOUNTER";
+      EncounterDef encounterDef;
+      if (safe) {
+        encounterDef = LevelData.GetEncounterDefById(EncounterDefId.EMPTY_ENCOUNTER);
       } else {
-        encounterName = "EMPTY ENCOUNTER";
+        // TODO: Levels!
+        encounterDef = LevelData.ChooseEncounter(1, seededRand);
       }
 
-      List<string> chosenEnemyDefs = new List<string>() { "SCOUT", "SCOUT" }; // TODO: Pick from the table given the encounter
-      foreach (string chosenEnemyDef in chosenEnemyDefs) {
+      foreach (string entityDefId in encounterDef.EntityDefIds) {
         var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
 
-        Entity enemy;
-        if (chosenEnemyDef == "SCOUT") {
-          enemy = EntityBuilder.CreateScoutEntity();
+        Entity newEntity;
+        if (entityDefId == EntityDefId.SCOUT) {
+          newEntity = EntityBuilder.CreateScoutEntity();
+        } else if (entityDefId == EntityDefId.FIGHTER) {
+          GD.Print("TODO: No implementation yet for ID ", entityDefId);
+          newEntity = EntityBuilder.CreateScoutEntity();
+        } else if (entityDefId == EntityDefId.GUNSHIP) {
+          GD.Print("TODO: No implementation yet for ID ", entityDefId);
+          newEntity = EntityBuilder.CreateScoutEntity();
+        } else if (entityDefId == EntityDefId.FRIGATE) {
+          GD.Print("TODO: No implementation yet for ID ", entityDefId);
+          newEntity = EntityBuilder.CreateScoutEntity();
+        } else if (entityDefId == EntityDefId.DESTROYER) {
+          GD.Print("TODO: No implementation yet for ID ", entityDefId);
+          newEntity = EntityBuilder.CreateScoutEntity();
+        } else if (entityDefId == EntityDefId.CRUISER) {
+          GD.Print("TODO: No implementation yet for ID ", entityDefId);
+          newEntity = EntityBuilder.CreateScoutEntity();
+        } else if (entityDefId == EntityDefId.CARRIER) {
+          GD.Print("TODO: No implementation yet for ID ", entityDefId);
+          newEntity = EntityBuilder.CreateScoutEntity();
         } else {
-          throw new NotImplementedException("No enemy tag for " + chosenEnemyDefs);
+          throw new NotImplementedException("No enemy tag for " + entityDefId);
         }
         
-        state.PlaceEntity(enemy, unblockedPosition);
+        state.PlaceEntity(newEntity, unblockedPosition);
       }
     }
 

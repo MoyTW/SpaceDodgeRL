@@ -79,7 +79,7 @@ namespace SpaceDodgeRL.resources.gamedata {
 
   public static class LevelData {
     // TODO: easy to turn this into json and not literally just have it splatted here in a giant code file lol
-    public static Dictionary<string, EncounterDef> EncounterDefs = new Dictionary<string, EncounterDef>() {
+    private static Dictionary<string, EncounterDef> EncounterDefs = new Dictionary<string, EncounterDef>() {
       { EncounterDefId.EMPTY_ENCOUNTER,
         new EncounterDef(
           EncounterDefId.EMPTY_ENCOUNTER,
@@ -252,7 +252,7 @@ namespace SpaceDodgeRL.resources.gamedata {
     };
 
     // Mapping from ChallengeRating -> EncounterDefId
-    public static Dictionary<int, WeightedOption<string>[]> ChallengeRatingToEncounterDefIdOptions = new Dictionary<int, WeightedOption<string>[]>() {
+    private static Dictionary<int, WeightedOption<string>[]> ChallengeRatingToEncounterDefIdOptions = new Dictionary<int, WeightedOption<string>[]>() {
       { ChallengeRating.ZERO,
         new WeightedOption<string>[4] {
           new WeightedOption<string>(EncounterDefId.SCOUT_ENCOUNTER, 50),
@@ -320,7 +320,7 @@ namespace SpaceDodgeRL.resources.gamedata {
     };
 
     // Mapping from DungeonLevel -> ChallengeRating - this is really hard to read, with all the cruft!
-    public static Dictionary<int, WeightedOption<int>[]> DungeonLevelToChallengeRatingOptions = new Dictionary<int, WeightedOption<int>[]>() {
+    private static Dictionary<int, WeightedOption<int>[]> DungeonLevelToChallengeRatingOptions = new Dictionary<int, WeightedOption<int>[]>() {
       {1, new WeightedOption<int>[2] {
         new WeightedOption<int>(ChallengeRating.ZERO, 20),
         new WeightedOption<int>(ChallengeRating.ONE, 10)
@@ -379,6 +379,10 @@ namespace SpaceDodgeRL.resources.gamedata {
       }
       // It will never actually reach this, since Next is exclusive of the input, but it throws up a warning, so we have it.
       return choices[choices.Length - 1].Option;
+    }
+
+    public static EncounterDef GetEncounterDefById(string id) {
+      return EncounterDefs[id];
     }
 
     public static EncounterDef ChooseEncounter(int level, Random seededRand) {
