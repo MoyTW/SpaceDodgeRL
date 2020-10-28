@@ -75,6 +75,10 @@ encounter_autopilot_menu={
  ]
 }
 
+[mono]
+
+profiler/enabled=true
+
 [rendering]
 
 quality/driver/driver_name="GLES2"
