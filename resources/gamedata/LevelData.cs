@@ -55,6 +55,27 @@ namespace SpaceDodgeRL.resources.gamedata {
     }
   }
 
+  public class WeightedOption<T> {
+    T Option { get; }
+    int Weight { get; }
+
+    public WeightedOption(T option, int weight) {
+      this.Option = option;
+      this.Weight = weight;
+    }
+  }
+
+  public static class ChallengeRating {
+    public static int ZERO = 0;
+    public static int ONE = 1;
+    public static int TWO = 2;
+    public static int THREE = 3;
+    public static int FOUR = 4;
+    public static int FIVE = 5;
+    public static int SIX = 6;
+    public static int SEVEN = 7;
+  }
+
   public class LevelData {
     // TODO: easy to turn this into json and not literally just have it splatted here in a giant code file lol
     public static Dictionary<string, EncounterDef> EncounterDefs = new Dictionary<string, EncounterDef>() {
@@ -227,6 +248,117 @@ namespace SpaceDodgeRL.resources.gamedata {
                                EntityDefId.DESTROYER, EntityDefId.DESTROYER, EntityDefId.FRIGATE, EntityDefId.FRIGATE,
                                EntityDefId.FRIGATE, EntityDefId.FRIGATE, EntityDefId.FRIGATE }
         ) },
+    };
+
+    // Mapping from ChallengeRating -> EncounterDefId
+    public static Dictionary<int, WeightedOption<string>[]> ChallengeRatingToEncounterDefIdOptions = new Dictionary<int, WeightedOption<string>[]>() {
+      { ChallengeRating.ZERO,
+        new WeightedOption<string>[4] {
+          new WeightedOption<string>(EncounterDefId.SCOUT_ENCOUNTER, 50),
+          new WeightedOption<string>(EncounterDefId.SCOUT_PAIR_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.SCOUT_TRIO_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.FIGHTER_ENCOUNTER, 50)
+        }
+      },
+      { ChallengeRating.ONE,
+        new WeightedOption<string>[4] {
+          new WeightedOption<string>(EncounterDefId.FIGHTER_ENCOUNTER, 50),
+          new WeightedOption<string>(EncounterDefId.FIGHTER_RECON_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.FIGHTER_PAIR_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.GUNSHIP_ENCOUNTER, 50)
+        }
+      },
+      { ChallengeRating.TWO,
+        new WeightedOption<string>[4] {
+          new WeightedOption<string>(EncounterDefId.GUNSHIP_ENCOUNTER, 50),
+          new WeightedOption<string>(EncounterDefId.FIGHTER_FLIGHT_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.GUNSHIP_RECON_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.FRIGATE_ENCOUNTER, 50)
+        }
+      },
+      { ChallengeRating.THREE,
+        new WeightedOption<string>[4] {
+          new WeightedOption<string>(EncounterDefId.FRIGATE_ENCOUNTER, 50),
+          new WeightedOption<string>(EncounterDefId.FRIGATE_PAIR_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.FRIGATE_GUNSHIP_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.DESTROYER_ENCOUNTER, 50)
+        }
+      },
+      { ChallengeRating.FOUR,
+        new WeightedOption<string>[4] {
+          new WeightedOption<string>(EncounterDefId.DESTROYER_ENCOUNTER, 50),
+          new WeightedOption<string>(EncounterDefId.DESTROYER_FIGHTER_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.DESTROYER_FRIGATE_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.CRUISER_ENCOUNTER, 50)
+        }
+      },
+      { ChallengeRating.FIVE,
+        new WeightedOption<string>[4] {
+          new WeightedOption<string>(EncounterDefId.CRUISER_ENCOUNTER, 50),
+          new WeightedOption<string>(EncounterDefId.CRUISER_PAIR_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.CRUISER_FIGHTER_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.CARRIER_ENCOUNTER, 50)
+        }
+      },
+      { ChallengeRating.SIX,
+        new WeightedOption<string>[4] {
+          new WeightedOption<string>(EncounterDefId.CARRIER_ENCOUNTER, 50),
+          new WeightedOption<string>(EncounterDefId.CARRIER_SCREEN_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.CARRIER_DESTROYER_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.CARRIER_TASK_FORCE_ENCOUNTER, 50)
+        }
+      },
+      { ChallengeRating.SEVEN,
+        new WeightedOption<string>[4] {
+          new WeightedOption<string>(EncounterDefId.CARRIER_TASK_FORCE_ENCOUNTER, 50),
+          new WeightedOption<string>(EncounterDefId.FAST_RESPONSE_FLEET_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.HEAVY_STRIKE_FORCE_ENCOUNTER, 100),
+          new WeightedOption<string>(EncounterDefId.EVER_VICTORIOUS_FLEET_ENCOUNTER, 50)
+        }
+      },
+    };
+
+    // Mapping from DungeonLevel -> ChallengeRating - this is really hard to read, with all the cruft!
+    public static Dictionary<int, WeightedOption<int>[]> DungeonLevelToChallengeRatingOptions = new Dictionary<int, WeightedOption<int>[]>() {
+      {1, new WeightedOption<int>[2] {
+        new WeightedOption<int>(ChallengeRating.ZERO, 20),
+        new WeightedOption<int>(ChallengeRating.ONE, 10)
+      }},
+      {2, new WeightedOption<int>[3] {
+        new WeightedOption<int>(ChallengeRating.ZERO, 10),
+        new WeightedOption<int>(ChallengeRating.ONE, 20),
+        new WeightedOption<int>(ChallengeRating.TWO, 10)
+      }},
+      {3, new WeightedOption<int>[3] {
+        new WeightedOption<int>(ChallengeRating.ONE, 10),
+        new WeightedOption<int>(ChallengeRating.TWO, 20),
+        new WeightedOption<int>(ChallengeRating.THREE, 10)
+      }},
+      {4, new WeightedOption<int>[3] {
+        new WeightedOption<int>(ChallengeRating.TWO, 10),
+        new WeightedOption<int>(ChallengeRating.THREE, 20),
+        new WeightedOption<int>(ChallengeRating.FOUR, 10)
+      }},
+      {5, new WeightedOption<int>[3] {
+        new WeightedOption<int>(ChallengeRating.THREE, 10),
+        new WeightedOption<int>(ChallengeRating.FOUR, 20),
+        new WeightedOption<int>(ChallengeRating.FIVE, 10)
+      }},
+      {6, new WeightedOption<int>[3] {
+        new WeightedOption<int>(ChallengeRating.FOUR, 10),
+        new WeightedOption<int>(ChallengeRating.FIVE, 20),
+        new WeightedOption<int>(ChallengeRating.SIX, 10)
+      }},
+      {7, new WeightedOption<int>[2] {
+        new WeightedOption<int>(ChallengeRating.FIVE, 10),
+        new WeightedOption<int>(ChallengeRating.SIX, 20)
+      }},
+      {8, new WeightedOption<int>[1] {
+        new WeightedOption<int>(ChallengeRating.SIX, 1)
+      }},
+      {9, new WeightedOption<int>[1] {
+        new WeightedOption<int>(ChallengeRating.SEVEN, 1)
+      }}
     };
   }
 }
