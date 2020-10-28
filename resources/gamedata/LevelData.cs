@@ -393,6 +393,18 @@ namespace SpaceDodgeRL.resources.gamedata {
       { DungeonLevel.NINE, 1 }
     };
 
+    private static Dictionary<int, int> DungeonLevelToNumberOfSatellites = new Dictionary<int, int>() {
+      { DungeonLevel.ONE, 20 },
+      { DungeonLevel.TWO, 20 },
+      { DungeonLevel.THREE, 15 },
+      { DungeonLevel.FOUR, 15 },
+      { DungeonLevel.FIVE, 10 },
+      { DungeonLevel.SIX, 10 },
+      { DungeonLevel.SEVEN, 10 },
+      { DungeonLevel.EIGHT, 10 },
+      { DungeonLevel.NINE, 30 }
+    };
+
     private static WeightedOption<string>[] ItemOptions = new WeightedOption<string>[4] {
       new WeightedOption<string>(EntityDefId.ITEM_DUCT_TAPE, 45),
       new WeightedOption<string>(EntityDefId.ITEM_EXTRA_BATTERY, 25),
@@ -417,6 +429,10 @@ namespace SpaceDodgeRL.resources.gamedata {
       }
       // It will never actually reach this, since Next is exclusive of the input, but it throws up a warning, so we have it.
       return choices[choices.Length - 1].Option;
+    }
+
+    public static int GetNumberOfSatellites(int level) {
+      return DungeonLevelToNumberOfSatellites[level];
     }
 
     public static EncounterDef GetEncounterDefById(string id) {

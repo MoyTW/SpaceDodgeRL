@@ -297,10 +297,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     private static void PopulateZone(EncounterZone zone, Random seededRand, EncounterState state, bool safe=false) {
-      int CURRENT_DUNGEON_LEVEL = 1;
+      int CURRENT_DUNGEON_LEVEL = 1; // TODO: Fix this!
 
       // Add satellites
-      int numSatellites = 3; // TODO: Populate from the level
+      int numSatellites = LevelData.GetNumberOfSatellites(CURRENT_DUNGEON_LEVEL);
       for (int i = 0; i < numSatellites; i++) {
         var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
         var satellite = EntityBuilder.CreateSatelliteEntity();
