@@ -15,7 +15,7 @@ namespace SpaceDodgeRL.scenes.components.AI {
     public override string EntityGroup => ENTITY_GROUP;
 
     // TODO: sight-lines & group activation
-    public override bool IsActive => true;
+    public override bool IsActive => false;
 
     public static ScoutAIComponent Create() {
       return _componentPrefab.Instance() as ScoutAIComponent;
