@@ -297,6 +297,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     private static void PopulateZone(EncounterZone zone, Random seededRand, EncounterState state, bool safe=false) {
+      int CURRENT_DUNGEON_LEVEL = 1;
+
       // Add satellites
       int numSatellites = 3; // TODO: Populate from the level
       for (int i = 0; i < numSatellites; i++) {
@@ -310,12 +312,13 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         encounterDef = LevelData.GetEncounterDefById(EncounterDefId.EMPTY_ENCOUNTER);
       } else {
         // TODO: Levels!
-        encounterDef = LevelData.ChooseEncounter(1, seededRand);
+        encounterDef = LevelData.ChooseEncounter(CURRENT_DUNGEON_LEVEL, seededRand);
       }
 
       foreach (string entityDefId in encounterDef.EntityDefIds) {
         var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
 
+        // TODO: Put this into a map or at least a function or something
         Entity newEntity;
         if (entityDefId == EntityDefId.SCOUT) {
           newEntity = EntityBuilder.CreateScoutEntity();
@@ -342,6 +345,21 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         }
         
         state.PlaceEntity(newEntity, unblockedPosition);
+      }
+
+      var chosenItemDefs = LevelData.ChooseItemDefs(CURRENT_DUNGEON_LEVEL, seededRand);
+      foreach(string chosenItemDefId in chosenItemDefs) {
+        if (chosenItemDefId == EntityDefId.ITEM_DUCT_TAPE) {
+          GD.Print("TODO: No implementation yet for ID ", chosenItemDefId);
+        } else if (chosenItemDefId == EntityDefId.ITEM_EXTRA_BATTERY) {
+          GD.Print("TODO: No implementation yet for ID ", chosenItemDefId);
+        } else if (chosenItemDefId == EntityDefId.ITEM_RED_PAINT) {
+          GD.Print("TODO: No implementation yet for ID ", chosenItemDefId);
+        } else if (chosenItemDefId == EntityDefId.ITEM_EMP) {
+          GD.Print("TODO: No implementation yet for ID ", chosenItemDefId);
+        } else {
+          throw new NotImplementedException("Cannot place item " + chosenItemDefId + " no such def!");
+        }
       }
     }
 

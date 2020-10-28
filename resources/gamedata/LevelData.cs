@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace SpaceDodgeRL.resources.gamedata {
 
   public static class EntityDefId {
+    // Enemies
     public static string SCOUT = "ENTITY_DEF_ID_SCOUT";
     public static string FIGHTER = "ENTITY_DEF_ID_FIGHTER";
     public static string GUNSHIP = "ENTITY_DEF_ID_GUNSHIP";
@@ -11,6 +12,12 @@ namespace SpaceDodgeRL.resources.gamedata {
     public static string DESTROYER = "ENTITY_DEF_ID_DESTROYER";
     public static string CRUISER = "ENTITY_DEF_ID_CRUISER";
     public static string CARRIER = "ENTITY_DEF_ID_CARRIER";
+
+    // Items
+    public static string ITEM_DUCT_TAPE = "ENTITY_DEF_ID_ITEM_DUCT_TAPE";
+    public static string ITEM_EXTRA_BATTERY = "ENTITY_DEF_ID_ITEM_EXTRA_BATTERY";
+    public static string ITEM_RED_PAINT = "ENTITY_DEF_ID_ITEM_RED_PAINT";
+    public static string ITEM_EMP = "ENTITY_DEF_ID_ITEM_EMP";
   }
 
   public static class EncounterDefId {
@@ -75,6 +82,18 @@ namespace SpaceDodgeRL.resources.gamedata {
     public static int FIVE = 5;
     public static int SIX = 6;
     public static int SEVEN = 7;
+  }
+
+  public static class DungeonLevel {
+    public static int ONE = 1;
+    public static int TWO = 2;
+    public static int THREE = 3;
+    public static int FOUR = 4;
+    public static int FIVE = 5;
+    public static int SIX = 6;
+    public static int SEVEN = 7;
+    public static int EIGHT = 8;
+    public static int NINE = 9;
   }
 
   public static class LevelData {
@@ -362,6 +381,25 @@ namespace SpaceDodgeRL.resources.gamedata {
       }}
     };
 
+    private static Dictionary<int, int> DungeonLevelToMaxItems = new Dictionary<int, int>() {
+      { DungeonLevel.ONE, 3 },
+      { DungeonLevel.TWO, 3 },
+      { DungeonLevel.THREE, 3 },
+      { DungeonLevel.FOUR, 2 },
+      { DungeonLevel.FIVE, 2 },
+      { DungeonLevel.SIX, 1 },
+      { DungeonLevel.SEVEN, 1 },
+      { DungeonLevel.EIGHT, 1 },
+      { DungeonLevel.NINE, 1 }
+    };
+
+    private static WeightedOption<string>[] ItemOptions = new WeightedOption<string>[4] {
+      new WeightedOption<string>(EntityDefId.ITEM_DUCT_TAPE, 45),
+      new WeightedOption<string>(EntityDefId.ITEM_EXTRA_BATTERY, 25),
+      new WeightedOption<string>(EntityDefId.ITEM_RED_PAINT, 10),
+      new WeightedOption<string>(EntityDefId.ITEM_EMP, 10)
+    };
+
     // No thought put into perf surely that's fine right (well it only happens once per level soooo)
     private static T PickChoice<T>(WeightedOption<T>[] choices, Random seededRand) {
       int sum = 0;
@@ -389,6 +427,17 @@ namespace SpaceDodgeRL.resources.gamedata {
       int challengeRating = PickChoice(DungeonLevelToChallengeRatingOptions[level], seededRand);
       string encounterDefId = PickChoice(ChallengeRatingToEncounterDefIdOptions[challengeRating], seededRand);
       return EncounterDefs[encounterDefId];
+    }
+
+    public static List<string> ChooseItemDefs(int level, Random seededRand) {
+      List<string> chosenItems = new List<string>();
+
+      int numItems = seededRand.Next(DungeonLevelToMaxItems[level] + 1);
+      for (int i = 0; i < numItems; i++) {
+        chosenItems.Add(PickChoice(ItemOptions, seededRand));
+      }
+
+      return chosenItems;
     }
   }
 }
