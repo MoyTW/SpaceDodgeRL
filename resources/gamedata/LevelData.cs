@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SpaceDodgeRL.resources.gamedata {
@@ -56,8 +57,8 @@ namespace SpaceDodgeRL.resources.gamedata {
   }
 
   public class WeightedOption<T> {
-    T Option { get; }
-    int Weight { get; }
+    public T Option { get; }
+    public int Weight { get; }
 
     public WeightedOption(T option, int weight) {
       this.Option = option;
@@ -76,7 +77,7 @@ namespace SpaceDodgeRL.resources.gamedata {
     public static int SEVEN = 7;
   }
 
-  public class LevelData {
+  public static class LevelData {
     // TODO: easy to turn this into json and not literally just have it splatted here in a giant code file lol
     public static Dictionary<string, EncounterDef> EncounterDefs = new Dictionary<string, EncounterDef>() {
       { EncounterDefId.EMPTY_ENCOUNTER,
@@ -360,5 +361,30 @@ namespace SpaceDodgeRL.resources.gamedata {
         new WeightedOption<int>(ChallengeRating.SEVEN, 1)
       }}
     };
+
+    // No thought put into perf surely that's fine right (well it only happens once per level soooo)
+    private static T PickChoice<T>(WeightedOption<T>[] choices, Random seededRand) {
+      int sum = 0;
+      foreach(WeightedOption<T> option in choices) {
+        sum += option.Weight;
+      }
+
+      int toNext = seededRand.Next(sum);
+      foreach(WeightedOption<T> option in choices) {
+        if (toNext < option.Weight) {
+          return option.Option;
+        } else {
+          toNext -= option.Weight;
+        }
+      }
+      // It will never actually reach this, since Next is exclusive of the input, but it throws up a warning, so we have it.
+      return choices[choices.Length - 1].Option;
+    }
+
+    public static EncounterDef ChooseEncounter(int level, Random seededRand) {
+      int challengeRating = PickChoice(DungeonLevelToChallengeRatingOptions[level], seededRand);
+      string encounterDefId = PickChoice(ChallengeRatingToEncounterDefIdOptions[challengeRating], seededRand);
+      return EncounterDefs[encounterDefId];
+    }
   }
 }
