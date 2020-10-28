@@ -134,7 +134,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
 
       return this._encounterTiles[x, y].Entities.FirstOrDefault<Entity>(e => {
-        return e.GetComponent<CollisionComponent>().BlocksMovement;
+        var collisionComponent = e.GetComponent<CollisionComponent>();
+        return collisionComponent != null && collisionComponent.BlocksMovement;
       });
     }
 
@@ -412,6 +413,16 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // Add all the various zone features to the map
       // TODO: Handle last level & add diplomat
       // TODO: Generate & implement stairs
+
+      // Generate the stairs (maybe we should refer interally as something more themetically appropriate?)
+      // You can get stairs in your starting zone, but you probably shouldn't take them...
+      var stairsZone = zones[playerZoneIdx];
+      //var stairsZone = zones[seededRand.Next(0, zones.Count)];
+      var stairsPosition = stairsZone.RandomUnblockedPosition(seededRand, state);
+      // TODO: Register the stairs in the zone!
+      var stairs = EntityBuilder.CreateStairsEntity();
+      state.PlaceEntity(stairs, stairsPosition);
+
       // TODO: Generate & implement Intel
 
       // Populate each zone with an encounter

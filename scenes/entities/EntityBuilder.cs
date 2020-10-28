@@ -10,6 +10,7 @@ namespace SpaceDodgeRL.scenes.entities {
     // I assume these are all loaded at the same time as _Ready()?
     private static PackedScene _entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
 
+    private static string _JPath = "res://resources/atlas_J.tres";
     private static string _sPath = "res://resources/atlas_s.tres";
     private static string _AtSignPath = "res://resources/atlas_@.tres";
     private static string _StarPath = "res://resources/atlas_Star.tres";
@@ -78,6 +79,14 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddChild(CollisionComponent.Create(blocksMovement: true, blocksVision: true));
       e.AddChild(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, logDamage: false));
       e.AddChild(SpriteDataComponent.Create(_hashSignPath));
+
+      return e;
+    }
+
+    public static Entity CreateStairsEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "jump point");
+
+      e.AddChild(SpriteDataComponent.Create(_JPath));
 
       return e;
     }
