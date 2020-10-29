@@ -322,17 +322,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       var chosenItemDefs = LevelData.ChooseItemDefs(dungeonLevel, seededRand);
       foreach(string chosenItemDefId in chosenItemDefs) {
-        if (chosenItemDefId == EntityDefId.ITEM_DUCT_TAPE) {
-          GD.Print("TODO: No implementation yet for ID ", chosenItemDefId);
-        } else if (chosenItemDefId == EntityDefId.ITEM_EXTRA_BATTERY) {
-          GD.Print("TODO: No implementation yet for ID ", chosenItemDefId);
-        } else if (chosenItemDefId == EntityDefId.ITEM_RED_PAINT) {
-          GD.Print("TODO: No implementation yet for ID ", chosenItemDefId);
-        } else if (chosenItemDefId == EntityDefId.ITEM_EMP) {
-          GD.Print("TODO: No implementation yet for ID ", chosenItemDefId);
-        } else {
-          throw new NotImplementedException("Cannot place item " + chosenItemDefId + " no such def!");
-        }
+        var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
+        var newEntity = EntityBuilder.CreateEntityByEntityDefId(chosenItemDefId);
+        state.PlaceEntity(newEntity, unblockedPosition);
       }
     }
 
@@ -380,6 +372,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // Add the player to the map
       var playerZoneIdx = seededRand.Next(0, zones.Count);
       state.PlaceEntity(player, zones[playerZoneIdx].Center);
+      // TODO: delete the following test item
+      var nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 1, zones[playerZoneIdx].Center.Y + 1);
+      state.PlaceEntity(EntityBuilder.CreateEntityByEntityDefId(EntityDefId.ITEM_DUCT_TAPE), nextToPlayer);
 
       // Add all the various zone features to the map
       // TODO: Handle last level & add diplomat

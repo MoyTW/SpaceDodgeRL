@@ -11,6 +11,7 @@ namespace SpaceDodgeRL.scenes.entities {
     // I assume these are all loaded at the same time as _Ready()?
     private static PackedScene _entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
 
+    private static string _tPath = "res://resources/atlas_t.tres";
     private static string _FPath = "res://resources/atlas_F.tres";
     private static string _JPath = "res://resources/atlas_J.tres";
     private static string _SPath = "res://resources/atlas_S.tres";
@@ -52,6 +53,17 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
+    // TODO: Add Use ability
+    // TODO: Add "always true even in FoW" tag
+    private static Entity CreateDuctTapeEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "duct tape");
+
+      e.AddChild(SpriteDataComponent.Create(_tPath));
+      e.AddChild(StorableComponent.Create());
+
+      return e;
+    }
+
     public static Entity CreateEntityByEntityDefId(string entityDefId) {
       if (entityDefId == EntityDefId.SCOUT) {
         return EntityBuilder.CreateScoutEntity();
@@ -72,6 +84,17 @@ namespace SpaceDodgeRL.scenes.entities {
       } else if (entityDefId == EntityDefId.CARRIER) {
         GD.Print("TODO: No implementation yet for ID ", entityDefId);
         return EntityBuilder.CreateScoutEntity();
+      } else if (entityDefId == EntityDefId.ITEM_DUCT_TAPE) {
+        return EntityBuilder.CreateDuctTapeEntity();
+      } else if (entityDefId == EntityDefId.ITEM_EXTRA_BATTERY) {
+        GD.Print("TODO: No implementation yet for ID ", entityDefId);
+        return EntityBuilder.CreateDuctTapeEntity();
+      } else if (entityDefId == EntityDefId.ITEM_RED_PAINT) {
+        GD.Print("TODO: No implementation yet for ID ", entityDefId);
+        return EntityBuilder.CreateDuctTapeEntity();
+      } else if (entityDefId == EntityDefId.ITEM_EMP) {
+        GD.Print("TODO: No implementation yet for ID ", entityDefId);
+        return EntityBuilder.CreateDuctTapeEntity();
       } else {
         throw new NotImplementedException("No mapping defined for " + entityDefId);
       }
