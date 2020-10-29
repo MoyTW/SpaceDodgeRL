@@ -15,6 +15,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       { ActionType.AUTOPILOT, (a, s) => ResolveAutopilot(a as AutopilotAction, s) },
       { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
       { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
+      { ActionType.GET_ITEM, (a, s) => ResolveGetItem(a as GetItemAction, s) },
       { ActionType.SELF_DESTRUCT, (a, s) => ResolveSelfDestruct(a as SelfDestructAction, s) },
       { ActionType.USE_STAIRS, (a, s) => ResolveUseStairs(a as UseStairsAction, s) },
       { ActionType.WAIT, (a, s) => ResolveWait(a as WaitAction, s) }
@@ -124,6 +125,23 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       var actorPosition = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>().EncounterPosition;
       Entity projectile = EntityBuilder.CreateProjectileEntity(action.ProjectileName, action.Power, action.PathFunction(actorPosition), action.Speed);
       state.PlaceEntity(projectile, actorPosition, true);
+    }
+
+    private static void ResolveGetItem(GetItemAction action, EncounterState state) {
+      var actor = state.GetEntityById(action.ActorId);
+      var actorPosition = actor.GetComponent<PositionComponent>().EncounterPosition;
+      var item = state.EntitiesAtPosition(actorPosition.X, actorPosition.Y)
+                      .FirstOrDefault(e => e.GetComponent<StorableComponent>() != null);
+
+      if (item != null) {
+        state.RemoveEntity(item);
+        actor.GetComponent<InventoryComponent>().AddEntity(item);
+
+        var logMessage = string.Format("[b]{0}[/b] has taken the [b]{1}[/b]", actor.EntityName, item.EntityName);
+        state.LogMessage(logMessage);
+      } else {
+        GD.Print("TODO: Make this not eat your turn!");
+      }
     }
 
     private static void ResolveSelfDestruct(SelfDestructAction action, EncounterState state) {
