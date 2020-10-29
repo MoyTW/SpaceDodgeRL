@@ -112,9 +112,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="EncounterCamera" type="Camera2D" parent="."]
-current = true
-
 [node name="DangerMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
 cell_size = Vector2( 24, 36 )

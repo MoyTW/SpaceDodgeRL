@@ -38,18 +38,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     #region Data Access
     // ##########################################################################################################################
 
-    private Entity _player;
-    public Entity Player {
-      get {
-        if (_player != null) {
-          return _player;
-        } else {
-          _player = GetTree().GetNodesInGroup(PlayerComponent.ENTITY_GROUP)[0] as Entity;
-          return _player;
-        }
-      }
-    }
-
+    public Entity Player { get; private set; }
+    public int DungeonLevel { get; private set; }
     public Entity NextEntity { get; private set; }
 
     /**
@@ -173,6 +163,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public void RemoveEntity(Entity entity) {
       var positionComponent = entity.GetComponent<PositionComponent>();
       entity.RemoveChild(positionComponent);
+      positionComponent.QueueFree();
 
       var entityPosition = positionComponent.EncounterPosition;
       RemoveChild(entity);
@@ -305,11 +296,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, this.EncounterLogSize);
     }
 
-    private static void PopulateZone(EncounterZone zone, Random seededRand, EncounterState state, bool safe=false) {
-      int CURRENT_DUNGEON_LEVEL = 1; // TODO: Fix this!
-
+    private static void PopulateZone(EncounterZone zone, int dungeonLevel, Random seededRand, EncounterState state, bool safe=false) {
       // Add satellites
-      int numSatellites = LevelData.GetNumberOfSatellites(CURRENT_DUNGEON_LEVEL);
+      int numSatellites = LevelData.GetNumberOfSatellites(dungeonLevel);
       for (int i = 0; i < numSatellites; i++) {
         var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
         var satellite = EntityBuilder.CreateSatelliteEntity();
@@ -322,7 +311,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         encounterDef = LevelData.GetEncounterDefById(EncounterDefId.EMPTY_ENCOUNTER);
       } else {
         // TODO: Levels!
-        encounterDef = LevelData.ChooseEncounter(CURRENT_DUNGEON_LEVEL, seededRand);
+        encounterDef = LevelData.ChooseEncounter(dungeonLevel, seededRand);
       }
 
       foreach (string entityDefId in encounterDef.EntityDefIds) {
@@ -357,7 +346,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         state.PlaceEntity(newEntity, unblockedPosition);
       }
 
-      var chosenItemDefs = LevelData.ChooseItemDefs(CURRENT_DUNGEON_LEVEL, seededRand);
+      var chosenItemDefs = LevelData.ChooseItemDefs(dungeonLevel, seededRand);
       foreach(string chosenItemDefId in chosenItemDefs) {
         if (chosenItemDefId == EntityDefId.ITEM_DUCT_TAPE) {
           GD.Print("TODO: No implementation yet for ID ", chosenItemDefId);
@@ -374,8 +363,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     // TODO: Seeded rand
-    public static void DoTempMapGen(EncounterState state, Random seededRand, int width = 300, int height = 300,
-        int maxZones = 10, int maxZoneGenAttempts = 100) {
+    public static void DoTempMapGen(Entity player, int dungeonLevel, EncounterState state, Random seededRand,
+        int width = 300, int height = 300, int maxZones = 10, int maxZoneGenAttempts = 100) {
       // Initialize the map with empty tiles
       state.MapWidth = width;
       state.MapHeight = height;
@@ -416,7 +405,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       // Add the player to the map
       var playerZoneIdx = seededRand.Next(0, zones.Count);
-      state.PlaceEntity(EntityBuilder.CreatePlayerEntity(), zones[playerZoneIdx].Center);
+      state.PlaceEntity(player, zones[playerZoneIdx].Center);
 
       // Add all the various zone features to the map
       // TODO: Handle last level & add diplomat
@@ -436,30 +425,47 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // Populate each zone with an encounter
       foreach (EncounterZone zone in zones) {
         if (zone == zones[playerZoneIdx]) {
-          PopulateZone(zone, seededRand, state, safe: true);
+          PopulateZone(zone, dungeonLevel, seededRand, state, safe: true);
         } else {
-          PopulateZone(zone, seededRand, state);
+          PopulateZone(zone, dungeonLevel, seededRand, state);
         }
       }
     }
 
     // TODO: Move into map gen & save/load
-    public void InitState() {
+    public void InitState(Entity player, int dungeonLevel) {
+      string ENCOUNTER_CAMERA_GROUP = "ENCOUNTER_CAMERA_GROUP";
+      // TODO: Rather than re-using a state when we switch levels, I'd rather sub in a new one, but I think I need to think
+      // about how that'd work in Godot, since we'd need to do some rewiring and the state has the camera, which is ugh.
+      foreach (Entity e in GetTree().GetNodesInGroup(Entity.ENTITY_GROUP)) {
+        if (e.GetParent() == this) {
+          this.RemoveEntity(e);
+          if (e != player) {
+            e.QueueFree();
+          }
+        }
+      }
+
+      this.Player = player;
+      this.DungeonLevel = dungeonLevel;
+
       // This class is kinda becoming a monster WRT "here's a cached thing for perf/getting around Godot reasons!"
       this._encounterLog = new List<string>();
       this._entitiesById = new Dictionary<string, Entity>();
 
       // TODO: Map gen seed properly
-      DoTempMapGen(this, new Random(1));
+      DoTempMapGen(player, dungeonLevel, this, new Random(1));
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
-      var camera = GetNode<Camera2D>("EncounterCamera");
-      RemoveChild(camera);
-      // TODO: VERY DEFINITELY DON'T KEEP DOING THIS!!!
-      Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
+      if (GetTree().GetNodesInGroup(ENCOUNTER_CAMERA_GROUP).Count == 0) {
+        var camera = new Camera2D();
+        camera.AddToGroup(ENCOUNTER_CAMERA_GROUP);
+        camera.Current = true;
+        Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
+      }
 
       // Populate all our initial caches
-      this.LogMessage("Encounter started!");
+      this.LogMessage(string.Format("Level {0} started!", dungeonLevel));
       this.CalculateNextEntity();
       // Init FoW overlay as all back
       this.InitFoWOverlay();

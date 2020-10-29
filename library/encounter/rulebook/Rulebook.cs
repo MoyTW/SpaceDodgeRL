@@ -112,7 +112,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       var stairs = state.EntitiesAtPosition(actorPosition.X, actorPosition.Y)
                         .FirstOrDefault(e => e.GetComponent<StairsComponent>() != null);
       if (stairs != null) {
-        GD.Print("TODO: Generate a new level and toss the player into it");
+        state.InitState(state.Player, state.DungeonLevel + 1);
       } else {
         GD.Print("TODO: Make this not eat your turn!");
       }

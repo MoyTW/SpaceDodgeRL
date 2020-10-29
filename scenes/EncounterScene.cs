@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.scenes.encounter;
 using SpaceDodgeRL.scenes.encounter.state;
+using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes {
 
@@ -21,7 +22,8 @@ namespace SpaceDodgeRL.scenes {
       encounterState.Connect("EncounterLogMessageAdded", this, "OnEncounterLogMessageAdded");
 
       // TODO: Proper state initialization & building & such!
-      encounterState.InitState();
+      var player = EntityBuilder.CreatePlayerEntity();
+      encounterState.InitState(player, 1);
     }
 
     // TODO: Decide if this is better placed directly onto the log label
