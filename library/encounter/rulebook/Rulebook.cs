@@ -113,7 +113,8 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     private static void ResolveUse(UseAction action, EncounterState state) {
       // We assume that the used entity must be in the inventory of the user - this is pretty fragile and might change.
       var user = state.GetEntityById(action.ActorId);
-      var usable = user.GetComponent<InventoryComponent>().StoredEntityById(action.UsableId);
+      var userInventory = user.GetComponent<InventoryComponent>();
+      var usable = userInventory.StoredEntityById(action.UsableId);
 
       if (usable.GetComponent<UsableComponent>() == null) {
         throw new NotImplementedException("can't use non-usable thing TODO: Handle better!");
@@ -135,6 +136,10 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.Player.GetComponent<PlayerComponent>().RegisterIntel(useEffectAddIntel.TargetDungeonLevel);
         state.LogMessage(string.Format("Discovered intel for [b]sector {0}[/b]!", useEffectAddIntel.TargetDungeonLevel));
       }
+
+      // We assume all items are single-use; this will change if I deviate from the reference implementation!
+      userInventory.RemoveEntity(usable);
+      usable.QueueFree();
     }
 
     private static void ResolveUseStairs(UseStairsAction action, EncounterState state) {
