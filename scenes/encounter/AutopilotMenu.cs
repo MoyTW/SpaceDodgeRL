@@ -19,21 +19,25 @@ public class AutopilotMenu : HBoxContainer {
   }
 
   private void ResetZones(ReadOnlyCollection<EncounterZone> zones, int mapWidth, int mapHeight) {
-    // TODO: Put a You Are Here in!
-    // For the system map
     var systemMap = this.GetNode<Control>("SystemMap");
+    var sidebarContainer = this.GetNode<VBoxContainer>("SidebarContainer/ButtonConsole/DynamicButtonsContainer");
 
+    // Clear all the old zone data
     foreach(Node child in systemMap.GetChildren()) {
       systemMap.RemoveChild(child);
       child.QueueFree();
     }
+    foreach (Node child in sidebarContainer.GetChildren()) {
+      sidebarContainer.RemoveChild(child);
+      child.QueueFree();
+    }
 
     foreach (EncounterZone zone in zones) {
-      var button = new Button();
-      button.AddToGroup(AutopilotMenu.ZONE_BUTTON_GROUP);
-      button.Text = zone.Name;
-      button.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone });
-      // TODO: Also scale the width/height of the zone
+      // Add the system
+      var systemButton = new Button();
+      systemButton.Text = zone.Name;
+      systemButton.AddToGroup(AutopilotMenu.ZONE_BUTTON_GROUP);
+      systemButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone });
       // TODO: It doesn't scale if you resize the window
       // TODO: Make it look less dumb
       float x1Percentage = (zone.X1 + 1) / (float)mapWidth;
@@ -41,26 +45,22 @@ public class AutopilotMenu : HBoxContainer {
       float scaledX1 = systemMap.RectSize.x * x1Percentage;
       float scaledY1 = systemMap.RectSize.y * y1Percentage;
 
-      button.RectPosition = new Vector2(scaledX1, scaledY1);
+      systemButton.RectPosition = new Vector2(scaledX1, scaledY1);
 
-      systemMap.AddChild(button);
-    }
+      float widthPercentage = (zone.Width) / (float)mapWidth;
+      float heightPercentage = (zone.Height) / (float)mapHeight;
+      float scaledWidth = systemMap.RectSize.x * widthPercentage;
+      float scaledHeight = systemMap.RectSize.y * heightPercentage;
 
-    // For the sidebar buttons
-    var buttonContainer = this.GetNode<VBoxContainer>("SidebarContainer/ButtonConsole/DynamicButtonsContainer");
+      systemButton.RectSize = new Vector2(scaledWidth, scaledHeight);
 
-    // Remove old nodes
-    foreach (Node child in buttonContainer.GetChildren()) {
-      buttonContainer.RemoveChild(child);
-      child.QueueFree();
-    }
+      systemMap.AddChild(systemButton);
 
-    // Add new nodes
-    foreach (EncounterZone zone in zones) {
-      var button = new Button();
-      button.Text = zone.Name;
-      button.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone });
-      buttonContainer.AddChild(button);
+      // Add the sidebar
+      var sidebarButton = new Button();
+      sidebarButton.Text = zone.Name;
+      sidebarButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone });
+      sidebarContainer.AddChild(sidebarButton);
     }
   }
 
@@ -71,6 +71,7 @@ public class AutopilotMenu : HBoxContainer {
       ResetZones(state.Zones, state.MapWidth, state.MapHeight);
     }
     
+    // TODO: Add You Are Here onto the starmap too!
     // You Are Here label
     var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
     EncounterZone closestZone = null;
