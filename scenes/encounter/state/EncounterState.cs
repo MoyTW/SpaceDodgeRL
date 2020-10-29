@@ -316,33 +316,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       foreach (string entityDefId in encounterDef.EntityDefIds) {
         var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
-
-        // TODO: Put this into a map or at least a function or something
-        Entity newEntity;
-        if (entityDefId == EntityDefId.SCOUT) {
-          newEntity = EntityBuilder.CreateScoutEntity();
-        } else if (entityDefId == EntityDefId.FIGHTER) {
-          GD.Print("TODO: No implementation yet for ID ", entityDefId);
-          newEntity = EntityBuilder.CreateScoutEntity();
-        } else if (entityDefId == EntityDefId.GUNSHIP) {
-          GD.Print("TODO: No implementation yet for ID ", entityDefId);
-          newEntity = EntityBuilder.CreateScoutEntity();
-        } else if (entityDefId == EntityDefId.FRIGATE) {
-          GD.Print("TODO: No implementation yet for ID ", entityDefId);
-          newEntity = EntityBuilder.CreateScoutEntity();
-        } else if (entityDefId == EntityDefId.DESTROYER) {
-          GD.Print("TODO: No implementation yet for ID ", entityDefId);
-          newEntity = EntityBuilder.CreateScoutEntity();
-        } else if (entityDefId == EntityDefId.CRUISER) {
-          GD.Print("TODO: No implementation yet for ID ", entityDefId);
-          newEntity = EntityBuilder.CreateScoutEntity();
-        } else if (entityDefId == EntityDefId.CARRIER) {
-          GD.Print("TODO: No implementation yet for ID ", entityDefId);
-          newEntity = EntityBuilder.CreateScoutEntity();
-        } else {
-          throw new NotImplementedException("No enemy tag for " + entityDefId);
-        }
-        
+        var newEntity = EntityBuilder.CreateEntityByEntityDefId(entityDefId);
         state.PlaceEntity(newEntity, unblockedPosition);
       }
 

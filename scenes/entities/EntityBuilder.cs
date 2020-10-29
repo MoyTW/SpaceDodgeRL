@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using SpaceDodgeRL.library.encounter;
+using SpaceDodgeRL.resources.gamedata;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
 
@@ -22,20 +23,7 @@ namespace SpaceDodgeRL.scenes.entities {
       return newEntity;
     }
 
-    public static Entity CreatePlayerEntity() {
-      var e = CreateEntity(Guid.NewGuid().ToString(), "player");
-
-      e.AddChild(ActionTimeComponent.Create(0));
-      e.AddChild(CollisionComponent.Create(true, false));
-      e.AddChild(DefenderComponent.Create(0, 100));
-      e.AddChild(PlayerComponent.Create());
-      e.AddChild(SpriteDataComponent.Create(_AtSignPath));
-      e.AddChild(SpeedComponent.Create(100));
-
-      return e;
-    }
-
-    public static Entity CreateScoutEntity() {
+    private static Entity CreateScoutEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "scout");
 
       e.AddChild(ScoutAIComponent.Create());
@@ -45,6 +33,45 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddChild(DefenderComponent.Create(0, 3, isInvincible: true));
       e.AddChild(SpriteDataComponent.Create(_sPath));
       e.AddChild(SpeedComponent.Create(200));
+
+      return e;
+    }
+
+    public static Entity CreateEntityByEntityDefId(string entityDefId) {
+      if (entityDefId == EntityDefId.SCOUT) {
+        return EntityBuilder.CreateScoutEntity();
+      } else if (entityDefId == EntityDefId.FIGHTER) {
+        GD.Print("TODO: No implementation yet for ID ", entityDefId);
+        return EntityBuilder.CreateScoutEntity();
+      } else if (entityDefId == EntityDefId.GUNSHIP) {
+        GD.Print("TODO: No implementation yet for ID ", entityDefId);
+        return EntityBuilder.CreateScoutEntity();
+      } else if (entityDefId == EntityDefId.FRIGATE) {
+        GD.Print("TODO: No implementation yet for ID ", entityDefId);
+        return EntityBuilder.CreateScoutEntity();
+      } else if (entityDefId == EntityDefId.DESTROYER) {
+        GD.Print("TODO: No implementation yet for ID ", entityDefId);
+        return EntityBuilder.CreateScoutEntity();
+      } else if (entityDefId == EntityDefId.CRUISER) {
+        GD.Print("TODO: No implementation yet for ID ", entityDefId);
+        return EntityBuilder.CreateScoutEntity();
+      } else if (entityDefId == EntityDefId.CARRIER) {
+        GD.Print("TODO: No implementation yet for ID ", entityDefId);
+        return EntityBuilder.CreateScoutEntity();
+      } else {
+        throw new NotImplementedException("No mapping defined for " + entityDefId);
+      }
+    }
+
+    public static Entity CreatePlayerEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "player");
+
+      e.AddChild(ActionTimeComponent.Create(0));
+      e.AddChild(CollisionComponent.Create(true, false));
+      e.AddChild(DefenderComponent.Create(0, 100));
+      e.AddChild(PlayerComponent.Create());
+      e.AddChild(SpriteDataComponent.Create(_AtSignPath));
+      e.AddChild(SpeedComponent.Create(100));
 
       return e;
     }
