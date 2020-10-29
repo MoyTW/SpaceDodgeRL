@@ -121,6 +121,14 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action == InputHandler.ActionMapping.GET_ITEM) {
           // TODO: Shouldn't end turn if fails due to no gettable items
           PlayerExecuteTurnEndingAction(new GetItemAction(entity.EntityId), state);
+        } else if (action == InputHandler.ActionMapping.USE_ITEM) {
+          // TODO: Query player for "what item"
+          var items = state.Player.GetComponent<InventoryComponent>().StoredItems;
+          if (items.Count > 0) {
+            PlayerExecuteTurnEndingAction(new UseAction(entity.EntityId, (items[0] as Entity).EntityId), state);
+          } else {
+            GD.Print("TODO: you have no items, fix this janky 'use first' prototype");
+          }
         } else if (entity.GetComponent<PlayerComponent>().IsAutopiloting) {
           // TODO: Allow player to interrupt to turn off autopiloting
           // TODO: If your machine is slow and you buffer your move inputs/use autopilot the targeting reticule and FoW sort
@@ -133,6 +141,8 @@ namespace SpaceDodgeRL.scenes.encounter {
             // TODO: STOP_AUTOPILOTING action, don't state change here
             entity.GetComponent<PlayerComponent>().StopAutopiloting();
           }
+        } else if (action != null) {
+          GD.Print("No handler yet for ", action);
         }
       } else {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();

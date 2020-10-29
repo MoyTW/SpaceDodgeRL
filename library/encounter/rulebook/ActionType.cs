@@ -6,6 +6,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     GET_ITEM,
     MOVE,
     SELF_DESTRUCT,
+    USE,
     USE_STAIRS,
     WAIT
   }

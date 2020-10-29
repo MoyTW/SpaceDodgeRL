@@ -33,6 +33,20 @@ namespace SpaceDodgeRL.scenes.components {
     }
 
     /**
+     * Returns the number of HP restored.
+     */
+    public int RestoreHP(int hp, bool overheal=false) {
+      int startingHp = this.CurrentHp;
+
+      this.CurrentHp += hp;
+      if (!overheal && this.CurrentHp > this.MaxHp) {
+        this.CurrentHp = this.MaxHp;
+      }
+
+      return this.CurrentHp - startingHp;
+    }
+
+    /**
      * Directly removes HP, without any checks
      */
     public void RemoveHp(int hp) {

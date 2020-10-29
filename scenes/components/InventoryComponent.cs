@@ -22,6 +22,17 @@ namespace SpaceDodgeRL.scenes.components {
       return component;
     }
 
+    public Godot.Collections.Array StoredItems { get => this.GetChildren(); }
+
+    public Entity StoredEntityById(string entityId) {
+      foreach (Entity e in StoredItems) {
+        if (e.EntityId == entityId) {
+          return e;
+        }
+      }
+      return null;
+    }
+
     public bool CanFit(Entity entity) {
       var storableComponent = entity.GetComponent<StorableComponent>();
       return storableComponent != null && this.InventoryUsed + storableComponent.Size <= this.InventorySize;

@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.library.encounter.rulebook.actions;
 using SpaceDodgeRL.scenes.components;
+using SpaceDodgeRL.scenes.components.use;
 using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
 using System;
@@ -17,6 +18,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
       { ActionType.GET_ITEM, (a, s) => ResolveGetItem(a as GetItemAction, s) },
       { ActionType.SELF_DESTRUCT, (a, s) => ResolveSelfDestruct(a as SelfDestructAction, s) },
+      { ActionType.USE, (a, s) => ResolveUse(a as UseAction, s) },
       { ActionType.USE_STAIRS, (a, s) => ResolveUseStairs(a as UseStairsAction, s) },
       { ActionType.WAIT, (a, s) => ResolveWait(a as WaitAction, s) }
     };
@@ -105,6 +107,26 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         }
       } else {
         state.TeleportEntity(actor, action.TargetPosition);
+      }
+    }
+
+    private static void ResolveUse(UseAction action, EncounterState state) {
+      // We assume that the used entity must be in the inventory of the user - this is pretty fragile and might change.
+      var user = state.GetEntityById(action.ActorId);
+      var usable = user.GetComponent<InventoryComponent>().StoredEntityById(action.UsableId);
+
+      if (usable.GetComponent<UsableComponent>() == null) {
+        throw new NotImplementedException("can't use non-usable thing TODO: Handle better!");
+      }
+
+      state.LogMessage(string.Format("{0} used {1}!", user.EntityName, usable.EntityName));
+
+      // We keep this logic here instead of in the component itself because the component should have only state data. That said
+      // we shouldn't keep it, like, *here* here, 'least not indefinitely.
+      var useEffectHeal = usable.GetComponent<UseEffectHealComponent>();
+      if (useEffectHeal != null) {
+        var restored = user.GetComponent<DefenderComponent>().RestoreHP(useEffectHeal.Healpower);
+        state.LogMessage(string.Format("{0} restored {1} HP to {2}!", usable.EntityName, restored, user.EntityName));
       }
     }
 
