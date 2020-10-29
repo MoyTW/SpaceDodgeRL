@@ -62,7 +62,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddChild(SpriteDataComponent.Create(_tPath));
       e.AddChild(StorableComponent.Create());
       e.AddChild(UsableComponent.Create());
-      e.AddChild(OnUseHealComponent.Create(healpower: 10));
+      e.AddChild(UseEffectHealComponent.Create(healpower: 10));
 
       return e;
     }
