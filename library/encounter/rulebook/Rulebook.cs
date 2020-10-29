@@ -128,6 +128,11 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         var restored = user.GetComponent<DefenderComponent>().RestoreHP(useEffectHeal.Healpower);
         state.LogMessage(string.Format("{0} restored {1} HP to {2}!", usable.EntityName, restored, user.EntityName));
       }
+
+      var useEffectAddIntel = usable.GetComponent<UseEffectAddIntelComponent>();
+      if (useEffectAddIntel != null) {
+        GD.Print("TODO: Should add intel for dungeon level ", useEffectAddIntel.TargetDungeonLevel);
+      }
     }
 
     private static void ResolveUseStairs(UseStairsAction action, EncounterState state) {

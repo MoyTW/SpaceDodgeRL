@@ -12,6 +12,7 @@ namespace SpaceDodgeRL.scenes.entities {
     // I assume these are all loaded at the same time as _Ready()?
     private static PackedScene _entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
 
+    private static string _iPath = "res://resources/atlas_i.tres";
     private static string _tPath = "res://resources/atlas_t.tres";
     private static string _FPath = "res://resources/atlas_F.tres";
     private static string _JPath = "res://resources/atlas_J.tres";
@@ -54,8 +55,7 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    // TODO: Add Use ability
-    // TODO: Add "always true even in FoW" tag
+    // TODO: Add "always visible even in FoW" tag
     private static Entity CreateDuctTapeEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "duct tape");
 
@@ -156,6 +156,17 @@ namespace SpaceDodgeRL.scenes.entities {
 
       e.AddChild(SpriteDataComponent.Create(_JPath));
       e.AddChild(StairsComponent.Create());
+
+      return e;
+    }
+
+    public static Entity CreateIntelEntity(int targetDungeonLevel) {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "intel for sector " + targetDungeonLevel);
+
+      e.AddChild(SpriteDataComponent.Create(_iPath));
+      e.AddChild(StorableComponent.Create());
+      e.AddChild(UsableComponent.Create());
+      e.AddChild(UseEffectAddIntelComponent.Create(targetDungeonLevel));
 
       return e;
     }
