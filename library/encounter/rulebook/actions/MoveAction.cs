@@ -1,6 +1,3 @@
-using SpaceDodgeRL.library.encounter;
-using SpaceDodgeRL.library.encounter.rulebook;
-
 namespace SpaceDodgeRL.library.encounter.rulebook.actions {
 
   public class MoveAction : EncounterAction {
