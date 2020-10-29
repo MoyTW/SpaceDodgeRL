@@ -131,7 +131,9 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
       var useEffectAddIntel = usable.GetComponent<UseEffectAddIntelComponent>();
       if (useEffectAddIntel != null) {
-        GD.Print("TODO: Should add intel for dungeon level ", useEffectAddIntel.TargetDungeonLevel);
+        // Kinda funny because player's the only one for which this effect is meaningful so we just grab player it's fiiiiiine
+        state.Player.GetComponent<PlayerComponent>().RegisterIntel(useEffectAddIntel.TargetDungeonLevel);
+        state.LogMessage(string.Format("Discovered intel for [b]sector {0}[/b]!", useEffectAddIntel.TargetDungeonLevel));
       }
     }
 
