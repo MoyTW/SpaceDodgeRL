@@ -44,6 +44,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
       );
     }
 
+    // TODO: These should have spread
     public static FireProjectileAction CreateSmallShotgunAction(string actorId, EncounterPosition targetPosition) {
       return new FireProjectileAction(
         actorId,

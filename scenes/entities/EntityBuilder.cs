@@ -11,8 +11,9 @@ namespace SpaceDodgeRL.scenes.entities {
     // I assume these are all loaded at the same time as _Ready()?
     private static PackedScene _entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
 
+    private static string _FPath = "res://resources/atlas_F.tres";
     private static string _JPath = "res://resources/atlas_J.tres";
-    private static string _sPath = "res://resources/atlas_s.tres";
+    private static string _SPath = "res://resources/atlas_S.tres";
     private static string _AtSignPath = "res://resources/atlas_@.tres";
     private static string _StarPath = "res://resources/atlas_Star.tres";
     private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
@@ -29,10 +30,24 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddChild(ScoutAIComponent.Create());
 
       e.AddChild(ActionTimeComponent.Create(0));
-      e.AddChild(CollisionComponent.Create(true, false));
-      e.AddChild(DefenderComponent.Create(0, 3, isInvincible: true));
-      e.AddChild(SpriteDataComponent.Create(_sPath));
-      e.AddChild(SpeedComponent.Create(200));
+      e.AddChild(CollisionComponent.CreateDefaultActor());
+      e.AddChild(DefenderComponent.Create(baseDefense: 0, maxHp: 10));
+      e.AddChild(SpriteDataComponent.Create(_SPath));
+      e.AddChild(SpeedComponent.Create(baseSpeed: 75));
+
+      return e;
+    }
+
+    private static Entity CreateFighterEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "fighter");
+
+      e.AddChild(FighterAIComponent.Create());
+
+      e.AddChild(ActionTimeComponent.Create(0));
+      e.AddChild(CollisionComponent.CreateDefaultActor());
+      e.AddChild(DefenderComponent.Create(baseDefense: 0, maxHp: 30));
+      e.AddChild(SpriteDataComponent.Create(_FPath));
+      e.AddChild(SpeedComponent.Create(baseSpeed: 125));
 
       return e;
     }
@@ -41,8 +56,7 @@ namespace SpaceDodgeRL.scenes.entities {
       if (entityDefId == EntityDefId.SCOUT) {
         return EntityBuilder.CreateScoutEntity();
       } else if (entityDefId == EntityDefId.FIGHTER) {
-        GD.Print("TODO: No implementation yet for ID ", entityDefId);
-        return EntityBuilder.CreateScoutEntity();
+        return EntityBuilder.CreateFighterEntity();
       } else if (entityDefId == EntityDefId.GUNSHIP) {
         GD.Print("TODO: No implementation yet for ID ", entityDefId);
         return EntityBuilder.CreateScoutEntity();

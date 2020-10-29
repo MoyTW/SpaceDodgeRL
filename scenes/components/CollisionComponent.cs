@@ -29,5 +29,9 @@ namespace SpaceDodgeRL.scenes.components {
 
       return component;
     }
+
+    public static CollisionComponent CreateDefaultActor() {
+      return Create(blocksMovement: true, blocksVision: false);
+    }
   }
 }
