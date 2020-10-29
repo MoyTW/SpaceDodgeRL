@@ -91,7 +91,6 @@ encounter_get_item={
 [mono]
 
 profiler/args="log:calls,sample,output=output.mlpd"
-profiler/enabled=true
 
 [rendering]
 
