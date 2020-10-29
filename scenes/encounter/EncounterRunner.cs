@@ -134,6 +134,7 @@ namespace SpaceDodgeRL.scenes.encounter {
           // TODO: If your machine is slow and you buffer your move inputs/use autopilot the targeting reticule and FoW sort
           // of don't keep up!
           // TODO: Add in termination condition of "enemy enters FoV"
+          // TODO: It NPEs when you try to autopilot to Zone 2 on 3cbebd008eca2f139a119c2f05adbd4fcebcfb01
           var path = entity.GetComponent<PlayerComponent>().AutopilotPath;
           if (!path.AtEnd) {
             PlayerMove(state, new MoveAction(entity.EntityId, path.Step()));
