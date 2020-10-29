@@ -4,6 +4,7 @@ using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.resources.gamedata;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
+using SpaceDodgeRL.scenes.components.use;
 
 namespace SpaceDodgeRL.scenes.entities {
 
@@ -60,6 +61,8 @@ namespace SpaceDodgeRL.scenes.entities {
 
       e.AddChild(SpriteDataComponent.Create(_tPath));
       e.AddChild(StorableComponent.Create());
+      e.AddChild(UsableComponent.Create());
+      e.AddChild(OnUseHealComponent.Create(healpower: 10));
 
       return e;
     }
