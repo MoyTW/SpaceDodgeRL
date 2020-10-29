@@ -85,6 +85,7 @@ encounter_use_stairs={
 
 [mono]
 
+profiler/args="log:calls,sample,output=output.mlpd"
 profiler/enabled=true
 
 [rendering]
