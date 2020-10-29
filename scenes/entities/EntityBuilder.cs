@@ -83,6 +83,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddChild(ActionTimeComponent.Create(0));
       e.AddChild(CollisionComponent.Create(true, false));
       e.AddChild(DefenderComponent.Create(0, 100));
+      e.AddChild(InventoryComponent.Create(inventorySize: 26));
       e.AddChild(PlayerComponent.Create());
       e.AddChild(SpriteDataComponent.Create(_AtSignPath));
       e.AddChild(SpeedComponent.Create(100));
