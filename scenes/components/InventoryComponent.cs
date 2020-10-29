@@ -11,8 +11,8 @@ namespace SpaceDodgeRL.scenes.components {
     public override string EntityGroup => ENTITY_GROUP;
     public static readonly string ENTITY_IN_INVENTORY_GROUP = "ENTITY_IN_INVENTORY_GROUP";
 
+    public int InventoryUsed { get => this.GetChildCount(); }
     public int InventorySize { get; private set; }
-    public bool InventoryFull { get => this.GetChildCount() >= this.InventorySize; }
 
     public static InventoryComponent Create(int inventorySize) {
       var component = _componentPrefab.Instance() as InventoryComponent;
@@ -22,14 +22,19 @@ namespace SpaceDodgeRL.scenes.components {
       return component;
     }
 
+    public bool CanFit(Entity entity) {
+      var storableComponent = entity.GetComponent<StorableComponent>();
+      return storableComponent != null && this.InventoryUsed + storableComponent.Size <= this.InventorySize;
+    }
+
     public void AddEntity(Entity entity) {
-      if (this.InventoryFull) {
-        throw new InventoryFullException();
+      if (!this.CanFit(entity)) {
+        throw new InventoryCannotStoreItemException();
       }
       base.AddChild(entity);
       entity.AddToGroup(ENTITY_IN_INVENTORY_GROUP);
     }
-    public class InventoryFullException : Exception {}
+    public class InventoryCannotStoreItemException : Exception {}
 
     public void RemoveEntity(Entity entity) {
       base.RemoveChild(entity);
