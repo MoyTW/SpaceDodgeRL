@@ -8,9 +8,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
   /**
    * An EncounterZone indicates a region of the map which is analagous to a room in a dungeon. It is essentially a POI and
    * contains zero or more of enemies, items, interactables, or doodads. They are currently all recntangular but that's an
-   * artifact of development not a design decision. Zones also serve as autopilot points, and have a string name and summary.
+   * artifact of development not a design decision. Zones also serve as autopilot points, and have a string name and readout
+   * data. Note that the entitites in the readout are not removed if they are destroyed/picked up!
    */
-  // TODO: Add all the features of the EncounterZone aside from layout!
   public class EncounterZone: Godot.Object {
     public static int MAX_UNBLOCKED_POSITION_ATTEMPTS = 250;
 

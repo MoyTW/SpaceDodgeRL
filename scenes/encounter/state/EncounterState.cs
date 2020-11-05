@@ -305,7 +305,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         state.PlaceEntity(satellite, unblockedPosition);
       }
 
-      // TODO: Add the data into the Zone & display it all pretty like if you have intel
       EncounterDef encounterDef;
       if (safe) {
         encounterDef = LevelData.GetEncounterDefById(EncounterDefId.EMPTY_ENCOUNTER);
@@ -329,7 +328,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
     }
 
-    // TODO: Seeded rand
     public static void DoTempMapGen(Entity player, int dungeonLevel, EncounterState state, Random seededRand,
         int width = 300, int height = 300, int maxZones = 10, int maxZoneGenAttempts = 100) {
       // Initialize the map with empty tiles
