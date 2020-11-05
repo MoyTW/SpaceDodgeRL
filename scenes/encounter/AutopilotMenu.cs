@@ -3,6 +3,7 @@ using Godot;
 using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.encounter.state;
+using SpaceDodgeRL.scenes.entities;
 
 public class AutopilotMenu : HBoxContainer {
 
@@ -35,7 +36,7 @@ public class AutopilotMenu : HBoxContainer {
     foreach (EncounterZone zone in zones) {
       // Add the system
       var systemButton = new Button();
-      systemButton.Text = zone.Name;
+      systemButton.Text = zone.ZoneName;
       systemButton.AddToGroup(AutopilotMenu.ZONE_BUTTON_GROUP);
       systemButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone });
       // TODO: It doesn't scale if you resize the window
@@ -58,7 +59,7 @@ public class AutopilotMenu : HBoxContainer {
 
       // Add the sidebar
       var sidebarButton = new Button();
-      sidebarButton.Text = zone.Name;
+      sidebarButton.Text = zone.ZoneName;
       sidebarButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone });
       sidebarContainer.AddChild(sidebarButton);
     }
@@ -84,7 +85,16 @@ public class AutopilotMenu : HBoxContainer {
       }
     }
     var youAreHereLabel = this.GetNode<RichTextLabel>("SidebarContainer/YouAreHereLabel");
-    youAreHereLabel.BbcodeText = string.Format("You are currently near [b]{0}[/b]", closestZone.Name);
+    youAreHereLabel.BbcodeText = string.Format("You are currently near [b]{0}[/b]", closestZone.ZoneName);
+
+    // TODO: Put in a UI to display this onscreen
+    foreach (EncounterZone zone in state.Zones) {
+      var items = "items=";
+      foreach (Entity e in zone.ReadoutItems) { items += " " + e.EntityName; }
+      var features = "features=";
+      foreach (Entity e in zone.ReadoutFeatures) { features += " " + e.EntityName; }
+      GD.Print(zone.ZoneName + " : " + zone.ReadoutEncounterName + " : " + items + " : " + features);
+    }
   }
 
   private void OnTreeEntered() {

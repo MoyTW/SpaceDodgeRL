@@ -310,9 +310,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       if (safe) {
         encounterDef = LevelData.GetEncounterDefById(EncounterDefId.EMPTY_ENCOUNTER);
       } else {
-        // TODO: Levels!
         encounterDef = LevelData.ChooseEncounter(dungeonLevel, seededRand);
       }
+      zone.ReadoutEncounterName = encounterDef.Name;
 
       foreach (string entityDefId in encounterDef.EntityDefIds) {
         var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
@@ -325,6 +325,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
         var newEntity = EntityBuilder.CreateEntityByEntityDefId(chosenItemDefId);
         state.PlaceEntity(newEntity, unblockedPosition);
+        zone.AddItemToReadout(newEntity);
       }
     }
 
@@ -360,7 +361,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         int zoneY = seededRand.Next(1, state.MapHeight - zoneHeight);
 
         var newZone = new EncounterZone(Guid.NewGuid().ToString(), new EncounterPosition(zoneX, zoneY), zoneWidth, zoneHeight,
-          zones.Count.ToString());
+          "Zone " + zones.Count.ToString());
 
         bool overlaps = zones.Any(existing => existing.Intersects(newZone));
         if (!overlaps) {
@@ -378,16 +379,15 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       // Add all the various zone features to the map
       // TODO: Handle last level & add diplomat
-      // TODO: Generate & implement stairs
 
       // Generate the stairs (maybe we should refer interally as something more themetically appropriate?)
       // You can get stairs in your starting zone, but you probably shouldn't take them...
       var stairsZone = zones[playerZoneIdx]; // TODO: not this
       //var stairsZone = zones[seededRand.Next(0, zones.Count)];
       var stairsPosition = stairsZone.RandomUnblockedPosition(seededRand, state);
-      // TODO: Register the stairs in the zone!
       var stairs = EntityBuilder.CreateStairsEntity();
       state.PlaceEntity(stairs, stairsPosition);
+      stairsZone.AddFeatureToReadout(stairs);
 
       // Generate intel
       var intelZone = zones[playerZoneIdx]; // TODO: not this
@@ -395,6 +395,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       var intelPosition = intelZone.RandomUnblockedPosition(seededRand, state);
       var intel = EntityBuilder.CreateIntelEntity(dungeonLevel + 1);
       state.PlaceEntity(intel, intelPosition);
+      intelZone.AddFeatureToReadout(intel);
 
       // Populate each zone with an encounter
       foreach (EncounterZone zone in zones) {

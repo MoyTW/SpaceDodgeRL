@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using SpaceDodgeRL.library.encounter;
+using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
   /**
@@ -15,8 +18,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public EncounterPosition Position { get; }
     public int Width { get; }
     public int Height { get; }
-    public string Name { get; }
-    // public string Summary { get; private set; }
+    // Readout information
+    public string ZoneName { get; }
+    public string ReadoutEncounterName { get; set; } // TODO: Consider making a builder for this
+    // Note that these do not get removed from the zone when picked up, though they are removed from the EncounterState!
+    private List<Entity> _readoutItems;
+    public ReadOnlyCollection<Entity> ReadoutItems { get => _readoutItems.AsReadOnly(); }
+    private List<Entity> _readoutFeatures;
+    public ReadOnlyCollection<Entity> ReadoutFeatures { get => _readoutFeatures.AsReadOnly(); }
 
     public int X1 { get => Position.X; }
     public int X2 { get => Position.X + Width; }
@@ -27,12 +36,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // This is required for Godot.Object
     public EncounterZone() { }
 
-    public EncounterZone(string zoneId, EncounterPosition position, int width, int height, string name) {
+    public EncounterZone(string zoneId, EncounterPosition position, int width, int height, string zoneName) {
       this.ZoneId = zoneId;
       this.Position = position;
       this.Width = width;
       this.Height = height;
-      this.Name = "Zone " + name;
+      this.ZoneName = zoneName;
+      this._readoutItems = new List<Entity>();
+      this._readoutFeatures = new List<Entity>();
 
       this.Center = new EncounterPosition((this.X1 + this.X2) / 2, (this.Y1 + this.Y2) / 2);
     }
@@ -56,10 +67,16 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return this.X1 <= other.X2 && this.X2 >= other.X1 && this.Y1 <= other.Y2 && this.Y2 >= other.Y1;
     }
 
-    public override string ToString() {
-      return string.Format("[{0} - [({1},{2}), ({3},{4})]]", this.Name, this.X1, this.Y1, this.X2, this.Y2);
+    public void AddItemToReadout(Entity item) {
+      this._readoutItems.Add(item);
     }
 
-    // TODO: Populate with encounter and items! When this is done it should also incoroporate a builder!
+    public void AddFeatureToReadout(Entity feature) {
+      this._readoutFeatures.Add(feature);
+    }
+
+    public override string ToString() {
+      return string.Format("[{0} - [({1},{2}), ({3},{4})]]", this.ZoneName, this.X1, this.Y1, this.X2, this.Y2);
+    }
   }
 }
