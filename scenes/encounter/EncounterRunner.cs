@@ -22,6 +22,11 @@ namespace SpaceDodgeRL.scenes.encounter {
       RunTurn(this._encounterState, inputHandlerRef);
     }
 
+    // TODO: Switch from tracking TTL to tracking "next tick", and then comparing to "current tick" in state - will save on having to iterate entities
+    // So, basically, should have each entity continuously update to "next tick" instead of subtracting "time to next tick" until 0
+    // will make passing time O(1)  - we will just update EncounterState's CurrentTick
+    // if we combine that with an internal storage in CalculateNextEntity() or remove CalculateNextEntity() it can basically cut out the whole
+    // series of entity iterations that we use to manage time
     private static void PassTime(EncounterState state, int time) {
       var actionEntities = state.ActionEntities();
       foreach (Entity entity in actionEntities) {
@@ -60,6 +65,13 @@ namespace SpaceDodgeRL.scenes.encounter {
 
       // TODO: This actually doesn't fire on moving towards an enemy, because the "determine fire" happens BEFORE you enter the radius
       // so if you spend a turn moving in, you don't know to fire! this is badly incorrect!
+      // The issue is that the ResolveActions() bundles all state changes into one invocation and then ends the turn, so you can't have something like
+      // 1. move towards your enemy
+      // 2. if moving means you're close enough to see your enemy, activate your shields
+      // because there's no time for logic in between. It also means you can't really have 'free' actions without restructuring how ResolveActions works.
+      // One thing we could do is unbundle ResolveActions(...) into ResolveAction, explicitly add an END_TURN action, and then just expect the caller to
+      // do the appropriate thing with turn endings.
+      // This ALSO lets us do things like hook an "end turn", uh, hook.
       Rulebook.ResolveActions(actions, state);
 
       // After the player executes their turn we need to update the UI
