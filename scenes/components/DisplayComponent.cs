@@ -11,12 +11,14 @@ namespace SpaceDodgeRL.scenes.components {
 
     public string TexturePath { get; private set; }
     public Texture Texture { get; private set; }
+    public bool VisibleInFoW { get; private set; }
 
-    public static DisplayComponent Create(string texturePath) {
+    public static DisplayComponent Create(string texturePath, bool visibleInFoW) {
       var component = _componentPrefab.Instance() as DisplayComponent;
 
       component.TexturePath = texturePath;
       component.Texture = GD.Load<Texture>(texturePath);
+      component.VisibleInFoW = visibleInFoW;
 
       return component;
     }

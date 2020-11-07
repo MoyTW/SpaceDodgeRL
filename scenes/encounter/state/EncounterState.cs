@@ -240,6 +240,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // contemplating just eliding one of the two in names?
     public void UpdateFoVAndFoW() {
       // TODO: Appropriate vision radius
+      // TODO: Hide sprites out of FoW and show sprites in FoW, according to their VisibleInFoW property
       this.FoVCache = FoVCache.ComputeFoV(this, this.Player.GetComponent<PositionComponent>().EncounterPosition, PLAYER_VISION_RADIUS);
       foreach (EncounterPosition position in this.FoVCache.VisibleCells) {
         this._encounterTiles[position.X, position.Y].Explored = true;
