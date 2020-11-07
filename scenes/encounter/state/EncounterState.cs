@@ -149,7 +149,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
 
-      var spriteData = entity.GetComponent<SpriteDataComponent>();
+      var spriteData = entity.GetComponent<DisplayComponent>();
       
       var positionComponent = PositionComponent.Create(targetPosition, spriteData.Texture);
       entity.AddChild(positionComponent);
