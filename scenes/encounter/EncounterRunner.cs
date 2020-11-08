@@ -39,7 +39,11 @@ namespace SpaceDodgeRL.scenes.encounter {
     private static void PlayerExecuteTurnEndingAction(EncounterAction action, EncounterState state) {
       var player = state.Player;
       var playerPosition = player.GetComponent<PositionComponent>().EncounterPosition;
-      var actions = new List<EncounterAction>() { action };
+
+      bool actionResolvedSuccessfully = Rulebook.ResolveAction(action, state);
+      if (!actionResolvedSuccessfully) {
+        return;
+      }
 
       // TODO: Pick a target in range and fire the projectile
       // TODO: Create a Faction component?
@@ -60,19 +64,8 @@ namespace SpaceDodgeRL.scenes.encounter {
       if (closestEnemyPosition != null && closestEnemyDistance <= playerComponent.CuttingLaserRange) {
         var fireAction = FireProjectileAction.CreateCuttingLaserAction(
           player.EntityId, playerComponent.CuttingLaserPower, closestEnemyPosition.EncounterPosition);
-        actions.Add(fireAction);
+        Rulebook.ResolveAction(fireAction, state);
       }
-
-      // TODO: This actually doesn't fire on moving towards an enemy, because the "determine fire" happens BEFORE you enter the radius
-      // so if you spend a turn moving in, you don't know to fire! this is badly incorrect!
-      // The issue is that the ResolveActions() bundles all state changes into one invocation and then ends the turn, so you can't have something like
-      // 1. move towards your enemy
-      // 2. if moving means you're close enough to see your enemy, activate your shields
-      // because there's no time for logic in between. It also means you can't really have 'free' actions without restructuring how ResolveActions works.
-      // One thing we could do is unbundle ResolveActions(...) into ResolveAction, explicitly add an END_TURN action, and then just expect the caller to
-      // do the appropriate thing with turn endings.
-      // This ALSO lets us do things like hook an "end turn", uh, hook.
-      Rulebook.ResolveActions(actions, state);
 
       // After the player executes their turn we need to update the UI
       state.CalculateNextEntity();
@@ -160,7 +153,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       } else {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();
         var aIActions = aIComponent.DecideNextAction(state);
-        Rulebook.ResolveActions(aIActions, state);
+        Rulebook.ResolveActionsAndEndTurn(aIActions, state);
         state.CalculateNextEntity();
         state.UpdateDangerMap();
       }
@@ -173,8 +166,9 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     public void HandleAutopilotSelection(EncounterZone selectedZone) {
-      var actions = new List<EncounterAction>() { new AutopilotAction(this._encounterState.Player.EntityId, selectedZone.ZoneId) };
-      Rulebook.ResolveActions(actions, this._encounterState);
+      var playerId = this._encounterState.Player.EntityId;
+      Rulebook.ResolveAction(new AutopilotAction(playerId, selectedZone.ZoneId), this._encounterState);
+      Rulebook.ResolveEndTurn(this._encounterState.Player.EntityId, this._encounterState);
     }
   }
 }

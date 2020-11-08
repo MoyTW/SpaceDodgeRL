@@ -12,7 +12,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
   public static class Rulebook {
     // ...can't I just do <> like I can in Kotlin? C# why you no let me do this. Probably because "evolving languages are hard".
-    private static Dictionary<ActionType, Action<EncounterAction, EncounterState>> _actionMapping = new Dictionary<ActionType, Action<EncounterAction, EncounterState>>() {
+    private static Dictionary<ActionType, Func<EncounterAction, EncounterState, bool>> _actionMapping = new Dictionary<ActionType, Func<EncounterAction, EncounterState, bool>>() {
       { ActionType.AUTOPILOT, (a, s) => ResolveAutopilot(a as AutopilotAction, s) },
       { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
       { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
@@ -23,36 +23,48 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       { ActionType.WAIT, (a, s) => ResolveWait(a as WaitAction, s) }
     };
 
-    private static void EndTurnIfStillExists(string entityId, EncounterState state) {
+    public static bool ResolveAction(EncounterAction action, EncounterState state) {
+      // If I had C# 8.0 I'd use the new, nifty switch! I'm using a dictionary because I *always* forget to break; out of a switch
+      // and that usually causes an annoying bug that I spend way too long mucking around with. Instead here it will just EXPLODE!
+      return _actionMapping[action.ActionType].Invoke(action, state);
+    }
+
+    public static bool ResolveEndTurn(string entityId, EncounterState state) {
       Entity entity = state.GetEntityById(entityId);
       if (entity != null) {
         var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
         actionTimeComponent.EndTurn(entity.GetComponent<SpeedComponent>());
+        return true;
+      } else {
+        return false;
       }
     }
 
-    public static void ResolveActions(List<EncounterAction> actions, EncounterState state) {
+    /**
+     * Resolves a list of actions, and then ends the turn. Does not check the results of the actions, so should only really be
+     * used when you're confident the actions will be successful and don't need to be able to interject additional logic.
+     */
+    public static void ResolveActionsAndEndTurn(List<EncounterAction> actions, EncounterState state) {
       actions.ForEach((action) => ResolveAction(action, state));
       if (actions.Count > 0) {
-        EndTurnIfStillExists(actions[0].ActorId, state);
+        ResolveEndTurn(actions[0].ActorId, state);
       } else {
         throw new NotImplementedException("should never resolve zero actions");
       }
     }
 
-    private static void ResolveAction(EncounterAction action, EncounterState state) {
-      // If I had C# 8.0 I'd use the new, nifty switch! I'm using a dictionary because I *always* forget to break; out of a switch
-      // and that usually causes an annoying bug that I spend way too long mucking around with. Instead here it will just EXPLODE!
-      _actionMapping[action.ActionType].Invoke(action, state);
-    }
-
     // TODO: If you autopilot to your current position, then autopilot somewhere else, it explodes with a could not pass time error
-    private static void ResolveAutopilot(AutopilotAction action, EncounterState state) {
+    private static bool ResolveAutopilot(AutopilotAction action, EncounterState state) {
       var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
       EncounterZone zone = state.GetZoneById(action.ZoneId);
 
       var path = new EncounterPath(Pathfinder.AStarWithNewGrid(playerPosition, zone.Center, state, 600));
-      state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(path);
+      if (path != null) {
+        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(path);
+        return true;
+      } else {
+        return false;
+      }
     }
 
     private static void LogAttack(DefenderComponent defenderComponent, string message, EncounterState state) {
@@ -88,12 +100,13 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
-    private static void ResolveMove(MoveAction action, EncounterState state) {
+    private static bool ResolveMove(MoveAction action, EncounterState state) {
       Entity actor = state.GetEntityById(action.ActorId);
       var positionComponent = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>();
 
       if (positionComponent.EncounterPosition == action.TargetPosition) {
         GD.PrintErr(string.Format("Entity {0}:{1} tried to move to its current position {2}", actor.EntityName, actor.EntityId, action.TargetPosition));
+        return false;
       } else if (state.IsPositionBlocked(action.TargetPosition)) {
         var blocker = state.BlockingEntityAtPosition(action.TargetPosition.X, action.TargetPosition.Y);
         var actorCollision = actor.GetComponent<CollisionComponent>();
@@ -105,12 +118,14 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         if (actorCollision.OnCollisionSelfDestruct) {
           ResolveAction(new SelfDestructAction(action.ActorId), state);
         }
+        return true;
       } else {
         state.TeleportEntity(actor, action.TargetPosition);
+        return true;
       }
     }
 
-    private static void ResolveUse(UseAction action, EncounterState state) {
+    private static bool ResolveUse(UseAction action, EncounterState state) {
       // We assume that the used entity must be in the inventory of the user - this is pretty fragile and might change.
       var user = state.GetEntityById(action.ActorId);
       var userInventory = user.GetComponent<InventoryComponent>();
@@ -140,28 +155,34 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       // We assume all items are single-use; this will change if I deviate from the reference implementation!
       userInventory.RemoveEntity(usable);
       usable.QueueFree();
+      return true;
     }
 
-    private static void ResolveUseStairs(UseStairsAction action, EncounterState state) {
+    private static bool ResolveUseStairs(UseStairsAction action, EncounterState state) {
       var actorPosition = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>().EncounterPosition;
       var stairs = state.EntitiesAtPosition(actorPosition.X, actorPosition.Y)
                         .FirstOrDefault(e => e.GetComponent<StairsComponent>() != null);
       if (stairs != null) {
         state.InitState(state.Player, state.DungeonLevel + 1);
+        return true;
       } else {
         GD.Print("TODO: Make this not eat your turn!");
+        return false;
       }
     }
 
-    private static void ResolveWait(WaitAction action, EncounterState state) { }
+    private static bool ResolveWait(WaitAction action, EncounterState state) {
+      return true;
+    }
 
-    private static void ResolveFireProjectile(FireProjectileAction action, EncounterState state) {
+    private static bool ResolveFireProjectile(FireProjectileAction action, EncounterState state) {
       var actorPosition = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>().EncounterPosition;
       Entity projectile = EntityBuilder.CreateProjectileEntity(action.ProjectileName, action.Power, action.PathFunction(actorPosition), action.Speed);
       state.PlaceEntity(projectile, actorPosition, true);
+      return true;
     }
 
-    private static void ResolveGetItem(GetItemAction action, EncounterState state) {
+    private static bool ResolveGetItem(GetItemAction action, EncounterState state) {
       var actor = state.GetEntityById(action.ActorId);
       var actorPosition = actor.GetComponent<PositionComponent>().EncounterPosition;
       var item = state.EntitiesAtPosition(actorPosition.X, actorPosition.Y)
@@ -173,14 +194,17 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
         var logMessage = string.Format("[b]{0}[/b] has taken the [b]{1}[/b]", actor.EntityName, item.EntityName);
         state.LogMessage(logMessage);
+        return true;
       } else {
         GD.Print("TODO: Make this not eat your turn!");
+        return false;
       }
     }
 
-    private static void ResolveSelfDestruct(SelfDestructAction action, EncounterState state) {
+    private static bool ResolveSelfDestruct(SelfDestructAction action, EncounterState state) {
       Entity entity = state.GetEntityById(action.ActorId);
       state.RemoveEntity(entity);
+      return true;
     }
   }
 }
