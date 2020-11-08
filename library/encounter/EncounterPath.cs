@@ -15,6 +15,7 @@ namespace SpaceDodgeRL.library.encounter {
     }
 
     public EncounterPosition CurrentPosition { get => _fullPath[_currentStep]; }
+    // Bug when going towards Zone 2, fullPath null?
     public bool AtEnd { get => _currentStep >= _fullPath.Count - 1; }
 
     public EncounterPosition Step() {
