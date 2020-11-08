@@ -22,19 +22,6 @@ namespace SpaceDodgeRL.scenes.encounter {
       RunTurn(this._encounterState, inputHandlerRef);
     }
 
-    // TODO: Switch from tracking TTL to tracking "next tick", and then comparing to "current tick" in state - will save on having to iterate entities
-    // So, basically, should have each entity continuously update to "next tick" instead of subtracting "time to next tick" until 0
-    // will make passing time O(1)  - we will just update EncounterState's CurrentTick
-    // if we combine that with an internal storage in CalculateNextEntity() or remove CalculateNextEntity() it can basically cut out the whole
-    // series of entity iterations that we use to manage time
-    private static void PassTime(EncounterState state, int time) {
-      var actionEntities = state.ActionEntities();
-      foreach (Entity entity in actionEntities) {
-        var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
-        actionTimeComponent.PassTime(time);
-      }
-    }
-
     // TODO: Write a system that has a component which does this instead of hard-coding it into the player's turn end
     private static void PlayerExecuteTurnEndingAction(EncounterAction action, EncounterState state) {
       var player = state.Player;
@@ -93,9 +80,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     private void RunTurn(EncounterState state, InputHandler inputHandler) {
       var entity = state.NextEntity;
       var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
-      if (actionTimeComponent.TicksUntilTurn > 0) {
-        EncounterRunner.PassTime(state, actionTimeComponent.TicksUntilTurn);
-      }
+      state.AdvanceTimeToNextEntity();
 
       if (entity.IsInGroup(PlayerComponent.ENTITY_GROUP)) {
         // TODO: Not on every process()

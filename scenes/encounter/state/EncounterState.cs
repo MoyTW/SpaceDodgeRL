@@ -38,6 +38,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     #region Data Access
     // ##########################################################################################################################
 
+    public int CurrentTick { get; private set; }
     public Entity Player { get; private set; }
     public int DungeonLevel { get; private set; }
     public Entity NextEntity { get; private set; }
@@ -140,6 +141,13 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // ##########################################################################################################################
     #endregion
     // ##########################################################################################################################
+
+    public void AdvanceTimeToNextEntity() {
+      var nextTurnAtTick = this.NextEntity.GetComponent<ActionTimeComponent>().NextTurnAtTick;
+      if (this.CurrentTick < nextTurnAtTick) {
+        this.CurrentTick = nextTurnAtTick;
+      }
+    }
 
     public void PlaceEntity(Entity entity, EncounterPosition targetPosition, bool ignoreCollision = false) {
       if (!IsInBounds(targetPosition)) {
@@ -250,22 +258,22 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
     // TODO: I should roll all this into one singular "Update for end turn" function taking (player=false)
     public void CalculateNextEntity() {
-      int lowestTTL = int.MaxValue;
+      int lowestNextTurnAtTick = int.MaxValue;
       Entity next = null;
 
       // TODO: This is slow because we can all ActionTimeComponents every time, whereas we should maintain an internal representation
       // TODO: Also this code is really awful!
       foreach (Node node in GetTree().GetNodesInGroup(ActionTimeComponent.ENTITY_GROUP)) {
         if (node.GetParent() == this) {
-          var ticksUntilTurn = (node as Entity).GetComponent<ActionTimeComponent>().TicksUntilTurn;
-          if (ticksUntilTurn < lowestTTL) {
-            lowestTTL = ticksUntilTurn;
+          var nextTurnAtTick = (node as Entity).GetComponent<ActionTimeComponent>().NextTurnAtTick;
+          if (nextTurnAtTick < lowestNextTurnAtTick) {
+            lowestNextTurnAtTick = nextTurnAtTick;
             next = node as Entity;
           }
         }
       }
 
-      if (lowestTTL == int.MaxValue) {
+      if (lowestNextTurnAtTick == int.MaxValue) {
         throw new NotImplementedException();
       }
 
