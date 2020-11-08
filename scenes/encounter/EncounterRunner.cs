@@ -38,16 +38,16 @@ namespace SpaceDodgeRL.scenes.encounter {
     // TODO: Write a system that has a component which does this instead of hard-coding it into the player's turn end
     private static void PlayerExecuteTurnEndingAction(EncounterAction action, EncounterState state) {
       var player = state.Player;
-      var playerPosition = player.GetComponent<PositionComponent>().EncounterPosition;
 
       bool actionResolvedSuccessfully = Rulebook.ResolveAction(action, state);
       if (!actionResolvedSuccessfully) {
         return;
       }
 
-      // TODO: Pick a target in range and fire the projectile
+      // Picks a target in range & fires a projectile
       // TODO: Create a Faction component?
       // TODO: Iterating literally every action entity every time is very silly
+      var playerPosition = player.GetComponent<PositionComponent>().EncounterPosition;
       PositionComponent closestEnemyPosition = null;
       float closestEnemyDistance = int.MaxValue;
       foreach (Entity actionEntity in state.ActionEntities()) {
@@ -66,6 +66,7 @@ namespace SpaceDodgeRL.scenes.encounter {
           player.EntityId, playerComponent.CuttingLaserPower, closestEnemyPosition.EncounterPosition);
         Rulebook.ResolveAction(fireAction, state);
       }
+      Rulebook.ResolveEndTurn(player.EntityId, state);
 
       // After the player executes their turn we need to update the UI
       state.CalculateNextEntity();
@@ -167,6 +168,7 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     public void HandleAutopilotSelection(EncounterZone selectedZone) {
       var playerId = this._encounterState.Player.EntityId;
+      // TODO: Gracefully handle autopilot failure!
       Rulebook.ResolveAction(new AutopilotAction(playerId, selectedZone.ZoneId), this._encounterState);
       Rulebook.ResolveEndTurn(this._encounterState.Player.EntityId, this._encounterState);
     }
