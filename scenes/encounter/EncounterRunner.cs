@@ -56,7 +56,6 @@ namespace SpaceDodgeRL.scenes.encounter {
       Rulebook.ResolveEndTurn(player.EntityId, state);
 
       // After the player executes their turn we need to update the UI
-      state.CalculateNextEntity();
       state.UpdateFoVAndFoW();
       state.UpdatePlayerOverlays();
     }
@@ -80,7 +79,6 @@ namespace SpaceDodgeRL.scenes.encounter {
     private void RunTurn(EncounterState state, InputHandler inputHandler) {
       var entity = state.NextEntity;
       var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
-      state.AdvanceTimeToNextEntity();
 
       if (entity.IsInGroup(PlayerComponent.ENTITY_GROUP)) {
         // TODO: Not on every process()
@@ -140,7 +138,6 @@ namespace SpaceDodgeRL.scenes.encounter {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();
         var aIActions = aIComponent.DecideNextAction(state);
         Rulebook.ResolveActionsAndEndTurn(aIActions, state);
-        state.CalculateNextEntity();
         state.UpdateDangerMap();
       }
     }

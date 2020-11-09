@@ -27,6 +27,7 @@ namespace SpaceDodgeRL.scenes.entities {
       return newEntity;
     }
 
+    // TODO: Take the current tick in this function!
     private static Entity CreateScoutEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "scout");
 

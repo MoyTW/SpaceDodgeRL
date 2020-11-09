@@ -34,14 +34,15 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public ReadOnlyCollection<EncounterZone> Zones { get => _zones.AsReadOnly(); }
     private Dictionary<string, Entity> _entitiesById;
 
+    private ActionTimeline _actionTimeline;
+    public int CurrentTick { get => _actionTimeline.CurrentTick; }
+    public Entity NextEntity { get => _actionTimeline.NextEntity; }
+    public Entity Player { get; private set; }
+    public int DungeonLevel { get; private set; }
+
     // ##########################################################################################################################
     #region Data Access
     // ##########################################################################################################################
-
-    public int CurrentTick { get; private set; }
-    public Entity Player { get; private set; }
-    public int DungeonLevel { get; private set; }
-    public Entity NextEntity { get; private set; }
 
     /**
      * Only returns direct child entities.
@@ -142,11 +143,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     #endregion
     // ##########################################################################################################################
 
-    public void AdvanceTimeToNextEntity() {
-      var nextTurnAtTick = this.NextEntity.GetComponent<ActionTimeComponent>().NextTurnAtTick;
-      if (this.CurrentTick < nextTurnAtTick) {
-        this.CurrentTick = nextTurnAtTick;
-      }
+    public void UpdateTimelineForEntity(Entity entity) {
+      _actionTimeline.UpdateTimelineForEntity(entity);
     }
 
     public void PlaceEntity(Entity entity, EncounterPosition targetPosition, bool ignoreCollision = false) {
@@ -157,6 +155,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
 
+      // Add the position component
       var spriteData = entity.GetComponent<DisplayComponent>();
       
       var positionComponent = PositionComponent.Create(targetPosition, spriteData.Texture);
@@ -166,9 +165,15 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       AddChild(entity);
       this._encounterTiles[entityPosition.X, entityPosition.Y].AddEntity(entity);
       this._entitiesById[entity.EntityId] = entity;
+
+      // If it's an action entity, add it into the timeline
+      if (entity.GetComponent<ActionTimeComponent>() != null) {
+        this._actionTimeline.AddEntityToTimeline(entity as Entity);
+      }
     }
 
     public void RemoveEntity(Entity entity) {
+      // Remove the position component from both
       var positionComponent = entity.GetComponent<PositionComponent>();
       entity.RemoveChild(positionComponent);
       positionComponent.QueueFree();
@@ -177,6 +182,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       RemoveChild(entity);
       this._encounterTiles[entityPosition.X, entityPosition.Y].RemoveEntity(entity);
       this._entitiesById.Remove(entity.EntityId);
+
+      // If it's an action entity, remove the action entity ONLY from EncounterState
+      if (entity.GetComponent<ActionTimeComponent>() != null) {
+        this._actionTimeline.RemoveEntityFromTimeline(entity as Entity);
+      }
     }
 
     /**
@@ -254,30 +264,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         this._encounterTiles[position.X, position.Y].Explored = true;
       }
       this.UpdateFoWOverlay();
-    }
-
-    // TODO: I should roll all this into one singular "Update for end turn" function taking (player=false)
-    public void CalculateNextEntity() {
-      int lowestNextTurnAtTick = int.MaxValue;
-      Entity next = null;
-
-      // TODO: This is slow because we can all ActionTimeComponents every time, whereas we should maintain an internal representation
-      // TODO: Also this code is really awful!
-      foreach (Node node in GetTree().GetNodesInGroup(ActionTimeComponent.ENTITY_GROUP)) {
-        if (node.GetParent() == this) {
-          var nextTurnAtTick = (node as Entity).GetComponent<ActionTimeComponent>().NextTurnAtTick;
-          if (nextTurnAtTick < lowestNextTurnAtTick) {
-            lowestNextTurnAtTick = nextTurnAtTick;
-            next = node as Entity;
-          }
-        }
-      }
-
-      if (lowestNextTurnAtTick == int.MaxValue) {
-        throw new NotImplementedException();
-      }
-
-      this.NextEntity = next;
     }
 
     public void UpdatePlayerOverlays() {
@@ -416,6 +402,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
     // TODO: Move into map gen & save/load
     public void InitState(Entity player, int dungeonLevel) {
+
       string ENCOUNTER_CAMERA_GROUP = "ENCOUNTER_CAMERA_GROUP";
       // TODO: Rather than re-using a state when we switch levels, I'd rather sub in a new one, but I think I need to think
       // about how that'd work in Godot, since we'd need to do some rewiring and the state has the camera, which is ugh.
@@ -434,6 +421,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // This class is kinda becoming a monster WRT "here's a cached thing for perf/getting around Godot reasons!"
       this._encounterLog = new List<string>();
       this._entitiesById = new Dictionary<string, Entity>();
+      this._actionTimeline = new ActionTimeline(0);
+      // We also need to reset the player's action time
+      player.GetComponent<ActionTimeComponent>().SetNextTurnAtTo(0);
 
       // TODO: Map gen seed properly
       DoTempMapGen(player, dungeonLevel, this, new Random(1));
@@ -448,7 +438,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       // Populate all our initial caches
       this.LogMessage(string.Format("Level {0} started!", dungeonLevel));
-      this.CalculateNextEntity();
       // Init FoW overlay as all back
       this.InitFoWOverlay();
       this.UpdateFoVAndFoW();
