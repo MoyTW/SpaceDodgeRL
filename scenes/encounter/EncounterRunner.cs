@@ -138,7 +138,10 @@ namespace SpaceDodgeRL.scenes.encounter {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();
         var aIActions = aIComponent.DecideNextAction(state, entity);
         Rulebook.ResolveActionsAndEndTurn(aIActions, state);
-        state.UpdateDangerMap();
+        // TODO: this seems...fragile?
+        if (aIComponent is PathAIComponent) {
+          state.UpdateDangerMap();
+        }
       }
     }
 
