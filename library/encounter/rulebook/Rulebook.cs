@@ -158,6 +158,11 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.LogMessage("TODO: Make boosting power do something!");
       }
 
+      var useEffectBoostSpeed = usable.GetComponent<UseEffectBoostSpeedComponent>();
+      if (useEffectBoostSpeed != null) {
+        state.LogMessage("TODO: Make boosting speed do something!");
+      }
+
       // We assume all items are single-use; this will change if I deviate from the reference implementation!
       userInventory.RemoveEntity(usable);
       usable.QueueFree();

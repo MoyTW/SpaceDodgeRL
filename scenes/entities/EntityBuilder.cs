@@ -63,7 +63,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(DisplayComponent.Create(_bPath, true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create());
-      e.AddComponent(UseEffectBoostPowerComponent.Create(power: 20, duration: 450));
+      e.AddComponent(UseEffectBoostPowerComponent.Create(boostPower: 20, duration: 450));
 
       return e;
     }
@@ -75,6 +75,17 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create());
       e.AddComponent(UseEffectHealComponent.Create(healpower: 10));
+
+      return e;
+    }
+
+    private static Entity CreateRedPaintEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "red paint");
+
+      e.AddComponent(DisplayComponent.Create(_bPath, true));
+      e.AddComponent(StorableComponent.Create());
+      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UseEffectBoostSpeedComponent.Create(boostPower: 75, duration: 300));
 
       return e;
     }
@@ -104,8 +115,7 @@ namespace SpaceDodgeRL.scenes.entities {
       } else if (entityDefId == EntityDefId.ITEM_EXTRA_BATTERY) {
         return EntityBuilder.CreateExtraBatteryEntity();
       } else if (entityDefId == EntityDefId.ITEM_RED_PAINT) {
-        GD.Print("TODO: No implementation yet for ID ", entityDefId);
-        return EntityBuilder.CreateDuctTapeEntity();
+        return EntityBuilder.CreateRedPaintEntity();
       } else if (entityDefId == EntityDefId.ITEM_EMP) {
         GD.Print("TODO: No implementation yet for ID ", entityDefId);
         return EntityBuilder.CreateDuctTapeEntity();

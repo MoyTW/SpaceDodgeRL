@@ -368,7 +368,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state.PlaceEntity(player, zones[playerZoneIdx].Center);
       // TODO: delete the following test item
       var nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 1, zones[playerZoneIdx].Center.Y + 1);
-      state.PlaceEntity(EntityBuilder.CreateEntityByEntityDefId(EntityDefId.ITEM_EXTRA_BATTERY), nextToPlayer);
+      state.PlaceEntity(EntityBuilder.CreateEntityByEntityDefId(EntityDefId.ITEM_RED_PAINT), nextToPlayer);
 
       // Add all the various zone features to the map
       // TODO: Handle last level & add diplomat
