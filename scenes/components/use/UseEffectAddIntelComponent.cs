@@ -1,6 +1,3 @@
-using Godot;
-using System;
-
 namespace SpaceDodgeRL.scenes.components.use {
 
   public class UseEffectAddIntelComponent : Component {

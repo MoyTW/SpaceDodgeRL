@@ -1,5 +1,3 @@
-using Godot;
-
 namespace SpaceDodgeRL.scenes.components.use {
 
   public class UseEffectHealComponent: Component {

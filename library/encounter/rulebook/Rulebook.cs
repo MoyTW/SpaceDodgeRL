@@ -153,6 +153,11 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.LogMessage(string.Format("Discovered intel for [b]sector {0}[/b]!", useEffectAddIntel.TargetDungeonLevel));
       }
 
+      var useEffectBoostPower = usable.GetComponent<UseEffectBoostPowerComponent>();
+      if (useEffectBoostPower != null) {
+        state.LogMessage("TODO: Make boosting power do something!");
+      }
+
       // We assume all items are single-use; this will change if I deviate from the reference implementation!
       userInventory.RemoveEntity(usable);
       usable.QueueFree();

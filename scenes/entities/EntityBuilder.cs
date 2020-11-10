@@ -12,6 +12,7 @@ namespace SpaceDodgeRL.scenes.entities {
     // I assume these are all loaded at the same time as _Ready()?
     private static PackedScene _entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
 
+    private static string _bPath = "res://resources/atlas_b.tres";
     private static string _iPath = "res://resources/atlas_i.tres";
     private static string _tPath = "res://resources/atlas_t.tres";
     private static string _FPath = "res://resources/atlas_F.tres";
@@ -56,6 +57,17 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
+    private static Entity CreateExtraBatteryEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "extra battery");
+
+      e.AddComponent(DisplayComponent.Create(_bPath, true));
+      e.AddComponent(StorableComponent.Create());
+      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UseEffectBoostPowerComponent.Create(power: 20, duration: 450));
+
+      return e;
+    }
+
     private static Entity CreateDuctTapeEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "duct tape");
 
@@ -90,8 +102,7 @@ namespace SpaceDodgeRL.scenes.entities {
       } else if (entityDefId == EntityDefId.ITEM_DUCT_TAPE) {
         return EntityBuilder.CreateDuctTapeEntity();
       } else if (entityDefId == EntityDefId.ITEM_EXTRA_BATTERY) {
-        GD.Print("TODO: No implementation yet for ID ", entityDefId);
-        return EntityBuilder.CreateDuctTapeEntity();
+        return EntityBuilder.CreateExtraBatteryEntity();
       } else if (entityDefId == EntityDefId.ITEM_RED_PAINT) {
         GD.Print("TODO: No implementation yet for ID ", entityDefId);
         return EntityBuilder.CreateDuctTapeEntity();
