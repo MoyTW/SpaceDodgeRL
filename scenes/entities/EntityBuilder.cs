@@ -132,8 +132,9 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(DefenderComponent.Create(0, 100));
       e.AddComponent(DisplayComponent.Create(_AtSignPath, false));
       e.AddComponent(InventoryComponent.Create(inventorySize: 26));
-      e.AddComponent(PlayerComponent.Create());      
+      e.AddComponent(PlayerComponent.Create());
       e.AddComponent(SpeedComponent.Create(100));
+      e.AddComponent(StatusEffectTrackerComponent.Create());
 
       return e;
     }

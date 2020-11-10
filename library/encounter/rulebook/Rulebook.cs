@@ -33,7 +33,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       Entity entity = state.GetEntityById(entityId);
       if (entity != null) {
         var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
-        actionTimeComponent.EndTurn(entity.GetComponent<SpeedComponent>());
+        actionTimeComponent.EndTurn(entity.GetComponent<SpeedComponent>(), entity.GetComponent<StatusEffectTrackerComponent>());
         state.UpdateTimelineForEntity(entity);
         return true;
       } else {
@@ -158,9 +158,14 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.LogMessage("TODO: Make boosting power do something!");
       }
 
-      var useEffectBoostSpeed = usable.GetComponent<UseEffectBoostSpeedComponent>();
-      if (useEffectBoostSpeed != null) {
-        state.LogMessage("TODO: Make boosting speed do something!");
+      var useEffectBoostSpeedComponent = usable.GetComponent<UseEffectBoostSpeedComponent>();
+      if (useEffectBoostSpeedComponent != null) {
+        var statusEffectTracker = user.GetComponent<StatusEffectTrackerComponent>();
+        statusEffectTracker.AddEffect(new StatusEffectTimedSpeedBoost(
+          boostPower: useEffectBoostSpeedComponent.BoostPower,
+          startTick: state.CurrentTick,
+          endTick: state.CurrentTick + useEffectBoostSpeedComponent.Duration
+        ));
       }
 
       // We assume all items are single-use; this will change if I deviate from the reference implementation!

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 namespace SpaceDodgeRL.scenes.components {
 
@@ -8,8 +9,6 @@ namespace SpaceDodgeRL.scenes.components {
     public string EntityGroup => ENTITY_GROUP;
 
     public int BaseSpeed { get; private set; }
-    // TODO: Buffs
-    public int Speed { get => BaseSpeed; }
 
     public static SpeedComponent Create(int baseSpeed) {
       var component = new SpeedComponent();
@@ -17,6 +16,20 @@ namespace SpaceDodgeRL.scenes.components {
       component.BaseSpeed = baseSpeed;
 
       return component;
+    }
+
+    public int CalculateSpeed(StatusEffectTrackerComponent statusEffectTrackerComponent) {
+      int totalBoost = 0;
+      if (statusEffectTrackerComponent != null) {
+        totalBoost = statusEffectTrackerComponent.GetStatusEffectsOfType(StatusEffectType.BOOST_SPEED)
+          .Sum(e => ((StatusEffectBoostStat)e).BoostPower);
+      }
+
+      if (this.BaseSpeed - totalBoost <= 0) {
+        return 0;
+      } else {
+        return this.BaseSpeed - totalBoost;
+      }
     }
   }
 }
