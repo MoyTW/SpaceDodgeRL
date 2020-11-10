@@ -87,6 +87,7 @@ namespace SpaceDodgeRL.scenes.entities {
         return (T)foundComponent;
       }
 
+      // TODO: Optimize for misses too (failed check always crawls all components; set dirty on component addition/removal)
       foreach (Component child in this._components) {
         if (child is T) {
           var typeT = typeof(T);
