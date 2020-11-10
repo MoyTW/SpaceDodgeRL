@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Godot;
 using SpaceDodgeRL.scenes.entities;
 
@@ -8,22 +10,24 @@ namespace SpaceDodgeRL.scenes.components {
     private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/InventoryComponent.tscn");
 
     public static readonly string ENTITY_GROUP = "INVENTORY_COMPONENT_GROUP";
-    public override string EntityGroup => ENTITY_GROUP;
+    public string EntityGroup => ENTITY_GROUP;
     public static readonly string ENTITY_IN_INVENTORY_GROUP = "ENTITY_IN_INVENTORY_GROUP";
 
-    public int InventoryUsed { get => this.GetChildCount(); }
+    private List<Entity> _storedEntities = new List<Entity>();
+    public int InventoryUsed { get => this._storedEntities.Count; }
     public int InventorySize { get; private set; }
 
     public static InventoryComponent Create(int inventorySize) {
-      var component = _componentPrefab.Instance() as InventoryComponent;
+      var component = new InventoryComponent();
 
       component.InventorySize = inventorySize;
 
       return component;
     }
 
-    public Godot.Collections.Array StoredItems { get => this.GetChildren(); }
+    public ReadOnlyCollection<Entity> StoredItems { get => this._storedEntities.AsReadOnly(); }
 
+    // If this gets slow we should store in a map not a list
     public Entity StoredEntityById(string entityId) {
       foreach (Entity e in StoredItems) {
         if (e.EntityId == entityId) {
@@ -40,26 +44,19 @@ namespace SpaceDodgeRL.scenes.components {
 
     public void AddEntity(Entity entity) {
       if (!this.CanFit(entity)) {
-        throw new InventoryCannotStoreItemException();
+        throw new InventoryFullCannotStoreItemException();
+      } else if (this._storedEntities.Contains(entity)) {
+        throw new InventoryAlreadyHasItemException();
       }
-      base.AddChild(entity);
+      this._storedEntities.Add(entity);
       entity.AddToGroup(ENTITY_IN_INVENTORY_GROUP);
     }
-    public class InventoryCannotStoreItemException : Exception {}
+    public class InventoryFullCannotStoreItemException : Exception {}
+    public class InventoryAlreadyHasItemException : Exception {}
 
     public void RemoveEntity(Entity entity) {
-      base.RemoveChild(entity);
+      this._storedEntities.Remove(entity);
       entity.RemoveFromGroup(ENTITY_IN_INVENTORY_GROUP);
-    }
-
-    [Obsolete("Use AddEntity(...) instead!")]
-    public new void AddChild(Node node, bool legibleUniqueName = false) {
-      throw new InvalidOperationException("Use AddEntity(...) instead!");
-    }
-
-    [Obsolete("Use RemoveEntity(...) instead!")]
-    public new void RemoveChild(Node node) {
-      throw new InvalidOperationException("Use RemoveEntity(...) instead!");
     }
   }
 }

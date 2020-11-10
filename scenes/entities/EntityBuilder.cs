@@ -31,13 +31,13 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateScoutEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "scout");
 
-      e.AddChild(ScoutAIComponent.Create());
+      e.AddComponent(ScoutAIComponent.Create());
 
-      e.AddChild(ActionTimeComponent.Create(0));
-      e.AddChild(CollisionComponent.CreateDefaultActor());
-      e.AddChild(DefenderComponent.Create(baseDefense: 0, maxHp: 10));
-      e.AddChild(DisplayComponent.Create(_SPath, false));
-      e.AddChild(SpeedComponent.Create(baseSpeed: 75));
+      e.AddComponent(ActionTimeComponent.Create(0));
+      e.AddComponent(CollisionComponent.CreateDefaultActor());
+      e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 10));
+      e.AddComponent(DisplayComponent.Create(_SPath, false));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 75));
 
       return e;
     }
@@ -45,13 +45,13 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateFighterEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "fighter");
 
-      e.AddChild(FighterAIComponent.Create());
+      e.AddComponent(FighterAIComponent.Create());
 
-      e.AddChild(ActionTimeComponent.Create(0));
-      e.AddChild(CollisionComponent.CreateDefaultActor());
-      e.AddChild(DefenderComponent.Create(baseDefense: 0, maxHp: 30));
-      e.AddChild(DisplayComponent.Create(_FPath, false));
-      e.AddChild(SpeedComponent.Create(baseSpeed: 125));
+      e.AddComponent(ActionTimeComponent.Create(0));
+      e.AddComponent(CollisionComponent.CreateDefaultActor());
+      e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 30));
+      e.AddComponent(DisplayComponent.Create(_FPath, false));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 125));
 
       return e;
     }
@@ -59,10 +59,10 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateDuctTapeEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "duct tape");
 
-      e.AddChild(DisplayComponent.Create(_tPath, true));
-      e.AddChild(StorableComponent.Create());
-      e.AddChild(UsableComponent.Create());
-      e.AddChild(UseEffectHealComponent.Create(healpower: 10));
+      e.AddComponent(DisplayComponent.Create(_tPath, true));
+      e.AddComponent(StorableComponent.Create());
+      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UseEffectHealComponent.Create(healpower: 10));
 
       return e;
     }
@@ -106,13 +106,13 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreatePlayerEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "player");
 
-      e.AddChild(ActionTimeComponent.Create(0));
-      e.AddChild(CollisionComponent.Create(true, false));
-      e.AddChild(DefenderComponent.Create(0, 100));
-      e.AddChild(DisplayComponent.Create(_AtSignPath, false));
-      e.AddChild(InventoryComponent.Create(inventorySize: 26));
-      e.AddChild(PlayerComponent.Create());      
-      e.AddChild(SpeedComponent.Create(100));
+      e.AddComponent(ActionTimeComponent.Create(0));
+      e.AddComponent(CollisionComponent.Create(true, false));
+      e.AddComponent(DefenderComponent.Create(0, 100));
+      e.AddComponent(DisplayComponent.Create(_AtSignPath, false));
+      e.AddComponent(InventoryComponent.Create(inventorySize: 26));
+      e.AddComponent(PlayerComponent.Create());      
+      e.AddComponent(SpeedComponent.Create(100));
 
       return e;
     }
@@ -120,13 +120,13 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateProjectileEntity(string projectileName, int power, EncounterPath path, int speed) {
       var e = CreateEntity(Guid.NewGuid().ToString(), projectileName);
 
-      e.AddChild(PathAIComponent.Create(path));
+      e.AddComponent(PathAIComponent.Create(path));
 
-      e.AddChild(ActionTimeComponent.Create(0)); // Should it go instantly or should it wait for its turn...?
-      e.AddChild(AttackerComponent.Create(power));
-      e.AddChild(CollisionComponent.Create(false, false, true, true));
-      e.AddChild(DisplayComponent.Create(_StarPath, false));
-      e.AddChild(SpeedComponent.Create(speed));
+      e.AddComponent(ActionTimeComponent.Create(0)); // Should it go instantly or should it wait for its turn...?
+      e.AddComponent(AttackerComponent.Create(power));
+      e.AddComponent(CollisionComponent.Create(false, false, true, true));
+      e.AddComponent(DisplayComponent.Create(_StarPath, false));
+      e.AddComponent(SpeedComponent.Create(speed));
 
       return e;
     }
@@ -134,9 +134,9 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateMapWallEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "map wall");
 
-      e.AddChild(CollisionComponent.Create(true, false));
-      e.AddChild(DefenderComponent.Create(0, 100, logDamage: false, isInvincible: true));
-      e.AddChild(DisplayComponent.Create(_StarPath, true));
+      e.AddComponent(CollisionComponent.Create(true, false));
+      e.AddComponent(DefenderComponent.Create(0, 100, logDamage: false, isInvincible: true));
+      e.AddComponent(DisplayComponent.Create(_StarPath, true));
 
       return e;
     }
@@ -144,9 +144,9 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateSatelliteEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "satellite");
 
-      e.AddChild(CollisionComponent.Create(blocksMovement: true, blocksVision: true));
-      e.AddChild(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, logDamage: false));
-      e.AddChild(DisplayComponent.Create(_hashSignPath, true));
+      e.AddComponent(CollisionComponent.Create(blocksMovement: true, blocksVision: true));
+      e.AddComponent(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, logDamage: false));
+      e.AddComponent(DisplayComponent.Create(_hashSignPath, true));
 
       return e;
     }
@@ -154,8 +154,8 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateStairsEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "jump point");
 
-      e.AddChild(DisplayComponent.Create(_JPath, true));
-      e.AddChild(StairsComponent.Create());
+      e.AddComponent(DisplayComponent.Create(_JPath, true));
+      e.AddComponent(StairsComponent.Create());
 
       return e;
     }
@@ -163,10 +163,10 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateIntelEntity(int targetDungeonLevel) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "intel for sector " + targetDungeonLevel);
 
-      e.AddChild(DisplayComponent.Create(_iPath, true));
-      e.AddChild(StorableComponent.Create());
-      e.AddChild(UsableComponent.Create());
-      e.AddChild(UseEffectAddIntelComponent.Create(targetDungeonLevel));
+      e.AddComponent(DisplayComponent.Create(_iPath, true));
+      e.AddComponent(StorableComponent.Create());
+      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UseEffectAddIntelComponent.Create(targetDungeonLevel));
 
       return e;
     }

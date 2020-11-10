@@ -6,10 +6,10 @@ namespace SpaceDodgeRL.scenes.components.use {
     private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/use/UsableComponent.tscn");
 
     public static readonly string ENTITY_GROUP = "USABLE_COMPONENT_GROUP";
-    public override string EntityGroup => ENTITY_GROUP;
+    public string EntityGroup => ENTITY_GROUP;
 
     public static UsableComponent Create() {
-      var component = _componentPrefab.Instance() as UsableComponent;
+      var component = new UsableComponent();
       return component;
     }
   }

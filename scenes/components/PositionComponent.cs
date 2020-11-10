@@ -4,11 +4,11 @@ using System;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class PositionComponent : Component {
-    private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
+  public class PositionComponent : Node, Component {
+    private static PackedScene _scenePrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
 
     public static readonly string ENTITY_GROUP = "POSITION_COMPONENT_GROUP";
-    public override string EntityGroup => ENTITY_GROUP;
+    public string EntityGroup => ENTITY_GROUP;
 
     // TODO: Don't put this here
     public const int START_X = 12;
@@ -26,7 +26,7 @@ namespace SpaceDodgeRL.scenes.components {
     }
 
     public static PositionComponent Create(EncounterPosition position, Texture texture) {
-      var component = _componentPrefab.Instance() as PositionComponent;
+      var component = _scenePrefab.Instance() as PositionComponent;
 
       component._encounterPosition = position;
       var sprite = component.GetNode<Sprite>("Sprite");

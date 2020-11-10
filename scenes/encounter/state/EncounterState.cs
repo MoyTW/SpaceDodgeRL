@@ -159,7 +159,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       var spriteData = entity.GetComponent<DisplayComponent>();
       
       var positionComponent = PositionComponent.Create(targetPosition, spriteData.Texture);
-      entity.AddChild(positionComponent);
+      entity.AddComponent(positionComponent);
 
       var entityPosition = positionComponent.EncounterPosition;
       AddChild(entity);
@@ -175,7 +175,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public void RemoveEntity(Entity entity) {
       // Remove the position component from both
       var positionComponent = entity.GetComponent<PositionComponent>();
-      entity.RemoveChild(positionComponent);
+      entity.RemoveComponent(positionComponent);
       positionComponent.QueueFree();
 
       var entityPosition = positionComponent.EncounterPosition;

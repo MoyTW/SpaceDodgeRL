@@ -4,16 +4,14 @@ using System;
 namespace SpaceDodgeRL.scenes.components {
 
   public class ActionTimeComponent : Component {
-    private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/ActionTimeComponent.tscn");
-
     public static readonly string ENTITY_GROUP = "ACTION_TIME_COMPONENT_GROUP";
-    public override string EntityGroup => ENTITY_GROUP;
+    public string EntityGroup => ENTITY_GROUP;
 
     public int NextTurnAtTick { get; private set; }
     public int LastTurnAtTick { get; private set; }
 
     public static ActionTimeComponent Create(int currentTick, int ticksUntilTurn = 0) {
-      var component = _componentPrefab.Instance() as ActionTimeComponent;
+      var component = new ActionTimeComponent();
 
       component.NextTurnAtTick = currentTick + ticksUntilTurn;
       component.LastTurnAtTick = int.MinValue;

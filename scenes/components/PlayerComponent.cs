@@ -6,10 +6,8 @@ using SpaceDodgeRL.resources.gamedata;
 namespace SpaceDodgeRL.scenes.components {
 
   public class PlayerComponent : Component {
-    private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/PlayerComponent.tscn");
-
     public static readonly string ENTITY_GROUP = "PLAYER_COMPONENT_GROUP";
-    public override string EntityGroup => ENTITY_GROUP;
+    public string EntityGroup => ENTITY_GROUP;
 
     private HashSet<int> _dungeonLevelsWithIntel;
 
@@ -27,7 +25,7 @@ namespace SpaceDodgeRL.scenes.components {
       EncounterPath autopilotPath = null,
       HashSet<int> dungeonLevelsWithIntel = null
     ) {
-      var component = _componentPrefab.Instance() as PlayerComponent;
+      var component = new PlayerComponent();
 
       component.CuttingLaserRange = cuttingLaserRange;
       component.CuttingLaserPower = cuttingLaserPower;

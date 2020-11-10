@@ -136,7 +136,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         }
       } else {
         AIComponent aIComponent = entity.GetComponent<AIComponent>();
-        var aIActions = aIComponent.DecideNextAction(state);
+        var aIActions = aIComponent.DecideNextAction(state, entity);
         Rulebook.ResolveActionsAndEndTurn(aIActions, state);
         state.UpdateDangerMap();
       }

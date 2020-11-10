@@ -7,10 +7,10 @@ namespace SpaceDodgeRL.scenes.components {
     private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/StairsComponent.tscn");
 
     public static readonly string ENTITY_GROUP = "STAIRS_COMPONENT_GROUP";
-    public override string EntityGroup => ENTITY_GROUP;
+    public string EntityGroup => ENTITY_GROUP;
 
     public static StairsComponent Create() {
-      var component = _componentPrefab.Instance() as StairsComponent;
+      var component = new StairsComponent();
       return component;
     }
   }

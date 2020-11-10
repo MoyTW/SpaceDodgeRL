@@ -9,21 +9,17 @@ using System.Collections.Generic;
 namespace SpaceDodgeRL.scenes.components.AI {
 
   public class ScoutAIComponent : AIComponent {
-    private static PackedScene _componentPrefab = GD.Load<PackedScene>("res://scenes/components/AI/ScoutAIComponent.tscn");
-
     public static readonly string ENTITY_GROUP = "SCOUT_AI_COMPONENT_GROUP";
-    public override string EntityGroup => ENTITY_GROUP;
+    public string EntityGroup => ENTITY_GROUP;
 
     // TODO: sight-lines & group activation
-    public override bool IsActive => false;
+    public bool IsActive => false;
 
     public static ScoutAIComponent Create() {
-      return _componentPrefab.Instance() as ScoutAIComponent;
+      return new ScoutAIComponent();
     }
 
-    public override List<EncounterAction> DecideNextAction(EncounterState state) {
-      Entity parent = GetParent() as Entity;
-
+    public List<EncounterAction> DecideNextAction(EncounterState state, Entity parent) {
       if (!IsActive) { return new List<EncounterAction>() { new WaitAction(parent.EntityId) }; }
 
       var actions = new List<EncounterAction>();
