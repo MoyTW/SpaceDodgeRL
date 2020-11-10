@@ -213,6 +213,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       var timeToNextPlayerMove = this.Player.GetComponent<SpeedComponent>().Speed;
 
       dangerMap.Clear();
+      // TODO: We don't actually need to update every entity, every time, since we only need to set the cell when the projectile itself moves
       foreach (Entity pathEntity in pathEntities) {
         var pathEntitySpeed = pathEntity.GetComponent<SpeedComponent>().Speed;
         var path = pathEntity.GetComponent<PathAIComponent>().Path;
