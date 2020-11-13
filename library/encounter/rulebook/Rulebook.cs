@@ -126,6 +126,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
+    // TODO: Consider putting all these effects under UsableComponent, instead of keeping them as components
     private static bool ResolveUse(UseAction action, EncounterState state) {
       // We assume that the used entity must be in the inventory of the user - this is pretty fragile and might change.
       var user = state.GetEntityById(action.ActorId);
@@ -155,11 +156,20 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
       var useEffectBoostPower = usable.GetComponent<UseEffectBoostPowerComponent>();
       if (useEffectBoostPower != null) {
-        state.LogMessage("TODO: Make boosting power do something!");
+        state.LogMessage(String.Format("Attack power boosted by {0} for duration {1}!",
+          useEffectBoostPower.BoostPower, useEffectBoostPower.Duration));
+        var statusEffectTracker = user.GetComponent<StatusEffectTrackerComponent>();
+        statusEffectTracker.AddEffect(new StatusEffectTimedPowerBoost(
+          boostPower: useEffectBoostPower.BoostPower,
+          startTick: state.CurrentTick,
+          endTick: state.CurrentTick + useEffectBoostPower.Duration
+        ));
       }
 
       var useEffectBoostSpeedComponent = usable.GetComponent<UseEffectBoostSpeedComponent>();
       if (useEffectBoostSpeedComponent != null) {
+        state.LogMessage(String.Format("Speed boosted by {0} for duration {1}!",
+          useEffectBoostPower.BoostPower, useEffectBoostPower.Duration));
         var statusEffectTracker = user.GetComponent<StatusEffectTrackerComponent>();
         statusEffectTracker.AddEffect(new StatusEffectTimedSpeedBoost(
           boostPower: useEffectBoostSpeedComponent.BoostPower,

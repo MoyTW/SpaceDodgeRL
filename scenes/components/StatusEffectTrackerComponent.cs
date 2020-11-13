@@ -21,6 +21,22 @@ namespace SpaceDodgeRL.scenes.components {
     int EndTick { get; }
   }
 
+  // TODO: Consider a builder or something so we don't need to enumerate every permutation of status effect?
+  // TODO: Deconflict term "power"
+  public class StatusEffectTimedPowerBoost : StatusEffect, StatusEffectTimed, StatusEffectBoostStat {
+    public string Type { get; }
+    public int BoostPower { get; }
+    public int StartTick { get; }
+    public int EndTick { get; }
+
+    public StatusEffectTimedPowerBoost(int boostPower, int startTick, int endTick) {
+      this.Type = StatusEffectType.BOOST_POWER;
+      this.BoostPower = boostPower;
+      this.StartTick = startTick;
+      this.EndTick = endTick;
+    }
+  }
+
   public class StatusEffectTimedSpeedBoost : StatusEffect, StatusEffectTimed, StatusEffectBoostStat {
     public string Type { get; }
     public int BoostPower { get; }
@@ -55,7 +71,12 @@ namespace SpaceDodgeRL.scenes.components {
     }
 
     public void UpdateStatusEffectTimers(int currentTick) {
-      this._statusEffects.RemoveAll(effect => effect is StatusEffectTimed && ((StatusEffectTimed)effect).EndTick < currentTick);
+      var expiredEffects = this._statusEffects
+        .Where(effect => effect is StatusEffectTimed && ((StatusEffectTimed)effect).EndTick < currentTick)
+        .ToArray();
+      foreach(StatusEffect expired in expiredEffects) {
+        this.RemoveEffect(expired);
+      }
     }
 
     public IEnumerable<StatusEffect> GetStatusEffectsOfType(string statusEffectType) {
