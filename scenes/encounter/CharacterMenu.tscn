@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/encounter/CharacterMenu.cs" type="Script" id=1]
+
+[node name="CharacterMenu" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 40.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MenuHeader" type="Label" parent="."]
+margin_right = 1064.0
+margin_bottom = 14.0
+text = "Character Menu"
+align = 1
+
+[node name="Columns" type="HBoxContainer" parent="."]
+margin_top = 18.0
+margin_right = 1064.0
+margin_bottom = 32.0
+
+[node name="LevelColumn" type="VBoxContainer" parent="Columns"]
+margin_right = 352.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Columns/LevelColumn"]
+margin_right = 352.0
+margin_bottom = 14.0
+text = "Levels"
+align = 1
+
+[node name="StatsColumn" type="VBoxContainer" parent="Columns"]
+margin_left = 356.0
+margin_right = 708.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Columns/StatsColumn"]
+margin_right = 352.0
+margin_bottom = 14.0
+text = "Stats"
+align = 1
+
+[node name="IntelColumn" type="VBoxContainer" parent="Columns"]
+margin_left = 712.0
+margin_right = 1064.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Columns/IntelColumn"]
+margin_right = 352.0
+margin_bottom = 14.0
+text = "Intel"
+align = 1

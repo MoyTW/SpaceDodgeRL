@@ -113,6 +113,8 @@ namespace SpaceDodgeRL.scenes.encounter {
           PlayerWait(state);
         } else if (action == InputHandler.ActionMapping.AUTOPILOT) {
           ShowAutopilotMenu(state);
+        } else if (action == InputHandler.ActionMapping.CHARACTER) {
+          ShowCharacterMenu();
         } else if (action == InputHandler.ActionMapping.USE_STAIRS) {
           // TODO: Attempting to use stairs definitely shouldn't end your turn lol
           PlayerExecuteTurnEndingAction(new UseStairsAction(entity.EntityId), state);
@@ -158,6 +160,11 @@ namespace SpaceDodgeRL.scenes.encounter {
       // TODO: We could probably make the cleaner by using signals?
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
       sceneManager.ShowAutopilotMenu(state);
+    }
+
+    private void ShowCharacterMenu() {
+      var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+      sceneManager.ShowCharacterMenu();
     }
 
     public void HandleAutopilotSelection(EncounterZone selectedZone) {
