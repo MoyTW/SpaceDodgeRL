@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scenes/encounter/CharacterMenu.cs" type="Script" id=1]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=2]
@@ -6,6 +6,10 @@
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Regular.tres" type="DynamicFont" id=4]
 
 [sub_resource type="DynamicFont" id=1]
+size = 32
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=2]
 size = 32
 font_data = ExtResource( 2 )
 
@@ -19,7 +23,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MenuHeader" type="Label" parent="."]
+[node name="CharacterHeader" type="Label" parent="."]
 margin_right = 1024.0
 margin_bottom = 40.0
 custom_fonts/font = SubResource( 1 )
@@ -94,3 +98,50 @@ margin_right = 1023.0
 margin_bottom = 68.0
 size_flags_vertical = 3
 text = "Close"
+
+[node name="LevelUpMenu" type="VBoxContainer" parent="."]
+margin_top = 116.0
+margin_right = 1024.0
+margin_bottom = 210.0
+
+[node name="LevelUpHeader" type="Label" parent="LevelUpMenu"]
+margin_right = 1024.0
+margin_bottom = 40.0
+custom_fonts/font = SubResource( 2 )
+text = "You Have Unused Levels!"
+align = 1
+
+[node name="LevelUpText" type="Label" parent="LevelUpMenu"]
+margin_top = 44.0
+margin_right = 1024.0
+margin_bottom = 64.0
+custom_fonts/font = ExtResource( 4 )
+text = "You cannot exit the character screen until you've spent your unused levels!"
+
+[node name="LevelUpColumns" type="HBoxContainer" parent="LevelUpMenu"]
+margin_top = 68.0
+margin_right = 1024.0
+margin_bottom = 94.0
+
+[node name="LevelUpHPSelection" type="Button" parent="LevelUpMenu/LevelUpColumns"]
+margin_right = 338.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 3 )
+text = "Max and current HP +15"
+
+[node name="LevelUpAttackPowerSelection" type="Button" parent="LevelUpMenu/LevelUpColumns"]
+margin_left = 342.0
+margin_right = 681.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 3 )
+text = "Laser Damage +3"
+
+[node name="LevelUpRepairSelection" type="Button" parent="LevelUpMenu/LevelUpColumns"]
+margin_left = 685.0
+margin_right = 1024.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 3 )
+text = "Repair half max HP"

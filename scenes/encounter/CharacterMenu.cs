@@ -23,8 +23,6 @@ public class CharacterMenu : VBoxContainer {
     PrepLevelColumn(state);
     PrepStatsColumn(state);
     PrepIntelColumn(state);
-
-
   }
 
   private void PrepLevelColumn(EncounterState state) {
