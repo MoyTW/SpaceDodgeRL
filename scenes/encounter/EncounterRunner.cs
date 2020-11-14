@@ -114,7 +114,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action == InputHandler.ActionMapping.AUTOPILOT) {
           ShowAutopilotMenu(state);
         } else if (action == InputHandler.ActionMapping.CHARACTER) {
-          ShowCharacterMenu();
+          ShowCharacterMenu(state);
         } else if (action == InputHandler.ActionMapping.USE_STAIRS) {
           // TODO: Attempting to use stairs definitely shouldn't end your turn lol
           PlayerExecuteTurnEndingAction(new UseStairsAction(entity.EntityId), state);
@@ -162,9 +162,9 @@ namespace SpaceDodgeRL.scenes.encounter {
       sceneManager.ShowAutopilotMenu(state);
     }
 
-    private void ShowCharacterMenu() {
+    private void ShowCharacterMenu(EncounterState state) {
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-      sceneManager.ShowCharacterMenu();
+      sceneManager.ShowCharacterMenu(state);
     }
 
     public void HandleAutopilotSelection(EncounterZone selectedZone) {

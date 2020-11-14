@@ -38,6 +38,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public int CurrentTick { get => _actionTimeline.CurrentTick; }
     public Entity NextEntity { get => _actionTimeline.NextEntity; }
     public Entity Player { get; private set; }
+    public int LevelsInDungeon { get => 10; } // TODO: Properly pass this in!
     public int DungeonLevel { get; private set; }
 
     // ##########################################################################################################################
