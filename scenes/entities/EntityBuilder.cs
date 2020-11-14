@@ -39,7 +39,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 10));
       e.AddComponent(DisplayComponent.Create(_SPath, false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 75));
-      e.AddComponent(XPValueComponent.Create(xpValue: 30));
+      e.AddComponent(XPValueComponent.Create(xpValue: 1500));
 
       return e;
     }
@@ -137,7 +137,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(PlayerComponent.Create());
       e.AddComponent(SpeedComponent.Create(100));
       e.AddComponent(StatusEffectTrackerComponent.Create());
-      e.AddComponent(XPTrackerComponent.Create());
+      e.AddComponent(XPTrackerComponent.Create(200, 150));
 
       return e;
     }
