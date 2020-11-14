@@ -39,6 +39,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 10));
       e.AddComponent(DisplayComponent.Create(_SPath, false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 75));
+      e.AddComponent(XPValueComponent.Create(xpValue: 30));
 
       return e;
     }
@@ -53,6 +54,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 30));
       e.AddComponent(DisplayComponent.Create(_FPath, false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 125));
+      e.AddComponent(XPValueComponent.Create(xpValue: 50));
 
       return e;
     }
@@ -135,17 +137,18 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(PlayerComponent.Create());
       e.AddComponent(SpeedComponent.Create(100));
       e.AddComponent(StatusEffectTrackerComponent.Create());
+      e.AddComponent(XPTrackerComponent.Create());
 
       return e;
     }
 
-    public static Entity CreateProjectileEntity(string projectileName, int power, EncounterPath path, int speed) {
+    public static Entity CreateProjectileEntity(Entity source, string projectileName, int power, EncounterPath path, int speed) {
       var e = CreateEntity(Guid.NewGuid().ToString(), projectileName);
 
       e.AddComponent(PathAIComponent.Create(path));
 
       e.AddComponent(ActionTimeComponent.Create(0)); // Should it go instantly or should it wait for its turn...?
-      e.AddComponent(AttackerComponent.Create(power));
+      e.AddComponent(AttackerComponent.Create(source, power));
       e.AddComponent(CollisionComponent.Create(false, false, true, true));
       e.AddComponent(DisplayComponent.Create(_StarPath, false));
       e.AddComponent(SpeedComponent.Create(speed));

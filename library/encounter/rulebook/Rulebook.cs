@@ -90,6 +90,15 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         if (defenderComponent.CurrentHp <= 0) {
           var logMessage = string.Format("[b]{0}[/b] hits [b]{1}[/b] for {2} damage, destroying it!",
             attacker.EntityName, defender.EntityName, damage);
+
+          // Assign XP to the entity that fired the projectile
+          var projectileSource = attackerComponent.Source;
+          var xpValueComponent = defender.GetComponent<XPValueComponent>();
+          if (xpValueComponent != null && projectileSource.GetComponent<XPTrackerComponent>() != null) {
+            projectileSource.GetComponent<XPTrackerComponent>().AddXP(xpValueComponent.XPValue);
+            logMessage += String.Format(" [b]{0}[/b] gains {1} XP!", projectileSource.EntityName, xpValueComponent.XPValue);
+          }
+
           LogAttack(defenderComponent, logMessage, state);
           // TODO: Change "SelfDestructAction" to "RemoveAction" or something & add a toggle/line for log text?
           ResolveAction(new SelfDestructAction(defender.EntityId), state);
@@ -203,7 +212,13 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
     private static bool ResolveFireProjectile(FireProjectileAction action, EncounterState state) {
       var actorPosition = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>().EncounterPosition;
-      Entity projectile = EntityBuilder.CreateProjectileEntity(action.ProjectileName, action.Power, action.PathFunction(actorPosition), action.Speed);
+      Entity projectile = EntityBuilder.CreateProjectileEntity(
+        state.GetEntityById(action.ActorId),
+        action.ProjectileName,
+        action.Power,
+        action.PathFunction(actorPosition),
+        action.Speed
+      );
       state.PlaceEntity(projectile, actorPosition, true);
       return true;
     }
