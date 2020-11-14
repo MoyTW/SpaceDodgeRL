@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 
 public class CharacterMenu : VBoxContainer {
+  private static string _fontPath = "res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Regular.ttf";
 
   private Button _closeButton;
   private List<Label> _intelLabels;
@@ -46,10 +47,15 @@ public class CharacterMenu : VBoxContainer {
     if (_intelLabels == null) {
       _intelLabels = new List<Label>();
       for (int i = 1; i < state.LevelsInDungeon; i++) {
+        var font = new DynamicFont();
+        font.FontData = (DynamicFontData)GD.Load(_fontPath);
+
         var newLabel = new Label();
-        newLabel.Text = String.Format("Sector {0}: {1}", i, playerComponent.KnowsIntel(i) ? "KNOWN" : "UNKNOWN");
+        newLabel.AddFontOverride("font", font);
         intelColumn.AddChild(newLabel);
         _intelLabels.Add(newLabel);
+
+        newLabel.Text = String.Format("Sector {0}: {1}", i, playerComponent.KnowsIntel(i) ? "KNOWN" : "UNKNOWN");
       }
     } else {
       for (int i = 1; i < state.LevelsInDungeon; i++) {
