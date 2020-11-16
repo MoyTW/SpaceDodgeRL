@@ -129,14 +129,16 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreatePlayerEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "player");
 
+      var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
+
       e.AddComponent(ActionTimeComponent.Create(0));
       e.AddComponent(CollisionComponent.Create(true, false));
       e.AddComponent(DefenderComponent.Create(0, 100));
       e.AddComponent(DisplayComponent.Create(_AtSignPath, false));
       e.AddComponent(InventoryComponent.Create(inventorySize: 26));
-      e.AddComponent(PlayerComponent.Create());
+      e.AddComponent(PlayerComponent.Create(statusEffectTrackerComponent));
       e.AddComponent(SpeedComponent.Create(100));
-      e.AddComponent(StatusEffectTrackerComponent.Create());
+      e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPTrackerComponent.Create(200, 150));
 
       return e;

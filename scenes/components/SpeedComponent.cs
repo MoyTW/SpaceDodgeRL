@@ -21,8 +21,7 @@ namespace SpaceDodgeRL.scenes.components {
     public int CalculateSpeed(StatusEffectTrackerComponent statusEffectTrackerComponent) {
       int totalBoost = 0;
       if (statusEffectTrackerComponent != null) {
-        totalBoost = statusEffectTrackerComponent.GetStatusEffectsOfType(StatusEffectType.BOOST_SPEED)
-          .Sum(e => ((StatusEffectBoostStat)e).BoostPower);
+        totalBoost = statusEffectTrackerComponent.GetTotalBoost(StatusEffectType.BOOST_SPEED);
       }
 
       if (this.BaseSpeed - totalBoost <= 0) {

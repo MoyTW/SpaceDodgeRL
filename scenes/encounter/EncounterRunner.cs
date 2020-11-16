@@ -50,16 +50,8 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
       var playerComponent = player.GetComponent<PlayerComponent>();
       if (closestEnemyPosition != null && closestEnemyDistance <= playerComponent.CuttingLaserRange) {
-        // TODO: Move this "get all the stuff & sum" logic into the status effect tracker?
-        var statusEffects = player.GetComponent<StatusEffectTrackerComponent>();
-        var boostPowerEffects = statusEffects.GetStatusEffectsOfType(StatusEffectType.BOOST_POWER);
-        var boostPower = 0;
-        if (boostPowerEffects != null) {
-          boostPower = boostPowerEffects.Sum(e => (e as StatusEffectBoostStat).BoostPower);
-        }
-
         var fireAction = FireProjectileAction.CreateCuttingLaserAction(
-          player.EntityId, playerComponent.CuttingLaserPower + boostPower, closestEnemyPosition.EncounterPosition);
+          player.EntityId, playerComponent.CuttingLaserPower, closestEnemyPosition.EncounterPosition);
         Rulebook.ResolveAction(fireAction, state);
       }
       Rulebook.ResolveEndTurn(player.EntityId, state);

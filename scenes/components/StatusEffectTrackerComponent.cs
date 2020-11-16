@@ -82,5 +82,9 @@ namespace SpaceDodgeRL.scenes.components {
     public IEnumerable<StatusEffect> GetStatusEffectsOfType(string statusEffectType) {
       return this._statusEffects.Where(effect => effect.Type == statusEffectType);
     }
+
+    public int GetTotalBoost(string statusEffectType) {
+      return GetStatusEffectsOfType(statusEffectType).Sum(e => ((StatusEffectBoostStat)e).BoostPower);
+    }
   }
 }
