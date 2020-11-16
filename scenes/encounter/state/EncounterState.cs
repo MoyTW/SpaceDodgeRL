@@ -211,12 +211,12 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public void UpdateDangerMap() {
       var dangerMap = GetNode<TileMap>("DangerMap");
       var pathEntities = GetTree().GetNodesInGroup(PathAIComponent.ENTITY_GROUP);
-      var timeToNextPlayerMove = this.Player.GetComponent<SpeedComponent>().CalculateSpeed(this.Player.GetComponent<StatusEffectTrackerComponent>());
+      var timeToNextPlayerMove = this.Player.GetComponent<SpeedComponent>().CalculateSpeed();
 
       dangerMap.Clear();
       // TODO: We don't actually need to update every entity, every time, since we only need to set the cell when the projectile itself moves
       foreach (Entity pathEntity in pathEntities) {
-        var pathEntitySpeed = pathEntity.GetComponent<SpeedComponent>().CalculateSpeed(pathEntity.GetComponent<StatusEffectTrackerComponent>());
+        var pathEntitySpeed = pathEntity.GetComponent<SpeedComponent>().CalculateSpeed();
         var path = pathEntity.GetComponent<PathAIComponent>().Path;
         var dangerPositions = path.Project(timeToNextPlayerMove / pathEntitySpeed);
 

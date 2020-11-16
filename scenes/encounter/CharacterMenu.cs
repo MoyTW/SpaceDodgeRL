@@ -78,7 +78,7 @@ public class CharacterMenu : VBoxContainer {
     GetNode<Label>("Columns/StatsColumn/StatsAttackRangeLabel").Text = String.Format("Cutting laser range: {0}", playerComponent.CuttingLaserRange);
 
     // TODO: Just make the status effect tracker a dependency and save on this
-    var speed = state.Player.GetComponent<SpeedComponent>().CalculateSpeed(state.Player.GetComponent<StatusEffectTrackerComponent>());
+    var speed = state.Player.GetComponent<SpeedComponent>().CalculateSpeed();
     GetNode<Label>("Columns/StatsColumn/StatsSpeedLabel").Text = String.Format("Speed: {0}", speed);
   }
 
