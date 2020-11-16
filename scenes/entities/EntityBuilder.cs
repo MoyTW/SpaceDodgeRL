@@ -84,6 +84,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateRedPaintEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "red paint");
 
+      // TODO: paint should be 'p'?
       e.AddComponent(DisplayComponent.Create(_bPath, true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create());
