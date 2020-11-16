@@ -5,7 +5,7 @@ namespace SpaceDodgeRL.scenes.components {
 
   public static class LevelUpBonus {
     public static string MAX_HP = "LEVEL_UP_BONUS_MAX_HP";
-    public static string ATTACK_POWER = "LEVEL_UP_BONUX_ATTACK_POWER";
+    public static string ATTACK_POWER = "LEVEL_UP_BONUS_ATTACK_POWER";
     public static string REPAIR = "LEVEL_UP_BONUS_REPAIR";
   }
 
