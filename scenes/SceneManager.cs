@@ -43,7 +43,11 @@ namespace SpaceDodgeRL.scenes {
 
     // Character Menu
     public void ShowCharacterMenu(EncounterState state) {
-      CallDeferred(nameof(DeferredSwitchScene), this._characterMenu);
+      CallDeferred(nameof(DeferredShowCharacterMenu), state);
+    }
+
+    private void DeferredShowCharacterMenu(EncounterState state) {
+      DeferredSwitchScene(this._characterMenu);
       this._characterMenu.PrepMenu(state);
     }
 

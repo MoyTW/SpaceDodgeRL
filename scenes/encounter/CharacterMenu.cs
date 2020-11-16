@@ -16,7 +16,6 @@ public class CharacterMenu : VBoxContainer {
   public override void _Ready() {
     _closeButton = this.GetNode<Button>("Columns/CloseButton");
     _closeButton.Connect("pressed", this, nameof(OnButtonPressed));
-    _closeButton.GrabFocus();
     _closeButton.Connect("tree_entered", this, nameof(OnTreeEntered));
 
     // Hook up the level up menu
@@ -47,6 +46,8 @@ public class CharacterMenu : VBoxContainer {
 
     if (playerXPTracker.UnusedLevelUps.Count == 0) {
       GetNode<VBoxContainer>("LevelUpMenu").Visible = false;
+      _closeButton.Disabled = false;
+      _closeButton.GrabFocus();
       return;
     }
 
