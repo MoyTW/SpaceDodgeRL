@@ -1,12 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components {
 
   public static class LevelUpBonus {
     public static string MAX_HP = "LEVEL_UP_BONUS_MAX_HP";
+    public static int MAX_HP_BONUS = 15;
+
     public static string ATTACK_POWER = "LEVEL_UP_BONUS_ATTACK_POWER";
+    public static int ATTACK_POWER_BONUS = 5;
+
     public static string REPAIR = "LEVEL_UP_BONUS_REPAIR";
+    public static double REPAIR_PERCENTAGE = .5f;
   }
 
   /**
@@ -57,10 +64,22 @@ namespace SpaceDodgeRL.scenes.components {
       Godot.GD.Print("XP gained, XP total now at " + this.XP);
     }
 
-    public void RegisterLevelUpChoice(string chosenLevelUp) {
-      Godot.GD.Print("YOU REGISTERED A LEVEL-UP");
+    public void RegisterLevelUpChoice(Entity entity, string chosenLevelUp) {
       this._chosenLevelUps.Add(this._unusedLevelUps[0], chosenLevelUp);
       this._unusedLevelUps.RemoveAt(0);
+
+      if (chosenLevelUp == LevelUpBonus.MAX_HP) {
+        // TODO: We can model persistent level-ups as status effects, can't we?
+        entity.GetComponent<DefenderComponent>().AddBaseMaxHp(LevelUpBonus.MAX_HP_BONUS);
+      } else if (chosenLevelUp == LevelUpBonus.ATTACK_POWER) {
+        entity.GetComponent<PlayerComponent>().AddBaseCuttingLaserPower(LevelUpBonus.ATTACK_POWER_BONUS);
+      } else if (chosenLevelUp == LevelUpBonus.REPAIR) {
+        var defenderComponent = entity.GetComponent<DefenderComponent>();
+        int repairValue = (int)((double)defenderComponent.MaxHp * LevelUpBonus.REPAIR_PERCENTAGE);
+        defenderComponent.RestoreHP(repairValue);
+      } else {
+        throw new NotImplementedException("what is the level-up of " + chosenLevelUp);
+      }
     }
   }
 }

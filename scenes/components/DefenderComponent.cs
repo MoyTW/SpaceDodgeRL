@@ -30,10 +30,17 @@ namespace SpaceDodgeRL.scenes.components {
       return component;
     }
 
+    public void AddBaseMaxHp(int hp, bool alsoAddCurrentHp = true) {
+      this.MaxHp += hp;
+      if (alsoAddCurrentHp) {
+        this.CurrentHp += hp;
+      }
+    }
+
     /**
      * Returns the number of HP restored.
      */
-    public int RestoreHP(int hp, bool overheal=false) {
+    public int RestoreHP(int hp, bool overheal = false) {
       int startingHp = this.CurrentHp;
 
       this.CurrentHp += hp;

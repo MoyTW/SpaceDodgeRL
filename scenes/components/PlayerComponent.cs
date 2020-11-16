@@ -37,6 +37,10 @@ namespace SpaceDodgeRL.scenes.components {
       return component;
     }
 
+    public void AddBaseCuttingLaserPower(int power) {
+      CuttingLaserPower += power;
+    }
+
     public void RegisterIntel(int dungeonLevel) {
       _dungeonLevelsWithIntel.Add(dungeonLevel);
     }

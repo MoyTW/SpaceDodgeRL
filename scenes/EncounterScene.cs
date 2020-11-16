@@ -43,8 +43,8 @@ namespace SpaceDodgeRL.scenes {
     }
 
     // This could probably be a signal.
-    public void HandleLevelUpSelected(string levelUpSelection) {
-      EncounterState.Player.GetComponent<XPTrackerComponent>().RegisterLevelUpChoice(levelUpSelection);
+    public void HandleLevelUpSelected(Entity entity, string levelUpSelection) {
+      EncounterState.Player.GetComponent<XPTrackerComponent>().RegisterLevelUpChoice(entity, levelUpSelection);
     }
   }
 }

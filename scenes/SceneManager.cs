@@ -51,9 +51,10 @@ namespace SpaceDodgeRL.scenes {
       this._characterMenu.PrepMenu(state);
     }
 
+    // Definitely an awkward call structuring here that could be nicer with signals
     public void HandleLevelUpSelected(string levelUpSelection) {
       var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
-      previousScene.HandleLevelUpSelected(levelUpSelection);
+      previousScene.HandleLevelUpSelected(previousScene.EncounterState.Player, levelUpSelection);
       this._characterMenu.PrepMenu(previousScene.EncounterState);
     }
 
