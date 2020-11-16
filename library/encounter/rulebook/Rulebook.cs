@@ -175,15 +175,15 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         ));
       }
 
-      var useEffectBoostSpeedComponent = usable.GetComponent<UseEffectBoostSpeedComponent>();
-      if (useEffectBoostSpeedComponent != null) {
+      var useEffectBoostSpeed = usable.GetComponent<UseEffectBoostSpeedComponent>();
+      if (useEffectBoostSpeed != null) {
         state.LogMessage(String.Format("Speed boosted by {0} for duration {1}!",
-          useEffectBoostPower.BoostPower, useEffectBoostPower.Duration));
+          useEffectBoostSpeed.BoostPower, useEffectBoostSpeed.Duration));
         var statusEffectTracker = user.GetComponent<StatusEffectTrackerComponent>();
         statusEffectTracker.AddEffect(new StatusEffectTimedSpeedBoost(
-          boostPower: useEffectBoostSpeedComponent.BoostPower,
+          boostPower: useEffectBoostSpeed.BoostPower,
           startTick: state.CurrentTick,
-          endTick: state.CurrentTick + useEffectBoostSpeedComponent.Duration
+          endTick: state.CurrentTick + useEffectBoostSpeed.Duration
         ));
       }
 
