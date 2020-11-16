@@ -69,7 +69,17 @@ public class CharacterMenu : VBoxContainer {
 
   // TODO: Fill this out
   private void PrepStatsColumn(EncounterState state) {
-    GD.Print("TODO: Make the stats column cool");
+    var defenderComponent = state.Player.GetComponent<DefenderComponent>();
+    GetNode<Label>("Columns/StatsColumn/StatsHPLabel").Text = String.Format("HP: {0}/{1}", defenderComponent.CurrentHp, defenderComponent.MaxHp);
+
+    var playerComponent = state.Player.GetComponent<PlayerComponent>();
+    // TODO: This doesn't take into account status boosts!
+    GetNode<Label>("Columns/StatsColumn/StatsAttackPowerLabel").Text = String.Format("Cutting laser power: {0}", playerComponent.CuttingLaserPower);
+    GetNode<Label>("Columns/StatsColumn/StatsAttackRangeLabel").Text = String.Format("Cutting laser range: {0}", playerComponent.CuttingLaserRange);
+
+    // TODO: Just make the status effect tracker a dependency and save on this
+    var speed = state.Player.GetComponent<SpeedComponent>().CalculateSpeed(state.Player.GetComponent<StatusEffectTrackerComponent>());
+    GetNode<Label>("Columns/StatsColumn/StatsSpeedLabel").Text = String.Format("Speed: {0}", speed);
   }
 
   // TODO: Make this not hideous, lol - add in the font

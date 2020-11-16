@@ -33,11 +33,11 @@ align = 1
 [node name="Columns" type="HBoxContainer" parent="."]
 margin_top = 44.0
 margin_right = 1024.0
-margin_bottom = 112.0
+margin_bottom = 160.0
 
 [node name="LevelColumn" type="VBoxContainer" parent="Columns"]
 margin_right = 321.0
-margin_bottom = 68.0
+margin_bottom = 116.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -67,7 +67,7 @@ align = 1
 [node name="StatsColumn" type="VBoxContainer" parent="Columns"]
 margin_left = 325.0
 margin_right = 647.0
-margin_bottom = 68.0
+margin_bottom = 116.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -78,10 +78,42 @@ custom_fonts/font = ExtResource( 3 )
 text = "Stats"
 align = 1
 
+[node name="StatsHPLabel" type="Label" parent="Columns/StatsColumn"]
+margin_top = 24.0
+margin_right = 322.0
+margin_bottom = 44.0
+custom_fonts/font = ExtResource( 4 )
+text = "LabelHP"
+align = 1
+
+[node name="StatsAttackPowerLabel" type="Label" parent="Columns/StatsColumn"]
+margin_top = 48.0
+margin_right = 322.0
+margin_bottom = 68.0
+custom_fonts/font = ExtResource( 4 )
+text = "LabelAttackPower"
+align = 1
+
+[node name="StatsAttackRangeLabel" type="Label" parent="Columns/StatsColumn"]
+margin_top = 72.0
+margin_right = 322.0
+margin_bottom = 92.0
+custom_fonts/font = ExtResource( 4 )
+text = "LabelAttackRange"
+align = 1
+
+[node name="StatsSpeedLabel" type="Label" parent="Columns/StatsColumn"]
+margin_top = 96.0
+margin_right = 322.0
+margin_bottom = 116.0
+custom_fonts/font = ExtResource( 4 )
+text = "LabelSpeed"
+align = 1
+
 [node name="IntelColumn" type="VBoxContainer" parent="Columns"]
 margin_left = 651.0
 margin_right = 972.0
-margin_bottom = 68.0
+margin_bottom = 116.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -95,14 +127,14 @@ align = 1
 [node name="CloseButton" type="Button" parent="Columns"]
 margin_left = 976.0
 margin_right = 1023.0
-margin_bottom = 68.0
+margin_bottom = 116.0
 size_flags_vertical = 3
 text = "Close"
 
 [node name="LevelUpMenu" type="VBoxContainer" parent="."]
-margin_top = 116.0
+margin_top = 164.0
 margin_right = 1024.0
-margin_bottom = 210.0
+margin_bottom = 258.0
 
 [node name="LevelUpHeader" type="Label" parent="LevelUpMenu"]
 margin_right = 1024.0
