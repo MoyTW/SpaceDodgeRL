@@ -58,6 +58,7 @@ namespace SpaceDodgeRL.scenes.components {
     }
 
     public void RegisterLevelUpChoice(string chosenLevelUp) {
+      Godot.GD.Print("YOU REGISTERED A LEVEL-UP");
       this._chosenLevelUps.Add(this._unusedLevelUps[0], chosenLevelUp);
       this._unusedLevelUps.RemoveAt(0);
     }

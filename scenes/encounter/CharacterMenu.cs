@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.components;
+using SpaceDodgeRL.scenes.encounter;
 using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
 using System;
@@ -17,12 +18,21 @@ public class CharacterMenu : VBoxContainer {
     _closeButton.Connect("pressed", this, nameof(OnButtonPressed));
     _closeButton.GrabFocus();
     _closeButton.Connect("tree_entered", this, nameof(OnTreeEntered));
+
+    // Hook up the level up menu
+    GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpHPSelection")
+      .Connect("pressed", this, nameof(OnLevelUpSelectionPressed),  new Godot.Collections.Array() { LevelUpBonus.MAX_HP });
+    GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpAttackPowerSelection")
+      .Connect("pressed", this, nameof(OnLevelUpSelectionPressed),  new Godot.Collections.Array() { LevelUpBonus.ATTACK_POWER });
+    GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpRepairSelection")
+      .Connect("pressed", this, nameof(OnLevelUpSelectionPressed),  new Godot.Collections.Array() { LevelUpBonus.REPAIR });
   }
 
   public void PrepMenu(EncounterState state) {
     PrepLevelColumn(state);
     PrepStatsColumn(state);
     PrepIntelColumn(state);
+    PrepLevelUpMenu(state);
   }
 
   private void PrepLevelColumn(EncounterState state) {
@@ -30,6 +40,30 @@ public class CharacterMenu : VBoxContainer {
 
     GetNode<Label>("Columns/LevelColumn/LevelLabel").Text = String.Format("Level: {0}", playerXPTracker.Level);
     GetNode<Label>("Columns/LevelColumn/ExperienceLabel").Text = String.Format("Experience: {0} / {1}", playerXPTracker.XP, playerXPTracker.NextLevelAtXP);
+  }
+
+  private void PrepLevelUpMenu(EncounterState state) {
+    var playerXPTracker = state.Player.GetComponent<XPTrackerComponent>();
+
+    if (playerXPTracker.UnusedLevelUps.Count == 0) {
+      GetNode<VBoxContainer>("LevelUpMenu").Visible = false;
+      return;
+    }
+
+    // Make appropriate elements visible
+    GetNode<VBoxContainer>("LevelUpMenu").Visible = true;
+    var playerDefender = state.Player.GetComponent<DefenderComponent>();
+    if (playerDefender.MaxHp > playerDefender.CurrentHp) {
+      GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpRepairSelection").Visible = true;
+    } else {
+      GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpRepairSelection").Visible = false;
+    }
+
+    // TODO: You get a !insideTree error here and if you enter level-up BEFORE first entering the screen it errors - reason's
+    // PrepMenu is called BEFORE mounting it. ok. well we'll patch that up.
+    // Disable exit
+    GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpHPSelection").GrabFocus();
+    _closeButton.Disabled = true;
   }
 
   // TODO: Fill this out
@@ -69,5 +103,10 @@ public class CharacterMenu : VBoxContainer {
   private void OnButtonPressed() {
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
     sceneManager.CloseCharacterMenu();
+  }
+
+  private void OnLevelUpSelectionPressed(string selection) {
+    var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+    sceneManager.HandleLevelUpSelected(selection);
   }
 }

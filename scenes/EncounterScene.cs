@@ -1,4 +1,5 @@
 using Godot;
+using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.encounter;
 using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
@@ -6,24 +7,24 @@ using SpaceDodgeRL.scenes.entities;
 namespace SpaceDodgeRL.scenes {
 
   public class EncounterScene : Container {
-    EncounterState encounterState;
-    EncounterRunner encounterRunner;
-    RichTextLabel encounterLogLabel;
+    public EncounterState EncounterState { get; private set; }
+    private EncounterRunner encounterRunner;
+    private RichTextLabel encounterLogLabel;
 
     public override void _Ready() {
-      encounterState = GetNode<EncounterState>("VBoxContainer/ViewportContainer/EncounterViewport/EncounterState");
+      EncounterState = GetNode<EncounterState>("VBoxContainer/ViewportContainer/EncounterViewport/EncounterState");
       encounterLogLabel = GetNode<RichTextLabel>("VBoxContainer/HBoxContainer/EncounterLogLabel");
 
       encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
       encounterRunner.inputHandlerRef = GetNode<InputHandler>("InputHandler");
-      encounterRunner.SetEncounterState(encounterState);
+      encounterRunner.SetEncounterState(EncounterState);
 
       // Hook up the UI
-      encounterState.Connect("EncounterLogMessageAdded", this, "OnEncounterLogMessageAdded");
+      EncounterState.Connect("EncounterLogMessageAdded", this, "OnEncounterLogMessageAdded");
 
       // TODO: Proper state initialization & building & such!
       var player = EntityBuilder.CreatePlayerEntity();
-      encounterState.InitState(player, 1);
+      EncounterState.InitState(player, 1);
     }
 
     // TODO: Decide if this is better placed directly onto the log label
@@ -34,10 +35,16 @@ namespace SpaceDodgeRL.scenes {
       encounterLogLabel.AppendBbcode(bbCodeMessage + "\n");
     }
 
+    // This could probably be a signal.
     public void HandleAutopilotMenuClosed(EncounterZone selectedZone) {
       if (selectedZone != null) {
         encounterRunner.HandleAutopilotSelection(selectedZone);
       }
+    }
+
+    // This could probably be a signal.
+    public void HandleLevelUpSelected(string levelUpSelection) {
+      EncounterState.Player.GetComponent<XPTrackerComponent>().RegisterLevelUpChoice(levelUpSelection);
     }
   }
 }

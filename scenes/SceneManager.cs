@@ -43,8 +43,14 @@ namespace SpaceDodgeRL.scenes {
 
     // Character Menu
     public void ShowCharacterMenu(EncounterState state) {
-      this._characterMenu.PrepMenu(state);
       CallDeferred(nameof(DeferredSwitchScene), this._characterMenu);
+      this._characterMenu.PrepMenu(state);
+    }
+
+    public void HandleLevelUpSelected(string levelUpSelection) {
+      var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
+      previousScene.HandleLevelUpSelected(levelUpSelection);
+      this._characterMenu.PrepMenu(previousScene.EncounterState);
     }
 
     public void CloseCharacterMenu() {
