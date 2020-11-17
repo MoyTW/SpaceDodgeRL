@@ -82,6 +82,11 @@ namespace SpaceDodgeRL.scenes.encounter {
       var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
 
       if (entity.IsInGroup(PlayerComponent.ENTITY_GROUP)) {
+        // We force the player to pick a level-up if they have any available.
+        if (entity.GetComponent<XPTrackerComponent>().UnusedLevelUps.Count > 0) {
+          ShowCharacterMenu(state);
+        }
+
         // TODO: Not on every process()
         var action = inputHandler.PopQueue();
         // Super not a fan of the awkwardness of checking this twice! Switch string -> enum, maybe?

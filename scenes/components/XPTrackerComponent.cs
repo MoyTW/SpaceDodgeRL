@@ -52,16 +52,19 @@ namespace SpaceDodgeRL.scenes.components {
       return component;
     }
 
-    // TODO: Display this to the user & make them pick their options!
-    public void AddXP(int xp) {
+    /**
+     * Adds XP and returns true if the entity has levelled up.
+     */
+    public bool AddXP(int xp) {
+      bool levelledUp = false;
       this.XP += xp;
       while (this.XP >= this.NextLevelAtXP) {
         this.XP -= this.NextLevelAtXP;
         this.Level += 1;
         this._unusedLevelUps.Add(this.Level);
-        Godot.GD.Print("You levelled up!");
+        levelledUp = true;
       }
-      Godot.GD.Print("XP gained, XP total now at " + this.XP);
+      return levelledUp;
     }
 
     public void RegisterLevelUpChoice(Entity entity, string chosenLevelUp) {
