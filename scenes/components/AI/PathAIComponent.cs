@@ -12,9 +12,6 @@ namespace SpaceDodgeRL.scenes.components.AI {
     public static readonly string ENTITY_GROUP = "PATH_AI_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
-    // Preset path AIs are always active
-    public bool IsActive => true;
-
     public EncounterPath Path { get; private set; }
 
     public static PathAIComponent Create(EncounterPath path) {

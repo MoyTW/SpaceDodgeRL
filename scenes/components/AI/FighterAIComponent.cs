@@ -13,14 +13,13 @@ namespace SpaceDodgeRL.scenes.components.AI {
     public string EntityGroup => ENTITY_GROUP;
 
     private ActivationGroup _activationGroup;
-    public bool IsActive => _activationGroup.IsActive;
 
     public FighterAIComponent(ActivationGroup activationGroup) {
       _activationGroup = activationGroup;
     }
 
     public List<EncounterAction> DecideNextAction(EncounterState state, Entity parent) {
-      if (!IsActive) {
+      if (!_activationGroup.IsActive) {
         var position = parent.GetComponent<PositionComponent>().EncounterPosition;
         if (state.FoVCache.Contains(position.X, position.Y)) {
           _activationGroup.Activate();

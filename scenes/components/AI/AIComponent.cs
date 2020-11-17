@@ -6,7 +6,6 @@ using SpaceDodgeRL.scenes.entities;
 namespace SpaceDodgeRL.scenes.components.AI {
 
   interface AIComponent: Component {
-    bool IsActive { get; }
     List<EncounterAction> DecideNextAction(EncounterState state, Entity parent);
   }
 }
