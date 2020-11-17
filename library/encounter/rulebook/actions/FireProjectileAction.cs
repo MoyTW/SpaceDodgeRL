@@ -10,37 +10,33 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
 
   public class FireProjectileAction : EncounterAction {
 
-    public string ProjectileName { get; private set; }
+    public ProjectileType ProjectileType { get; private set; }
     public int Power { get; private set; }
     // A function that takes the source position
     public Func<EncounterPosition, EncounterPath> PathFunction { get; private set; }
     public int Speed { get; private set; }
-    public ProjectileType ProjectileType { get; private set; }
 
     protected FireProjectileAction(
       string actorId,
-      string projectileName,
+      ProjectileType projectileType,
       int power,
       Func<EncounterPosition, EncounterPath> pathFunction,
-      int speed,
-      ProjectileType projectileType
+      int speed
     ) : base(actorId, ActionType.FIRE_PROJECTILE) {
-      this.ProjectileName = projectileName;
+      this.ProjectileType = projectileType;
       this.Power = power;
       this.PathFunction = pathFunction;
       this.Speed = speed;
-      this.ProjectileType = projectileType;
     }
 
     public static FireProjectileAction CreateCuttingLaserAction(string playerId, int playerPower, EncounterPosition targetPosition) {
       return new FireProjectileAction(
         playerId,
-        "cutting laser",
+        ProjectileType.CUTTING_LASER,
         playerPower,
         // TODO: Cutting laser range
         (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
-        1, // TODO: If the player fires on the same tick that the enemy moves, the enemy will move before the laser gets a chance, causing a miss!
-        ProjectileType.CUTTING_LASER
+        1 // TODO: If the player fires on the same tick that the enemy moves, the enemy will move before the laser gets a chance, causing a miss!
       );
     }
 
@@ -48,11 +44,10 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
     public static FireProjectileAction CreateSmallShotgunAction(string actorId, EncounterPosition targetPosition) {
       return new FireProjectileAction(
         actorId,
-        "small shotgun pellet",
+        ProjectileType.SMALL_SHOTGUN,
         1,
         (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
-        25,
-        ProjectileType.SMALL_SHOTGUN
+        25
       );
     }
   }

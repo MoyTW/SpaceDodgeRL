@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 using SpaceDodgeRL.library.encounter;
+using SpaceDodgeRL.library.encounter.rulebook.actions;
 using SpaceDodgeRL.resources.gamedata;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
@@ -17,10 +19,29 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _tPath = "res://resources/atlas_t.tres";
     private static string _FPath = "res://resources/atlas_F.tres";
     private static string _JPath = "res://resources/atlas_J.tres";
-    private static string _SPath = "res://resources/atlas_S.tres";
     private static string _AtSignPath = "res://resources/atlas_@.tres";
     private static string _StarPath = "res://resources/atlas_Star.tres";
     private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
+
+    private static string _texScoutPath = "res://resources/tex_scout.tres";
+    private static string _texSmallShotgunPath = "res://resources/tex_small_shotgun.tres";
+
+    private class ProjectileDisplayData {
+      public ProjectileType Type { get; }
+      public string Name { get; }
+      public string TexturePath { get; }
+
+      public ProjectileDisplayData(ProjectileType type, string name, string texturePath) {
+        this.Type = type;
+        this.Name = name;
+        this.TexturePath = texturePath;
+      }
+    }
+
+    private static Dictionary<ProjectileType, ProjectileDisplayData> projectileTypeToProjectileDisplay = new Dictionary<ProjectileType, ProjectileDisplayData>() {
+      { ProjectileType.CUTTING_LASER, new ProjectileDisplayData(ProjectileType.CUTTING_LASER, "cutting laser beam", _StarPath) }, // TODO: Maybe change this?
+      { ProjectileType.SMALL_SHOTGUN, new ProjectileDisplayData(ProjectileType.SMALL_SHOTGUN, "small shotgun pellet", _texSmallShotgunPath) }
+    };
 
     private static Entity CreateEntity(string id, string name) {
       Entity newEntity = _entityPrefab.Instance() as Entity;
@@ -39,7 +60,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 10));
-      e.AddComponent(DisplayComponent.Create(_SPath, false));
+      e.AddComponent(DisplayComponent.Create(_texScoutPath, false));
       e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 75));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 1450));
@@ -157,15 +178,17 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    public static Entity CreateProjectileEntity(Entity source, string projectileName, int power, EncounterPath path, int speed, int currentTick) {
-      var e = CreateEntity(Guid.NewGuid().ToString(), projectileName);
+    public static Entity CreateProjectileEntity(Entity source, ProjectileType type, int power, EncounterPath path, int speed, int currentTick) {
+      var displayData = projectileTypeToProjectileDisplay[type];
+
+      var e = CreateEntity(Guid.NewGuid().ToString(), displayData.Name);
 
       e.AddComponent(PathAIComponent.Create(path));
 
       e.AddComponent(ActionTimeComponent.Create(currentTick)); // Should it go instantly or should it wait for its turn...?
       e.AddComponent(AttackerComponent.Create(source, power));
       e.AddComponent(CollisionComponent.Create(false, false, true, true));
-      e.AddComponent(DisplayComponent.Create(_StarPath, false));
+      e.AddComponent(DisplayComponent.Create(displayData.TexturePath, false));
       e.AddComponent(SpeedComponent.Create(null, speed));
 
       return e;

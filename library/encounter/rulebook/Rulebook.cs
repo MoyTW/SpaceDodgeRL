@@ -214,7 +214,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       var actorPosition = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>().EncounterPosition;
       Entity projectile = EntityBuilder.CreateProjectileEntity(
         state.GetEntityById(action.ActorId),
-        action.ProjectileName,
+        action.ProjectileType,
         action.Power,
         action.PathFunction(actorPosition),
         action.Speed,
