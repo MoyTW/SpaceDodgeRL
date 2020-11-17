@@ -310,16 +310,19 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
       zone.ReadoutEncounterName = encounterDef.Name;
 
-      foreach (string entityDefId in encounterDef.EntityDefIds) {
-        var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
-        var newEntity = EntityBuilder.CreateEntityByEntityDefId(entityDefId);
-        state.PlaceEntity(newEntity, unblockedPosition);
+      if (encounterDef.EntityDefIds.Count > 0) {
+        ActivationGroup activationGroup = new ActivationGroup();
+        foreach (string entityDefId in encounterDef.EntityDefIds) {
+          var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
+          var newEntity = EntityBuilder.CreateEnemyByEntityDefId(entityDefId, activationGroup);
+          state.PlaceEntity(newEntity, unblockedPosition);
+        }
       }
 
       var chosenItemDefs = LevelData.ChooseItemDefs(dungeonLevel, seededRand);
       foreach(string chosenItemDefId in chosenItemDefs) {
         var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
-        var newEntity = EntityBuilder.CreateEntityByEntityDefId(chosenItemDefId);
+        var newEntity = EntityBuilder.CreateItemByEntityDefId(chosenItemDefId);
         state.PlaceEntity(newEntity, unblockedPosition);
         zone.AddItemToReadout(newEntity);
       }
@@ -370,11 +373,12 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state.PlaceEntity(player, zones[playerZoneIdx].Center);
       // TODO: delete the following test item
       var nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 2, zones[playerZoneIdx].Center.Y + 1);
-      state.PlaceEntity(EntityBuilder.CreateEntityByEntityDefId(EntityDefId.ITEM_RED_PAINT), nextToPlayer);
+      state.PlaceEntity(EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_RED_PAINT), nextToPlayer);
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 1, zones[playerZoneIdx].Center.Y + 1);
-      state.PlaceEntity(EntityBuilder.CreateEntityByEntityDefId(EntityDefId.ITEM_EXTRA_BATTERY), nextToPlayer);
+      state.PlaceEntity(EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_EXTRA_BATTERY), nextToPlayer);
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 5, zones[playerZoneIdx].Center.Y + 5);
-      state.PlaceEntity(EntityBuilder.CreateEntityByEntityDefId(EntityDefId.SCOUT), nextToPlayer);
+      ActivationGroup activationGroup = new ActivationGroup();
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.SCOUT, activationGroup), nextToPlayer);
 
       // Add all the various zone features to the map
       // TODO: Handle last level & add diplomat

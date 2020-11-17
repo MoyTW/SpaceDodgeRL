@@ -12,15 +12,22 @@ namespace SpaceDodgeRL.scenes.components.AI {
     public static readonly string ENTITY_GROUP = "FIGHTER_AI_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
-    // TODO: sight-lines & group activation
-    public bool IsActive => false;
+    private ActivationGroup _activationGroup;
+    public bool IsActive => _activationGroup.IsActive;
 
-    public static FighterAIComponent Create() {
-      return new FighterAIComponent();
+    public FighterAIComponent(ActivationGroup activationGroup) {
+      _activationGroup = activationGroup;
     }
 
     public List<EncounterAction> DecideNextAction(EncounterState state, Entity parent) {
-      if (!IsActive) { return new List<EncounterAction>() { new WaitAction(parent.EntityId) }; }
+      if (!IsActive) {
+        var position = parent.GetComponent<PositionComponent>().EncounterPosition;
+        if (state.FoVCache.Contains(position.X, position.Y)) {
+          _activationGroup.Activate();
+        } else {
+          return new List<EncounterAction>() { new WaitAction(parent.EntityId) };
+        }
+      }
 
       var actions = new List<EncounterAction>();
       var parentPos = parent.GetComponent<PositionComponent>().EncounterPosition;

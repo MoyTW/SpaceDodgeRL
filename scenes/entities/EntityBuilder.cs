@@ -29,12 +29,12 @@ namespace SpaceDodgeRL.scenes.entities {
     }
 
     // TODO: Take the current tick in this function!
-    private static Entity CreateScoutEntity() {
+    private static Entity CreateScoutEntity(ActivationGroup activationGroup) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "scout");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
-      e.AddComponent(ScoutAIComponent.Create());
+      e.AddComponent(new ScoutAIComponent(activationGroup));
 
       e.AddComponent(ActionTimeComponent.Create(0));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
@@ -47,12 +47,12 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    private static Entity CreateFighterEntity() {
+    private static Entity CreateFighterEntity(ActivationGroup activationGroup) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "fighter");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
-      e.AddComponent(FighterAIComponent.Create());
+      e.AddComponent(new FighterAIComponent(activationGroup));
 
       e.AddComponent(ActionTimeComponent.Create(0));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
@@ -99,37 +99,43 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    public static Entity CreateEntityByEntityDefId(string entityDefId) {
-      if (entityDefId == EntityDefId.SCOUT) {
-        return EntityBuilder.CreateScoutEntity();
-      } else if (entityDefId == EntityDefId.FIGHTER) {
-        return EntityBuilder.CreateFighterEntity();
-      } else if (entityDefId == EntityDefId.GUNSHIP) {
-        GD.Print("TODO: No implementation yet for ID ", entityDefId);
-        return EntityBuilder.CreateScoutEntity();
-      } else if (entityDefId == EntityDefId.FRIGATE) {
-        GD.Print("TODO: No implementation yet for ID ", entityDefId);
-        return EntityBuilder.CreateScoutEntity();
-      } else if (entityDefId == EntityDefId.DESTROYER) {
-        GD.Print("TODO: No implementation yet for ID ", entityDefId);
-        return EntityBuilder.CreateScoutEntity();
-      } else if (entityDefId == EntityDefId.CRUISER) {
-        GD.Print("TODO: No implementation yet for ID ", entityDefId);
-        return EntityBuilder.CreateScoutEntity();
-      } else if (entityDefId == EntityDefId.CARRIER) {
-        GD.Print("TODO: No implementation yet for ID ", entityDefId);
-        return EntityBuilder.CreateScoutEntity();
-      } else if (entityDefId == EntityDefId.ITEM_DUCT_TAPE) {
+    public static Entity CreateEnemyByEntityDefId(string enemyDefId, ActivationGroup activationGroup) {
+      if (enemyDefId == EntityDefId.SCOUT) {
+        return EntityBuilder.CreateScoutEntity(activationGroup);
+      } else if (enemyDefId == EntityDefId.FIGHTER) {
+        return EntityBuilder.CreateFighterEntity(activationGroup);
+      } else if (enemyDefId == EntityDefId.GUNSHIP) {
+        GD.Print("TODO: No implementation yet for ID ", enemyDefId);
+        return EntityBuilder.CreateScoutEntity(activationGroup);
+      } else if (enemyDefId == EntityDefId.FRIGATE) {
+        GD.Print("TODO: No implementation yet for ID ", enemyDefId);
+        return EntityBuilder.CreateScoutEntity(activationGroup);
+      } else if (enemyDefId == EntityDefId.DESTROYER) {
+        GD.Print("TODO: No implementation yet for ID ", enemyDefId);
+        return EntityBuilder.CreateScoutEntity(activationGroup);
+      } else if (enemyDefId == EntityDefId.CRUISER) {
+        GD.Print("TODO: No implementation yet for ID ", enemyDefId);
+        return EntityBuilder.CreateScoutEntity(activationGroup);
+      } else if (enemyDefId == EntityDefId.CARRIER) {
+        GD.Print("TODO: No implementation yet for ID ", enemyDefId);
+        return EntityBuilder.CreateScoutEntity(activationGroup);
+      } else {
+        throw new NotImplementedException("No mapping defined for " + enemyDefId);
+      }
+    }
+
+    public static Entity CreateItemByEntityDefId(string itemDefId) {
+      if (itemDefId == EntityDefId.ITEM_DUCT_TAPE) {
         return EntityBuilder.CreateDuctTapeEntity();
-      } else if (entityDefId == EntityDefId.ITEM_EXTRA_BATTERY) {
+      } else if (itemDefId == EntityDefId.ITEM_EXTRA_BATTERY) {
         return EntityBuilder.CreateExtraBatteryEntity();
-      } else if (entityDefId == EntityDefId.ITEM_RED_PAINT) {
+      } else if (itemDefId == EntityDefId.ITEM_RED_PAINT) {
         return EntityBuilder.CreateRedPaintEntity();
-      } else if (entityDefId == EntityDefId.ITEM_EMP) {
-        GD.Print("TODO: No implementation yet for ID ", entityDefId);
+      } else if (itemDefId == EntityDefId.ITEM_EMP) {
+        GD.Print("TODO: No implementation yet for ID ", itemDefId);
         return EntityBuilder.CreateDuctTapeEntity();
       } else {
-        throw new NotImplementedException("No mapping defined for " + entityDefId);
+        throw new NotImplementedException("No mapping defined for " + itemDefId);
       }
     }
 
