@@ -24,6 +24,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
 
     private static string _texScoutPath = "res://resources/tex_scout.tres";
+    private static string _texSmallGatlingPath = "res://resources/tex_small_gatling.tres";
     private static string _texSmallShotgunPath = "res://resources/tex_small_shotgun.tres";
 
     private class ProjectileDisplayData {
@@ -40,6 +41,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
     private static Dictionary<ProjectileType, ProjectileDisplayData> projectileTypeToProjectileDisplay = new Dictionary<ProjectileType, ProjectileDisplayData>() {
       { ProjectileType.CUTTING_LASER, new ProjectileDisplayData(ProjectileType.CUTTING_LASER, "cutting laser beam", _StarPath) }, // TODO: Maybe change this?
+      { ProjectileType.SMALL_GATLING, new ProjectileDisplayData(ProjectileType.SMALL_GATLING, "small gatling shell", _texSmallGatlingPath) },
       { ProjectileType.SMALL_SHOTGUN, new ProjectileDisplayData(ProjectileType.SMALL_SHOTGUN, "small shotgun pellet", _texSmallShotgunPath) }
     };
 

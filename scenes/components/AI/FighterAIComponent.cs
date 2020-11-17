@@ -39,9 +39,9 @@ namespace SpaceDodgeRL.scenes.components.AI {
       }
       // Always fire
       // TODO: These should be small_gatling, not small_shotgun
-      actions.Add(FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos));
-      actions.Add(FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos));
-      actions.Add(FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos));
+      actions.Add(FireProjectileAction.CreateSmallGatlingAction(parent.EntityId, playerPos));
+      actions.Add(FireProjectileAction.CreateSmallGatlingAction(parent.EntityId, playerPos));
+      actions.Add(FireProjectileAction.CreateSmallGatlingAction(parent.EntityId, playerPos));
 
       return actions;
     }

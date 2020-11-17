@@ -5,6 +5,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
   // Move this to its own file!
   public enum ProjectileType {
     CUTTING_LASER,
+    SMALL_GATLING,
     SMALL_SHOTGUN
   }
 
@@ -33,10 +34,10 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
       return new FireProjectileAction(
         playerId,
         ProjectileType.CUTTING_LASER,
-        playerPower,
+        power: playerPower,
         // TODO: Cutting laser range
         (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
-        1 // TODO: If the player fires on the same tick that the enemy moves, the enemy will move before the laser gets a chance, causing a miss!
+        speed: 1 // TODO: If the player fires on the same tick that the enemy moves, the enemy will move before the laser gets a chance, causing a miss!
       );
     }
 
@@ -45,9 +46,19 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
       return new FireProjectileAction(
         actorId,
         ProjectileType.SMALL_SHOTGUN,
-        1,
+        power: 1,
         (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
-        25
+        speed: 25
+      );
+    }
+
+    public static FireProjectileAction CreateSmallGatlingAction(string actorId, EncounterPosition targetPosition) {
+      return new FireProjectileAction(
+        actorId,
+        ProjectileType.SMALL_GATLING,
+        power: 2,
+        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
+        speed: 50
       );
     }
   }
