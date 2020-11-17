@@ -113,10 +113,8 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action == InputHandler.ActionMapping.CHARACTER) {
           ShowCharacterMenu(state);
         } else if (action == InputHandler.ActionMapping.USE_STAIRS) {
-          // TODO: Attempting to use stairs definitely shouldn't end your turn lol
           PlayerExecuteTurnEndingAction(new UseStairsAction(entity.EntityId), state);
         } else if (action == InputHandler.ActionMapping.GET_ITEM) {
-          // TODO: Shouldn't end turn if fails due to no gettable items
           PlayerExecuteTurnEndingAction(new GetItemAction(entity.EntityId), state);
         } else if (action == InputHandler.ActionMapping.USE_ITEM) {
           // TODO: Query player for "what item"
