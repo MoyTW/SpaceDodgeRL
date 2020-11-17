@@ -5,6 +5,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
   // Move this to its own file!
   public enum ProjectileType {
     CUTTING_LASER,
+    SMALL_CANNON,
     SMALL_GATLING,
     SMALL_SHOTGUN
   }
@@ -57,6 +58,16 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
         actorId,
         ProjectileType.SMALL_GATLING,
         power: 2,
+        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
+        speed: 50
+      );
+    }
+
+    public static FireProjectileAction CreateSmallCannonAction(string actorId, EncounterPosition targetPosition) {
+      return new FireProjectileAction(
+        actorId,
+        ProjectileType.SMALL_CANNON,
+        power: 5,
         (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
         speed: 50
       );

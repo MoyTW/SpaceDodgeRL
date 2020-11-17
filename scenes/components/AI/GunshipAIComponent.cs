@@ -8,17 +8,21 @@ using System.Collections.Generic;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class ScoutAIComponent : AIComponent {
-    public static readonly string ENTITY_GROUP = "SCOUT_AI_COMPONENT_GROUP";
+  public class GunshipAIComponent : AIComponent {
+    public static readonly string ENTITY_GROUP = "GUNSHIP_AI_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
     private ActivationGroup _activationGroup;
 
-    public ScoutAIComponent(ActivationGroup activationGroup) {
-      this._activationGroup = activationGroup;
+    private int _shotgunCooldown = 3;
+    private int _currentShotgunCooldown = 0;
+
+    public GunshipAIComponent(ActivationGroup activationGroup) {
+      _activationGroup = activationGroup;
     }
 
     public List<EncounterAction> DecideNextAction(EncounterState state, Entity parent) {
+      // TODO: Pull this out & don't copy/paste in every AI
       if (!_activationGroup.IsActive) {
         var position = parent.GetComponent<PositionComponent>().EncounterPosition;
         if (state.FoVCache.Contains(position.X, position.Y)) {
@@ -29,7 +33,6 @@ namespace SpaceDodgeRL.scenes.components.AI {
       }
 
       var actions = new List<EncounterAction>();
-
       var parentPos = parent.GetComponent<PositionComponent>().EncounterPosition;
       var playerPos = state.Player.GetComponent<PositionComponent>().EncounterPosition;
 
@@ -41,9 +44,15 @@ namespace SpaceDodgeRL.scenes.components.AI {
           actions.Add(new MoveAction(parent.EntityId, path[0]));
         }
       }
-      // Always fire shotgun (spread=2, pellets=3) TODO: Shotgun has spread, pellets
-      var fire = FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos);
-      actions.Add(fire);
+      // Fire shotgun pellets=5, spread=5 every 4th turn, else fire single cannon
+      if (this._currentShotgunCooldown == 0) {
+        actions.Add(FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos)); // TODO: pellets 5, spread 5
+        this._currentShotgunCooldown += this._shotgunCooldown;
+      } else {
+        actions.Add(FireProjectileAction.CreateSmallCannonAction(parent.EntityId, playerPos));
+        this._currentShotgunCooldown -= 1;
+      }
+
 
       return actions;
     }

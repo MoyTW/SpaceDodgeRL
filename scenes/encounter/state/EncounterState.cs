@@ -378,7 +378,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state.PlaceEntity(EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_EXTRA_BATTERY), nextToPlayer);
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 5, zones[playerZoneIdx].Center.Y + 5);
       ActivationGroup activationGroup = new ActivationGroup();
-      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.FIGHTER, activationGroup, 0), nextToPlayer);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.GUNSHIP, activationGroup, 0), nextToPlayer);
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 30, zones[playerZoneIdx].Center.Y + 30);
       state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.SCOUT, activationGroup, 0), nextToPlayer);
 

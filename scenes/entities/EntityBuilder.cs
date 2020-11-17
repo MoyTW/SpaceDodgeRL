@@ -23,7 +23,9 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _StarPath = "res://resources/atlas_Star.tres";
     private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
 
+    private static string _texGunshipPath = "res://resources/tex_gunship.tres";
     private static string _texScoutPath = "res://resources/tex_scout.tres";
+    private static string _texSmallCannonPath = "res://resources/tex_small_cannon.tres";
     private static string _texSmallGatlingPath = "res://resources/tex_small_gatling.tres";
     private static string _texSmallShotgunPath = "res://resources/tex_small_shotgun.tres";
 
@@ -41,6 +43,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
     private static Dictionary<ProjectileType, ProjectileDisplayData> projectileTypeToProjectileDisplay = new Dictionary<ProjectileType, ProjectileDisplayData>() {
       { ProjectileType.CUTTING_LASER, new ProjectileDisplayData(ProjectileType.CUTTING_LASER, "cutting laser beam", _StarPath) }, // TODO: Maybe change this?
+      { ProjectileType.SMALL_CANNON, new ProjectileDisplayData(ProjectileType.SMALL_CANNON, "small cannon shell", _texSmallCannonPath) },
       { ProjectileType.SMALL_GATLING, new ProjectileDisplayData(ProjectileType.SMALL_GATLING, "small gatling shell", _texSmallGatlingPath) },
       { ProjectileType.SMALL_SHOTGUN, new ProjectileDisplayData(ProjectileType.SMALL_SHOTGUN, "small shotgun pellet", _texSmallShotgunPath) }
     };
@@ -88,6 +91,24 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
+    private static Entity CreateGunshipEntity(ActivationGroup activationGroup, int currentTick) {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "gunship");
+
+      var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
+
+      e.AddComponent(new GunshipAIComponent(activationGroup));
+
+      e.AddComponent(ActionTimeComponent.Create(currentTick));
+      e.AddComponent(CollisionComponent.CreateDefaultActor());
+      e.AddComponent(DefenderComponent.Create(baseDefense: 4, maxHp: 50));
+      e.AddComponent(DisplayComponent.Create(_texGunshipPath, false));
+      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 100));
+      e.AddComponent(statusEffectTrackerComponent);
+      e.AddComponent(XPValueComponent.Create(xpValue: 100));
+
+      return e;
+    }
+
     private static Entity CreateExtraBatteryEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "extra battery");
 
@@ -129,7 +150,7 @@ namespace SpaceDodgeRL.scenes.entities {
         return EntityBuilder.CreateFighterEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.GUNSHIP) {
         GD.Print("TODO: No implementation yet for ID ", enemyDefId);
-        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
+        return EntityBuilder.CreateGunshipEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.FRIGATE) {
         GD.Print("TODO: No implementation yet for ID ", enemyDefId);
         return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
