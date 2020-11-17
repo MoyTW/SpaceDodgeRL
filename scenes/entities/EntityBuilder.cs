@@ -24,6 +24,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
 
     private static string _texGunshipPath = "res://resources/tex_gunship.tres";
+    private static string _texFrigatePath = "res://resources/tex_frigate.tres";
     private static string _texScoutPath = "res://resources/tex_scout.tres";
     private static string _texSmallCannonPath = "res://resources/tex_small_cannon.tres";
     private static string _texSmallGatlingPath = "res://resources/tex_small_gatling.tres";
@@ -111,6 +112,24 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
+    private static Entity CreateFrigateEntity(ActivationGroup activationGroup, int currentTick) {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "frigate");
+
+      var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
+
+      e.AddComponent(new FrigateAIComponent(activationGroup));
+
+      e.AddComponent(ActionTimeComponent.Create(currentTick));
+      e.AddComponent(CollisionComponent.CreateDefaultActor());
+      e.AddComponent(DefenderComponent.Create(baseDefense: 10, maxHp: 150));
+      e.AddComponent(DisplayComponent.Create(_texFrigatePath, false));
+      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 250));
+      e.AddComponent(statusEffectTrackerComponent);
+      e.AddComponent(XPValueComponent.Create(xpValue: 200));
+
+      return e;
+    }
+
     private static Entity CreateExtraBatteryEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "extra battery");
 
@@ -151,11 +170,9 @@ namespace SpaceDodgeRL.scenes.entities {
       } else if (enemyDefId == EntityDefId.FIGHTER) {
         return EntityBuilder.CreateFighterEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.GUNSHIP) {
-        GD.Print("TODO: No implementation yet for ID ", enemyDefId);
-        return EntityBuilder.CreateGunshipEntity(activationGroup, currentTick);
+         return EntityBuilder.CreateGunshipEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.FRIGATE) {
-        GD.Print("TODO: No implementation yet for ID ", enemyDefId);
-        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
+        return EntityBuilder.CreateFrigateEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.DESTROYER) {
         GD.Print("TODO: No implementation yet for ID ", enemyDefId);
         return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
