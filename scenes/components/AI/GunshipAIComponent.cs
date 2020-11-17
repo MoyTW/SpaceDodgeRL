@@ -44,9 +44,9 @@ namespace SpaceDodgeRL.scenes.components.AI {
           actions.Add(new MoveAction(parent.EntityId, path[0]));
         }
       }
-      // Fire shotgun pellets=5, spread=5 every 4th turn, else fire single cannon
+      // Fire shotgun pellets=5, spread=5 every 4th turn, else fire single cannon (this is honestly a comical amount of spread though)
       if (this._currentShotgunCooldown == 0) {
-        actions.Add(FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos)); // TODO: pellets 5, spread 5
+        actions.AddRange(FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos, numPellets: 5, spread: 5, state.EncounterRand));
         this._currentShotgunCooldown += this._shotgunCooldown;
       } else {
         actions.Add(FireProjectileAction.CreateSmallCannonAction(parent.EntityId, playerPos));

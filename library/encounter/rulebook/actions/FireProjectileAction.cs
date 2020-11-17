@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SpaceDodgeRL.library.encounter.rulebook.actions {
 
@@ -42,8 +43,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
       );
     }
 
-    // TODO: These should have spread
-    public static FireProjectileAction CreateSmallShotgunAction(string actorId, EncounterPosition targetPosition) {
+    private static FireProjectileAction CreateSmallShotgunAction(string actorId, EncounterPosition targetPosition) {
       return new FireProjectileAction(
         actorId,
         ProjectileType.SMALL_SHOTGUN,
@@ -51,6 +51,23 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
         (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
         speed: 25
       );
+    }
+
+    /**
+     * Fires a spread of shotgun pellets in a box formation around the centerpoint. Spread is half the width/height of the box.
+     */
+    public static List<FireProjectileAction> CreateSmallShotgunAction(string actorId, EncounterPosition targetPosition, int numPellets, int spread, Random seededRand) {
+      if (spread == 0) { throw new NotImplementedException("shotguns can't have 0 spread what is this"); }
+
+      List<FireProjectileAction> pellets = new List<FireProjectileAction>();
+
+      for (int i = 0; i < numPellets; i++) {
+        var dx = seededRand.Next(spread * 2 + 1) - spread;
+        var dy = seededRand.Next(spread * 2 + 1) - spread;
+        pellets.Add(CreateSmallShotgunAction(actorId, new EncounterPosition(targetPosition.X + dx, targetPosition.Y + dy)));
+      }
+
+      return pellets;
     }
 
     public static FireProjectileAction CreateSmallGatlingAction(string actorId, EncounterPosition targetPosition) {

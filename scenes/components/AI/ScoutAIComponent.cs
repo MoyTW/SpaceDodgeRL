@@ -41,9 +41,9 @@ namespace SpaceDodgeRL.scenes.components.AI {
           actions.Add(new MoveAction(parent.EntityId, path[0]));
         }
       }
-      // Always fire shotgun (spread=2, pellets=3) TODO: Shotgun has spread, pellets
-      var fire = FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos);
-      actions.Add(fire);
+      // Always fire shotgun (spread=2, pellets=3)
+      var fire = FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos, numPellets: 3, spread: 2, state.EncounterRand);
+      actions.AddRange(fire);
 
       return actions;
     }

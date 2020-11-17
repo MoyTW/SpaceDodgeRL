@@ -41,6 +41,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public int LevelsInDungeon { get => 10; } // TODO: Properly pass this in!
     public int DungeonLevel { get; private set; }
 
+    public Random EncounterRand { get; private set; }
+
     // ##########################################################################################################################
     #region Data Access
     // ##########################################################################################################################
@@ -439,6 +441,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       // TODO: Map gen seed properly
       DoTempMapGen(player, dungeonLevel, this, new Random(1));
+
+      // TODO: save/load the state of rand for reproducibility?
+      this.EncounterRand = new Random(1);
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
       if (GetTree().GetNodesInGroup(ENCOUNTER_CAMERA_GROUP).Count == 0) {
