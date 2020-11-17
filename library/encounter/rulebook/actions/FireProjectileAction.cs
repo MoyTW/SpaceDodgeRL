@@ -8,6 +8,8 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
     SMALL_SHOTGUN
   }
 
+  // TODO: After the first(?) turn, shotgun pellets appear to have infinite speed. My guess is it's a consequence of them starting
+  // out at 0 timeline and just taking all their turns at once.
   public class FireProjectileAction : EncounterAction {
 
     public string ProjectileName { get; private set; }

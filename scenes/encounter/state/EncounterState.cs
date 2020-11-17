@@ -379,6 +379,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 5, zones[playerZoneIdx].Center.Y + 5);
       ActivationGroup activationGroup = new ActivationGroup();
       state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.SCOUT, activationGroup), nextToPlayer);
+      nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 30, zones[playerZoneIdx].Center.Y + 30);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.SCOUT, activationGroup), nextToPlayer);
 
       // Add all the various zone features to the map
       // TODO: Handle last level & add diplomat
