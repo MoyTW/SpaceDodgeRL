@@ -1,12 +1,11 @@
 using Godot;
 using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.components;
-using SpaceDodgeRL.scenes.encounter;
 using SpaceDodgeRL.scenes.encounter.state;
-using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;
 
+// TODO: Make all this nice and pretty what with colors and stuff
 public class CharacterMenu : VBoxContainer {
   private static string _fontPath = "res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Regular.ttf";
 
@@ -34,6 +33,7 @@ public class CharacterMenu : VBoxContainer {
     PrepLevelUpMenu(state);
   }
 
+  // TODO: Maybe show level history?
   private void PrepLevelColumn(EncounterState state) {
     var playerXPTracker = state.Player.GetComponent<XPTrackerComponent>();
 
@@ -49,40 +49,34 @@ public class CharacterMenu : VBoxContainer {
       _closeButton.Disabled = false;
       _closeButton.GrabFocus();
       return;
-    }
-
-    // Make appropriate elements visible
-    GetNode<VBoxContainer>("LevelUpMenu").Visible = true;
-    var playerDefender = state.Player.GetComponent<DefenderComponent>();
-    if (playerDefender.MaxHp > playerDefender.CurrentHp) {
-      GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpRepairSelection").Visible = true;
     } else {
-      GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpRepairSelection").Visible = false;
-    }
+      // Make appropriate elements visible
+      GetNode<VBoxContainer>("LevelUpMenu").Visible = true;
+      var playerDefender = state.Player.GetComponent<DefenderComponent>();
+      if (playerDefender.MaxHp > playerDefender.CurrentHp) {
+        GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpRepairSelection").Visible = true;
+      } else {
+        GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpRepairSelection").Visible = false;
+      }
 
-    // TODO: You get a !insideTree error here and if you enter level-up BEFORE first entering the screen it errors - reason's
-    // PrepMenu is called BEFORE mounting it. ok. well we'll patch that up.
-    // Disable exit
-    GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpHPSelection").GrabFocus();
-    _closeButton.Disabled = true;
+      // Disable exit
+      GetNode<Button>("LevelUpMenu/LevelUpColumns/LevelUpHPSelection").GrabFocus();
+      _closeButton.Disabled = true;
+    }
   }
 
-  // TODO: Fill this out
   private void PrepStatsColumn(EncounterState state) {
     var defenderComponent = state.Player.GetComponent<DefenderComponent>();
     GetNode<Label>("Columns/StatsColumn/StatsHPLabel").Text = String.Format("HP: {0}/{1}", defenderComponent.CurrentHp, defenderComponent.MaxHp);
 
     var playerComponent = state.Player.GetComponent<PlayerComponent>();
-    // TODO: This doesn't take into account status boosts!
     GetNode<Label>("Columns/StatsColumn/StatsAttackPowerLabel").Text = String.Format("Cutting laser power: {0}", playerComponent.CuttingLaserPower);
     GetNode<Label>("Columns/StatsColumn/StatsAttackRangeLabel").Text = String.Format("Cutting laser range: {0}", playerComponent.CuttingLaserRange);
 
-    // TODO: Just make the status effect tracker a dependency and save on this
     var speed = state.Player.GetComponent<SpeedComponent>().CalculateSpeed();
     GetNode<Label>("Columns/StatsColumn/StatsSpeedLabel").Text = String.Format("Speed: {0}", speed);
   }
 
-  // TODO: Make this not hideous, lol - add in the font
   private void PrepIntelColumn(EncounterState state) {
     var playerComponent = state.Player.GetComponent<PlayerComponent>();
     var intelColumn = GetNode<VBoxContainer>("Columns/IntelColumn");
