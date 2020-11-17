@@ -314,7 +314,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         ActivationGroup activationGroup = new ActivationGroup();
         foreach (string entityDefId in encounterDef.EntityDefIds) {
           var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
-          var newEntity = EntityBuilder.CreateEnemyByEntityDefId(entityDefId, activationGroup);
+          var newEntity = EntityBuilder.CreateEnemyByEntityDefId(entityDefId, activationGroup, state.CurrentTick);
           state.PlaceEntity(newEntity, unblockedPosition);
         }
       }
@@ -378,9 +378,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state.PlaceEntity(EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_EXTRA_BATTERY), nextToPlayer);
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 5, zones[playerZoneIdx].Center.Y + 5);
       ActivationGroup activationGroup = new ActivationGroup();
-      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.SCOUT, activationGroup), nextToPlayer);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.SCOUT, activationGroup, 0), nextToPlayer);
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 30, zones[playerZoneIdx].Center.Y + 30);
-      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.SCOUT, activationGroup), nextToPlayer);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.SCOUT, activationGroup, 0), nextToPlayer);
 
       // Add all the various zone features to the map
       // TODO: Handle last level & add diplomat

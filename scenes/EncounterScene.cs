@@ -23,7 +23,7 @@ namespace SpaceDodgeRL.scenes {
       EncounterState.Connect("EncounterLogMessageAdded", this, "OnEncounterLogMessageAdded");
 
       // TODO: Proper state initialization & building & such!
-      var player = EntityBuilder.CreatePlayerEntity();
+      var player = EntityBuilder.CreatePlayerEntity(0);
       EncounterState.InitState(player, 1);
     }
 

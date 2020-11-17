@@ -217,7 +217,8 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         action.ProjectileName,
         action.Power,
         action.PathFunction(actorPosition),
-        action.Speed
+        action.Speed,
+        state.CurrentTick
       );
       state.PlaceEntity(projectile, actorPosition, true);
       return true;

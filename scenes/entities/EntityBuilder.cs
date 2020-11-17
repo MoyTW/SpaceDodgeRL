@@ -29,14 +29,14 @@ namespace SpaceDodgeRL.scenes.entities {
     }
 
     // TODO: Take the current tick in this function!
-    private static Entity CreateScoutEntity(ActivationGroup activationGroup) {
+    private static Entity CreateScoutEntity(ActivationGroup activationGroup, int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "scout");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
       e.AddComponent(new ScoutAIComponent(activationGroup));
 
-      e.AddComponent(ActionTimeComponent.Create(0));
+      e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 10));
       e.AddComponent(DisplayComponent.Create(_SPath, false));
@@ -47,14 +47,14 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    private static Entity CreateFighterEntity(ActivationGroup activationGroup) {
+    private static Entity CreateFighterEntity(ActivationGroup activationGroup, int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "fighter");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
       e.AddComponent(new FighterAIComponent(activationGroup));
 
-      e.AddComponent(ActionTimeComponent.Create(0));
+      e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 30));
       e.AddComponent(DisplayComponent.Create(_FPath, false));
@@ -99,26 +99,26 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    public static Entity CreateEnemyByEntityDefId(string enemyDefId, ActivationGroup activationGroup) {
+    public static Entity CreateEnemyByEntityDefId(string enemyDefId, ActivationGroup activationGroup, int currentTick) {
       if (enemyDefId == EntityDefId.SCOUT) {
-        return EntityBuilder.CreateScoutEntity(activationGroup);
+        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.FIGHTER) {
-        return EntityBuilder.CreateFighterEntity(activationGroup);
+        return EntityBuilder.CreateFighterEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.GUNSHIP) {
         GD.Print("TODO: No implementation yet for ID ", enemyDefId);
-        return EntityBuilder.CreateScoutEntity(activationGroup);
+        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.FRIGATE) {
         GD.Print("TODO: No implementation yet for ID ", enemyDefId);
-        return EntityBuilder.CreateScoutEntity(activationGroup);
+        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.DESTROYER) {
         GD.Print("TODO: No implementation yet for ID ", enemyDefId);
-        return EntityBuilder.CreateScoutEntity(activationGroup);
+        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.CRUISER) {
         GD.Print("TODO: No implementation yet for ID ", enemyDefId);
-        return EntityBuilder.CreateScoutEntity(activationGroup);
+        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.CARRIER) {
         GD.Print("TODO: No implementation yet for ID ", enemyDefId);
-        return EntityBuilder.CreateScoutEntity(activationGroup);
+        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
       } else {
         throw new NotImplementedException("No mapping defined for " + enemyDefId);
       }
@@ -139,12 +139,12 @@ namespace SpaceDodgeRL.scenes.entities {
       }
     }
 
-    public static Entity CreatePlayerEntity() {
+    public static Entity CreatePlayerEntity(int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "player");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
-      e.AddComponent(ActionTimeComponent.Create(0));
+      e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.Create(true, false));
       e.AddComponent(DefenderComponent.Create(0, 100));
       e.AddComponent(DisplayComponent.Create(_AtSignPath, false));
@@ -157,12 +157,12 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    public static Entity CreateProjectileEntity(Entity source, string projectileName, int power, EncounterPath path, int speed) {
+    public static Entity CreateProjectileEntity(Entity source, string projectileName, int power, EncounterPath path, int speed, int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), projectileName);
 
       e.AddComponent(PathAIComponent.Create(path));
 
-      e.AddComponent(ActionTimeComponent.Create(0)); // Should it go instantly or should it wait for its turn...?
+      e.AddComponent(ActionTimeComponent.Create(currentTick)); // Should it go instantly or should it wait for its turn...?
       e.AddComponent(AttackerComponent.Create(source, power));
       e.AddComponent(CollisionComponent.Create(false, false, true, true));
       e.AddComponent(DisplayComponent.Create(_StarPath, false));
