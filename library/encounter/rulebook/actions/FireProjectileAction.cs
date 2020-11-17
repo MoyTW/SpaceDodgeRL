@@ -8,7 +8,8 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
     CUTTING_LASER,
     SMALL_CANNON,
     SMALL_GATLING,
-    SMALL_SHOTGUN
+    SMALL_SHOTGUN,
+    REVERSER
   }
 
   public class FireProjectileAction : EncounterAction {
@@ -40,6 +41,16 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
         // TODO: Cutting laser range
         (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
         speed: 1 // TODO: If the player fires on the same tick that the enemy moves, the enemy will move before the laser gets a chance, causing a miss!
+      );
+    }
+
+    public static FireProjectileAction CreateReverserAction(string actorId, EncounterPosition targetPosition) {
+      return new FireProjectileAction(
+        actorId,
+        ProjectileType.REVERSER,
+        power: 2,
+        (sourcePos) => EncounterPathBuilder.BuildReverseLinePath(sourcePos, targetPosition, overshoot: 4),
+        speed: 33
       );
     }
 

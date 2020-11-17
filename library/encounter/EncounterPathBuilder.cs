@@ -9,6 +9,16 @@ namespace SpaceDodgeRL.library.encounter {
       return new EncounterPath(StraightLine(start, target, numSteps));
     }
 
+    public static EncounterPath BuildReverseLinePath(EncounterPosition start, EncounterPosition target, int overshoot) {
+      var distance = (int)Math.Ceiling(start.DistanceTo(target));
+
+      var outwardPath = StraightLine(start, target, numSteps: distance + overshoot);
+      var reversePath = StraightLine(outwardPath[outwardPath.Count - 2], start, numSteps: distance + overshoot);
+      reversePath.RemoveAt(reversePath.Count - 1);
+      outwardPath.AddRange(reversePath);
+      return new EncounterPath(outwardPath);
+    }
+
     private static List<EncounterPosition> StraightLine(EncounterPosition start, EncounterPosition end, int numSteps) {
       List<EncounterPosition> acc = new List<EncounterPosition>();
       acc.Add(start);
