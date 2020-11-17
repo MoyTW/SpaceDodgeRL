@@ -23,6 +23,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _StarPath = "res://resources/atlas_Star.tres";
     private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
 
+    private static string _texDestroyerPath = "res://resources/tex_destroyer.tres";
     private static string _texGunshipPath = "res://resources/tex_gunship.tres";
     private static string _texFrigatePath = "res://resources/tex_frigate.tres";
     private static string _texScoutPath = "res://resources/tex_scout.tres";
@@ -130,6 +131,24 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
+    private static Entity CreateDestroyerEntity(ActivationGroup activationGroup, int currentTick) {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "destroyer");
+
+      var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
+
+      e.AddComponent(new DestroyerAIComponent(activationGroup));
+
+      e.AddComponent(ActionTimeComponent.Create(currentTick));
+      e.AddComponent(CollisionComponent.CreateDefaultActor());
+      e.AddComponent(DefenderComponent.Create(baseDefense: 15, maxHp: 200));
+      e.AddComponent(DisplayComponent.Create(_texDestroyerPath, false));
+      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 300));
+      e.AddComponent(statusEffectTrackerComponent);
+      e.AddComponent(XPValueComponent.Create(xpValue: 500));
+
+      return e;
+    }
+
     private static Entity CreateExtraBatteryEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "extra battery");
 
@@ -174,8 +193,7 @@ namespace SpaceDodgeRL.scenes.entities {
       } else if (enemyDefId == EntityDefId.FRIGATE) {
         return EntityBuilder.CreateFrigateEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.DESTROYER) {
-        GD.Print("TODO: No implementation yet for ID ", enemyDefId);
-        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
+        return EntityBuilder.CreateDestroyerEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.CRUISER) {
         GD.Print("TODO: No implementation yet for ID ", enemyDefId);
         return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
