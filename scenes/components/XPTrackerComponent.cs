@@ -10,7 +10,7 @@ namespace SpaceDodgeRL.scenes.components {
     public static int MAX_HP_BONUS = 15;
 
     public static string ATTACK_POWER = "LEVEL_UP_BONUS_ATTACK_POWER";
-    public static int ATTACK_POWER_BONUS = 5;
+    public static int ATTACK_POWER_BONUS = 3;
 
     public static string REPAIR = "LEVEL_UP_BONUS_REPAIR";
     public static double REPAIR_PERCENTAGE = .5f;
