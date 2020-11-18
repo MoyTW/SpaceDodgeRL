@@ -9,6 +9,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
     SMALL_CANNON,
     SMALL_GATLING,
     SMALL_SHOTGUN,
+    RAILGUN,
     REVERSER
   }
 
@@ -98,6 +99,16 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
         power: 5,
         (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
         speed: 50
+      );
+    }
+
+    public static FireProjectileAction CreateRailgunAction(string actorId, EncounterPosition targetPosition) {
+      return new FireProjectileAction(
+        actorId,
+        ProjectileType.RAILGUN,
+        power: 15,
+        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 40),
+        speed: 20
       );
     }
   }
