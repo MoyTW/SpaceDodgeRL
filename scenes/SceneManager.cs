@@ -1,4 +1,5 @@
 using Godot;
+using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.encounter.state;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace SpaceDodgeRL.scenes {
 
     private AutopilotMenu _autopilotMenu;
     private CharacterMenu _characterMenu;
+    private InventoryMenu _inventoryMenu;
     private ReadOnlyCollection<EncounterZone> _autopilotMenuZones;
 
     public override void _Ready() {
@@ -21,6 +23,7 @@ namespace SpaceDodgeRL.scenes {
 
       this._autopilotMenu = GD.Load<PackedScene>("res://scenes/encounter/AutopilotMenu.tscn").Instance() as AutopilotMenu;
       this._characterMenu = GD.Load<PackedScene>("res://scenes/encounter/CharacterMenu.tscn").Instance() as CharacterMenu;
+      this._inventoryMenu = GD.Load<PackedScene>("res://scenes/encounter/InventoryMenu.tscn").Instance() as InventoryMenu;
     }
 
     // Autopilot Menu
@@ -67,6 +70,30 @@ namespace SpaceDodgeRL.scenes {
       sceneStack.RemoveAt(sceneStack.Count - 1);
       DeferredSwitchScene(previousScene);
     }
+
+    #region Inventory Menu
+
+    public void ShowInventoryMenu(EncounterState state) {
+      CallDeferred(nameof(DeferredShowInventoryMenu), state);
+    }
+
+    private void DeferredShowInventoryMenu(EncounterState state) {
+      DeferredSwitchScene(this._inventoryMenu);
+      this._inventoryMenu.PrepMenu(state.Player.GetComponent<InventoryComponent>());
+    }
+
+    // TODO: Merge with CloseCharacterMenu into generic "no other effects go back to encounter"
+    public void CloseInventoryMenu() {
+      CallDeferred(nameof(DeferredCloseInventoryMenu));
+    }
+
+    private void DeferredCloseInventoryMenu() {
+      var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
+      sceneStack.RemoveAt(sceneStack.Count - 1);
+      DeferredSwitchScene(previousScene);
+    }
+
+    #endregion
 
     // Plumbing
     private void DeferredSwitchScene(Node scene) {

@@ -112,6 +112,8 @@ namespace SpaceDodgeRL.scenes.encounter {
           ShowAutopilotMenu(state);
         } else if (action == InputHandler.ActionMapping.CHARACTER) {
           ShowCharacterMenu(state);
+        } else if (action == InputHandler.ActionMapping.INVENTORY) {
+          ShowInventoryMenu(state);
         } else if (action == InputHandler.ActionMapping.USE_STAIRS) {
           PlayerExecuteTurnEndingAction(new UseStairsAction(entity.EntityId), state);
         } else if (action == InputHandler.ActionMapping.GET_ITEM) {
@@ -151,6 +153,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
     }
 
+    // TODO: These are basically identical we can conslidate
     private void ShowAutopilotMenu(EncounterState state) {
       // TODO: We could probably make the cleaner by using signals?
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
@@ -160,6 +163,11 @@ namespace SpaceDodgeRL.scenes.encounter {
     private void ShowCharacterMenu(EncounterState state) {
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
       sceneManager.ShowCharacterMenu(state);
+    }
+
+    private void ShowInventoryMenu(EncounterState state) {
+      var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+      sceneManager.ShowInventoryMenu(state);
     }
 
     public void HandleAutopilotSelection(EncounterZone selectedZone) {
