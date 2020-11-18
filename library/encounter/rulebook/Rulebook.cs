@@ -18,6 +18,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
       { ActionType.GET_ITEM, (a, s) => ResolveGetItem(a as GetItemAction, s) },
       { ActionType.SELF_DESTRUCT, (a, s) => ResolveSelfDestruct(a as SelfDestructAction, s) },
+      { ActionType.SPAWN_ENTITY, (a, s) => ResolveSpawnEntity(a as SpawnEntityAction, s) },
       { ActionType.USE, (a, s) => ResolveUse(a as UseAction, s) },
       { ActionType.USE_STAIRS, (a, s) => ResolveUseStairs(a as UseStairsAction, s) },
       { ActionType.WAIT, (a, s) => ResolveWait(a as WaitAction, s) }
@@ -171,6 +172,11 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     private static bool ResolveSelfDestruct(SelfDestructAction action, EncounterState state) {
       Entity entity = state.GetEntityById(action.ActorId);
       state.RemoveEntity(entity);
+      return true;
+    }
+
+    private static bool ResolveSpawnEntity(SpawnEntityAction action, EncounterState state) {
+      state.PlaceEntity(action.EntityToSpawn, action.Position, action.IgnoreCollision);
       return true;
     }
 

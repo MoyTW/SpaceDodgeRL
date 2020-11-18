@@ -36,14 +36,21 @@ namespace SpaceDodgeRL.scenes.components.AI {
 
       var actions = new List<EncounterAction>();
       var parentPos = parent.GetComponent<PositionComponent>().EncounterPosition;
+      // TODO: Player death! if you die this just NPEs, which aside from being inelegant kills the program.
       var playerPos = state.Player.GetComponent<PositionComponent>().EncounterPosition;
 
       // Carrier never moves
 
-      // Always launch randomly chosen strike craft
+      // Always launch randomly chosen strike craft - immediately paths one square to get it out of the carrier's square
       var chosenEntityDef = this._launchTable[state.EncounterRand.Next(3)];
       var strikeCraft = EntityBuilder.CreateEnemyByEntityDefId(chosenEntityDef, this._activationGroup, state.CurrentTick);
-      GD.Print("TODO: Launch fighter craft entity action");
+      actions.Add(new SpawnEntityAction(parent.EntityId, strikeCraft, parentPos, true));
+      var path = Pathfinder.AStarWithNewGrid(parentPos, playerPos, state);
+      // TODO: If you park adjacent the carrier, spawns will try to path literally into you and be stuck on the carrier square.
+      // Won't crash anything it'll just put some error logs out and be deeply comical.
+      if (path != null) {
+        actions.Add(new MoveAction(strikeCraft.EntityId, path[0]));
+      }
 
       // If player is close and flak is off cooldown, fire (comically this can, and will, friendly-fire its fighter wing)
       // TODO: friendly fire, maybe? It is a bit silly.
@@ -52,10 +59,6 @@ namespace SpaceDodgeRL.scenes.components.AI {
         this._currentFlakCooldown = this._flakCooldown;
       } else if (this._currentFlakCooldown > 0) {
         this._currentFlakCooldown -= 1;
-      }
-
-      if (actions.Count == 0) {
-        actions.Add(new WaitAction(parent.EntityId));
       }
 
       return actions;
