@@ -382,6 +382,24 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + i, zones[playerZoneIdx].Center.Y + 3);
         state.PlaceEntity(EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_EXTRA_BATTERY), nextToPlayer);
       }
+      // TODO: Remove this - blocks off Zone 8 to test autopilot resilience
+      var satellite = EntityBuilder.CreateSatelliteEntity();
+      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X + 1, zones[8].Center.Y + 1));
+      satellite = EntityBuilder.CreateSatelliteEntity();
+      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X, zones[8].Center.Y + 1));
+      satellite = EntityBuilder.CreateSatelliteEntity();
+      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X - 1, zones[8].Center.Y + 1));
+      satellite = EntityBuilder.CreateSatelliteEntity();
+      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X + 1, zones[8].Center.Y));
+      satellite = EntityBuilder.CreateSatelliteEntity();
+      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X - 1, zones[8].Center.Y));
+      satellite = EntityBuilder.CreateSatelliteEntity();
+      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X + 1, zones[8].Center.Y - 1));
+      satellite = EntityBuilder.CreateSatelliteEntity();
+      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X, zones[8].Center.Y - 1));
+      satellite = EntityBuilder.CreateSatelliteEntity();
+      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X - 1, zones[8].Center.Y - 1));
+      
       /*
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 5, zones[playerZoneIdx].Center.Y + 5);
       ActivationGroup activationGroup = new ActivationGroup();

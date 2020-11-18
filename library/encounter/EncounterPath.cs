@@ -11,11 +11,13 @@ namespace SpaceDodgeRL.library.encounter {
     private List<EncounterPosition> _fullPath;
 
     public EncounterPath(List<EncounterPosition> path) {
+      if (path == null) {
+        throw new NotImplementedException("You can't make a path with a list that's null!");
+      }
       this._fullPath = path;
     }
 
     public EncounterPosition CurrentPosition { get => _fullPath[_currentStep]; }
-    // Bug when going towards Zone 2, fullPath null?
     public bool AtEnd { get => _currentStep >= _fullPath.Count - 1; }
 
     public EncounterPosition Step() {

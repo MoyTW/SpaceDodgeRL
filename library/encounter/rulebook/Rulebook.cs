@@ -55,16 +55,26 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
-    // TODO: If you autopilot to your current position, then autopilot somewhere else, it explodes with a could not pass time error
     private static bool ResolveAutopilot(AutopilotAction action, EncounterState state) {
       var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
       EncounterZone zone = state.GetZoneById(action.ZoneId);
 
-      var path = new EncounterPath(Pathfinder.AStarWithNewGrid(playerPosition, zone.Center, state, 600));
-      if (path != null) {
-        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(path);
+      var foundPath = Pathfinder.AStarWithNewGrid(playerPosition, zone.Center, state, 9000);
+      int autopilotTries = 0;
+      while (foundPath == null && autopilotTries < 5) {
+        foundPath = Pathfinder.AStarWithNewGrid(playerPosition, zone.RandomUnblockedPosition(state.EncounterRand, state), state, 9000);
+        autopilotTries++;
+      }
+      if (foundPath != null && autopilotTries > 0) {
+        state.LogMessage(String.Format("Autopilot could not find path to center of [b]{0}[/b]; autopiloting to randomly chosen position in [b]{0}[/b].", zone.ZoneName));
+        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(new EncounterPath(foundPath));
+        return true;
+      } else if (foundPath != null) {
+        state.LogMessage(String.Format("Autopiloting to [b]{0}[/b]", zone.ZoneName));
+        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(new EncounterPath(foundPath));
         return true;
       } else {
+        state.LogMessage(String.Format("Autopilot failed to plot course to to [b]{0}[/b]", zone.ZoneName));
         return false;
       }
     }
@@ -164,7 +174,6 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.LogMessage(logMessage);
         return true;
       } else {
-        GD.Print("TODO: Make this not eat your turn!");
         return false;
       }
     }
@@ -246,7 +255,6 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.InitState(state.Player, state.DungeonLevel + 1);
         return true;
       } else {
-        GD.Print("TODO: Make this not eat your turn!");
         return false;
       }
     }
