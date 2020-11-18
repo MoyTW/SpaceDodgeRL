@@ -135,6 +135,45 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
+    private static bool ResolveFireProjectile(FireProjectileAction action, EncounterState state) {
+      var actorPosition = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>().EncounterPosition;
+      Entity projectile = EntityBuilder.CreateProjectileEntity(
+        state.GetEntityById(action.ActorId),
+        action.ProjectileType,
+        action.Power,
+        action.PathFunction(actorPosition),
+        action.Speed,
+        state.CurrentTick
+      );
+      state.PlaceEntity(projectile, actorPosition, true);
+      return true;
+    }
+
+    private static bool ResolveGetItem(GetItemAction action, EncounterState state) {
+      var actor = state.GetEntityById(action.ActorId);
+      var actorPosition = actor.GetComponent<PositionComponent>().EncounterPosition;
+      var item = state.EntitiesAtPosition(actorPosition.X, actorPosition.Y)
+                      .FirstOrDefault(e => e.GetComponent<StorableComponent>() != null);
+
+      if (item != null) {
+        state.RemoveEntity(item);
+        actor.GetComponent<InventoryComponent>().AddEntity(item);
+
+        var logMessage = string.Format("[b]{0}[/b] has taken the [b]{1}[/b]", actor.EntityName, item.EntityName);
+        state.LogMessage(logMessage);
+        return true;
+      } else {
+        GD.Print("TODO: Make this not eat your turn!");
+        return false;
+      }
+    }
+
+    private static bool ResolveSelfDestruct(SelfDestructAction action, EncounterState state) {
+      Entity entity = state.GetEntityById(action.ActorId);
+      state.RemoveEntity(entity);
+      return true;
+    }
+
     // TODO: Consider putting all these effects under UsableComponent, instead of keeping them as components
     private static bool ResolveUse(UseAction action, EncounterState state) {
       // We assume that the used entity must be in the inventory of the user - this is pretty fragile and might change.
@@ -207,45 +246,6 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     }
 
     private static bool ResolveWait(WaitAction action, EncounterState state) {
-      return true;
-    }
-
-    private static bool ResolveFireProjectile(FireProjectileAction action, EncounterState state) {
-      var actorPosition = state.GetEntityById(action.ActorId).GetComponent<PositionComponent>().EncounterPosition;
-      Entity projectile = EntityBuilder.CreateProjectileEntity(
-        state.GetEntityById(action.ActorId),
-        action.ProjectileType,
-        action.Power,
-        action.PathFunction(actorPosition),
-        action.Speed,
-        state.CurrentTick
-      );
-      state.PlaceEntity(projectile, actorPosition, true);
-      return true;
-    }
-
-    private static bool ResolveGetItem(GetItemAction action, EncounterState state) {
-      var actor = state.GetEntityById(action.ActorId);
-      var actorPosition = actor.GetComponent<PositionComponent>().EncounterPosition;
-      var item = state.EntitiesAtPosition(actorPosition.X, actorPosition.Y)
-                      .FirstOrDefault(e => e.GetComponent<StorableComponent>() != null);
-
-      if (item != null) {
-        state.RemoveEntity(item);
-        actor.GetComponent<InventoryComponent>().AddEntity(item);
-
-        var logMessage = string.Format("[b]{0}[/b] has taken the [b]{1}[/b]", actor.EntityName, item.EntityName);
-        state.LogMessage(logMessage);
-        return true;
-      } else {
-        GD.Print("TODO: Make this not eat your turn!");
-        return false;
-      }
-    }
-
-    private static bool ResolveSelfDestruct(SelfDestructAction action, EncounterState state) {
-      Entity entity = state.GetEntityById(action.ActorId);
-      state.RemoveEntity(entity);
       return true;
     }
   }
