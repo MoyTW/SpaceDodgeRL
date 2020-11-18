@@ -119,13 +119,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action == InputHandler.ActionMapping.GET_ITEM) {
           PlayerExecuteTurnEndingAction(new GetItemAction(entity.EntityId), state);
         } else if (action == InputHandler.ActionMapping.USE_ITEM) {
-          // TODO: Query player for "what item"
-          var items = state.Player.GetComponent<InventoryComponent>().StoredItems;
-          if (items.Count > 0) {
-            PlayerExecuteTurnEndingAction(new UseAction(entity.EntityId, (items[0] as Entity).EntityId), state);
-          } else {
-            GD.Print("TODO: you have no items, fix this janky 'use first' prototype");
-          }
+          GD.Print("Select an item via the inventory menu instead!");
         } else if (entity.GetComponent<PlayerComponent>().IsAutopiloting) {
           // TODO: Allow player to interrupt to turn off autopiloting
           // TODO: If your machine is slow and you buffer your move inputs/use autopilot the targeting reticule and FoW sort
