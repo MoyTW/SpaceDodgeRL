@@ -1,6 +1,5 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://scenes/encounter/InventoryEntry.tscn" type="PackedScene" id=1]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://scenes/encounter/InventoryMenu.cs" type="Script" id=3]
 
@@ -28,28 +27,24 @@ align = 1
 [node name="Columns" type="HBoxContainer" parent="."]
 margin_top = 44.0
 margin_right = 1024.0
-margin_bottom = 88.0
+margin_bottom = 64.0
 
 [node name="LeftColumn" type="VBoxContainer" parent="Columns"]
 margin_right = 484.0
-margin_bottom = 44.0
+margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="ItemEntry" parent="Columns/LeftColumn" instance=ExtResource( 1 )]
-margin_right = 484.0
-margin_bottom = 44.0
 
 [node name="RightColumn" type="VBoxContainer" parent="Columns"]
 margin_left = 488.0
 margin_right = 973.0
-margin_bottom = 44.0
+margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CloseButton" type="Button" parent="Columns"]
 margin_left = 977.0
 margin_right = 1024.0
-margin_bottom = 44.0
+margin_bottom = 20.0
 size_flags_vertical = 3
 text = "Close"
