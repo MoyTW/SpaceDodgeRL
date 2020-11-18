@@ -26,7 +26,8 @@ namespace SpaceDodgeRL.scenes {
       this._inventoryMenu = GD.Load<PackedScene>("res://scenes/encounter/InventoryMenu.tscn").Instance() as InventoryMenu;
     }
 
-    // Autopilot Menu
+    #region Autopilot Menu
+
     public void ShowAutopilotMenu(EncounterState state) {
       this._autopilotMenu.PrepMenu(state);
       CallDeferred(nameof(DeferredSwitchScene), this._autopilotMenu);
@@ -44,7 +45,10 @@ namespace SpaceDodgeRL.scenes {
       DeferredSwitchScene(previousScene);
     }
 
-    // Character Menu
+    #endregion
+
+    #region Character Menu
+
     public void ShowCharacterMenu(EncounterState state) {
       CallDeferred(nameof(DeferredShowCharacterMenu), state);
     }
@@ -61,15 +65,7 @@ namespace SpaceDodgeRL.scenes {
       this._characterMenu.PrepMenu(previousScene.EncounterState);
     }
 
-    public void CloseCharacterMenu() {
-      CallDeferred(nameof(DeferredCloseCharacterMenu));
-    }
-
-    private void DeferredCloseCharacterMenu() {
-      var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
-      sceneStack.RemoveAt(sceneStack.Count - 1);
-      DeferredSwitchScene(previousScene);
-    }
+    #endregion
 
     #region Inventory Menu
 
@@ -82,32 +78,31 @@ namespace SpaceDodgeRL.scenes {
       this._inventoryMenu.PrepMenu(state.Player.GetComponent<InventoryComponent>());
     }
 
-    // TODO: Merge with CloseCharacterMenu into generic "no other effects go back to encounter"
-    public void CloseInventoryMenu() {
-      CallDeferred(nameof(DeferredCloseInventoryMenu));
+    public void HandleItemToUseSelected(string itemIdToUse) {
+      CallDeferred(nameof(DeferredHandleItemToUseSelected), itemIdToUse);
     }
 
-    private void DeferredCloseInventoryMenu() {
-      var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
-      sceneStack.RemoveAt(sceneStack.Count - 1);
-      DeferredSwitchScene(previousScene);
-    }
-
-    public void CloseInventoryMenu(string itemIdToUse) {
-      CallDeferred(nameof(DeferredCloseInventoryMenu), itemIdToUse);
-    }
-
-    private void DeferredCloseInventoryMenu(string itemIdToUse) {
+    private void DeferredHandleItemToUseSelected(string itemIdToUse) {
       var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
       sceneStack.RemoveAt(sceneStack.Count - 1);
 
       DeferredSwitchScene(previousScene);
-      previousScene.HandleInventoryMenuClosed(itemIdToUse);
+      previousScene.HandleItemToUseSelected(itemIdToUse);
     }
 
     #endregion
 
     // Plumbing
+    public void ReturnToEncounterScene() {
+      CallDeferred(nameof(DeferredReturnToEncounterScene));
+    }
+
+    private void DeferredReturnToEncounterScene() {
+      var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
+      sceneStack.RemoveAt(sceneStack.Count - 1);
+      DeferredSwitchScene(previousScene);
+    }
+
     private void DeferredSwitchScene(Node scene) {
       var lastScene = root.GetChild(root.GetChildCount() - 1);
       this.sceneStack.Add(lastScene);

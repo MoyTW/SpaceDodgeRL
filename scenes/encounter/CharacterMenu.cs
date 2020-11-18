@@ -107,7 +107,7 @@ public class CharacterMenu : VBoxContainer {
 
   private void OnButtonPressed() {
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-    sceneManager.CloseCharacterMenu();
+    sceneManager.ReturnToEncounterScene();
   }
 
   private void OnLevelUpSelectionPressed(string selection) {

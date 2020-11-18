@@ -53,11 +53,11 @@ public class InventoryMenu : VBoxContainer {
 
   private void OnUseButtonPressed(string entityId) {
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-    sceneManager.CloseInventoryMenu(entityId);
+    sceneManager.HandleItemToUseSelected(entityId);
   }
 
   private void OnCloseButtonPressed() {
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-    sceneManager.CloseInventoryMenu();
+    sceneManager.ReturnToEncounterScene();
   }
 }

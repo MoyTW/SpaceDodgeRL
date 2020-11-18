@@ -43,7 +43,7 @@ namespace SpaceDodgeRL.scenes {
     }
 
     // TODO: The many layers of indirection for these menus are vexing but feature-complete first
-    public void HandleInventoryMenuClosed(string itemIdToUse) {
+    public void HandleItemToUseSelected(string itemIdToUse) {
       encounterRunner.HandleUseItemSelection(itemIdToUse);
     }
 
