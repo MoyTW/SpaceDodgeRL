@@ -136,12 +136,21 @@ namespace SpaceDodgeRL.scenes.encounter {
           GD.Print("No handler yet for ", action);
         }
       } else {
-        AIComponent aIComponent = entity.GetComponent<AIComponent>();
-        var aIActions = aIComponent.DecideNextAction(state, entity);
-        Rulebook.ResolveActionsAndEndTurn(aIActions, state);
-        // TODO: this seems...fragile?
-        if (aIComponent is PathAIComponent) {
-          state.UpdateDangerMap();
+        // TODO: Figure out using the delta in Process how many of these we permit to run?
+        int numTurnsToRun = 15;
+        int numTurnsRan = 0;
+        while (!entity.IsInGroup(PlayerComponent.ENTITY_GROUP) && numTurnsRan < numTurnsToRun) {
+          AIComponent aIComponent = entity.GetComponent<AIComponent>();
+          var aIActions = aIComponent.DecideNextAction(state, entity);
+          Rulebook.ResolveActionsAndEndTurn(aIActions, state);
+
+          // TODO: this seems...fragile?
+          if (aIComponent is PathAIComponent) {
+            state.UpdateDangerMap();
+          }
+
+          entity = state.NextEntity;
+          numTurnsRan += 1;
         }
       }
     }
