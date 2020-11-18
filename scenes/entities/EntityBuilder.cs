@@ -76,7 +76,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(DisplayComponent.Create(_texScoutPath, false));
       e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 75));
       e.AddComponent(statusEffectTrackerComponent);
-      e.AddComponent(XPValueComponent.Create(xpValue: 1450));
+      e.AddComponent(XPValueComponent.Create(xpValue: 30));
 
       return e;
     }
