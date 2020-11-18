@@ -59,7 +59,6 @@ namespace SpaceDodgeRL.scenes.components.AI {
       }
 
       // If player is close and flak is off cooldown, fire
-      GD.Print("DISTANCE ", distanceToPlayer, "FLAK ", _currentFlakCooldown);
       if (distanceToPlayer <= 4 && this._currentFlakCooldown == 0) {
         actions.AddRange(FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos, numPellets: 30, spread: 5, state.EncounterRand));
         this._currentFlakCooldown = this._flakCooldown;
