@@ -42,6 +42,11 @@ namespace SpaceDodgeRL.scenes {
       }
     }
 
+    // TODO: The many layers of indirection for these menus are vexing but feature-complete first
+    public void HandleInventoryMenuClosed(string itemIdToUse) {
+      encounterRunner.HandleUseItemSelection(itemIdToUse);
+    }
+
     // This could probably be a signal.
     public void HandleLevelUpSelected(Entity entity, string levelUpSelection) {
       EncounterState.Player.GetComponent<XPTrackerComponent>().RegisterLevelUpChoice(entity, levelUpSelection);

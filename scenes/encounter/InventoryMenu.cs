@@ -35,6 +35,7 @@ public class InventoryMenu : VBoxContainer {
     foreach(KeyValuePair<string, Entity> held in toAddThese) {
       var newEntry = _inventoryPrefab.Instance() as InventoryEntry;
       newEntry.PopulateData(held.Key, held.Value.EntityName, "TODO: Item descriptions");
+      newEntry.Connect(nameof(InventoryEntry.UseItemSelected), this, nameof(OnUseButtonPressed), new Godot.Collections.Array{ held.Key });
 
       this._displayedIdsToEntries[held.Key] = newEntry;
 
@@ -48,6 +49,11 @@ public class InventoryMenu : VBoxContainer {
         GetNode<VBoxContainer>("Columns/RightColumn").AddChild(newEntry);
       }
     }
+  }
+
+  private void OnUseButtonPressed(string entityId) {
+    var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+    sceneManager.CloseInventoryMenu(entityId);
   }
 
   private void OnCloseButtonPressed() {

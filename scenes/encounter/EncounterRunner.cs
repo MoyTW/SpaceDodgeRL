@@ -176,5 +176,10 @@ namespace SpaceDodgeRL.scenes.encounter {
       Rulebook.ResolveAction(new AutopilotAction(playerId, selectedZone.ZoneId), this._encounterState);
       Rulebook.ResolveEndTurn(this._encounterState.Player.EntityId, this._encounterState);
     }
+
+    public void HandleUseItemSelection(string itemIdToUse) {
+      var playerId = this._encounterState.Player.EntityId;
+      PlayerExecuteTurnEndingAction(new UseAction(playerId, itemIdToUse), this._encounterState);
+    }
   }
 }

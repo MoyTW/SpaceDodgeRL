@@ -93,6 +93,18 @@ namespace SpaceDodgeRL.scenes {
       DeferredSwitchScene(previousScene);
     }
 
+    public void CloseInventoryMenu(string itemIdToUse) {
+      CallDeferred(nameof(DeferredCloseInventoryMenu), itemIdToUse);
+    }
+
+    private void DeferredCloseInventoryMenu(string itemIdToUse) {
+      var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
+      sceneStack.RemoveAt(sceneStack.Count - 1);
+
+      DeferredSwitchScene(previousScene);
+      previousScene.HandleInventoryMenuClosed(itemIdToUse);
+    }
+
     #endregion
 
     // Plumbing
