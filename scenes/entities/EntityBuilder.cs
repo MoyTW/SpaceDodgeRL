@@ -23,6 +23,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _StarPath = "res://resources/atlas_Star.tres";
     private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
 
+    private static string _texCarrierPath = "res://resources/tex_carrier.tres";
     private static string _texCruiserPath = "res://resources/tex_cruiser.tres";
     private static string _texDestroyerPath = "res://resources/tex_destroyer.tres";
     private static string _texGunshipPath = "res://resources/tex_gunship.tres";
@@ -170,6 +171,24 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
+    private static Entity CreateCarrierEntity(ActivationGroup activationGroup, int currentTick) {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "carrier");
+
+      var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
+
+      e.AddComponent(new CarrierAIComponent(activationGroup));
+
+      e.AddComponent(ActionTimeComponent.Create(currentTick));
+      e.AddComponent(CollisionComponent.CreateDefaultActor());
+      e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 500));
+      e.AddComponent(DisplayComponent.Create(_texCarrierPath, false));
+      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 200));
+      e.AddComponent(statusEffectTrackerComponent);
+      e.AddComponent(XPValueComponent.Create(xpValue: 2000));
+
+      return e;
+    }
+
     private static Entity CreateExtraBatteryEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "extra battery");
 
@@ -218,8 +237,7 @@ namespace SpaceDodgeRL.scenes.entities {
       } else if (enemyDefId == EntityDefId.CRUISER) {
         return EntityBuilder.CreateCruiserEntity(activationGroup, currentTick);
       } else if (enemyDefId == EntityDefId.CARRIER) {
-        GD.Print("TODO: No implementation yet for ID ", enemyDefId);
-        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
+        return EntityBuilder.CreateCarrierEntity(activationGroup, currentTick);
       } else {
         throw new NotImplementedException("No mapping defined for " + enemyDefId);
       }
