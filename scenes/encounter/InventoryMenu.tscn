@@ -30,21 +30,28 @@ margin_right = 1024.0
 margin_bottom = 64.0
 
 [node name="LeftColumn" type="VBoxContainer" parent="Columns"]
-margin_right = 484.0
+margin_right = 321.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MiddleColumn" type="VBoxContainer" parent="Columns"]
+margin_left = 325.0
+margin_right = 647.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="RightColumn" type="VBoxContainer" parent="Columns"]
-margin_left = 488.0
-margin_right = 973.0
+margin_left = 651.0
+margin_right = 972.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CloseButton" type="Button" parent="Columns"]
-margin_left = 977.0
-margin_right = 1024.0
+margin_left = 976.0
+margin_right = 1023.0
 margin_bottom = 20.0
 size_flags_vertical = 3
 text = "Close"

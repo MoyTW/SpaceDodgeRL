@@ -36,9 +36,17 @@ public class InventoryMenu : VBoxContainer {
       var newEntry = _inventoryPrefab.Instance() as InventoryEntry;
       newEntry.PopulateData(held.Key, held.Value.EntityName, "TODO: Item descriptions");
 
-      // TODO: Put only [n] entries on left column
-      GetNode<VBoxContainer>("Columns/LeftColumn").AddChild(newEntry);
       this._displayedIdsToEntries[held.Key] = newEntry;
+
+      // TODO: A less fixed layout
+      // TODO: When you use an item, it should collapse the column instead of leaving a hole - maybe we should just redraw it all?
+      if (this._displayedIdsToEntries.Count < 10) {
+        GetNode<VBoxContainer>("Columns/LeftColumn").AddChild(newEntry);
+      } else if (this._displayedIdsToEntries.Count < 20) {
+        GetNode<VBoxContainer>("Columns/MiddleColumn").AddChild(newEntry);
+      } else {
+        GetNode<VBoxContainer>("Columns/RightColumn").AddChild(newEntry);
+      }
     }
   }
 
