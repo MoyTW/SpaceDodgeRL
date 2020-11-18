@@ -50,7 +50,9 @@ namespace SpaceDodgeRL.scenes.components.AI {
         this._currentShotgunCooldown += this._shotgunCooldown;
       } else {
         actions.Add(FireProjectileAction.CreateSmallCannonAction(parent.EntityId, playerPos));
-        this._currentShotgunCooldown -= 1;
+        if (this._currentShotgunCooldown > 0) {
+          this._currentShotgunCooldown -= 1;
+        }
       }
 
 

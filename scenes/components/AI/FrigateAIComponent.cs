@@ -50,7 +50,9 @@ namespace SpaceDodgeRL.scenes.components.AI {
         actions.Add(FireProjectileAction.CreateSmallCannonAction(parent.EntityId, playerPos));
         actions.Add(FireProjectileAction.CreateSmallCannonAction(parent.EntityId, playerPos));
         actions.AddRange(FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos, numPellets: 2, spread: 3, state.EncounterRand));
-        this._currentReverserCooldown -= 1;
+        if (this._currentReverserCooldown > 0) {
+          this._currentReverserCooldown -= 1;
+        }
       }
 
       return actions;

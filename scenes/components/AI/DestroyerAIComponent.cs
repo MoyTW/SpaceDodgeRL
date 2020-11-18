@@ -48,7 +48,9 @@ namespace SpaceDodgeRL.scenes.components.AI {
         this._currentVolleyCooldown += _volleyCooldown;
       } else {
         actions.AddRange(FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos, numPellets: 2, spread: 1, state.EncounterRand));
-        this._currentVolleyCooldown -= 1;
+        if (this._currentVolleyCooldown > 0) {
+          this._currentVolleyCooldown -= 1;
+        }
       }
 
       return actions;
