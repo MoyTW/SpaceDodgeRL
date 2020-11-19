@@ -159,6 +159,7 @@ namespace SpaceDodgeRL.scenes.encounter {
           entity = state.NextEntity;
           numTurnsRan += 1;
         }
+        GD.Print("You should save here!");
       }
     }
 

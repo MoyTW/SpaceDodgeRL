@@ -45,7 +45,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
     // ##########################################################################################################################
     #region Data Access
-    // ##########################################################################################################################
 
     /**
      * Only returns direct child entities.
@@ -142,9 +141,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       });
     }
 
-    // ##########################################################################################################################
     #endregion
     // ##########################################################################################################################
+
+    // ##########################################################################################################################
+    #region Entity Management
 
     public void UpdateTimelineForEntity(Entity entity) {
       _actionTimeline.UpdateTimelineForEntity(entity);
@@ -209,6 +210,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       positionComponent.EncounterPosition = targetPosition;
       this._encounterTiles[targetPosition.X, targetPosition.Y].AddEntity(entity);
     }
+
+    #endregion
+    // ##########################################################################################################################
+    #region Display caches
 
     public void UpdateDangerMap() {
       var dangerMap = GetNode<TileMap>("DangerMap");
@@ -286,6 +291,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         }
       }
     }
+
+    #endregion
+    // ##########################################################################################################################
 
     public void LogMessage(string bbCodeMessage) {
       if (this._encounterLog.Count >= this.EncounterLogSize) {
