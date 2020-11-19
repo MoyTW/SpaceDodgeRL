@@ -92,6 +92,7 @@ namespace SpaceDodgeRL.scenes.encounter {
 
         // If you interrupt autopilot in any way it immediately shuts off
         if (action != null && entity.GetComponent<PlayerComponent>().IsAutopiloting) {
+          // TODO: Log that you've cancelled autopilot
           // TODO: STOP_AUTOPILOTING action, don't state change here
           entity.GetComponent<PlayerComponent>().StopAutopiloting();
         }
@@ -129,11 +130,19 @@ namespace SpaceDodgeRL.scenes.encounter {
           GD.Print("Select an item via the inventory menu instead!");
         } else if (entity.GetComponent<PlayerComponent>().IsAutopiloting) {
           // TODO: The player sprite lags the true position significantly because the Tween can't keep up
-          // TODO: Add in termination condition of "enemy enters FoV"
           var path = entity.GetComponent<PlayerComponent>().AutopilotPath;
-          if (!path.AtEnd) {
+          var seesEnemies = state.FoVCache.VisibleCells
+              .Select(cell => state.EntitiesAtPosition(cell.X, cell.Y))
+              .Any(entitiesAtPosition => entitiesAtPosition.Any(e => e.GetComponent<AIComponent>() != null && !(e.GetComponent<PathAIComponent>() is PathAIComponent)));
+
+          if (seesEnemies) {
+            // TODO: Log that you see enemies
+            // TODO: STOP_AUTOPILOTING action, don't state change here
+            entity.GetComponent<PlayerComponent>().StopAutopiloting();
+          } else if (!path.AtEnd) {
             PlayerMove(state, new MoveAction(entity.EntityId, path.Step()));
           } else {
+            // TODO: Log that you've reached your destination
             // TODO: STOP_AUTOPILOTING action, don't state change here
             entity.GetComponent<PlayerComponent>().StopAutopiloting();
           }
