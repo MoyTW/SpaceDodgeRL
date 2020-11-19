@@ -25,13 +25,13 @@ namespace SpaceDodgeRL.scenes.components {
       }
     }
 
-    public static PositionComponent Create(EncounterPosition position, Texture texture) {
+    public static PositionComponent Create(EncounterPosition position, string texturePath) {
       var component = _scenePrefab.Instance() as PositionComponent;
 
       component._encounterPosition = position;
       var sprite = component.GetNode<Sprite>("Sprite");
       sprite.Position = IndexToVector(position.X, position.Y);
-      sprite.Texture = texture;
+      sprite.Texture = GD.Load<Texture>(texturePath);
 
       return component;
     }
