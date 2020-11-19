@@ -33,8 +33,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
 
       // Picks a target in range & fires a projectile
-      // TODO: Create a Faction component?
-      // TODO: Iterating literally every action entity every time is very silly
+      // PERF: Iterating literally every action entity every time is very silly
       var playerPosition = player.GetComponent<PositionComponent>().EncounterPosition;
       PositionComponent closestEnemyPosition = null;
       float closestEnemyDistance = int.MaxValue;
@@ -182,7 +181,6 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     public void HandleAutopilotSelection(EncounterZone selectedZone) {
       var playerId = this._encounterState.Player.EntityId;
-      // TODO: Gracefully handle autopilot failure!
       Rulebook.ResolveAction(new AutopilotBeginAction(playerId, selectedZone.ZoneId), this._encounterState);
       Rulebook.ResolveEndTurn(this._encounterState.Player.EntityId, this._encounterState);
     }

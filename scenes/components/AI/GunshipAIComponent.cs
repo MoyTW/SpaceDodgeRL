@@ -38,7 +38,7 @@ namespace SpaceDodgeRL.scenes.components.AI {
 
       // Close distance if further than 5
       if (parentPos.DistanceTo(playerPos) >= 5f) {
-        // TODO: We may want to make pathfinding stateful/cache it or something, to save on turn times
+        // PERF: We may want to make pathfinding stateful/cache it or something, to save on turn times
         var path = Pathfinder.AStarWithNewGrid(parentPos, playerPos, state);
         if (path != null) {
           actions.Add(new MoveAction(parent.EntityId, path[0]));

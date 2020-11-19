@@ -11,7 +11,7 @@ namespace SpaceDodgeRL.library.encounter {
       return AStarWithNewGrid(start, end, state);
     }
 
-    // TODO: If this ends up being slow, we can mark with a dirty bit
+    // PERF: If this ends up being slow, we can mark with a dirty bit
     /**
      * Returns a path from start to end, exclusive - that is, the start and end nodes are *not* listed in the path. Does a full
      * naive search every time.
