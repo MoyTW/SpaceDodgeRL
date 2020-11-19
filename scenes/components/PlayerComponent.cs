@@ -14,8 +14,8 @@ namespace SpaceDodgeRL.scenes.components {
 
     // Right now the player is a special case in that they're the only entity with variable-power weaponry!
     public int CuttingLaserRange { get; private set; }
-    private int _cuttingLaserBasePower;
-    public int CuttingLaserPower { get => _cuttingLaserBasePower + statusEffectTrackerComponent.GetTotalBoost(StatusEffectType.BOOST_POWER); }
+    public int BaseCuttingLaserPower;
+    public int CuttingLaserPower { get => BaseCuttingLaserPower + statusEffectTrackerComponent.GetTotalBoost(StatusEffectType.BOOST_POWER); }
 
     // Autopilot data
     public bool IsAutopiloting { get => this.AutopilotPath != null; }
@@ -23,7 +23,7 @@ namespace SpaceDodgeRL.scenes.components {
 
     public static PlayerComponent Create(
       StatusEffectTrackerComponent statusEffectTrackerComponent,
-      int cuttingLaserBasePower = 26,
+      int baseCuttingLaserPower = 26,
       int cuttingLaserRange = 3,
       EncounterPath autopilotPath = null,
       HashSet<int> dungeonLevelsWithIntel = null
@@ -31,7 +31,7 @@ namespace SpaceDodgeRL.scenes.components {
       var component = new PlayerComponent();
 
       component.statusEffectTrackerComponent = statusEffectTrackerComponent;
-      component._cuttingLaserBasePower = cuttingLaserBasePower;
+      component.BaseCuttingLaserPower = baseCuttingLaserPower;
       component.CuttingLaserRange = cuttingLaserRange;
       component.AutopilotPath = autopilotPath;
       component._dungeonLevelsWithIntel = dungeonLevelsWithIntel != null ?
@@ -42,7 +42,7 @@ namespace SpaceDodgeRL.scenes.components {
     }
 
     public void AddBaseCuttingLaserPower(int power) {
-      this._cuttingLaserBasePower += power;
+      this.BaseCuttingLaserPower += power;
     }
 
     public void RegisterIntel(int dungeonLevel) {
