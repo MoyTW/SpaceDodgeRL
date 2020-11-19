@@ -1,9 +1,12 @@
 using Godot;
 using SpaceDodgeRL.library.encounter;
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components {
 
+  [JsonConverter(typeof(PositionComponentConverter))]
   public class PositionComponent : Node, Component {
     private static PackedScene _scenePrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
 
@@ -45,6 +48,29 @@ namespace SpaceDodgeRL.scenes.components {
 
     private static Vector2 IndexToVector(int x, int y, int xOffset = 0, int yOffset = 0) {
       return new Vector2(START_X + STEP_X * x, START_Y + STEP_Y * y);
+    }
+  }
+
+  public class PositionComponentConverter : JsonConverter<PositionComponent> {
+    private class SaveData {
+      public string EntityGroup { get; }
+      public EncounterPosition EncounterPosition { get; }
+      public string TexturePath { get; }
+
+      public SaveData(PositionComponent component) {
+        this.EntityGroup = PositionComponent.ENTITY_GROUP;
+        this.EncounterPosition = component.EncounterPosition;
+        this.TexturePath = component.GetNode<Sprite>("Sprite").Texture.ResourcePath;
+      }
+    }
+
+    public override PositionComponent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+      var saveData = JsonSerializer.Deserialize<SaveData>(reader.GetString(), options);
+      return PositionComponent.Create(saveData.EncounterPosition, saveData.TexturePath);
+    }
+
+    public override void Write(Utf8JsonWriter writer, PositionComponent value, JsonSerializerOptions options) {
+      JsonSerializer.Serialize<SaveData>(writer, new SaveData(value), options);
     }
   }
 }

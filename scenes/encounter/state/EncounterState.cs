@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
 
@@ -491,6 +493,17 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.InitFoWOverlay();
       this.UpdateFoVAndFoW();
       this.UpdatePlayerOverlays();
+
+      // TODO: remove this & set components back to private
+      JsonSerializerOptions options = new JsonSerializerOptions {
+        //ReferenceHandler = ReferenceHandler.Preserve
+      };
+      string serializedComponents = JsonSerializer.Serialize(this.Player._components.Select(c => (object)c), options);
+      GD.Print(serializedComponents);
+      var deserialized = JsonSerializer.Deserialize<List<object>>(serializedComponents);
+      foreach(object o in deserialized) {
+        GD.Print(o);
+      }
     }
   }
 }

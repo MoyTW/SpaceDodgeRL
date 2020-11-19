@@ -19,7 +19,7 @@ namespace SpaceDodgeRL.scenes.entities {
     // logically nonsensical. So, the assumption at least now isn't that terrible.
     //
     // I will admit that the implementation is imperfect.
-    private List<Component> _components;
+    public List<Component> _components;
     private Dictionary<Type, Component> _childTypeToComponent;
     private Dictionary<Component, List<Type>> _childComponentToTypes;
 
