@@ -89,6 +89,13 @@ namespace SpaceDodgeRL.scenes.encounter {
 
         // TODO: Not on every process()
         var action = inputHandler.PopQueue();
+
+        // If you interrupt autopilot in any way it immediately shuts off
+        if (action != null && entity.GetComponent<PlayerComponent>().IsAutopiloting) {
+          // TODO: STOP_AUTOPILOTING action, don't state change here
+          entity.GetComponent<PlayerComponent>().StopAutopiloting();
+        }
+
         // Super not a fan of the awkwardness of checking this twice! Switch string -> enum, maybe?
         if (action == InputHandler.ActionMapping.MOVE_N) {
           PlayerMove(state, 0, -1);
@@ -121,9 +128,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action == InputHandler.ActionMapping.USE_ITEM) {
           GD.Print("Select an item via the inventory menu instead!");
         } else if (entity.GetComponent<PlayerComponent>().IsAutopiloting) {
-          // TODO: Allow player to interrupt to turn off autopiloting
-          // TODO: If your machine is slow and you buffer your move inputs/use autopilot the targeting reticule and FoW sort
-          // of don't keep up!
+          // TODO: The player sprite lags the true position significantly because the Tween can't keep up
           // TODO: Add in termination condition of "enemy enters FoV"
           var path = entity.GetComponent<PlayerComponent>().AutopilotPath;
           if (!path.AtEnd) {
