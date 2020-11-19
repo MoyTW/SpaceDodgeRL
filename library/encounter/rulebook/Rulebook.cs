@@ -13,7 +13,8 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
   public static class Rulebook {
     // ...can't I just do <> like I can in Kotlin? C# why you no let me do this. Probably because "evolving languages are hard".
     private static Dictionary<ActionType, Func<EncounterAction, EncounterState, bool>> _actionMapping = new Dictionary<ActionType, Func<EncounterAction, EncounterState, bool>>() {
-      { ActionType.AUTOPILOT, (a, s) => ResolveAutopilot(a as AutopilotAction, s) },
+      { ActionType.AUTOPILOT_BEGIN, (a, s) => ResolveAutopilotBegin(a as AutopilotBeginAction, s) },
+      { ActionType.AUTOPILOT_END, (a, s) => ResolveAutopilotEnd(a as AutopilotEndAction, s) },
       { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
       { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
       { ActionType.GET_ITEM, (a, s) => ResolveGetItem(a as GetItemAction, s) },
@@ -55,7 +56,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
-    private static bool ResolveAutopilot(AutopilotAction action, EncounterState state) {
+    private static bool ResolveAutopilotBegin(AutopilotBeginAction action, EncounterState state) {
       var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
       EncounterZone zone = state.GetZoneById(action.ZoneId);
 
@@ -77,6 +78,22 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.LogMessage(String.Format("Autopilot failed to plot course to to [b]{0}[/b]", zone.ZoneName));
         return false;
       }
+    }
+
+    private static bool ResolveAutopilotEnd(AutopilotEndAction action, EncounterState state) {
+      state.Player.GetComponent<PlayerComponent>().StopAutopiloting();
+
+      if (action.Reason == AutopilotEndReason.PLAYER_INPUT) {
+        state.LogMessage(String.Format("Autopilot ending - [b]overridden by pilot[/b]"));
+      } else if (action.Reason == AutopilotEndReason.ENEMY_DETECTED) {
+        state.LogMessage(String.Format("Autopilot ending - [b]enemy detected[/b]"));
+      } else if (action.Reason == AutopilotEndReason.DESTINATION_REACHED) {
+        state.LogMessage(String.Format("Autopilot ending - [b]destination reached[/b]"));
+      } else {
+        throw new NotImplementedException("no such matching clause for enum");
+      }
+
+      return true;
     }
 
     private static void LogAttack(DefenderComponent defenderComponent, string message, EncounterState state) {

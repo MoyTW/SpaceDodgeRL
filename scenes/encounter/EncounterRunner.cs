@@ -92,9 +92,7 @@ namespace SpaceDodgeRL.scenes.encounter {
 
         // If you interrupt autopilot in any way it immediately shuts off
         if (action != null && entity.GetComponent<PlayerComponent>().IsAutopiloting) {
-          // TODO: Log that you've cancelled autopilot
-          // TODO: STOP_AUTOPILOTING action, don't state change here
-          entity.GetComponent<PlayerComponent>().StopAutopiloting();
+          Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.PLAYER_INPUT), state);
         }
 
         // Super not a fan of the awkwardness of checking this twice! Switch string -> enum, maybe?
@@ -136,15 +134,11 @@ namespace SpaceDodgeRL.scenes.encounter {
               .Any(entitiesAtPosition => entitiesAtPosition.Any(e => e.GetComponent<AIComponent>() != null && !(e.GetComponent<PathAIComponent>() is PathAIComponent)));
 
           if (seesEnemies) {
-            // TODO: Log that you see enemies
-            // TODO: STOP_AUTOPILOTING action, don't state change here
-            entity.GetComponent<PlayerComponent>().StopAutopiloting();
+            Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
           } else if (!path.AtEnd) {
             PlayerMove(state, new MoveAction(entity.EntityId, path.Step()));
           } else {
-            // TODO: Log that you've reached your destination
-            // TODO: STOP_AUTOPILOTING action, don't state change here
-            entity.GetComponent<PlayerComponent>().StopAutopiloting();
+            Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.DESTINATION_REACHED), state);
           }
         } else if (action != null) {
           GD.Print("No handler yet for ", action);
@@ -189,7 +183,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     public void HandleAutopilotSelection(EncounterZone selectedZone) {
       var playerId = this._encounterState.Player.EntityId;
       // TODO: Gracefully handle autopilot failure!
-      Rulebook.ResolveAction(new AutopilotAction(playerId, selectedZone.ZoneId), this._encounterState);
+      Rulebook.ResolveAction(new AutopilotBeginAction(playerId, selectedZone.ZoneId), this._encounterState);
       Rulebook.ResolveEndTurn(this._encounterState.Player.EntityId, this._encounterState);
     }
 

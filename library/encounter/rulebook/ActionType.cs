@@ -1,7 +1,8 @@
 namespace SpaceDodgeRL.library.encounter.rulebook {
 
   public enum ActionType {
-    AUTOPILOT,
+    AUTOPILOT_BEGIN,
+    AUTOPILOT_END,
     FIRE_PROJECTILE,
     GET_ITEM,
     MOVE,
