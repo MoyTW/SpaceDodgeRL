@@ -1,16 +1,19 @@
 using Godot;
+using SpaceDodgeRL.scenes.entities;
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class CollisionComponent : Component {
+  public class CollisionComponent : Component, Savable {
     public static readonly string ENTITY_GROUP = "COLLISION_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
-    public bool BlocksMovement { get; private set; }
-    public bool BlocksVision { get; private set; }
-    public bool OnCollisionAttack { get; private set; }
-    public bool OnCollisionSelfDestruct { get; private set; }
+    [JsonInclude] public bool BlocksMovement { get; private set; }
+    [JsonInclude] public bool BlocksVision { get; private set; }
+    [JsonInclude] public bool OnCollisionAttack { get; private set; }
+    [JsonInclude] public bool OnCollisionSelfDestruct { get; private set; }
 
     public static CollisionComponent Create(
       bool blocksMovement,
@@ -28,8 +31,20 @@ namespace SpaceDodgeRL.scenes.components {
       return component;
     }
 
+    public static CollisionComponent Create(string saveData) {
+      return JsonSerializer.Deserialize<CollisionComponent>(saveData);
+    }
+
     public static CollisionComponent CreateDefaultActor() {
       return Create(blocksMovement: true, blocksVision: false);
     }
+
+    public string Save() {
+      return JsonSerializer.Serialize(this);
+    }
+
+    public void NotifyAttached(Entity parent) { }
+
+    public void NotifyDetached(Entity parent) { }
   }
 }
