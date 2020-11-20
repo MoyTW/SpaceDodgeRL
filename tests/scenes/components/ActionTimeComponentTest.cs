@@ -14,6 +14,13 @@ namespace SpaceDodgeRL.tests.scenes.components {
     }
 
     [Fact]
+    public void IncludesEntityGroup() {
+      var component = ActionTimeComponent.Create(0, 0);
+      JsonElement deserialized = JsonSerializer.Deserialize<JsonElement>(component.Save());
+      Assert.Equal(ActionTimeComponent.ENTITY_GROUP, deserialized.GetProperty("EntityGroup").GetString());
+    }
+
+    [Fact]
     public void SerializesAndDeserializesCorrectly() {
       var component = ActionTimeComponent.Create(37, 57);
       string saved = component.Save();
