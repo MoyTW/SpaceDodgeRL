@@ -1,14 +1,17 @@
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Godot;
+using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class DisplayComponent : Component {
+  public class DisplayComponent : Component, Savable {
     public static readonly string ENTITY_GROUP = "SPRITE_DATA_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
-    public string TexturePath { get; private set; }
-    public bool VisibleInFoW { get; private set; }
+    [JsonInclude] public string TexturePath { get; private set; }
+    [JsonInclude] public bool VisibleInFoW { get; private set; }
 
     public static DisplayComponent Create(string texturePath, bool visibleInFoW) {
       var component = new DisplayComponent();
@@ -18,5 +21,17 @@ namespace SpaceDodgeRL.scenes.components {
 
       return component;
     }
+
+    public static DisplayComponent Create(string saveData) {
+      return JsonSerializer.Deserialize<DisplayComponent>(saveData);
+    }
+
+    public string Save() {
+      return JsonSerializer.Serialize(this);
+    }
+
+    public void NotifyAttached(Entity parent) { }
+
+    public void NotifyDetached(Entity parent) { }
   }
 }
