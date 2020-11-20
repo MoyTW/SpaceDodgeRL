@@ -12,5 +12,8 @@ This isn't a comprehensive setup list, because really who's gonna set this up ot
 4. Visual Studio Code settings
   * Install C# Plugin
   * Install C# Tools for Godot Plugin
+5. Set up tests
+  * Install .Net Core Test Explorer Plugin
+  * `cp ./.mono/assemblies/Debug/GodotSharp.dll .mono/temp/bin/Debug/`
 
 This should let you run the project from Godot, probably.
