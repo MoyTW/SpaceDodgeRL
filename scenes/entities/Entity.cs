@@ -58,6 +58,9 @@ namespace SpaceDodgeRL.scenes.entities {
       if (component is Node) {
         base.AddChild(component as Node);
       }
+      if (component is Savable) {
+        (component as Savable).NotifyAttached(this);
+      }
     }
 
     public void RemoveComponent(Component component) {
@@ -68,6 +71,9 @@ namespace SpaceDodgeRL.scenes.entities {
 
       if (component is Node) {
         base.RemoveChild(component as Node);
+      }
+      if (component is Savable) {
+        (component as Savable).NotifyDetached(this);
       }
     }
 

@@ -502,7 +502,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       GD.Print(serializedComponents);
       var deserialized = JsonSerializer.Deserialize<List<object>>(serializedComponents);
       foreach(object o in deserialized) {
-        GD.Print(o);
+ //       GD.Print(o);
       }
     }
   }

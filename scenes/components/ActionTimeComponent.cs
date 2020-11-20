@@ -1,17 +1,20 @@
 using Godot;
+using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class ActionTimeComponent : Component {
+  public class ActionTimeComponent : Component, Savable {
     public static readonly string ENTITY_GROUP = "ACTION_TIME_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
-    public int NextTurnAtTick { get; private set; }
-    public int LastTurnAtTick { get; private set; }
+    [JsonInclude] public int NextTurnAtTick { get; private set; }
+    [JsonInclude] public int LastTurnAtTick { get; private set; }
 
     public static ActionTimeComponent Create(int currentTick, int ticksUntilTurn = 0) {
       var component = new ActionTimeComponent();
@@ -38,5 +41,17 @@ namespace SpaceDodgeRL.scenes.components {
       this.LastTurnAtTick = currentTick;
       this.NextTurnAtTick = currentTick + speedComponent.CalculateSpeed();
     }
+
+    public static ActionTimeComponent Create(string saveData) {
+      return JsonSerializer.Deserialize<ActionTimeComponent>(saveData);
+    }
+
+    public string Save() {
+      return JsonSerializer.Serialize(this);
+    }
+
+    public void NotifyAttached(Entity parent) { }
+
+    public void NotifyDetached(Entity parent) { }
   }
 }

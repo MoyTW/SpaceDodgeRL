@@ -1,21 +1,27 @@
+using System.Text.Json;
+using SpaceDodgeRL.scenes.components;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace SpaceDodgeRL.tests.scenes.components {
 
   public class ActionTimeComponentTest {
 
-    [Fact]
-    public void PassingTest() {
-      Assert.Equal(4, Add(2, 2));
+    private readonly ITestOutputHelper _output;
+
+    public ActionTimeComponentTest(ITestOutputHelper output) {
+      this._output = output;
     }
 
     [Fact]
-    public void FailingTest() {
-      Assert.Equal(5, Add(2, 2));
-    }
+    public void SerializesAndDeserializesCorrectly() {
+      var component = ActionTimeComponent.Create(37, 57);
+      string saved = component.Save();
 
-    int Add(int x, int y) {
-      return x + y;
+      var newComponent = ActionTimeComponent.Create(saved);
+
+      Assert.Equal(component.NextTurnAtTick, newComponent.NextTurnAtTick);
+      Assert.Equal(component.LastTurnAtTick, newComponent.LastTurnAtTick);
     }
   }
 }
