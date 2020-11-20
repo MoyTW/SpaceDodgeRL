@@ -1,10 +1,11 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.library.encounter {
 
   public struct EncounterPosition: IEquatable<EncounterPosition> {
-    public int X { get; }
-    public int Y { get; }
+    [JsonInclude] public int X { get; private set; }
+    [JsonInclude] public int Y { get; private set; }
 
     public EncounterPosition(int x, int y) {
       X = x;

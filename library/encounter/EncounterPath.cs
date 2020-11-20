@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.library.encounter {
 
@@ -7,30 +8,32 @@ namespace SpaceDodgeRL.library.encounter {
    * Data class to represent a series of [x, y] coordinate pairs over a time period.
    */
   public class EncounterPath {
-    private int _currentStep = 0;
-    private List<EncounterPosition> _fullPath;
 
-    public EncounterPath(List<EncounterPosition> path) {
-      if (path == null) {
+    [JsonInclude] public int CurrentStep { get; private set; }
+    [JsonInclude] public List<EncounterPosition> FullPath { get; private set; }
+
+    public EncounterPosition CurrentPosition { get => FullPath[CurrentStep]; }
+    public bool AtEnd { get => CurrentStep >= FullPath.Count - 1; }
+
+    public EncounterPath(List<EncounterPosition> fullPath, int currentStep = 0) {
+      if (fullPath == null) {
         throw new NotImplementedException("You can't make a path with a list that's null!");
       }
-      this._fullPath = path;
+      this.CurrentStep = currentStep;
+      this.FullPath = fullPath;
     }
-
-    public EncounterPosition CurrentPosition { get => _fullPath[_currentStep]; }
-    public bool AtEnd { get => _currentStep >= _fullPath.Count - 1; }
 
     public EncounterPosition Step() {
       if (this.AtEnd) {
         throw new InvalidOperationException("Can't step, already at end");
       }
-      _currentStep += 1;
+      CurrentStep += 1;
       return CurrentPosition;
     }
 
     public List<EncounterPosition> Project(int steps) {
-      var stepsLeft = _fullPath.Count - (_currentStep + 1);
-      return _fullPath.GetRange(_currentStep + 1, Math.Min(steps, stepsLeft));
+      var stepsLeft = FullPath.Count - (CurrentStep + 1);
+      return FullPath.GetRange(CurrentStep + 1, Math.Min(steps, stepsLeft));
     }
   }
 }
