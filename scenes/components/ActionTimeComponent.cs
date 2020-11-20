@@ -25,6 +25,10 @@ namespace SpaceDodgeRL.scenes.components {
       return component;
     }
 
+    public static ActionTimeComponent Create(string saveData) {
+      return JsonSerializer.Deserialize<ActionTimeComponent>(saveData);
+    }
+
     // An ugly hack right now to get the player from Encounter A -> Encounter B
     public void SetNextTurnAtTo(int nextTurnAtTick) {
       this.NextTurnAtTick = nextTurnAtTick;
@@ -40,10 +44,6 @@ namespace SpaceDodgeRL.scenes.components {
       
       this.LastTurnAtTick = currentTick;
       this.NextTurnAtTick = currentTick + speedComponent.CalculateSpeed();
-    }
-
-    public static ActionTimeComponent Create(string saveData) {
-      return JsonSerializer.Deserialize<ActionTimeComponent>(saveData);
     }
 
     public string Save() {

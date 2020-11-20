@@ -1,5 +1,6 @@
 using Godot;
 using SpaceDodgeRL.library.encounter;
+using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -7,7 +8,7 @@ using System.Text.Json.Serialization;
 namespace SpaceDodgeRL.scenes.components {
 
   [JsonConverter(typeof(PositionComponentConverter))]
-  public class PositionComponent : Node, Component {
+  public class PositionComponent : Node, Component, Savable {
     private static PackedScene _scenePrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
 
     public static readonly string ENTITY_GROUP = "POSITION_COMPONENT_GROUP";
@@ -39,6 +40,10 @@ namespace SpaceDodgeRL.scenes.components {
       return component;
     }
 
+    public static PositionComponent Create(string saveData) {
+      return JsonSerializer.Deserialize<PositionComponent>(saveData);
+    }
+
     private void Tween(Vector2 newPosition) {
       var tween = GetNode<Tween>("Tween");
       var sprite = GetNode<Sprite>("Sprite");
@@ -49,6 +54,14 @@ namespace SpaceDodgeRL.scenes.components {
     private static Vector2 IndexToVector(int x, int y, int xOffset = 0, int yOffset = 0) {
       return new Vector2(START_X + STEP_X * x, START_Y + STEP_Y * y);
     }
+
+    public string Save() {
+      return JsonSerializer.Serialize(this);
+    }
+
+    public void NotifyAttached(Entity parent) { }
+
+    public void NotifyDetached(Entity parent) { }
   }
 
   public class PositionComponentConverter : JsonConverter<PositionComponent> {
