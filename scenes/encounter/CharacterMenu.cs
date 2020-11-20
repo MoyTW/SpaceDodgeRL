@@ -73,7 +73,7 @@ public class CharacterMenu : VBoxContainer {
     GetNode<Label>("Columns/StatsColumn/StatsAttackPowerLabel").Text = String.Format("Cutting laser power: {0}", playerComponent.CuttingLaserPower);
     GetNode<Label>("Columns/StatsColumn/StatsAttackRangeLabel").Text = String.Format("Cutting laser range: {0}", playerComponent.CuttingLaserRange);
 
-    var speed = state.Player.GetComponent<SpeedComponent>().CalculateSpeed();
+    var speed = state.Player.GetComponent<SpeedComponent>().Speed;
     GetNode<Label>("Columns/StatsColumn/StatsSpeedLabel").Text = String.Format("Speed: {0}", speed);
   }
 

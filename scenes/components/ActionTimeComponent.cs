@@ -43,7 +43,7 @@ namespace SpaceDodgeRL.scenes.components {
       }
       
       this.LastTurnAtTick = currentTick;
-      this.NextTurnAtTick = currentTick + speedComponent.CalculateSpeed();
+      this.NextTurnAtTick = currentTick + speedComponent.Speed;
     }
 
     public string Save() {

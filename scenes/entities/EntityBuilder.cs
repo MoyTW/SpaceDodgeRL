@@ -73,7 +73,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 10));
       e.AddComponent(DisplayComponent.Create(_texScoutPath, false));
-      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 75));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 75));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 30));
 
@@ -91,7 +91,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 30));
       e.AddComponent(DisplayComponent.Create(_FPath, false));
-      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 125));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 125));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 50));
 
@@ -109,7 +109,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 4, maxHp: 50));
       e.AddComponent(DisplayComponent.Create(_texGunshipPath, false));
-      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 100));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 100));
 
@@ -127,7 +127,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 10, maxHp: 150));
       e.AddComponent(DisplayComponent.Create(_texFrigatePath, false));
-      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 250));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 250));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 200));
 
@@ -145,7 +145,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 15, maxHp: 200));
       e.AddComponent(DisplayComponent.Create(_texDestroyerPath, false));
-      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 300));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 300));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 500));
 
@@ -163,7 +163,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 10, maxHp: 300));
       e.AddComponent(DisplayComponent.Create(_texCruiserPath, false));
-      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 400));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 400));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 1000));
 
@@ -181,7 +181,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 500));
       e.AddComponent(DisplayComponent.Create(_texCarrierPath, false));
-      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, baseSpeed: 200));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 200));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 2000));
 
@@ -268,7 +268,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(DisplayComponent.Create(_AtSignPath, false));
       e.AddComponent(InventoryComponent.Create(inventorySize: 26));
       e.AddComponent(PlayerComponent.Create());
-      e.AddComponent(SpeedComponent.Create(statusEffectTrackerComponent, 100));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPTrackerComponent.Create(200, 150));
 
@@ -286,7 +286,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(AttackerComponent.Create(source.EntityId, power));
       e.AddComponent(CollisionComponent.Create(false, false, true, true));
       e.AddComponent(DisplayComponent.Create(displayData.TexturePath, false));
-      e.AddComponent(SpeedComponent.Create(null, speed));
+      e.AddComponent(SpeedComponent.Create(speed));
 
       return e;
     }
