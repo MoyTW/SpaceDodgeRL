@@ -119,7 +119,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
             attacker.EntityName, defender.EntityName, damage);
 
           // Assign XP to the entity that fired the projectile
-          var projectileSource = attackerComponent.Source;
+          var projectileSource = state.GetEntityById(attackerComponent.SourceEntityId);
           var xpValueComponent = defender.GetComponent<XPValueComponent>();
           if (xpValueComponent != null && projectileSource.GetComponent<XPTrackerComponent>() != null) {
             projectileSource.GetComponent<XPTrackerComponent>().AddXP(xpValueComponent.XPValue);

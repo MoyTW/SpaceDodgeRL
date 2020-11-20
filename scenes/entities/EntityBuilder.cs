@@ -283,7 +283,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(PathAIComponent.Create(path));
 
       e.AddComponent(ActionTimeComponent.Create(currentTick)); // Should it go instantly or should it wait for its turn...?
-      e.AddComponent(AttackerComponent.Create(source, power));
+      e.AddComponent(AttackerComponent.Create(source.EntityId, power));
       e.AddComponent(CollisionComponent.Create(false, false, true, true));
       e.AddComponent(DisplayComponent.Create(displayData.TexturePath, false));
       e.AddComponent(SpeedComponent.Create(null, speed));
