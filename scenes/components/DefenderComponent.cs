@@ -1,18 +1,21 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Godot;
+using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class DefenderComponent : Component {
+  public class DefenderComponent : Component, Savable {
     public static readonly string ENTITY_GROUP = "DEFENDER_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
-    public int BaseDefense { get; private set; }
+    [JsonInclude] public int BaseDefense { get; private set; }
     // Right now we don't do defense buffs, but we could later!
     public int Defense { get => this.BaseDefense; }
-    public int MaxHp { get; private set; }
-    public int CurrentHp { get; private set; }
-    public bool ShouldLogDamage { get; private set; }
-    public bool IsInvincible { get; private set; }
+    [JsonInclude] public int MaxHp { get; private set; }
+    [JsonInclude] public int CurrentHp { get; private set; }
+    [JsonInclude] public bool ShouldLogDamage { get; private set; }
+    [JsonInclude] public bool IsInvincible { get; private set; }
 
     public static DefenderComponent Create(int baseDefense, int maxHp, int currentHp = int.MinValue, bool logDamage = true, bool isInvincible = false) {
       var component = new DefenderComponent();
@@ -28,6 +31,10 @@ namespace SpaceDodgeRL.scenes.components {
       component.IsInvincible = isInvincible;
 
       return component;
+    }
+
+    public static DefenderComponent Create(string saveData) {
+      return JsonSerializer.Deserialize<DefenderComponent>(saveData);
     }
 
     public void AddBaseMaxHp(int hp, bool alsoAddCurrentHp = true) {
@@ -57,5 +64,13 @@ namespace SpaceDodgeRL.scenes.components {
     public void RemoveHp(int hp) {
       this.CurrentHp -= hp;
     }
+
+    public string Save() {
+      return JsonSerializer.Serialize(this);
+    }
+
+    public void NotifyAttached(Entity parent) { }
+
+    public void NotifyDetached(Entity parent) { }
   }
 }
