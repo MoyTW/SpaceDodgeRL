@@ -46,8 +46,6 @@ namespace SpaceDodgeRL.tests.scenes.components {
       Assert.Equal(component.AutopilotPath.CurrentPosition, newComponent.AutopilotPath.CurrentPosition);
     }
 
-    // TODO: Right. Entity inherits Node, so this...errors. This is deeply vexing.
-    /*
     [Fact]
     public void PullsStatusEffectTrackerFromEntity() {
       var entity = new Entity();
@@ -63,6 +61,5 @@ namespace SpaceDodgeRL.tests.scenes.components {
       trackerComponent.AddEffect(new StatusEffectTimedPowerBoost(10, 5, 5));
       Assert.Equal(15, playerComponent.CuttingLaserPower);
     }
-    */
   }
 }
