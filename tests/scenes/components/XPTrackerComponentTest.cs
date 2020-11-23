@@ -49,8 +49,8 @@ namespace SpaceDodgeRL.tests.scenes.components {
       Assert.Equal(component.UnusedLevelUps[1], newComponent.UnusedLevelUps[1]);
       Assert.Equal(component.NextLevelAtXP, newComponent.NextLevelAtXP);
       Assert.Equal(component.XPToNextLevel, newComponent.XPToNextLevel);
-      Assert.Equal(component.ChosenLevelUps[0], newComponent.ChosenLevelUps[0]);
-      Assert.Equal(component.ChosenLevelUps[1], newComponent.ChosenLevelUps[1]);
+      Assert.Equal(component.ChosenLevelUps[2], newComponent.ChosenLevelUps[2]);
+      Assert.Equal(component.ChosenLevelUps[3], newComponent.ChosenLevelUps[3]);
     }
   }
 }
