@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  [JsonConverter(typeof(PositionComponentConverter))]
   public class PositionComponent : Node, Component, Savable {
     private static PackedScene _scenePrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
 
@@ -41,7 +40,8 @@ namespace SpaceDodgeRL.scenes.components {
     }
 
     public static PositionComponent Create(string saveData) {
-      return JsonSerializer.Deserialize<PositionComponent>(saveData);
+      var loaded = JsonSerializer.Deserialize<SaveData>(saveData);
+      return PositionComponent.Create(loaded.EncounterPosition, loaded.TexturePath);
     }
 
     private void Tween(Vector2 newPosition) {
@@ -55,20 +55,12 @@ namespace SpaceDodgeRL.scenes.components {
       return new Vector2(START_X + STEP_X * x, START_Y + STEP_Y * y);
     }
 
-    public string Save() {
-      return JsonSerializer.Serialize(this);
-    }
-
-    public void NotifyAttached(Entity parent) { }
-
-    public void NotifyDetached(Entity parent) { }
-  }
-
-  public class PositionComponentConverter : JsonConverter<PositionComponent> {
     private class SaveData {
-      public string EntityGroup { get; }
-      public EncounterPosition EncounterPosition { get; }
-      public string TexturePath { get; }
+      public string EntityGroup { get; set; }
+      public EncounterPosition EncounterPosition { get; set; }
+      public string TexturePath { get; set; }
+
+      public SaveData() { }
 
       public SaveData(PositionComponent component) {
         this.EntityGroup = PositionComponent.ENTITY_GROUP;
@@ -77,13 +69,12 @@ namespace SpaceDodgeRL.scenes.components {
       }
     }
 
-    public override PositionComponent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-      var saveData = JsonSerializer.Deserialize<SaveData>(reader.GetString(), options);
-      return PositionComponent.Create(saveData.EncounterPosition, saveData.TexturePath);
+    public string Save() {
+      return JsonSerializer.Serialize(new SaveData(this));
     }
 
-    public override void Write(Utf8JsonWriter writer, PositionComponent value, JsonSerializerOptions options) {
-      JsonSerializer.Serialize<SaveData>(writer, new SaveData(value), options);
-    }
+    public void NotifyAttached(Entity parent) { }
+
+    public void NotifyDetached(Entity parent) { }
   }
 }

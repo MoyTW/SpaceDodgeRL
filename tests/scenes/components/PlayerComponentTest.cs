@@ -49,6 +49,7 @@ namespace SpaceDodgeRL.tests.scenes.components {
     [Fact]
     public void PullsStatusEffectTrackerFromEntity() {
       var entity = new Entity();
+      entity.Init("", "");
       
       var playerComponent = PlayerComponent.Create(baseCuttingLaserPower: 5);
       entity.AddComponent(playerComponent);
