@@ -498,12 +498,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       JsonSerializerOptions options = new JsonSerializerOptions {
         //ReferenceHandler = ReferenceHandler.Preserve
       };
-      string serializedComponents = JsonSerializer.Serialize(this.Player._components.Select(c => (object)c), options);
+      var serializedComponents = JsonSerializer.Serialize(this.Player._components);
       GD.Print(serializedComponents);
       var deserialized = JsonSerializer.Deserialize<List<object>>(serializedComponents);
-      foreach(object o in deserialized) {
- //       GD.Print(o);
-      }
+      GD.Print(deserialized);
     }
   }
 }
