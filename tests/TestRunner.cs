@@ -77,6 +77,8 @@ namespace SpaceDodgeRL.tests {
         successfulTests.Count + failedTests.Count, successfulTests.Count, failedTests.Count);
 
       output.Flush();
+
+      GetTree().Quit();
     }
   }
 }
