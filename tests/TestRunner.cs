@@ -78,6 +78,10 @@ namespace SpaceDodgeRL.tests {
 
       output.Flush();
 
+      GD.Print("Test run completed!");
+      GD.Print(String.Format("{0} tests ran: {1} successful, {2} failed.",
+        successfulTests.Count + failedTests.Count, successfulTests.Count, failedTests.Count));
+
       GetTree().Quit();
     }
   }
