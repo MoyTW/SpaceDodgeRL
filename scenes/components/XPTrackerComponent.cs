@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.Json;
 using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components {
@@ -19,7 +20,7 @@ namespace SpaceDodgeRL.scenes.components {
   /**
    * Tracks levels and level-up bonuses.
    */
-  public class XPTrackerComponent : Component {
+  public class XPTrackerComponent : Component, Savable {
     public static readonly string ENTITY_GROUP = "XP_TRACKER_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
@@ -50,6 +51,10 @@ namespace SpaceDodgeRL.scenes.components {
       component._chosenLevelUps = chosenLevelUps != null ? chosenLevelUps : new Dictionary<int, string>();
 
       return component;
+    }
+
+    public static XPTrackerComponent Create(string saveData) {
+      return JsonSerializer.Deserialize<XPTrackerComponent>(saveData);
     }
 
     /**
@@ -84,5 +89,13 @@ namespace SpaceDodgeRL.scenes.components {
         throw new NotImplementedException("what is the level-up of " + chosenLevelUp);
       }
     }
+
+    public string Save() {
+      return JsonSerializer.Serialize(this);
+    }
+
+    public void NotifyAttached(Entity parent) { }
+
+    public void NotifyDetached(Entity parent) { }
   }
 }
