@@ -62,12 +62,12 @@ namespace SpaceDodgeRL.scenes.entities {
       return newEntity;
     }
 
-    private static Entity CreateScoutEntity(ActivationGroup activationGroup, int currentTick) {
+    private static Entity CreateScoutEntity(string activationGroupId, int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "scout");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
-      e.AddComponent(new ScoutAIComponent(activationGroup));
+      e.AddComponent(new ScoutAIComponent(activationGroupId));
 
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
@@ -80,12 +80,12 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    private static Entity CreateFighterEntity(ActivationGroup activationGroup, int currentTick) {
+    private static Entity CreateFighterEntity(string activationGroupId, int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "fighter");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
-      e.AddComponent(new FighterAIComponent(activationGroup));
+      e.AddComponent(new FighterAIComponent(activationGroupId));
 
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
@@ -98,12 +98,12 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    private static Entity CreateGunshipEntity(ActivationGroup activationGroup, int currentTick) {
+    private static Entity CreateGunshipEntity(string activationGroupId, int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "gunship");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
-      e.AddComponent(new GunshipAIComponent(activationGroup));
+      e.AddComponent(new GunshipAIComponent(activationGroupId));
 
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
@@ -116,12 +116,12 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    private static Entity CreateFrigateEntity(ActivationGroup activationGroup, int currentTick) {
+    private static Entity CreateFrigateEntity(string activationGroupId, int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "frigate");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
-      e.AddComponent(new FrigateAIComponent(activationGroup));
+      e.AddComponent(new FrigateAIComponent(activationGroupId));
 
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
@@ -134,12 +134,12 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    private static Entity CreateDestroyerEntity(ActivationGroup activationGroup, int currentTick) {
+    private static Entity CreateDestroyerEntity(string activationGroupId, int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "destroyer");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
-      e.AddComponent(new DestroyerAIComponent(activationGroup));
+      e.AddComponent(new DestroyerAIComponent(activationGroupId));
 
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
@@ -152,12 +152,12 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    private static Entity CreateCruiserEntity(ActivationGroup activationGroup, int currentTick) {
+    private static Entity CreateCruiserEntity(string activationGroupId, int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "cruiser");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
-      e.AddComponent(new CruiserAIComponent(activationGroup));
+      e.AddComponent(new CruiserAIComponent(activationGroupId));
 
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
@@ -170,12 +170,12 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    private static Entity CreateCarrierEntity(ActivationGroup activationGroup, int currentTick) {
+    private static Entity CreateCarrierEntity(string activationGroupId, int currentTick) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "carrier");
 
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
-      e.AddComponent(new CarrierAIComponent(activationGroup));
+      e.AddComponent(new CarrierAIComponent(activationGroupId));
 
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
@@ -222,21 +222,21 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    public static Entity CreateEnemyByEntityDefId(string enemyDefId, ActivationGroup activationGroup, int currentTick) {
+    public static Entity CreateEnemyByEntityDefId(string enemyDefId, string activationGroupId, int currentTick) {
       if (enemyDefId == EntityDefId.SCOUT) {
-        return EntityBuilder.CreateScoutEntity(activationGroup, currentTick);
+        return EntityBuilder.CreateScoutEntity(activationGroupId, currentTick);
       } else if (enemyDefId == EntityDefId.FIGHTER) {
-        return EntityBuilder.CreateFighterEntity(activationGroup, currentTick);
+        return EntityBuilder.CreateFighterEntity(activationGroupId, currentTick);
       } else if (enemyDefId == EntityDefId.GUNSHIP) {
-         return EntityBuilder.CreateGunshipEntity(activationGroup, currentTick);
+         return EntityBuilder.CreateGunshipEntity(activationGroupId, currentTick);
       } else if (enemyDefId == EntityDefId.FRIGATE) {
-        return EntityBuilder.CreateFrigateEntity(activationGroup, currentTick);
+        return EntityBuilder.CreateFrigateEntity(activationGroupId, currentTick);
       } else if (enemyDefId == EntityDefId.DESTROYER) {
-        return EntityBuilder.CreateDestroyerEntity(activationGroup, currentTick);
+        return EntityBuilder.CreateDestroyerEntity(activationGroupId, currentTick);
       } else if (enemyDefId == EntityDefId.CRUISER) {
-        return EntityBuilder.CreateCruiserEntity(activationGroup, currentTick);
+        return EntityBuilder.CreateCruiserEntity(activationGroupId, currentTick);
       } else if (enemyDefId == EntityDefId.CARRIER) {
-        return EntityBuilder.CreateCarrierEntity(activationGroup, currentTick);
+        return EntityBuilder.CreateCarrierEntity(activationGroupId, currentTick);
       } else {
         throw new NotImplementedException("No mapping defined for " + enemyDefId);
       }

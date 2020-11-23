@@ -8,26 +8,13 @@ using System.Collections.Generic;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class ScoutAIComponent : AIComponent {
+  public class ScoutAIComponent : ActivatableAIComponent {
     public static readonly string ENTITY_GROUP = "SCOUT_AI_COMPONENT_GROUP";
-    public string EntityGroup => ENTITY_GROUP;
+    public override string EntityGroup => ENTITY_GROUP;
 
-    private ActivationGroup _activationGroup;
+    public ScoutAIComponent(string activationGroupId) : base(activationGroupId) { }
 
-    public ScoutAIComponent(ActivationGroup activationGroup) {
-      this._activationGroup = activationGroup;
-    }
-
-    public List<EncounterAction> DecideNextAction(EncounterState state, Entity parent) {
-      if (!_activationGroup.IsActive) {
-        var position = parent.GetComponent<PositionComponent>().EncounterPosition;
-        if (state.FoVCache.Contains(position.X, position.Y)) {
-          _activationGroup.Activate();
-        } else {
-          return new List<EncounterAction>() { new WaitAction(parent.EntityId) };
-        }
-      }
-
+    public override List<EncounterAction> _DecideNextAction(EncounterState state, Entity parent) {
       var actions = new List<EncounterAction>();
 
       var parentPos = parent.GetComponent<PositionComponent>().EncounterPosition;

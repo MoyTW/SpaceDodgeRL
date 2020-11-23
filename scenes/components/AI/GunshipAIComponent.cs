@@ -8,30 +8,16 @@ using System.Collections.Generic;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class GunshipAIComponent : AIComponent {
+  public class GunshipAIComponent : ActivatableAIComponent {
     public static readonly string ENTITY_GROUP = "GUNSHIP_AI_COMPONENT_GROUP";
-    public string EntityGroup => ENTITY_GROUP;
-
-    private ActivationGroup _activationGroup;
+    public override string EntityGroup => ENTITY_GROUP;
 
     private int _shotgunCooldown = 3;
     private int _currentShotgunCooldown = 0;
 
-    public GunshipAIComponent(ActivationGroup activationGroup) {
-      _activationGroup = activationGroup;
-    }
+    public GunshipAIComponent(string activationGroupId) : base (activationGroupId) { }
 
-    public List<EncounterAction> DecideNextAction(EncounterState state, Entity parent) {
-      // TODO: Pull this out & don't copy/paste in every AI
-      if (!_activationGroup.IsActive) {
-        var position = parent.GetComponent<PositionComponent>().EncounterPosition;
-        if (state.FoVCache.Contains(position.X, position.Y)) {
-          _activationGroup.Activate();
-        } else {
-          return new List<EncounterAction>() { new WaitAction(parent.EntityId) };
-        }
-      }
-
+    public override List<EncounterAction> _DecideNextAction(EncounterState state, Entity parent) {
       var actions = new List<EncounterAction>();
       var parentPos = parent.GetComponent<PositionComponent>().EncounterPosition;
       var playerPos = state.Player.GetComponent<PositionComponent>().EncounterPosition;

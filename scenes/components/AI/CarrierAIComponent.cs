@@ -9,31 +9,17 @@ using System.Collections.Generic;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class CarrierAIComponent : AIComponent {
+  public class CarrierAIComponent : ActivatableAIComponent {
     public static readonly string ENTITY_GROUP = "CARRIER_AI_COMPONENT_GROUP";
-    public string EntityGroup => ENTITY_GROUP;
-
-    private ActivationGroup _activationGroup;
+    public override string EntityGroup => ENTITY_GROUP;
 
     private int _flakCooldown = 9;
     private int _currentFlakCooldown = 0;
     private string[] _launchTable = new string[] { EntityDefId.SCOUT, EntityDefId.FIGHTER, EntityDefId.FIGHTER };
 
-    public CarrierAIComponent(ActivationGroup activationGroup) {
-      _activationGroup = activationGroup;
-    }
+    public CarrierAIComponent(string activationGroupId) : base(activationGroupId) { }
 
-    public List<EncounterAction> DecideNextAction(EncounterState state, Entity parent) {
-      // TODO: Pull this out & don't copy/paste in every AI
-      if (!_activationGroup.IsActive) {
-        var position = parent.GetComponent<PositionComponent>().EncounterPosition;
-        if (state.FoVCache.Contains(position.X, position.Y)) {
-          _activationGroup.Activate();
-        } else {
-          return new List<EncounterAction>() { new WaitAction(parent.EntityId) };
-        }
-      }
-
+    public override List<EncounterAction> _DecideNextAction(EncounterState state, Entity parent) {
       var actions = new List<EncounterAction>();
       var parentPos = parent.GetComponent<PositionComponent>().EncounterPosition;
       // TODO: Player death! if you die this just NPEs, which aside from being inelegant kills the program.
@@ -43,7 +29,7 @@ namespace SpaceDodgeRL.scenes.components.AI {
 
       // Always launch randomly chosen strike craft - immediately paths one square to get it out of the carrier's square
       var chosenEntityDef = this._launchTable[state.EncounterRand.Next(3)];
-      var strikeCraft = EntityBuilder.CreateEnemyByEntityDefId(chosenEntityDef, this._activationGroup, state.CurrentTick);
+      var strikeCraft = EntityBuilder.CreateEnemyByEntityDefId(chosenEntityDef, this.ActivationGroupId, state.CurrentTick);
       actions.Add(new SpawnEntityAction(parent.EntityId, strikeCraft, parentPos, true));
       var path = Pathfinder.AStarWithNewGrid(parentPos, playerPos, state);
       // TODO: If you park adjacent the carrier, spawns will try to path literally into you and be stuck on the carrier square.

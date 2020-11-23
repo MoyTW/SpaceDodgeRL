@@ -36,6 +36,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public ReadOnlyCollection<EncounterZone> Zones { get => _zones.AsReadOnly(); }
     private Dictionary<string, Entity> _entitiesById;
 
+    private Dictionary<string, bool> _activationTracker;
+
     private ActionTimeline _actionTimeline;
     public int CurrentTick { get => _actionTimeline.CurrentTick; }
     public Entity NextEntity { get => _actionTimeline.NextEntity; }
@@ -213,6 +215,17 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this._encounterTiles[targetPosition.X, targetPosition.Y].AddEntity(entity);
     }
 
+    public bool GroupActivated(string activationGroupId) {
+      if (!this._activationTracker.ContainsKey(activationGroupId)) {
+        this._activationTracker[activationGroupId] = false;
+      }
+      return this._activationTracker[activationGroupId];
+    }
+
+    public void ActivateGroup(string activationGroupId) {
+      this._activationTracker[activationGroupId] = true;
+    }
+
     #endregion
     // ##########################################################################################################################
     #region Display caches
@@ -323,10 +336,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       zone.ReadoutEncounterName = encounterDef.Name;
 
       if (encounterDef.EntityDefIds.Count > 0) {
-        ActivationGroup activationGroup = new ActivationGroup();
+        string activationGroupId = Guid.NewGuid().ToString();
         foreach (string entityDefId in encounterDef.EntityDefIds) {
           var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
-          var newEntity = EntityBuilder.CreateEnemyByEntityDefId(entityDefId, activationGroup, state.CurrentTick);
+          var newEntity = EntityBuilder.CreateEnemyByEntityDefId(entityDefId, activationGroupId, state.CurrentTick);
           state.PlaceEntity(newEntity, unblockedPosition);
         }
       }
@@ -469,6 +482,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // This class is kinda becoming a monster WRT "here's a cached thing for perf/getting around Godot reasons!"
       this._encounterLog = new List<string>();
       this._entitiesById = new Dictionary<string, Entity>();
+      this._activationTracker = new Dictionary<string, bool>();
       this._actionTimeline = new ActionTimeline(0);
       // We also need to reset the player's action time
       player.GetComponent<ActionTimeComponent>().SetNextTurnAtTo(0);
