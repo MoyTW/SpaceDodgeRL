@@ -16,7 +16,7 @@ namespace SpaceDodgeRL.library.encounter {
     public bool AtEnd { get => CurrentStep >= FullPath.Count - 1; }
 
     public EncounterPath(List<EncounterPosition> fullPath, int currentStep = 0) {
-      if (fullPath == null) {
+      if (fullPath == null || fullPath.Count == 0) {
         throw new NotImplementedException("You can't make a path with a list that's null!");
       }
       this.CurrentStep = currentStep;
