@@ -37,7 +37,6 @@ namespace SpaceDodgeRL.tests.scenes.components {
       component.AddEntity(battery2);
 
       string saved = component.Save();
-
       var newComponent = InventoryComponent.Create(saved);
 
       Assert.Equal(component.InventorySize, newComponent.InventorySize);
@@ -59,6 +58,32 @@ namespace SpaceDodgeRL.tests.scenes.components {
       Assert.True(newItems[2].GetComponent<UseEffectBoostPowerComponent>() != null);
       Assert.Equal(componentItems[2].GetComponent<UseEffectBoostPowerComponent>().Duration,
         newItems[2].GetComponent<UseEffectBoostPowerComponent>().Duration);
+    }
+
+    [Fact]
+    public void NestedInventoriesSerializeAndDeserializeCorrectly() {
+      var outerInventory = InventoryComponent.Create(20);
+
+      var waterskin = Entity.Create("waterskinId", "waterskinName");
+      waterskin.AddComponent(StorableComponent.Create());
+      var waterskinInventory = InventoryComponent.Create(10);
+      
+      var nested = Entity.Create("nestedId", "nestedName");
+      nested.AddComponent(StorableComponent.Create());
+
+      waterskinInventory.AddEntity(nested);
+      waterskin.AddComponent(waterskinInventory);
+
+      outerInventory.AddEntity(waterskin);
+
+      string saved = outerInventory.Save();
+      var newComponent = InventoryComponent.Create(saved);
+
+      Assert.Equal("waterskinId", newComponent._StoredEntities[0].EntityId);
+      Assert.Equal("waterskinName", newComponent._StoredEntities[0].EntityName);
+      Assert.NotNull(newComponent._StoredEntities[0].GetComponent<StorableComponent>());
+      Assert.Equal("nestedId", newComponent._StoredEntities[0].GetComponent<InventoryComponent>()._StoredEntities[0].EntityId);
+      Assert.Equal("nestedName", newComponent._StoredEntities[0].GetComponent<InventoryComponent>()._StoredEntities[0].EntityName);      
     }
   }
 }
