@@ -38,7 +38,7 @@ public class AutopilotMenu : HBoxContainer {
       var systemButton = new Button();
       systemButton.Text = zone.ZoneName;
       systemButton.AddToGroup(AutopilotMenu.ZONE_BUTTON_GROUP);
-      systemButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone });
+      systemButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
       // TODO: It doesn't scale if you resize the window
       // TODO: Make it look less dumb
       float x1Percentage = (zone.X1 + 1) / (float)mapWidth;
@@ -60,7 +60,7 @@ public class AutopilotMenu : HBoxContainer {
       // Add the sidebar
       var sidebarButton = new Button();
       sidebarButton.Text = zone.ZoneName;
-      sidebarButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone });
+      sidebarButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
       sidebarContainer.AddChild(sidebarButton);
     }
   }
@@ -106,8 +106,8 @@ public class AutopilotMenu : HBoxContainer {
     _closeButton.GrabFocus();
   }
 
-  private void OnButtonPressed(EncounterZone zone) {
+  private void OnButtonPressed(string zoneId) {
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-    sceneManager.CloseAutopilotMenu(zone);
+    sceneManager.CloseAutopilotMenu(zoneId);
   }
 }

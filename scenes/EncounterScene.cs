@@ -48,9 +48,9 @@ namespace SpaceDodgeRL.scenes {
     }
 
     // This could probably be a signal.
-    public void HandleAutopilotMenuClosed(EncounterZone selectedZone) {
-      if (selectedZone != null) {
-        encounterRunner.HandleAutopilotSelection(selectedZone);
+    public void HandleAutopilotMenuClosed(string selectedZoneId) {
+      if (selectedZoneId != null) {
+        encounterRunner.HandleAutopilotSelection(selectedZoneId);
       }
     }
 

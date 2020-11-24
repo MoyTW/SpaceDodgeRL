@@ -180,9 +180,9 @@ namespace SpaceDodgeRL.scenes.encounter {
       sceneManager.ShowInventoryMenu(state);
     }
 
-    public void HandleAutopilotSelection(EncounterZone selectedZone) {
+    public void HandleAutopilotSelection(string selectedZoneId) {
       var playerId = this._encounterState.Player.EntityId;
-      Rulebook.ResolveAction(new AutopilotBeginAction(playerId, selectedZone.ZoneId), this._encounterState);
+      Rulebook.ResolveAction(new AutopilotBeginAction(playerId, selectedZoneId), this._encounterState);
       Rulebook.ResolveEndTurn(this._encounterState.Player.EntityId, this._encounterState);
     }
 

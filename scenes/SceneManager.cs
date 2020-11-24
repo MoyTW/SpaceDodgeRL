@@ -33,15 +33,15 @@ namespace SpaceDodgeRL.scenes {
       CallDeferred(nameof(DeferredSwitchScene), this._autopilotMenu);
     }
 
-    public void CloseAutopilotMenu(EncounterZone selectedZone) {
-      CallDeferred(nameof(DeferredCloseAutopilotMenu), selectedZone);
+    public void CloseAutopilotMenu(string selectedZoneId) {
+      CallDeferred(nameof(DeferredCloseAutopilotMenu), selectedZoneId);
     }
 
-    private void DeferredCloseAutopilotMenu(EncounterZone selectedZone) {
+    private void DeferredCloseAutopilotMenu(string selectedZoneId) {
       var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
       sceneStack.RemoveAt(sceneStack.Count - 1);
 
-      previousScene.HandleAutopilotMenuClosed(selectedZone);
+      previousScene.HandleAutopilotMenuClosed(selectedZoneId);
       DeferredSwitchScene(previousScene);
     }
 
