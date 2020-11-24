@@ -368,19 +368,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.InitFoWOverlay();
       this.UpdateFoVAndFoW();
       this.UpdatePlayerOverlays();
-
-      // TODO: remove this & set components back to private
-      JsonSerializerOptions options = new JsonSerializerOptions {
-        //ReferenceHandler = ReferenceHandler.Preserve
-      };
-      var serializedComponents = JsonSerializer.Serialize(this.Player._Components);
-      GD.Print(serializedComponents);
-      var deserialized = JsonSerializer.Deserialize<List<object>>(serializedComponents);
-      GD.Print(deserialized);
-      GD.Print("#####");
-      // var stateSaveData = JsonSerializer.Serialize<SaveData>(this.ToSaveData());
-      //GD.Print(stateSaveData);
-      // var state = EncounterState.FromSaveData(JsonSerializer.Deserialize<SaveData>(stateSaveData));
     }
 
     public class SaveData {
