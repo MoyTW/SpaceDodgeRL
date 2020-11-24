@@ -21,14 +21,14 @@ namespace SpaceDodgeRL.tests.scenes.components {
     [Fact]
     public void IncludesEntityGroup() {
       var component = PositionComponent.Create(new EncounterPosition(0, 0), "res://resources/tex_test.tres");
-      JsonElement deserialized = JsonSerializer.Deserialize<JsonElement>(component.Save());
+      JsonElement deserialized = JsonSerializer.Deserialize<JsonElement>(JsonSerializer.Serialize(component));
       Assert.Equal(PositionComponent.ENTITY_GROUP, deserialized.GetProperty("EntityGroup").GetString());
     }
 
     [Fact]
     public void SerializesAndDeserializesCorrectly() {
       var component = PositionComponent.Create(new EncounterPosition(23, -98), "res://resources/tex_test.tres");
-      string saved = component.Save();
+      string saved = JsonSerializer.Serialize(component);
 
       var newComponent = PositionComponent.Create(saved);
 

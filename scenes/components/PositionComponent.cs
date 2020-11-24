@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components {
 
+  [JsonConverter(typeof(PositionConverter))]
   public class PositionComponent : Node, Component, Savable {
     private static PackedScene _scenePrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
 
@@ -55,7 +56,7 @@ namespace SpaceDodgeRL.scenes.components {
       return new Vector2(START_X + STEP_X * x, START_Y + STEP_Y * y);
     }
 
-    private class SaveData {
+    public class SaveData {
       public string EntityGroup { get; set; }
       public EncounterPosition EncounterPosition { get; set; }
       public string TexturePath { get; set; }
@@ -76,5 +77,17 @@ namespace SpaceDodgeRL.scenes.components {
     public void NotifyAttached(Entity parent) { }
 
     public void NotifyDetached(Entity parent) { }
+  }
+
+  public class PositionConverter : JsonConverter<PositionComponent> {
+    public override PositionComponent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+      using (var doc = JsonDocument.ParseValue(ref reader)) {
+        return PositionComponent.Create(doc.RootElement.GetRawText());
+      }
+    }
+
+    public override void Write(Utf8JsonWriter writer, PositionComponent value, JsonSerializerOptions options) {
+      JsonSerializer.Serialize(writer, new PositionComponent.SaveData(value), options);
+    }
   }
 }
