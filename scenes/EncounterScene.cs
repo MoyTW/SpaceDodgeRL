@@ -24,7 +24,7 @@ namespace SpaceDodgeRL.scenes {
 
       // TODO: Proper state initialization & building & such!
       var player = EntityBuilder.CreatePlayerEntity(0);
-      EncounterState.InitState(player, 1);
+      EncounterState.ResetStateForNewLevel(player, 1);
     }
 
     // TODO: Decide if this is better placed directly onto the log label

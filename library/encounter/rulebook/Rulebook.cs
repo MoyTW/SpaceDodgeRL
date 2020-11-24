@@ -268,7 +268,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       var stairs = state.EntitiesAtPosition(actorPosition.X, actorPosition.Y)
                         .FirstOrDefault(e => e.GetComponent<StairsComponent>() != null);
       if (stairs != null) {
-        state.InitState(state.Player, state.DungeonLevel + 1);
+        state.ResetStateForNewLevel(state.Player, state.DungeonLevel + 1);
         return true;
       } else {
         return false;

@@ -54,7 +54,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state.MapHeight = height;
       state._encounterTiles = new EncounterTile[width, height];
       for (int x = 0; x < width; x++) {
-        for (int y = 0; y < width; y++) {
+        for (int y = 0; y < height; y++) {
           state._encounterTiles[x, y] = new EncounterTile();
         }
       }

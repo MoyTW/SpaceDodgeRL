@@ -17,9 +17,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
     // TODO: put this somewhere proper!
     public static int PLAYER_VISION_RADIUS = 10;
+    public static int EncounterLogSize = 50;
 
     // Encounter Log
-    public int EncounterLogSize = 50;
     private List<string> _encounterLog;
     public ReadOnlyCollection<string> EncounterLog { get => _encounterLog.AsReadOnly(); }
     [Signal]
@@ -310,15 +310,15 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // ##########################################################################################################################
 
     public void LogMessage(string bbCodeMessage) {
-      if (this._encounterLog.Count >= this.EncounterLogSize) {
+      if (this._encounterLog.Count >= EncounterState.EncounterLogSize) {
         this._encounterLog.RemoveAt(0);
       }
       this._encounterLog.Add(bbCodeMessage);
-      this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, this.EncounterLogSize);
+      this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, EncounterState.EncounterLogSize);
     }
 
     // TODO: Move into map gen & save/load
-    public void InitState(Entity player, int dungeonLevel) {
+    public void ResetStateForNewLevel(Entity player, int dungeonLevel) {
 
       string ENCOUNTER_CAMERA_GROUP = "ENCOUNTER_CAMERA_GROUP";
       // TODO: Rather than re-using a state when we switch levels, I'd rather sub in a new one, but I think I need to think
@@ -372,6 +372,89 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       GD.Print(serializedComponents);
       var deserialized = JsonSerializer.Deserialize<List<object>>(serializedComponents);
       GD.Print(deserialized);
+      GD.Print("#####");
+      var stateSaveData = JsonSerializer.Serialize<SaveData>(this.ToSaveData());
+      //GD.Print(stateSaveData);
+      var state = EncounterState.FromSaveData(JsonSerializer.Deserialize<SaveData>(stateSaveData));
+    }
+
+    public class SaveData {
+      public List<string> EncounterLog { get; set; }
+      public int MapWidth { get; set; }
+      public int MapHeight { get; set; }
+      public EncounterTile.SaveData[][] EncounterTiles { get; set; }
+      public List<EncounterZone> Zones { get; set; }
+      public Dictionary<string, Entity> EntitiesById { get; set; }
+      public Dictionary<string, bool> ActivationTracker { get; set; }
+      public ActionTimeline.SaveData ActionTimeline { get; set; }
+      public string PlayerId { get; set; }
+      public int LevelsInDungeon { get; set; }
+      public int DungeonLevel { get; set; }
+      // For now we're just gonna...not deal with the rand; that's a whole OTHER issue. Probably solution is re-seed every
+      // invocation and store the re-seed though. Or we just say "eh we don't care, it can go be random however".
+      // public Random EncounterRand { get; private set; }
+    }
+
+    public static EncounterState FromSaveData(SaveData data) {
+      PackedScene _encounterPrefab = GD.Load<PackedScene>("res://scenes/encounter/state/EncounterState.tscn");
+      EncounterState state = _encounterPrefab.Instance() as EncounterState;
+
+      state._encounterLog = data.EncounterLog;
+      state.MapWidth = data.MapWidth;
+      state.MapHeight = data.MapHeight;
+      state._encounterTiles = new EncounterTile[data.MapHeight, data.MapHeight];
+      for (int x = 0; x < data.MapWidth; x++) {
+        for (int y = 0; y < data.MapHeight; y++) {
+          state._encounterTiles[x, y] = EncounterTile.FromSaveData(data.EncounterTiles[x][y], data.EntitiesById);
+        }
+      }
+      state._zones = data.Zones;
+      state._entitiesById = data.EntitiesById;
+      state._activationTracker = data.ActivationTracker;
+      state._actionTimeline = ActionTimeline.FromSaveData(data.ActionTimeline, data.EntitiesById);
+      state.Player = data.EntitiesById[data.PlayerId];
+      // TODO: Dungeon height
+      state.DungeonLevel = data.DungeonLevel;
+
+      // TODO: save rand
+      state.EncounterRand = new Random(1);
+
+      string ENCOUNTER_CAMERA_GROUP = "ENCOUNTER_CAMERA_GROUP";
+      var camera = new Camera2D();
+      camera.AddToGroup(ENCOUNTER_CAMERA_GROUP);
+      camera.Current = true;
+      state.Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
+
+      // Init FoW overlay as all back
+      state.InitFoWOverlay();
+      state.UpdateFoVAndFoW();
+      state.UpdatePlayerOverlays();
+
+      return state;
+    }
+
+    public SaveData ToSaveData() {
+      var data = new SaveData();
+
+      data.EncounterLog = this._encounterLog;
+      data.MapWidth = this.MapWidth;
+      data.MapHeight = this.MapHeight;
+      data.EncounterTiles = new EncounterTile.SaveData[data.MapWidth][];
+      for (int x = 0; x < data.MapWidth; x++) {
+        data.EncounterTiles[x] = new EncounterTile.SaveData[data.MapHeight];
+        for (int y = 0; y < data.MapHeight; y++) {
+          data.EncounterTiles[x][y] = this._encounterTiles[x, y].ToSaveData();
+        }
+      }
+      data.Zones = this._zones;
+      data.EntitiesById = this._entitiesById;
+      data.ActivationTracker = this._activationTracker;
+      data.ActionTimeline = this._actionTimeline.ToSaveData();
+      data.PlayerId = this.Player.EntityId;
+      data.LevelsInDungeon = this.LevelsInDungeon;
+      data.DungeonLevel = this.DungeonLevel;
+
+      return data;
     }
   }
 }
