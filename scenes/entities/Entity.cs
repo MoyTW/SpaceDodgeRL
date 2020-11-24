@@ -2,6 +2,8 @@ using Godot;
 using SpaceDodgeRL.scenes.components;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.entities {
 
@@ -9,9 +11,8 @@ namespace SpaceDodgeRL.scenes.entities {
 
     public static readonly string ENTITY_GROUP = "groupEntity";
 
-    private string _id, _name;
-    public string EntityId { get => _id; }
-    public string EntityName { get => _name; }
+    [JsonInclude] public string EntityId { get; private set; }
+    [JsonInclude] public string EntityName { get; private set; }
 
     // Currently we make the assumption that an Entity can have 1 and only 1 of each node of any particular inheritance tree. So,
     // a node can only have 1 AIComponent, for example. This might change if we model, I don't know, a status effect as a node -
@@ -19,21 +20,56 @@ namespace SpaceDodgeRL.scenes.entities {
     // logically nonsensical. So, the assumption at least now isn't that terrible.
     //
     // I will admit that the implementation is imperfect.
-    public List<Component> _components;
+    public List<Component> _Components { get; private set; }
     private Dictionary<Type, Component> _childTypeToComponent;
     private Dictionary<Component, List<Type>> _childComponentToTypes;
 
-    public void Init(string id, string name) {
-      _id = id;
-      _name = name;
-      _components = new List<Component>();
-      _childTypeToComponent = new Dictionary<Type, Component>();
-      _childComponentToTypes = new Dictionary<Component, List<Type>>();
-      AddToGroup(ENTITY_GROUP);
+    // TODO: Clean this up
+    private class SaveData {
+      public string EntityId { get; set; }
+      public string EntityName { get; set; }
+      public List<Component> Components { get; set; }
+
+      public SaveData() { }
+
+      public SaveData(Entity entity) {
+        this.EntityId = entity.EntityId;
+        this.EntityName = entity.EntityName;
+        this.Components = entity._Components;
+      }
+    }
+
+    private Entity Init(string entityId, string entityName) {
+      this.EntityId = entityId;
+      this.EntityName = entityName;
+      this._Components = new List<Component>();
+      this._childTypeToComponent = new Dictionary<Type, Component>();
+      this._childComponentToTypes = new Dictionary<Component, List<Type>>();
+      this.AddToGroup(ENTITY_GROUP);
+      return this;
+    }
+
+    public static Entity Create(string entityId, string entityName) {
+      return new Entity().Init(entityId, entityName);
+    }
+
+    public static Entity Create(string saveData) {
+      var loaded = JsonSerializer.Deserialize<SaveData>(saveData);
+
+      var entity = new Entity().Init(entityId: loaded.EntityId, entityName: loaded.EntityName);
+      foreach(var component in loaded.Components) {
+        entity.AddComponent(component);
+      }
+
+      return entity;
+    }
+
+    public string Save() {
+      return JsonSerializer.Serialize(new SaveData(this));
     }
 
     public override void _Ready() {
-      if (_id == null || _name == null) {
+      if (this.EntityId == null || this.EntityName == null) {
         throw new NotImplementedException("call Init() on your entities!");
       }
     }
@@ -50,7 +86,7 @@ namespace SpaceDodgeRL.scenes.entities {
       if (!(component is Component)) {
         throw new NotImplementedException();
       }
-      _components.Add(component);
+      _Components.Add(component);
       _childTypeToComponent[component.GetType()] = component;
       _childComponentToTypes[component] = new List<Type>() { component.GetType() };
       AddToGroup((component as Component).EntityGroup);
@@ -64,7 +100,7 @@ namespace SpaceDodgeRL.scenes.entities {
     }
 
     public void RemoveComponent(Component component) {
-      _components.Remove(component);
+      _Components.Remove(component);
       _childComponentToTypes[component].ForEach(t => _childTypeToComponent.Remove(t));
       _childComponentToTypes.Remove(component);
       RemoveFromGroup((component as Component).EntityGroup);
@@ -94,7 +130,7 @@ namespace SpaceDodgeRL.scenes.entities {
       }
 
       // TODO: Optimize for misses too (failed check always crawls all components; set dirty on component addition/removal)
-      foreach (Component child in this._components) {
+      foreach (Component child in this._Components) {
         if (child is T) {
           var typeT = typeof(T);
           this._childTypeToComponent[typeT] = (Component)child;

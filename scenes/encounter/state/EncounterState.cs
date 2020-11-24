@@ -512,7 +512,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       JsonSerializerOptions options = new JsonSerializerOptions {
         //ReferenceHandler = ReferenceHandler.Preserve
       };
-      var serializedComponents = JsonSerializer.Serialize(this.Player._components);
+      var serializedComponents = JsonSerializer.Serialize(this.Player._Components);
       GD.Print(serializedComponents);
       var deserialized = JsonSerializer.Deserialize<List<object>>(serializedComponents);
       GD.Print(deserialized);

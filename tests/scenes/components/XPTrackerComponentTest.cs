@@ -25,8 +25,7 @@ namespace SpaceDodgeRL.tests.scenes.components {
     public void SerializesAndDeserializesCorrectly() {
       // I attempted to mock this, but both NSubstitute and Moq apparently have serious issues with mocking the GetCOmponent<T>
       // call, and would crash. So...TODO: look into mocking!
-      var entity = new Entity();
-      entity.Init("", "");
+      var entity = Entity.Create("", "");
       var defenderComponent = DefenderComponent.Create(10, 10);
       entity.AddComponent(defenderComponent);
 

@@ -55,8 +55,7 @@ namespace SpaceDodgeRL.scenes.entities {
     };
 
     private static Entity CreateEntity(string id, string name) {
-      Entity newEntity = new Entity();
-      newEntity.Init(id, name);
+      Entity newEntity = Entity.Create(id, name);
       return newEntity;
     }
 
