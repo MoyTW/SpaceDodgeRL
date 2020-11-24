@@ -11,8 +11,6 @@ using SpaceDodgeRL.scenes.components.use;
 namespace SpaceDodgeRL.scenes.entities {
 
   public static class EntityBuilder {
-    // I assume these are all loaded at the same time as _Ready()?
-    private static PackedScene _entityPrefab = GD.Load<PackedScene>("res://scenes/entities/Entity.tscn");
 
     private static string _bPath = "res://resources/atlas_b.tres";
     private static string _iPath = "res://resources/atlas_i.tres";
@@ -57,7 +55,7 @@ namespace SpaceDodgeRL.scenes.entities {
     };
 
     private static Entity CreateEntity(string id, string name) {
-      Entity newEntity = _entityPrefab.Instance() as Entity;
+      Entity newEntity = new Entity();
       newEntity.Init(id, name);
       return newEntity;
     }
