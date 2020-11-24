@@ -92,9 +92,9 @@ public class AutopilotMenu : HBoxContainer {
       GD.Print("##### INTEL READOUT FOR " + state.DungeonLevel + " #####");
       foreach (EncounterZone zone in state.Zones) {
         var items = "items=";
-        foreach (Entity e in zone.ReadoutItems) { items += " " + e.EntityName; }
+        foreach (EntityReadout e in zone.ReadoutItems) { items += " " + e.EntityName; }
         var features = "features=";
-        foreach (Entity e in zone.ReadoutFeatures) { features += " " + e.EntityName; }
+        foreach (EntityReadout e in zone.ReadoutFeatures) { features += " " + e.EntityName; }
         GD.Print(zone.ZoneName + " : " + zone.ReadoutEncounterName + " : " + items + " : " + features);
       }
     } else {

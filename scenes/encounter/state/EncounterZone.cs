@@ -1,39 +1,50 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
+
+  public class EntityReadout {
+    [JsonInclude] public string EntityName { get; private set; }
+
+    public EntityReadout() { }
+
+    public EntityReadout(Entity entity) {
+      this.EntityName = entity.EntityName;
+    }
+  }
+
   /**
    * An EncounterZone indicates a region of the map which is analagous to a room in a dungeon. It is essentially a POI and
    * contains zero or more of enemies, items, interactables, or doodads. They are currently all recntangular but that's an
    * artifact of development not a design decision. Zones also serve as autopilot points, and have a string name and readout
    * data. Note that the entitites in the readout are not removed if they are destroyed/picked up!
    */
-  public class EncounterZone: Godot.Object {
+  public class EncounterZone {
     public static int MAX_UNBLOCKED_POSITION_ATTEMPTS = 250;
 
-    public string ZoneId { get; }
-    public EncounterPosition Position { get; }
-    public int Width { get; }
-    public int Height { get; }
+    [JsonInclude] public string ZoneId { get; private set; }
+    [JsonInclude] public EncounterPosition Position { get; private set; }
+    [JsonInclude] public int Width { get; private set; }
+    [JsonInclude] public int Height { get; private set; }
     // Readout information
-    public string ZoneName { get; }
-    public string ReadoutEncounterName { get; set; } // TODO: Consider making a builder for this
+    [JsonInclude] public string ZoneName { get; private set; }
+    [JsonInclude] public string ReadoutEncounterName { get; set; } // TODO: Consider making a builder for this
     // Note that these do not get removed from the zone when picked up, though they are removed from the EncounterState!
-    private List<Entity> _readoutItems;
-    public ReadOnlyCollection<Entity> ReadoutItems { get => _readoutItems.AsReadOnly(); }
-    private List<Entity> _readoutFeatures;
-    public ReadOnlyCollection<Entity> ReadoutFeatures { get => _readoutFeatures.AsReadOnly(); }
+    [JsonInclude] public List<EntityReadout> _ReadoutItems { get; private set; }
+    public ReadOnlyCollection<EntityReadout> ReadoutItems { get => _ReadoutItems.AsReadOnly(); }
+    [JsonInclude] public List<EntityReadout> _ReadoutFeatures { get; private set; }
+    public ReadOnlyCollection<EntityReadout> ReadoutFeatures { get => _ReadoutFeatures.AsReadOnly(); }
 
     public int X1 { get => Position.X; }
     public int X2 { get => Position.X + Width; }
     public int Y1 { get => Position.Y; }
     public int Y2 { get => Position.Y + Height; }
-    public EncounterPosition Center { get; private set; }
+    [JsonInclude] public EncounterPosition Center { get; private set; }
 
-    // This is required for Godot.Object
     public EncounterZone() { }
 
     public EncounterZone(string zoneId, EncounterPosition position, int width, int height, string zoneName) {
@@ -42,8 +53,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.Width = width;
       this.Height = height;
       this.ZoneName = zoneName;
-      this._readoutItems = new List<Entity>();
-      this._readoutFeatures = new List<Entity>();
+      this._ReadoutItems = new List<EntityReadout>();
+      this._ReadoutFeatures = new List<EntityReadout>();
 
       this.Center = new EncounterPosition((this.X1 + this.X2) / 2, (this.Y1 + this.Y2) / 2);
     }
@@ -68,11 +79,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     public void AddItemToReadout(Entity item) {
-      this._readoutItems.Add(item);
+      this._ReadoutItems.Add(new EntityReadout(item));
     }
 
     public void AddFeatureToReadout(Entity feature) {
-      this._readoutFeatures.Add(feature);
+      this._ReadoutFeatures.Add(new EntityReadout(feature));
     }
 
     public override string ToString() {
