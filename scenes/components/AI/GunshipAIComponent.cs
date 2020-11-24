@@ -5,17 +5,23 @@ using SpaceDodgeRL.library.encounter.rulebook.actions;
 using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class GunshipAIComponent : ActivatableAIComponent {
+  public class GunshipAIComponent : ActivatableAIComponent, Savable {
     public static readonly string ENTITY_GROUP = "GUNSHIP_AI_COMPONENT_GROUP";
     public override string EntityGroup => ENTITY_GROUP;
 
-    private int _shotgunCooldown = 3;
-    private int _currentShotgunCooldown = 0;
+    [JsonInclude] public int ShotgunCooldown { get; private set; } = 3;
+    [JsonInclude] public int CurrentShotgunCooldown { get; private set; } = 0;
 
     public GunshipAIComponent(string activationGroupId) : base (activationGroupId) { }
+
+    public static GunshipAIComponent Create(string saveData) {
+      return JsonSerializer.Deserialize<GunshipAIComponent>(saveData);
+    }
 
     public override List<EncounterAction> _DecideNextAction(EncounterState state, Entity parent) {
       var actions = new List<EncounterAction>();
@@ -31,18 +37,26 @@ namespace SpaceDodgeRL.scenes.components.AI {
         }
       }
       // Fire shotgun pellets=5, spread=5 every 4th turn, else fire single cannon (this is honestly a comical amount of spread though)
-      if (this._currentShotgunCooldown == 0) {
+      if (this.CurrentShotgunCooldown == 0) {
         actions.AddRange(FireProjectileAction.CreateSmallShotgunAction(parent.EntityId, playerPos, numPellets: 5, spread: 5, state.EncounterRand));
-        this._currentShotgunCooldown += this._shotgunCooldown;
+        this.CurrentShotgunCooldown += this.ShotgunCooldown;
       } else {
         actions.Add(FireProjectileAction.CreateSmallCannonAction(parent.EntityId, playerPos));
-        if (this._currentShotgunCooldown > 0) {
-          this._currentShotgunCooldown -= 1;
+        if (this.CurrentShotgunCooldown > 0) {
+          this.CurrentShotgunCooldown -= 1;
         }
       }
 
 
       return actions;
     }
+
+    public string Save() { 
+      return JsonSerializer.Serialize(this);
+    }
+
+    public void NotifyAttached(Entity parent) { }
+
+    public void NotifyDetached(Entity parent) { }
   }
 }
