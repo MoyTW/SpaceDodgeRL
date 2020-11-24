@@ -1,19 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Godot;
 using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class InventoryComponent : Component {
+  public class InventoryComponent : Component, Savable {
     public static readonly string ENTITY_GROUP = "INVENTORY_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
     public static readonly string ENTITY_IN_INVENTORY_GROUP = "ENTITY_IN_INVENTORY_GROUP";
 
-    private List<Entity> _storedEntities = new List<Entity>();
-    public int InventoryUsed { get => this._storedEntities.Count; }
-    public int InventorySize { get; private set; }
+    [JsonInclude] public List<Entity> _StoredEntities { get; private set; } = new List<Entity>();
+    public ReadOnlyCollection<Entity> StoredItems { get => this._StoredEntities.AsReadOnly(); }
+    public int InventoryUsed { get => this._StoredEntities.Count; }
+    [JsonInclude] public int InventorySize { get; private set; }
 
     public static InventoryComponent Create(int inventorySize) {
       var component = new InventoryComponent();
@@ -23,7 +26,9 @@ namespace SpaceDodgeRL.scenes.components {
       return component;
     }
 
-    public ReadOnlyCollection<Entity> StoredItems { get => this._storedEntities.AsReadOnly(); }
+    public static InventoryComponent Create(string saveData) {
+      return JsonSerializer.Deserialize<InventoryComponent>(saveData);
+    }
 
     // If this gets slow we should store in a map not a list
     public Entity StoredEntityById(string entityId) {
@@ -43,18 +48,26 @@ namespace SpaceDodgeRL.scenes.components {
     public void AddEntity(Entity entity) {
       if (!this.CanFit(entity)) {
         throw new InventoryFullCannotStoreItemException();
-      } else if (this._storedEntities.Contains(entity)) {
+      } else if (this._StoredEntities.Contains(entity)) {
         throw new InventoryAlreadyHasItemException();
       }
-      this._storedEntities.Add(entity);
+      this._StoredEntities.Add(entity);
       entity.AddToGroup(ENTITY_IN_INVENTORY_GROUP);
     }
     public class InventoryFullCannotStoreItemException : Exception {}
     public class InventoryAlreadyHasItemException : Exception {}
 
     public void RemoveEntity(Entity entity) {
-      this._storedEntities.Remove(entity);
+      this._StoredEntities.Remove(entity);
       entity.RemoveFromGroup(ENTITY_IN_INVENTORY_GROUP);
     }
+
+    public string Save() {
+      return JsonSerializer.Serialize(this);
+    }
+
+    public void NotifyAttached(Entity parent) { }
+
+    public void NotifyDetached(Entity parent) { }
   }
 }
