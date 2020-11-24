@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.entities {
 
+  [JsonConverter(typeof(EntityConverter))]
   public class Entity : Node {
 
     public static readonly string ENTITY_GROUP = "groupEntity";
@@ -23,21 +24,6 @@ namespace SpaceDodgeRL.scenes.entities {
     public List<Component> _Components { get; private set; }
     private Dictionary<Type, Component> _childTypeToComponent;
     private Dictionary<Component, List<Type>> _childComponentToTypes;
-
-    // TODO: Clean this up
-    private class SaveData {
-      public string EntityId { get; set; }
-      public string EntityName { get; set; }
-      public List<Component> Components { get; set; }
-
-      public SaveData() { }
-
-      public SaveData(Entity entity) {
-        this.EntityId = entity.EntityId;
-        this.EntityName = entity.EntityName;
-        this.Components = entity._Components;
-      }
-    }
 
     private Entity Init(string entityId, string entityName) {
       this.EntityId = entityId;
@@ -62,10 +48,6 @@ namespace SpaceDodgeRL.scenes.entities {
       }
 
       return entity;
-    }
-
-    public string Save() {
-      return JsonSerializer.Serialize(new SaveData(this));
     }
 
     public override void _Ready() {
@@ -139,6 +121,32 @@ namespace SpaceDodgeRL.scenes.entities {
         }
       }
       return default(T);
+    }
+
+    public class SaveData {
+      public string EntityId { get; set; }
+      public string EntityName { get; set; }
+      public List<Component> Components { get; set; }
+
+      public SaveData() { }
+
+      public SaveData(Entity entity) {
+        this.EntityId = entity.EntityId;
+        this.EntityName = entity.EntityName;
+        this.Components = entity._Components;
+      }
+    }
+  }
+
+  public class EntityConverter : JsonConverter<Entity> {
+    public override Entity Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+      using (var doc = JsonDocument.ParseValue(ref reader)) {
+        return Entity.Create(doc.RootElement.GetRawText());
+      }
+    }
+
+    public override void Write(Utf8JsonWriter writer, Entity value, JsonSerializerOptions options) {
+      JsonSerializer.Serialize(writer, new Entity.SaveData(value), options);
     }
   }
 }

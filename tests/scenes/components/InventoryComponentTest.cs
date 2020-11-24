@@ -52,13 +52,13 @@ namespace SpaceDodgeRL.tests.scenes.components {
 
       Assert.Equal(componentItems[1].EntityId, newItems[1].EntityId);
       Assert.True(newItems[1].GetComponent<UseEffectHealComponent>() != null);
-      Assert.Equal(componentItems[0].GetComponent<UseEffectHealComponent>().Healpower,
-        newItems[0].GetComponent<UseEffectHealComponent>().Healpower);
+      Assert.Equal(componentItems[1].GetComponent<UseEffectHealComponent>().Healpower,
+        newItems[1].GetComponent<UseEffectHealComponent>().Healpower);
 
       Assert.Equal(componentItems[2].EntityId, newItems[2].EntityId);
       Assert.True(newItems[2].GetComponent<UseEffectBoostPowerComponent>() != null);
-      Assert.Equal(componentItems[0].GetComponent<UseEffectBoostPowerComponent>().Duration,
-        newItems[0].GetComponent<UseEffectBoostPowerComponent>().Duration);
+      Assert.Equal(componentItems[2].GetComponent<UseEffectBoostPowerComponent>().Duration,
+        newItems[2].GetComponent<UseEffectBoostPowerComponent>().Duration);
     }
   }
 }

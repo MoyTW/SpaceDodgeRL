@@ -18,8 +18,8 @@ namespace SpaceDodgeRL.tests.scenes.entities {
     public void SimpleEntity() {
       Entity entity = Entity.Create("some id", "some name");
 
-      var saved = entity.Save();
-      var loaded = Entity.Create(saved);
+      var saved = JsonSerializer.Serialize(entity);
+      var loaded = JsonSerializer.Deserialize<Entity>(saved);
 
       Assert.Equal(entity.EntityId, loaded.EntityId);
       Assert.Equal(entity.EntityName, loaded.EntityName);
@@ -30,8 +30,8 @@ namespace SpaceDodgeRL.tests.scenes.entities {
       Entity entity = Entity.Create("some id", "some name");
       entity.AddComponent(PlayerComponent.Create(baseCuttingLaserPower: 99));
 
-      var saved = entity.Save();
-      var loaded = Entity.Create(saved);
+      var saved = JsonSerializer.Serialize(entity);
+      var loaded = JsonSerializer.Deserialize<Entity>(saved);
 
       Assert.Equal(entity._Components.Count, loaded._Components.Count);
       Assert.NotNull(loaded.GetComponent<PlayerComponent>());

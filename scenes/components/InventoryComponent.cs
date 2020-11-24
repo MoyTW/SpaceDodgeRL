@@ -14,7 +14,7 @@ namespace SpaceDodgeRL.scenes.components {
     public static readonly string ENTITY_IN_INVENTORY_GROUP = "ENTITY_IN_INVENTORY_GROUP";
 
     [JsonInclude] public List<Entity> _StoredEntities { get; private set; } = new List<Entity>();
-    public ReadOnlyCollection<Entity> StoredItems { get => this._StoredEntities.AsReadOnly(); }
+    [JsonIgnore] public ReadOnlyCollection<Entity> StoredItems { get => this._StoredEntities.AsReadOnly(); }
     public int InventoryUsed { get => this._StoredEntities.Count; }
     [JsonInclude] public int InventorySize { get; private set; }
 
