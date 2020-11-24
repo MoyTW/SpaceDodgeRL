@@ -1,6 +1,7 @@
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.entities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
 
@@ -17,19 +18,19 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     public void AddEntityToTimeline(Entity entity, bool front=false) {
-    var nextTurnAtTick = entity.GetComponent<ActionTimeComponent>().NextTurnAtTick;
+      var nextTurnAtTick = entity.GetComponent<ActionTimeComponent>().NextTurnAtTick;
 
-    _nextActiveTicks.Add(nextTurnAtTick);
-    _entityToTick[entity] = nextTurnAtTick;
+      this._nextActiveTicks.Add(nextTurnAtTick);
+      this._entityToTick[entity] = nextTurnAtTick;
 
-    if (_tickToEntities.ContainsKey(nextTurnAtTick)) {
-      if (front) {
-      _tickToEntities[nextTurnAtTick].Insert(0, entity);
+      if (this._tickToEntities.ContainsKey(nextTurnAtTick)) {
+        if (front) {
+          this._tickToEntities[nextTurnAtTick].Insert(0, entity);
+        } else {
+          this._tickToEntities[nextTurnAtTick].Add(entity);
+        }
       } else {
-      _tickToEntities[nextTurnAtTick].Add(entity);
-      }
-    } else {
-        _tickToEntities[nextTurnAtTick] = new List<Entity>() { entity };
+        this._tickToEntities[nextTurnAtTick] = new List<Entity>() { entity };
       }
     }
 
@@ -54,6 +55,44 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public void UpdateTimelineForEntity(Entity entity) {
       this.RemoveEntityFromTimeline(entity);
       this.AddEntityToTimeline(entity);
+    }
+
+    public class SaveData {
+      public int CurrentTick { get; set; }
+      public List<int> NextActiveTicks { get; set; }
+      public Dictionary<string, int> EntityIdToTick { get; set; }
+      public Dictionary<int, List<string>> TickToEntityIds { get; set; }
+    }
+
+    public static ActionTimeline FromSaveData(SaveData data, Dictionary<string, Entity> entitiesById) {
+      var timeline = new ActionTimeline(data.CurrentTick);
+
+      foreach (var tick in data.NextActiveTicks) {
+        timeline._nextActiveTicks.Add(tick);
+      }
+      foreach(var kvp in data.EntityIdToTick) {
+        timeline._entityToTick[entitiesById[kvp.Key]] = kvp.Value;
+      }
+      foreach(var kvp in data.TickToEntityIds) {
+        timeline._tickToEntities[kvp.Key] = kvp.Value.Select(id => entitiesById[id]).ToList();
+      }
+      return timeline;
+    }
+
+    public SaveData ToSaveData() {
+      var data = new SaveData();
+      data.CurrentTick = this.CurrentTick;
+      data.NextActiveTicks = new List<int>(this._nextActiveTicks);
+      // There's probably a fancy LINQ way to do this innit?
+      data.EntityIdToTick = new Dictionary<string, int>();
+      foreach (var kvp in this._entityToTick) {
+        data.EntityIdToTick[kvp.Key.EntityId] = kvp.Value;
+      }
+      data.TickToEntityIds = new Dictionary<int, List<string>>();
+      foreach (var kvp in this._tickToEntities) {
+        data.TickToEntityIds[kvp.Key] = kvp.Value.Select(e => e.EntityId).ToList();;
+      }
+      return data;
     }
   }
 }

@@ -35,5 +35,26 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public void RemoveEntity(Entity entity) {
       _entities.Remove(entity);
     }
+
+    public class SaveData {
+      public bool Explored { get; set; }
+      public List<string> EntityIds { get; set; }
+    }
+
+    public static EncounterTile FromSaveData(SaveData data, Dictionary<string, Entity> entitiesById) {
+      var tile = new EncounterTile();
+      tile.Explored = data.Explored;
+      foreach (var entityId in data.EntityIds) {
+        tile.AddEntity(entitiesById[entityId]);
+      }
+      return tile;
+    }
+
+    public SaveData ToSaveData() {
+      var data = new SaveData();
+      data.Explored = this.Explored;
+      data.EntityIds = this._entities.Select(e => e.EntityId).ToList();
+      return data;
+    }
   }
 }
