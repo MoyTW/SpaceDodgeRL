@@ -5,14 +5,19 @@ using SpaceDodgeRL.library.encounter.rulebook.actions;
 using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class ScoutAIComponent : ActivatableAIComponent {
+  public class ScoutAIComponent : ActivatableAIComponent, Savable {
     public static readonly string ENTITY_GROUP = "SCOUT_AI_COMPONENT_GROUP";
     public override string EntityGroup => ENTITY_GROUP;
 
     public ScoutAIComponent(string activationGroupId) : base(activationGroupId) { }
+
+    public static ScoutAIComponent Create(string saveData) {
+      return JsonSerializer.Deserialize<ScoutAIComponent>(saveData);
+    }
 
     public override List<EncounterAction> _DecideNextAction(EncounterState state, Entity parent) {
       var actions = new List<EncounterAction>();
@@ -34,5 +39,13 @@ namespace SpaceDodgeRL.scenes.components.AI {
 
       return actions;
     }
+
+    public string Save() {
+      return JsonSerializer.Serialize(this);
+    }
+
+    public void NotifyAttached(Entity parent) { }
+
+    public void NotifyDetached(Entity parent) { }
   }
 }
