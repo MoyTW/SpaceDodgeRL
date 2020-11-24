@@ -61,12 +61,12 @@ namespace SpaceDodgeRL.scenes.components.AI {
       return actions;
     }
 
-    public string Save() {
+    public override string Save() {
       return JsonSerializer.Serialize(this);
     }
 
-    public void NotifyAttached(Entity parent) { }
+    public override void NotifyAttached(Entity parent) { }
 
-    public void NotifyDetached(Entity parent) { }
+    public override void NotifyDetached(Entity parent) { }
   }
 }

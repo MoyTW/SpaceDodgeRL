@@ -72,12 +72,10 @@ namespace SpaceDodgeRL.scenes.entities {
       _childTypeToComponent[component.GetType()] = component;
       _childComponentToTypes[component] = new List<Type>() { component.GetType() };
       AddToGroup((component as Component).EntityGroup);
+      component.NotifyAttached(this);
 
       if (component is Node) {
         base.AddChild(component as Node);
-      }
-      if (component is Savable) {
-        (component as Savable).NotifyAttached(this);
       }
     }
 
@@ -86,12 +84,10 @@ namespace SpaceDodgeRL.scenes.entities {
       _childComponentToTypes[component].ForEach(t => _childTypeToComponent.Remove(t));
       _childComponentToTypes.Remove(component);
       RemoveFromGroup((component as Component).EntityGroup);
+      component.NotifyDetached(this);
 
       if (component is Node) {
         base.RemoveChild(component as Node);
-      }
-      if (component is Savable) {
-        (component as Savable).NotifyDetached(this);
       }
     }
 

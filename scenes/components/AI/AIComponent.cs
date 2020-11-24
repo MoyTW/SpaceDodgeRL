@@ -33,5 +33,8 @@ namespace SpaceDodgeRL.scenes.components.AI {
       return _DecideNextAction(state, parent);
     }
 
+    public abstract string Save();
+    public abstract void NotifyAttached(Entity parent);
+    public abstract void NotifyDetached(Entity parent);
   }
 }
