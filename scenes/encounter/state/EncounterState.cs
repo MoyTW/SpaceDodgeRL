@@ -14,6 +14,7 @@ using System.Text.Json.Serialization;
 namespace SpaceDodgeRL.scenes.encounter.state {
 
   public class EncounterState : Control {
+    private static PackedScene _encounterPrefab = GD.Load<PackedScene>("res://scenes/encounter/state/EncounterState.tscn");
 
     // TODO: put this somewhere proper!
     public static int PLAYER_VISION_RADIUS = 10;
@@ -317,6 +318,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, EncounterState.EncounterLogSize);
     }
 
+    public static EncounterState Create() {
+      return _encounterPrefab.Instance() as EncounterState;
+    }
+
     // TODO: Move into map gen & save/load
     public void ResetStateForNewLevel(Entity player, int dungeonLevel) {
 
@@ -373,9 +378,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       var deserialized = JsonSerializer.Deserialize<List<object>>(serializedComponents);
       GD.Print(deserialized);
       GD.Print("#####");
-      var stateSaveData = JsonSerializer.Serialize<SaveData>(this.ToSaveData());
+      // var stateSaveData = JsonSerializer.Serialize<SaveData>(this.ToSaveData());
       //GD.Print(stateSaveData);
-      var state = EncounterState.FromSaveData(JsonSerializer.Deserialize<SaveData>(stateSaveData));
+      // var state = EncounterState.FromSaveData(JsonSerializer.Deserialize<SaveData>(stateSaveData));
     }
 
     public class SaveData {
@@ -395,8 +400,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // public Random EncounterRand { get; private set; }
     }
 
-    public static EncounterState FromSaveData(SaveData data) {
-      PackedScene _encounterPrefab = GD.Load<PackedScene>("res://scenes/encounter/state/EncounterState.tscn");
+    public static EncounterState FromSaveData(string saveData) {
+      SaveData data = JsonSerializer.Deserialize<SaveData>(saveData);
       EncounterState state = _encounterPrefab.Instance() as EncounterState;
 
       state._encounterLog = data.EncounterLog;
@@ -410,6 +415,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
       state._zones = data.Zones;
       state._entitiesById = data.EntitiesById;
+      foreach (var entity in data.EntitiesById.Values) {
+        state.AddChild(entity);
+      }
       state._activationTracker = data.ActivationTracker;
       state._actionTimeline = ActionTimeline.FromSaveData(data.ActionTimeline, data.EntitiesById);
       state.Player = data.EntitiesById[data.PlayerId];
@@ -433,7 +441,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return state;
     }
 
-    public SaveData ToSaveData() {
+    public string ToSaveData() {
       var data = new SaveData();
 
       data.EncounterLog = this._encounterLog;
@@ -454,7 +462,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       data.LevelsInDungeon = this.LevelsInDungeon;
       data.DungeonLevel = this.DungeonLevel;
 
-      return data;
+      return JsonSerializer.Serialize(data);
     }
   }
 }

@@ -8,12 +8,16 @@ namespace SpaceDodgeRL.scenes {
 
   public class EncounterScene : Container {
     public EncounterState EncounterState { get; private set; }
+    private Viewport encounterViewport;
     private EncounterRunner encounterRunner;
     private RichTextLabel encounterLogLabel;
 
     public override void _Ready() {
-      EncounterState = GetNode<EncounterState>("VBoxContainer/ViewportContainer/EncounterViewport/EncounterState");
+      encounterViewport = GetNode<Viewport>("VBoxContainer/ViewportContainer/EncounterViewport");
       encounterLogLabel = GetNode<RichTextLabel>("VBoxContainer/HBoxContainer/EncounterLogLabel");
+
+      this.EncounterState = EncounterState.Create();
+      encounterViewport.AddChild(this.EncounterState);
 
       encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
       encounterRunner.inputHandlerRef = GetNode<InputHandler>("InputHandler");
@@ -22,9 +26,17 @@ namespace SpaceDodgeRL.scenes {
       // Hook up the UI
       EncounterState.Connect("EncounterLogMessageAdded", this, "OnEncounterLogMessageAdded");
 
-      // TODO: Proper state initialization & building & such!
       var player = EntityBuilder.CreatePlayerEntity(0);
-      EncounterState.ResetStateForNewLevel(player, 1);
+      this.EncounterState.ResetStateForNewLevel(player, 1);
+
+      // TODO: Proper testing of saving/loading
+      this.EncounterState.QueueFree();
+      encounterViewport.RemoveChild(this.EncounterState);
+      var asString = this.EncounterState.ToSaveData();
+      this.EncounterState = EncounterState.FromSaveData(asString);
+      this.encounterViewport.AddChild(this.EncounterState);
+      GD.Print(GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP"));
+      this.encounterRunner.SetEncounterState(this.EncounterState);
     }
 
     // TODO: Decide if this is better placed directly onto the log label
