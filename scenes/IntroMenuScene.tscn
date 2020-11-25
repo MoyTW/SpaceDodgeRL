@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/SaveSlot.cs" type="Script" id=1]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=2]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://scenes/IntroMenuScene.cs" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -13,6 +14,7 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
+script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -66,6 +68,3 @@ margin_right = 860.0
 margin_bottom = 136.0
 text = "SAVE SLOT 3"
 script = ExtResource( 1 )
-[connection signal="pressed" from="CenterContainer/SaveSlot1" to="CenterContainer/SaveSlot1" method="OnSaveSlotPressed"]
-[connection signal="pressed" from="CenterContainer/SaveSlot2" to="CenterContainer/SaveSlot2" method="OnSaveSlotPressed"]
-[connection signal="pressed" from="CenterContainer/SaveSlot3" to="CenterContainer/SaveSlot3" method="OnSaveSlotPressed"]

@@ -126,10 +126,26 @@ namespace SpaceDodgeRL.scenes {
       DeferredSwitchScene(previousScene, true);
     }
 
+    public void ExitToMainMenu() {
+      CallDeferred(nameof(DeferredExitToMainMenu));
+    }
+
+    /**
+     * Drops us back to the main menu and burns the scene stack.
+     */
+    private void DeferredExitToMainMenu() {
+      var introMenuScene = sceneStack.Find(s => s is IntroMenuScene);
+      DeferredSwitchScene(introMenuScene);
+      sceneStack.Clear();
+    }
+
     private void DeferredSwitchScene(Node scene) {
       DeferredSwitchScene(scene, false);
     }
 
+    /**
+     * Swaps scenes, operating only on the last child node of root. Saves previous scenes in SceneStack.
+     */
     private void DeferredSwitchScene(Node scene, bool previous) {
       var lastScene = root.GetChild(root.GetChildCount() - 1);
       if (!previous) {
