@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://scenes/SaveSlot.cs" type="Script" id=1]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=2]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://scenes/IntroMenuScene.cs" type="Script" id=4]
+[ext_resource path="res://scenes/SaveSlotScene.tscn" type="PackedScene" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -28,8 +28,9 @@ __meta__ = {
 }
 
 [node name="Title" type="Label" parent="CenterContainer"]
+margin_top = 24.0
 margin_right = 860.0
-margin_bottom = 40.0
+margin_bottom = 64.0
 custom_fonts/font = SubResource( 1 )
 text = "Untitled Godot Space Dodging Roguelike Game"
 __meta__ = {
@@ -37,9 +38,9 @@ __meta__ = {
 }
 
 [node name="Subtitle" type="Label" parent="CenterContainer"]
-margin_top = 44.0
+margin_top = 68.0
 margin_right = 860.0
-margin_bottom = 64.0
+margin_bottom = 88.0
 custom_fonts/font = ExtResource( 2 )
 text = "Subtitle Goes Here"
 align = 1
@@ -48,23 +49,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SaveSlot1" type="Button" parent="CenterContainer"]
-margin_top = 68.0
-margin_right = 860.0
-margin_bottom = 88.0
-text = "SAVE SLOT 1"
-script = ExtResource( 1 )
-
-[node name="SaveSlot2" type="Button" parent="CenterContainer"]
+[node name="SaveSlot1" parent="CenterContainer" instance=ExtResource( 5 )]
 margin_top = 92.0
 margin_right = 860.0
-margin_bottom = 112.0
-text = "SAVE SLOT 2"
-script = ExtResource( 1 )
+margin_bottom = 118.0
+SlotNumber = 1
 
-[node name="SaveSlot3" type="Button" parent="CenterContainer"]
-margin_top = 116.0
+[node name="SaveSlot2" parent="CenterContainer" instance=ExtResource( 5 )]
+margin_top = 122.0
 margin_right = 860.0
-margin_bottom = 136.0
-text = "SAVE SLOT 3"
-script = ExtResource( 1 )
+margin_bottom = 148.0
+SlotNumber = 2
+
+[node name="SaveSlot3" parent="CenterContainer" instance=ExtResource( 5 )]
+margin_top = 152.0
+margin_right = 860.0
+margin_bottom = 178.0
+SlotNumber = 3
