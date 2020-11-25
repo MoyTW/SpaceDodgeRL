@@ -137,6 +137,7 @@ namespace SpaceDodgeRL.scenes {
       var introMenuScene = sceneStack.Find(s => s is IntroMenuScene);
       DeferredSwitchScene(introMenuScene);
       sceneStack.Clear();
+      (introMenuScene as IntroMenuScene).SetFocus();
     }
 
     private void DeferredSwitchScene(Node scene) {

@@ -30,6 +30,10 @@ public class SaveSlotScene : HBoxContainer {
     this.RefreshDisplay();
   }
 
+  public void FocusLoadButton() {
+    this._loadButton.GrabFocus();
+  }
+
   /**
    * Surprisingly EnterTree happens BEFORE _Ready, and I can't be bothered to go find a non-hacky way to get this to line up.
    * Hence this null check on _loadButton.
