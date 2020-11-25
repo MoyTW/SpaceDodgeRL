@@ -20,6 +20,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public static int PLAYER_VISION_RADIUS = 10;
     public static int EncounterLogSize = 50;
 
+    public string SaveFilePath { get; private set; }
+
     // Encounter Log
     private List<string> _encounterLog;
     public ReadOnlyCollection<string> EncounterLog { get => _encounterLog.AsReadOnly(); }
@@ -318,8 +320,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, EncounterState.EncounterLogSize);
     }
 
-    public static EncounterState Create() {
-      return _encounterPrefab.Instance() as EncounterState;
+    public static EncounterState Create(string saveFilePath) {
+      var state = _encounterPrefab.Instance() as EncounterState;
+      state.SaveFilePath = saveFilePath;
+      return state;
     }
 
     // TODO: Move into map gen & save/load
@@ -371,6 +375,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     public class SaveData {
+      public string SaveFilePath { get; set; }
       public List<string> EncounterLog { get; set; }
       public int MapWidth { get; set; }
       public int MapHeight { get; set; }
@@ -391,6 +396,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       SaveData data = JsonSerializer.Deserialize<SaveData>(saveData);
       EncounterState state = _encounterPrefab.Instance() as EncounterState;
 
+      state.SaveFilePath = data.SaveFilePath;
       state._encounterLog = data.EncounterLog;
       state.MapWidth = data.MapWidth;
       state.MapHeight = data.MapHeight;
@@ -431,6 +437,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public string ToSaveData() {
       var data = new SaveData();
 
+      data.SaveFilePath = this.SaveFilePath;
       data.EncounterLog = this._encounterLog;
       data.MapWidth = this.MapWidth;
       data.MapHeight = this.MapHeight;
