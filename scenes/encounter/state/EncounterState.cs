@@ -331,6 +331,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     // TODO: Think harder about initialization & such & how it integrates into Godot
+    // TODO: When you load a game it attaches the camera to the wrong player. uh. what.
     public override void _Ready() {
       if (GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP").Count == 0) {
         var camera = new Camera2D();
