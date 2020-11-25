@@ -50,7 +50,8 @@ public class SaveSlotScene : HBoxContainer {
     if (this.HasSaveData) {
       this._loadButton.Text = String.Format("Save Slot {0} - (data)", this.SlotNumber);
       var modified = file.GetModifiedTime(this.SaveLocation);
-      this._lastPlayedLabel.Text = String.Format("Last Played: {0}", modified);
+      var modifiedDate = DateTimeOffset.FromUnixTimeSeconds((long)modified).ToLocalTime().ToString("yyyy-MM-dd");
+      this._lastPlayedLabel.Text = String.Format("Last Played: {0}", modifiedDate);
       this._clearButton.Disabled = false;
     } else {
       this._loadButton.Text = String.Format("Save Slot {0} - (empty)", this.SlotNumber);

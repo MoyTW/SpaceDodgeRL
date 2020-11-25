@@ -28,9 +28,8 @@ __meta__ = {
 }
 
 [node name="Title" type="Label" parent="CenterContainer"]
-margin_top = 24.0
 margin_right = 860.0
-margin_bottom = 64.0
+margin_bottom = 40.0
 custom_fonts/font = SubResource( 1 )
 text = "Untitled Godot Space Dodging Roguelike Game"
 __meta__ = {
@@ -38,9 +37,9 @@ __meta__ = {
 }
 
 [node name="Subtitle" type="Label" parent="CenterContainer"]
-margin_top = 68.0
+margin_top = 44.0
 margin_right = 860.0
-margin_bottom = 88.0
+margin_bottom = 64.0
 custom_fonts/font = ExtResource( 2 )
 text = "Subtitle Goes Here"
 align = 1
@@ -50,19 +49,19 @@ __meta__ = {
 }
 
 [node name="SaveSlot1" parent="CenterContainer" instance=ExtResource( 5 )]
-margin_top = 92.0
+margin_top = 68.0
 margin_right = 860.0
-margin_bottom = 118.0
+margin_bottom = 94.0
 SlotNumber = 1
 
 [node name="SaveSlot2" parent="CenterContainer" instance=ExtResource( 5 )]
-margin_top = 122.0
+margin_top = 98.0
 margin_right = 860.0
-margin_bottom = 148.0
+margin_bottom = 124.0
 SlotNumber = 2
 
 [node name="SaveSlot3" parent="CenterContainer" instance=ExtResource( 5 )]
-margin_top = 152.0
+margin_top = 128.0
 margin_right = 860.0
-margin_bottom = 178.0
+margin_bottom = 154.0
 SlotNumber = 3
