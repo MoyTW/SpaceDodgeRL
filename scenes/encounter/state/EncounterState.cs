@@ -414,6 +414,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       EncounterState state = _encounterPrefab.Instance() as EncounterState;
 
       state.SaveFilePath = data.SaveFilePath;
+      // TODO: This populates the internal representation but doesn't print; print old messages
       state._encounterLog = data.EncounterLog;
       state.MapWidth = data.MapWidth;
       state.MapHeight = data.MapHeight;
@@ -446,6 +447,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // Init FoW overlay as all back
       state.InitFoWOverlay();
       state.UpdateFoVAndFoW();
+      // TODO: when you load it doesn't show paths until after one move for some reason
+      // 's prolly something obvious and dumb
       state.UpdatePlayerOverlays();
 
       return state;
