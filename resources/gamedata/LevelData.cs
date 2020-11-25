@@ -12,6 +12,7 @@ namespace SpaceDodgeRL.resources.gamedata {
     public static string DESTROYER = "ENTITY_DEF_ID_DESTROYER";
     public static string CRUISER = "ENTITY_DEF_ID_CRUISER";
     public static string CARRIER = "ENTITY_DEF_ID_CARRIER";
+    public static string DIPLOMAT = "ENTITY_DEF_ID_DIPLOMAT";
 
     // Items
     public static string ITEM_DUCT_TAPE = "ENTITY_DEF_ID_ITEM_DUCT_TAPE";
@@ -48,6 +49,7 @@ namespace SpaceDodgeRL.resources.gamedata {
     public static string FAST_RESPONSE_FLEET_ENCOUNTER = "FAST_RESPONSE_FLEET_ENCOUNTER_ID";
     public static string HEAVY_STRIKE_FORCE_ENCOUNTER = "HEAVY_STRIKE_FORCE_ENCOUNTER_ID";
     public static string EVER_VICTORIOUS_FLEET_ENCOUNTER = "EVER_VICTORIOUS_FLEET_ENCOUNTER_ID";
+    public static string DIPLOMAT_ENCOUNTER = "DIPLOMAT_ENCOUNTER_ID";
   }
 
   public class EncounterDef {
@@ -82,6 +84,7 @@ namespace SpaceDodgeRL.resources.gamedata {
     public static int FIVE = 5;
     public static int SIX = 6;
     public static int SEVEN = 7;
+    public static int END = int.MaxValue;
   }
 
   public static class DungeonLevel {
@@ -94,6 +97,7 @@ namespace SpaceDodgeRL.resources.gamedata {
     public static int SEVEN = 7;
     public static int EIGHT = 8;
     public static int NINE = 9;
+    public static int TEN = 10;
   }
 
   public static class LevelData {
@@ -268,6 +272,12 @@ namespace SpaceDodgeRL.resources.gamedata {
                                EntityDefId.DESTROYER, EntityDefId.DESTROYER, EntityDefId.FRIGATE, EntityDefId.FRIGATE,
                                EntityDefId.FRIGATE, EntityDefId.FRIGATE, EntityDefId.FRIGATE }
         ) },
+      { EncounterDefId.DIPLOMAT_ENCOUNTER,
+        new EncounterDef(
+          EncounterDefId.DIPLOMAT_ENCOUNTER,
+          "The Diplomat",
+          new List<string> { EntityDefId.DIPLOMAT }
+        ) },
     };
 
     // Mapping from ChallengeRating -> EncounterDefId
@@ -336,6 +346,11 @@ namespace SpaceDodgeRL.resources.gamedata {
           new WeightedOption<string>(EncounterDefId.EVER_VICTORIOUS_FLEET_ENCOUNTER, 50)
         }
       },
+      { ChallengeRating.END,
+        new WeightedOption<string>[1] {
+          new WeightedOption<string>(EncounterDefId.DIPLOMAT_ENCOUNTER, 1)
+        }
+      }
     };
 
     // Mapping from DungeonLevel -> ChallengeRating - this is really hard to read, with all the cruft!
@@ -378,6 +393,9 @@ namespace SpaceDodgeRL.resources.gamedata {
       }},
       {9, new WeightedOption<int>[1] {
         new WeightedOption<int>(ChallengeRating.SEVEN, 1)
+      }},
+      {10, new WeightedOption<int>[1] {
+        new WeightedOption<int>(ChallengeRating.END, 1)
       }}
     };
 
@@ -390,7 +408,8 @@ namespace SpaceDodgeRL.resources.gamedata {
       { DungeonLevel.SIX, 1 },
       { DungeonLevel.SEVEN, 1 },
       { DungeonLevel.EIGHT, 1 },
-      { DungeonLevel.NINE, 1 }
+      { DungeonLevel.NINE, 1 },
+      { DungeonLevel.TEN, 0 }
     };
 
     private static Dictionary<int, int> DungeonLevelToNumberOfSatellites = new Dictionary<int, int>() {
@@ -402,7 +421,8 @@ namespace SpaceDodgeRL.resources.gamedata {
       { DungeonLevel.SIX, 10 },
       { DungeonLevel.SEVEN, 10 },
       { DungeonLevel.EIGHT, 10 },
-      { DungeonLevel.NINE, 30 }
+      { DungeonLevel.NINE, 30 },
+      { DungeonLevel.TEN, 0 }
     };
 
     private static WeightedOption<string>[] ItemOptions = new WeightedOption<string>[4] {
@@ -429,6 +449,14 @@ namespace SpaceDodgeRL.resources.gamedata {
       }
       // It will never actually reach this, since Next is exclusive of the input, but it throws up a warning, so we have it.
       return choices[choices.Length - 1].Option;
+    }
+
+    public static int GetNumberOfZones(int level) {
+      if (level == 10) {
+        return 2;
+      } else {
+        return 10;
+      }
     }
 
     public static int GetNumberOfSatellites(int level) {

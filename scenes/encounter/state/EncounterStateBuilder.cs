@@ -47,8 +47,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
     }
 
-    public static void PopulateStateForLevel(Entity player, int dungeonLevel, EncounterState state, Random seededRand,
-        int width = 300, int height = 300, int maxZones = 10, int maxZoneGenAttempts = 100) {
+    private static void InitializeMapAndAddBorderWalls(EncounterState state, int width, int height) {
       // Initialize the map with empty tiles
       state.MapWidth = width;
       state.MapHeight = height;
@@ -67,11 +66,16 @@ namespace SpaceDodgeRL.scenes.encounter.state {
           }
         }
       }
+    }
+
+    public static void PopulateStateForLevel(Entity player, int dungeonLevel, EncounterState state, Random seededRand,
+        int width = 300, int height = 300, int maxZoneGenAttempts = 100) {
+      InitializeMapAndAddBorderWalls(state, width, height);
 
       // Place each empty zone onto the map
       int zoneGenAttemps = 0;
       List<EncounterZone> zones = new List<EncounterZone>();
-      while (zoneGenAttemps < maxZoneGenAttempts && zones.Count < maxZones) {
+      while (zoneGenAttemps < maxZoneGenAttempts && zones.Count < LevelData.GetNumberOfZones(dungeonLevel)) {
         int zoneWidth = seededRand.Next(ZONE_MIN_SIZE, ZONE_MAX_SIZE + 1);
         int zoneHeight = seededRand.Next(ZONE_MIN_SIZE, ZONE_MAX_SIZE + 1);
         int zoneX = seededRand.Next(1, state.MapWidth - zoneWidth);
@@ -99,23 +103,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + i, zones[playerZoneIdx].Center.Y + 3);
         state.PlaceEntity(EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_EXTRA_BATTERY), nextToPlayer);
       }
-      // TODO: Remove this - blocks off Zone 8 to test autopilot resilience
-      var satellite = EntityBuilder.CreateSatelliteEntity();
-      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X + 1, zones[8].Center.Y + 1));
-      satellite = EntityBuilder.CreateSatelliteEntity();
-      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X, zones[8].Center.Y + 1));
-      satellite = EntityBuilder.CreateSatelliteEntity();
-      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X - 1, zones[8].Center.Y + 1));
-      satellite = EntityBuilder.CreateSatelliteEntity();
-      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X + 1, zones[8].Center.Y));
-      satellite = EntityBuilder.CreateSatelliteEntity();
-      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X - 1, zones[8].Center.Y));
-      satellite = EntityBuilder.CreateSatelliteEntity();
-      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X + 1, zones[8].Center.Y - 1));
-      satellite = EntityBuilder.CreateSatelliteEntity();
-      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X, zones[8].Center.Y - 1));
-      satellite = EntityBuilder.CreateSatelliteEntity();
-      state.PlaceEntity(satellite, new EncounterPosition(zones[8].Center.X - 1, zones[8].Center.Y - 1));
       
       /*
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 5, zones[playerZoneIdx].Center.Y + 5);
@@ -126,7 +113,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       */
 
       // Add all the various zone features to the map
-      // TODO: Handle last level & add diplomat
+      // TODO: Make diplomat encounter work with LevelData & not a special case
+      if (dungeonLevel == 10) {
+      }
 
       // Generate the stairs (maybe we should refer interally as something more themetically appropriate?)
       // You can get stairs in your starting zone, but you probably shouldn't take them...

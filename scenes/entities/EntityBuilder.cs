@@ -24,6 +24,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texCarrierPath = "res://resources/tex_carrier.tres";
     private static string _texCruiserPath = "res://resources/tex_cruiser.tres";
     private static string _texDestroyerPath = "res://resources/tex_destroyer.tres";
+    private static string _texDiplomatPath = "res://resources/tex_diplomat.tres";
     private static string _texGunshipPath = "res://resources/tex_gunship.tres";
     private static string _texFrigatePath = "res://resources/tex_frigate.tres";
     private static string _texScoutPath = "res://resources/tex_scout.tres";
@@ -185,6 +186,24 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
+    private static Entity CreateDiplomatEntity(string activationGroupId, int currentTick) {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "diplomat");
+
+      var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
+
+      e.AddComponent(new DiplomatAIComponent(activationGroupId));
+
+      e.AddComponent(ActionTimeComponent.Create(currentTick));
+      e.AddComponent(CollisionComponent.CreateDefaultActor());
+      e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 100));
+      e.AddComponent(DisplayComponent.Create(_texDiplomatPath, false));
+      e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
+      e.AddComponent(statusEffectTrackerComponent);
+      e.AddComponent(XPValueComponent.Create(xpValue: 0));
+
+      return e;
+    }
+
     private static Entity CreateExtraBatteryEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "extra battery");
 
@@ -234,6 +253,8 @@ namespace SpaceDodgeRL.scenes.entities {
         return EntityBuilder.CreateCruiserEntity(activationGroupId, currentTick);
       } else if (enemyDefId == EntityDefId.CARRIER) {
         return EntityBuilder.CreateCarrierEntity(activationGroupId, currentTick);
+      } else if (enemyDefId == EntityDefId.DIPLOMAT) {
+        return EntityBuilder.CreateDiplomatEntity(activationGroupId, currentTick);
       } else {
         throw new NotImplementedException("No mapping defined for " + enemyDefId);
       }
