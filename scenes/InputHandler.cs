@@ -16,6 +16,7 @@ namespace SpaceDodgeRL.scenes {
       public static string WAIT = "encounter_wait";
       public static string AUTOPILOT = "encounter_autopilot_menu";
       public static string CHARACTER = "encounter_character_menu";
+      public static string ESCAPE_MENU = "encounter_escape_menu";
       public static string INVENTORY = "encounter_inventory_menu";
       public static string USE_STAIRS = "encounter_use_stairs";
       public static string GET_ITEM = "encounter_get_item";
@@ -23,7 +24,7 @@ namespace SpaceDodgeRL.scenes {
       public static string USE_ITEM = "encounter_use_item";
       // PERF: make a set if perf bad?
       public static string[] AllMappings = new string[] { MOVE_N, MOVE_NE, MOVE_E, MOVE_SE, MOVE_S, MOVE_SW, MOVE_W, MOVE_NW,
-        WAIT, AUTOPILOT, CHARACTER, INVENTORY, USE_STAIRS, GET_ITEM, USE_ITEM
+        WAIT, AUTOPILOT, CHARACTER, ESCAPE_MENU, INVENTORY, USE_STAIRS, GET_ITEM, USE_ITEM
       };
     }
 

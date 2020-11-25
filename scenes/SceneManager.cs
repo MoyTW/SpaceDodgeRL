@@ -14,6 +14,7 @@ namespace SpaceDodgeRL.scenes {
 
     private AutopilotMenu _autopilotMenu;
     private CharacterMenu _characterMenu;
+    private EscapeMenu _escapeMenu;
     private InventoryMenu _inventoryMenu;
     private ReadOnlyCollection<EncounterZone> _autopilotMenuZones;
 
@@ -23,6 +24,7 @@ namespace SpaceDodgeRL.scenes {
 
       this._autopilotMenu = GD.Load<PackedScene>("res://scenes/encounter/AutopilotMenu.tscn").Instance() as AutopilotMenu;
       this._characterMenu = GD.Load<PackedScene>("res://scenes/encounter/CharacterMenu.tscn").Instance() as CharacterMenu;
+      this._escapeMenu = GD.Load<PackedScene>("res://scenes/encounter/EscapeMenu.tscn").Instance() as EscapeMenu;
       this._inventoryMenu = GD.Load<PackedScene>("res://scenes/encounter/InventoryMenu.tscn").Instance() as InventoryMenu;
     }
 
@@ -63,6 +65,14 @@ namespace SpaceDodgeRL.scenes {
       var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
       previousScene.HandleLevelUpSelected(previousScene.EncounterState.Player, levelUpSelection);
       this._characterMenu.PrepMenu(previousScene.EncounterState);
+    }
+
+    #endregion
+
+    #region Escape Menu
+
+    public void ShowEscapeMenu() {
+      CallDeferred(nameof(DeferredSwitchScene), this._escapeMenu);
     }
 
     #endregion
