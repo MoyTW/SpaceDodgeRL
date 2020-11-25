@@ -118,7 +118,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action == InputHandler.ActionMapping.CHARACTER) {
           ShowCharacterMenu(state);
         } else if (action == InputHandler.ActionMapping.ESCAPE_MENU) {
-          ShowEscapeMenu();
+          ShowEscapeMenu(state);
         } else if (action == InputHandler.ActionMapping.INVENTORY) {
           ShowInventoryMenu(state);
         } else if (action == InputHandler.ActionMapping.USE_STAIRS) {
@@ -177,9 +177,9 @@ namespace SpaceDodgeRL.scenes.encounter {
       sceneManager.ShowCharacterMenu(state);
     }
 
-    private void ShowEscapeMenu() {
+    private void ShowEscapeMenu(EncounterState state) {
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-      sceneManager.ShowEscapeMenu();
+      sceneManager.ShowEscapeMenu(state);
     }
 
     private void ShowInventoryMenu(EncounterState state) {

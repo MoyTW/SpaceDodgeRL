@@ -69,13 +69,13 @@ namespace SpaceDodgeRL.scenes {
 
     #region Escape Menu
 
-    public void ShowEscapeMenu() {
-      CallDeferred(nameof(DeferredShowEscapeMenu));
+    public void ShowEscapeMenu(EncounterState state) {
+      CallDeferred(nameof(DeferredShowEscapeMenu), state);
     }
 
-    private void DeferredShowEscapeMenu() {
+    private void DeferredShowEscapeMenu(EncounterState state) {
       DeferredSwitchScene(this._escapeMenu);
-      this._escapeMenu.PrepMenu();
+      this._escapeMenu.PrepMenu(state);
     }
 
     #endregion
