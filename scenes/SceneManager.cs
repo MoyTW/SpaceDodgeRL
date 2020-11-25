@@ -72,7 +72,12 @@ namespace SpaceDodgeRL.scenes {
     #region Escape Menu
 
     public void ShowEscapeMenu() {
-      CallDeferred(nameof(DeferredSwitchScene), this._escapeMenu);
+      CallDeferred(nameof(DeferredShowEscapeMenu));
+    }
+
+    private void DeferredShowEscapeMenu() {
+      DeferredSwitchScene(this._escapeMenu);
+      this._escapeMenu.PrepMenu();
     }
 
     #endregion
@@ -103,12 +108,12 @@ namespace SpaceDodgeRL.scenes {
     #endregion
 
     // Plumbing
-    public void ReturnToEncounterScene() {
-      CallDeferred(nameof(DeferredReturnToEncounterScene));
+    public void ReturnToPreviousScene() {
+      CallDeferred(nameof(DeferredReturnToPreviousScene));
     }
 
-    private void DeferredReturnToEncounterScene() {
-      var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
+    private void DeferredReturnToPreviousScene() {
+      var previousScene = sceneStack[sceneStack.Count - 1];
       sceneStack.RemoveAt(sceneStack.Count - 1);
       DeferredSwitchScene(previousScene);
     }

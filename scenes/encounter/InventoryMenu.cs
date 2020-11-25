@@ -58,6 +58,6 @@ public class InventoryMenu : VBoxContainer {
 
   private void OnCloseButtonPressed() {
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-    sceneManager.ReturnToEncounterScene();
+    sceneManager.ReturnToPreviousScene();
   }
 }
