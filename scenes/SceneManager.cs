@@ -82,6 +82,18 @@ namespace SpaceDodgeRL.scenes {
 
     #endregion
 
+    #region EncounterScene
+
+    public void ShowEncounterScene(EncounterScene scene) {
+      CallDeferred(nameof(DeferredShowEncounterScene), scene);
+    }
+
+    private void DeferredShowEncounterScene(EncounterScene scene) {
+      DeferredSwitchScene(scene);
+    }
+
+    #endregion
+
     #region Inventory Menu
 
     public void ShowInventoryMenu(EncounterState state) {

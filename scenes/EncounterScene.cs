@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.encounter;
@@ -16,27 +17,27 @@ namespace SpaceDodgeRL.scenes {
       encounterViewport = GetNode<Viewport>("VBoxContainer/ViewportContainer/EncounterViewport");
       encounterLogLabel = GetNode<RichTextLabel>("VBoxContainer/HBoxContainer/EncounterLogLabel");
 
-      this.EncounterState = EncounterState.Create();
-      encounterViewport.AddChild(this.EncounterState);
-
       encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
       encounterRunner.inputHandlerRef = GetNode<InputHandler>("InputHandler");
-      encounterRunner.SetEncounterState(EncounterState);
 
-      // Hook up the UI
-      EncounterState.Connect("EncounterLogMessageAdded", this, "OnEncounterLogMessageAdded");
-
-      var player = EntityBuilder.CreatePlayerEntity(0);
-      this.EncounterState.ResetStateForNewLevel(player, 1);
-
-      // TODO: Proper testing of saving/loading
-      this.EncounterState.QueueFree();
-      encounterViewport.RemoveChild(this.EncounterState);
-      var asString = this.EncounterState.ToSaveData();
-      this.EncounterState = EncounterState.FromSaveData(asString);
+      if (this.EncounterState == null) {
+        throw new NotImplementedException("must call SetEncounterState before adding to tree");
+      }
       this.encounterViewport.AddChild(this.EncounterState);
-      GD.Print(GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP"));
       this.encounterRunner.SetEncounterState(this.EncounterState);
+      // Hook up the UI
+      this.EncounterState.Connect("EncounterLogMessageAdded", this, "OnEncounterLogMessageAdded");
+    }
+
+    /**
+     * Must be called once and only once, before being added to the scene tree.
+     */
+    public void SetEncounterState(EncounterState state) {
+      if (this.EncounterState != null) {
+        throw new NotImplementedException("can't call SetEncounterState twice");
+      }
+
+      this.EncounterState = state;
     }
 
     // TODO: Decide if this is better placed directly onto the log label

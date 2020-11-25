@@ -326,17 +326,33 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return state;
     }
 
+    public void SetStateForNewGame() {
+      this.ResetStateForNewLevel(EntityBuilder.CreatePlayerEntity(0), 1);
+    }
+
+    // TODO: Think harder about initialization & such & how it integrates into Godot
+    public override void _Ready() {
+      if (GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP").Count == 0) {
+        var camera = new Camera2D();
+        camera.AddToGroup("ENCOUNTER_CAMERA_GROUP");
+        camera.Current = true;
+        Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
+      }
+    }
+
     // TODO: Move into map gen & save/load
     public void ResetStateForNewLevel(Entity player, int dungeonLevel) {
 
       string ENCOUNTER_CAMERA_GROUP = "ENCOUNTER_CAMERA_GROUP";
       // TODO: Rather than re-using a state when we switch levels, I'd rather sub in a new one, but I think I need to think
       // about how that'd work in Godot, since we'd need to do some rewiring and the state has the camera, which is ugh.
-      foreach (Entity e in GetTree().GetNodesInGroup(Entity.ENTITY_GROUP)) {
-        if (e.GetParent() == this) {
-          this.RemoveEntity(e);
-          if (e != player) {
-            e.QueueFree();
+      if (this.IsInsideTree()) {
+        foreach (Entity e in GetTree().GetNodesInGroup(Entity.ENTITY_GROUP)) {
+          if (e.GetParent() == this) {
+            this.RemoveEntity(e);
+            if (e != player) {
+              e.QueueFree();
+            }
           }
         }
       }
@@ -359,7 +375,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.EncounterRand = new Random(1);
 
       // TODO: Attaching camera to the player like this is extremely jank! Figure out a better way?
-      if (GetTree().GetNodesInGroup(ENCOUNTER_CAMERA_GROUP).Count == 0) {
+      if (this.IsInsideTree() && GetTree().GetNodesInGroup(ENCOUNTER_CAMERA_GROUP).Count == 0) {
         var camera = new Camera2D();
         camera.AddToGroup(ENCOUNTER_CAMERA_GROUP);
         camera.Current = true;
