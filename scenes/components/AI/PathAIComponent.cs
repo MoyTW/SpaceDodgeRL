@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class PathAIComponent : AIComponent, Savable {
+  public class PathAIComponent : AIComponent {
     public static readonly string ENTITY_GROUP = "PATH_AI_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 

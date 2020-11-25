@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class DestroyerAIComponent : ActivatableAIComponent, Savable {
+  public class DestroyerAIComponent : ActivatableAIComponent {
     public static readonly string ENTITY_GROUP = "DESTROYER_AI_COMPONENT_GROUP";
     public override string EntityGroup => ENTITY_GROUP;
 

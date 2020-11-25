@@ -8,7 +8,7 @@ using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class InventoryComponent : Component, Savable {
+  public class InventoryComponent : Component {
     public static readonly string ENTITY_GROUP = "INVENTORY_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
     public static readonly string ENTITY_IN_INVENTORY_GROUP = "ENTITY_IN_INVENTORY_GROUP";

@@ -79,9 +79,4 @@ namespace SpaceDodgeRL.scenes.components {
     void NotifyAttached(Entity parent);
     void NotifyDetached(Entity parent);
   }
-
-  // TODO: After all Components implement Savable, delete Savable and move fns into Component
-  public interface Savable {
-
-  }
 }

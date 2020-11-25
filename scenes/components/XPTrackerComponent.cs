@@ -21,7 +21,7 @@ namespace SpaceDodgeRL.scenes.components {
   /**
    * Tracks levels and level-up bonuses.
    */
-  public class XPTrackerComponent : Component, Savable {
+  public class XPTrackerComponent : Component {
     public static readonly string ENTITY_GROUP = "XP_TRACKER_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 

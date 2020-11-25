@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class StairsComponent : Component, Savable {
+  public class StairsComponent : Component {
     public static readonly string ENTITY_GROUP = "STAIRS_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 

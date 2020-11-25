@@ -6,7 +6,7 @@ using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class DisplayComponent : Component, Savable {
+  public class DisplayComponent : Component {
     public static readonly string ENTITY_GROUP = "SPRITE_DATA_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 

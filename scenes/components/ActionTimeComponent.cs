@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class ActionTimeComponent : Component, Savable {
+  public class ActionTimeComponent : Component {
     public static readonly string ENTITY_GROUP = "ACTION_TIME_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 

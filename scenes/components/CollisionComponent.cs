@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class CollisionComponent : Component, Savable {
+  public class CollisionComponent : Component {
     public static readonly string ENTITY_GROUP = "COLLISION_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 

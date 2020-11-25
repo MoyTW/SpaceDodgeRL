@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class FighterAIComponent : ActivatableAIComponent, Savable {
+  public class FighterAIComponent : ActivatableAIComponent {
     public static readonly string ENTITY_GROUP = "FIGHTER_AI_COMPONENT_GROUP";
     public override string EntityGroup => ENTITY_GROUP;
 

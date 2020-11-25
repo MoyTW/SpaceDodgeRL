@@ -11,7 +11,7 @@ using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components.AI {
 
-  public class CarrierAIComponent : ActivatableAIComponent, Savable {
+  public class CarrierAIComponent : ActivatableAIComponent {
     public static readonly string ENTITY_GROUP = "CARRIER_AI_COMPONENT_GROUP";
     public override string EntityGroup => ENTITY_GROUP;
 

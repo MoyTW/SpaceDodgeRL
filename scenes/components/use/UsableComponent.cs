@@ -4,7 +4,7 @@ using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components.use {
 
-  public class UsableComponent : Component, Savable {
+  public class UsableComponent : Component {
     public static readonly string ENTITY_GROUP = "USABLE_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 

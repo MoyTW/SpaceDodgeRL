@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class SpeedComponent : Component, Savable {
+  public class SpeedComponent : Component {
     public static readonly string ENTITY_GROUP = "SPEED_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 

@@ -9,7 +9,7 @@ using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components {
 
-  public class PlayerComponent : Component, Savable {
+  public class PlayerComponent : Component {
     public static readonly string ENTITY_GROUP = "PLAYER_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 

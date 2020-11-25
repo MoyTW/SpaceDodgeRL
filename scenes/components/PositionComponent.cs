@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 namespace SpaceDodgeRL.scenes.components {
 
   [JsonConverter(typeof(PositionConverter))]
-  public class PositionComponent : Node, Component, Savable {
+  public class PositionComponent : Node, Component {
     private static PackedScene _scenePrefab = GD.Load<PackedScene>("res://scenes/components/PositionComponent.tscn");
 
     public static readonly string ENTITY_GROUP = "POSITION_COMPONENT_GROUP";

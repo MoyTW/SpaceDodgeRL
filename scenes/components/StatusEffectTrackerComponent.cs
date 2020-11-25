@@ -102,7 +102,7 @@ namespace SpaceDodgeRL.scenes.components {
     }
   }
 
-  public class StatusEffectTrackerComponent : Component, Savable {
+  public class StatusEffectTrackerComponent : Component {
     public static readonly string ENTITY_GROUP = "STATUS_EFFECT_TRACKER_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
