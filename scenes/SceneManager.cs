@@ -41,10 +41,8 @@ namespace SpaceDodgeRL.scenes {
 
     private void DeferredCloseAutopilotMenu(string selectedZoneId) {
       var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
-      sceneStack.RemoveAt(sceneStack.Count - 1);
-
+      DeferredReturnToPreviousScene();
       previousScene.HandleAutopilotMenuClosed(selectedZoneId);
-      DeferredSwitchScene(previousScene);
     }
 
     #endregion
@@ -111,9 +109,7 @@ namespace SpaceDodgeRL.scenes {
 
     private void DeferredHandleItemToUseSelected(string itemIdToUse) {
       var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
-      sceneStack.RemoveAt(sceneStack.Count - 1);
-
-      DeferredSwitchScene(previousScene);
+      DeferredReturnToPreviousScene();
       previousScene.HandleItemToUseSelected(itemIdToUse);
     }
 
@@ -127,12 +123,18 @@ namespace SpaceDodgeRL.scenes {
     private void DeferredReturnToPreviousScene() {
       var previousScene = sceneStack[sceneStack.Count - 1];
       sceneStack.RemoveAt(sceneStack.Count - 1);
-      DeferredSwitchScene(previousScene);
+      DeferredSwitchScene(previousScene, true);
     }
 
     private void DeferredSwitchScene(Node scene) {
+      DeferredSwitchScene(scene, false);
+    }
+
+    private void DeferredSwitchScene(Node scene, bool previous) {
       var lastScene = root.GetChild(root.GetChildCount() - 1);
-      this.sceneStack.Add(lastScene);
+      if (!previous) {
+        this.sceneStack.Add(lastScene);
+      }
       root.RemoveChild(lastScene);
       root.AddChild(scene);
     }
