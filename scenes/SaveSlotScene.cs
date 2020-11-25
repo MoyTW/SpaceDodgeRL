@@ -9,6 +9,7 @@ public class SaveSlotScene : HBoxContainer {
   private Button _loadButton;
   private Label _lastPlayedLabel;
   private Button _clearButton;
+  private ConfirmationDialog _clearConfirmationDialog;
 
   [Export]
   public int SlotNumber { get; private set; }
@@ -17,9 +18,12 @@ public class SaveSlotScene : HBoxContainer {
 
   public override void _Ready() {
     this._loadButton = this.GetNode<Button>("LoadButton");
-    this._loadButton.Connect("pressed", this, nameof(OnSaveSlotPressed));
+    this._loadButton.Connect("pressed", this, nameof(OnLoadButtonPressed));
     this._lastPlayedLabel = this.GetNode<Label>("LastPlayedLabel");
     this._clearButton = this.GetNode<Button>("ClearButton");
+    this._clearButton.Connect("pressed", this, nameof(OnClearButtonPressed));
+    this._clearConfirmationDialog = this.GetNode<ConfirmationDialog>("ClearConfirmationDialog");
+    this._clearConfirmationDialog.GetOk().Connect("pressed", this, nameof(OnClearConfirmationDialogAccepted));
 
     this.SaveLocation = string.Format("user://SaveData_{0}.dat", Name);
 
@@ -44,6 +48,8 @@ public class SaveSlotScene : HBoxContainer {
     file.Open(this.SaveLocation, File.ModeFlags.Read);
     if(file.IsOpen()) {
       this.HasSaveData = true;
+    } else {
+      this.HasSaveData = false;
     }
     file.Close();
 
@@ -60,7 +66,7 @@ public class SaveSlotScene : HBoxContainer {
     }
   }
 
-  private void OnSaveSlotPressed() {
+  private void OnLoadButtonPressed() {
     if (this.HasSaveData == false) {
       // Initialize new EncounterState, EncounterScene
       var scene = _encounterPrefab.Instance() as EncounterScene;
@@ -90,5 +96,16 @@ public class SaveSlotScene : HBoxContainer {
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
       sceneManager.ShowEncounterScene(scene);
     }
+  }
+
+  private void OnClearButtonPressed() {
+    this._clearConfirmationDialog.PopupCentered();
+    this._clearConfirmationDialog.GetCancel().GrabFocus();
+  }
+
+  private void OnClearConfirmationDialogAccepted() {
+    var dir = new Directory();
+    dir.Remove(this.SaveLocation);
+    this.RefreshDisplay();
   }
 }
