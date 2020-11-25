@@ -59,6 +59,8 @@ namespace SpaceDodgeRL.scenes.components {
 
     public void RemoveEntity(Entity entity) {
       this._StoredEntities.Remove(entity);
+      // TODO: BUG - When you save/load it doesn't add in group; I mean we may as well just nuke the
+      // ENTITY_IN_INVENTORY_GROUP tag altogether 'till we need it?
       entity.RemoveFromGroup(ENTITY_IN_INVENTORY_GROUP);
     }
 

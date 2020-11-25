@@ -40,7 +40,6 @@ public class IntroMenuScene : Control {
       file.Close();
 
       var oldState = EncounterState.FromSaveData(saveData);
-      oldState.SetStateForNewGame();
       scene.SetEncounterState(oldState);
 
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
