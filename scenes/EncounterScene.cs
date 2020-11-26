@@ -28,7 +28,7 @@ namespace SpaceDodgeRL.scenes {
       this.encounterViewport.AddChild(this.EncounterState);
       this.encounterRunner.SetEncounterState(this.EncounterState);
       // Hook up the UI
-      this.EncounterState.Connect("EncounterLogMessageAdded", this, "OnEncounterLogMessageAdded");
+      this.EncounterState.Connect(nameof(EncounterState.EncounterLogMessageAdded), this, nameof(OnEncounterLogMessageAdded));
     }
 
     /**
@@ -43,6 +43,7 @@ namespace SpaceDodgeRL.scenes {
     }
 
     // TODO: Decide if this is better placed directly onto the log label
+    // TODO: I think there's an issue where it stops updating after it hits its size limit
     private void OnEncounterLogMessageAdded(string bbCodeMessage, int encounterLogSize) {
       if (encounterLogLabel.GetLineCount() > encounterLogSize) {
         encounterLogLabel.RemoveLine(0);
