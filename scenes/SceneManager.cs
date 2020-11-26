@@ -14,6 +14,7 @@ namespace SpaceDodgeRL.scenes {
 
     private AutopilotMenu _autopilotMenu;
     private CharacterMenu _characterMenu;
+    private DefeatMenu _defeatMenu;
     private EscapeMenu _escapeMenu;
     private InventoryMenu _inventoryMenu;
     private ReadOnlyCollection<EncounterZone> _autopilotMenuZones;
@@ -24,6 +25,7 @@ namespace SpaceDodgeRL.scenes {
 
       this._autopilotMenu = GD.Load<PackedScene>("res://scenes/encounter/AutopilotMenu.tscn").Instance() as AutopilotMenu;
       this._characterMenu = GD.Load<PackedScene>("res://scenes/encounter/CharacterMenu.tscn").Instance() as CharacterMenu;
+      this._defeatMenu = GD.Load<PackedScene>("res://scenes/encounter/DefeatMenu.tscn").Instance() as DefeatMenu;
       this._escapeMenu = GD.Load<PackedScene>("res://scenes/encounter/EscapeMenu.tscn").Instance() as EscapeMenu;
       this._inventoryMenu = GD.Load<PackedScene>("res://scenes/encounter/InventoryMenu.tscn").Instance() as InventoryMenu;
     }
@@ -63,6 +65,19 @@ namespace SpaceDodgeRL.scenes {
       var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
       previousScene.HandleLevelUpSelected(previousScene.EncounterState.Player, levelUpSelection);
       this._characterMenu.PrepMenu(previousScene.EncounterState);
+    }
+
+    #endregion
+
+    # region Defeat Menu
+
+    public void ShowDefeatMenu(EncounterState state) {
+      CallDeferred(nameof(DeferredShowDefeatMenu), state);
+    }
+
+    private void DeferredShowDefeatMenu(EncounterState state) {
+      DeferredSwitchScene(this._defeatMenu);
+      this._defeatMenu.PrepMenu(state);
     }
 
     #endregion
