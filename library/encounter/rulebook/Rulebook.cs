@@ -194,8 +194,26 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
+    private static void ResolveOnDeathEffect(string effectType, EncounterState state) {
+      if (effectType == OnDeathEffectType.PLAYER_VICTORY) {
+        GD.Print("Congratulations! you won!");
+      } else if (effectType == OnDeathEffectType.PLAYER_DEFEAT) {
+        GD.Print("Oof, you lost. RIP. How do we get Rulebook to throw up a death screen?");
+      } else {
+        throw new NotImplementedException(String.Format("Don't know how to resolve on death effect type {0}", effectType));
+      }
+    }
+
     private static bool ResolveSelfDestruct(SelfDestructAction action, EncounterState state) {
       Entity entity = state.GetEntityById(action.ActorId);
+
+      var onDeathComponent = entity.GetComponent<OnDeathComponent>();
+      if (onDeathComponent != null) {
+        foreach (var effectType in onDeathComponent.ActiveEffectTypes) {
+          ResolveOnDeathEffect(effectType, state);
+        }
+      }
+
       state.RemoveEntity(entity);
       return true;
     }

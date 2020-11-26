@@ -197,6 +197,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 100));
       e.AddComponent(DisplayComponent.Create(_texDiplomatPath, false));
+      e.AddComponent(OnDeathComponent.Create(new List<string>() { OnDeathEffectType.PLAYER_VICTORY }));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 0));
@@ -285,6 +286,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(DefenderComponent.Create(0, 100));
       e.AddComponent(DisplayComponent.Create(_AtSignPath, false));
       e.AddComponent(InventoryComponent.Create(inventorySize: 26));
+      e.AddComponent(OnDeathComponent.Create(new List<string>() { OnDeathEffectType.PLAYER_DEFEAT }));
       e.AddComponent(PlayerComponent.Create());
       e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
       e.AddComponent(statusEffectTrackerComponent);
