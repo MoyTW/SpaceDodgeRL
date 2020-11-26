@@ -24,6 +24,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texCarrierPath = "res://resources/tex_carrier.tres";
     private static string _texCruiserPath = "res://resources/tex_cruiser.tres";
     private static string _texDestroyerPath = "res://resources/tex_destroyer.tres";
+    private static string _texEMPPath = "res://resources/tex_EMP.tres";
     private static string _texDiplomatPath = "res://resources/tex_diplomat.tres";
     private static string _texGunshipPath = "res://resources/tex_gunship.tres";
     private static string _texFrigatePath = "res://resources/tex_frigate.tres";
@@ -241,6 +242,18 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
+    private static Entity CreateEMPEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "EMP");
+
+      e.AddComponent(DisplayComponent.Create(_texEMPPath, true));
+      e.AddComponent(StorableComponent.Create());
+      e.AddComponent(UsableComponent.Create());
+      // I seriously put 20 radius 10 turns? That's enough time to mop up an entire encounter!
+      e.AddComponent(UseEffectEMPComponent.Create(radius: 20, disableTurns: 10));
+
+      return e;
+    }
+
     public static Entity CreateEnemyByEntityDefId(string enemyDefId, string activationGroupId, int currentTick) {
       if (enemyDefId == EntityDefId.SCOUT) {
         return EntityBuilder.CreateScoutEntity(activationGroupId, currentTick);
@@ -271,8 +284,7 @@ namespace SpaceDodgeRL.scenes.entities {
       } else if (itemDefId == EntityDefId.ITEM_RED_PAINT) {
         return EntityBuilder.CreateRedPaintEntity();
       } else if (itemDefId == EntityDefId.ITEM_EMP) {
-        GD.Print("TODO: No implementation yet for ID ", itemDefId);
-        return EntityBuilder.CreateDuctTapeEntity();
+        return EntityBuilder.CreateEMPEntity();
       } else {
         throw new NotImplementedException("No mapping defined for " + itemDefId);
       }

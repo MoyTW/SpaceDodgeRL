@@ -286,6 +286,12 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         ));
       }
 
+      var useEffectEMP = usable.GetComponent<UseEffectEMPComponent>();
+      if (useEffectEMP != null) {
+        state.LogMessage(String.Format("EMP detonated in radius {0} - disables {1} turns!",
+          useEffectEMP.Radius, useEffectEMP.DisableTurns));
+      }
+
       // We assume all items are single-use; this will change if I deviate from the reference implementation!
       userInventory.RemoveEntity(usable);
       usable.QueueFree();
