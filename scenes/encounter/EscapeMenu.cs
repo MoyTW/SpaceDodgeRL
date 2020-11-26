@@ -28,21 +28,12 @@ public class EscapeMenu : Control {
   }
 
   private void OnMainMenuBttonPressed() {
-    Godot.File write = new Godot.File();
-    write.Open(this._state.SaveFilePath, File.ModeFlags.Write);
-    write.StoreString(this._state.ToSaveData());
-    write.Close();
-
-    var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-    sceneManager.ExitToMainMenu();
+    this._state.WriteToFile();
+    ((SceneManager)GetNode("/root/SceneManager")).ExitToMainMenu();
   }
 
   private void OnSaveAndQuitButtonPressed() {
-    Godot.File write = new Godot.File();
-    write.Open(this._state.SaveFilePath, File.ModeFlags.Write);
-    write.StoreString(this._state.ToSaveData());
-    write.Close();
-
+    this._state.WriteToFile();
     GetTree().Quit();
   }
 }

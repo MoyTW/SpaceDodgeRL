@@ -325,6 +325,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
                         .FirstOrDefault(e => e.GetComponent<StairsComponent>() != null);
       if (stairs != null) {
         state.ResetStateForNewLevel(state.Player, state.DungeonLevel + 1);
+        state.WriteToFile();
         return true;
       } else {
         return false;

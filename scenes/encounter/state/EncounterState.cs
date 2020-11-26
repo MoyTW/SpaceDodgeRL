@@ -472,7 +472,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return state;
     }
 
-    public string ToSaveData() {
+    public void WriteToFile() {
+      Godot.File write = new Godot.File();
+      write.Open(this.SaveFilePath, File.ModeFlags.Write);
+      write.StoreString(this.ToSaveData());
+      write.Close();
+    }
+
+    private string ToSaveData() {
       var data = new SaveData();
 
       data.SaveFilePath = this.SaveFilePath;

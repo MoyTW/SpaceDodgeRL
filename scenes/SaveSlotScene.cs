@@ -79,10 +79,7 @@ public class SaveSlotScene : HBoxContainer {
       scene.SetEncounterState(newState);
 
       // Save to slot
-      Godot.File write = new Godot.File();
-      write.Open(this.SaveLocation, File.ModeFlags.Write);
-      write.StoreString(newState.ToSaveData());
-      write.Close();
+      newState.WriteToFile();
 
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
       sceneManager.ShowEncounterScene(scene);
