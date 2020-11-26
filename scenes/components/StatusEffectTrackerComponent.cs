@@ -8,6 +8,7 @@ using SpaceDodgeRL.scenes.entities;
 namespace SpaceDodgeRL.scenes.components {
 
   public static class StatusEffectType {
+    public static string DISABLE = "STATUS_EFFECT_DISABLE";
     public static string BOOST_POWER = "STATUS_EFFECT_BOOST_POWER";
     public static string BOOST_SPEED = "STATUS_EFFECT_BOOST_SPEED";
   }
@@ -48,7 +49,9 @@ namespace SpaceDodgeRL.scenes.components {
         }
       }
 
-      if (type == StatusEffectType.BOOST_POWER) {
+      if (type == StatusEffectType.DISABLE) {
+        return new StatusEffectTimedDisable(startTick: startTick, endTick: endTick);
+      } else if (type == StatusEffectType.BOOST_POWER) {
         return new StatusEffectTimedPowerBoost(boostPower: boostPower, startTick: startTick, endTick: endTick);
       } else if (type == StatusEffectType.BOOST_SPEED) {
         return new StatusEffectTimedSpeedBoost(boostPower: boostPower, startTick: startTick, endTick: endTick);
@@ -58,8 +61,9 @@ namespace SpaceDodgeRL.scenes.components {
     }
 
     public override void Write(Utf8JsonWriter writer, StatusEffect value, JsonSerializerOptions options) {
-      // JsonSerializer.Serialize<object>(writer, value as object, options);
-      if (value.Type == StatusEffectType.BOOST_POWER) {
+      if (value.Type == StatusEffectType.DISABLE) {
+        JsonSerializer.Serialize<StatusEffectTimedDisable>(writer, value as StatusEffectTimedDisable);
+      } else if (value.Type == StatusEffectType.BOOST_POWER) {
         JsonSerializer.Serialize<StatusEffectTimedPowerBoost>(writer, value as StatusEffectTimedPowerBoost);
       } else if (value.Type == StatusEffectType.BOOST_SPEED) {
         JsonSerializer.Serialize<StatusEffectTimedSpeedBoost>(writer, value as StatusEffectTimedSpeedBoost);
@@ -74,6 +78,16 @@ namespace SpaceDodgeRL.scenes.components {
   public interface StatusEffectTimed {
     int StartTick { get; }
     int EndTick { get; }
+  }
+
+  public class StatusEffectTimedDisable : StatusEffect, StatusEffectTimed {
+    public int StartTick { get; }
+    public int EndTick { get; }
+
+    public StatusEffectTimedDisable(int startTick, int endTick) : base(StatusEffectType.DISABLE) {
+      this.StartTick = startTick;
+      this.EndTick = endTick;
+    }
   }
 
   // TODO: Consider a builder or something so we don't need to enumerate every permutation of status effect?

@@ -26,6 +26,7 @@ namespace SpaceDodgeRL.tests.scenes.components {
       component.AddEffect(new StatusEffectTimedSpeedBoost(50, 23, 48));
       component.AddEffect(new StatusEffectTimedSpeedBoost(4, 51, 99));
       component.AddEffect(new StatusEffectTimedPowerBoost(64, 13, 22));
+      component.AddEffect(new StatusEffectTimedDisable(0, 99));
       string saved = component.Save();
 
       var newComponent = StatusEffectTrackerComponent.Create(saved);
@@ -34,6 +35,9 @@ namespace SpaceDodgeRL.tests.scenes.components {
       Assert.Equal((component._StatusEffects[0] as StatusEffectTimed).EndTick, (newComponent._StatusEffects[0] as StatusEffectTimed).EndTick);
       Assert.Equal((component._StatusEffects[2] as StatusEffectTimed).StartTick, (newComponent._StatusEffects[2] as StatusEffectTimed).StartTick);
       Assert.Equal((component._StatusEffects[2] as StatusEffectTimed).EndTick, (newComponent._StatusEffects[2] as StatusEffectTimed).EndTick);
+      Assert.Equal(component._StatusEffects[3].Type, newComponent._StatusEffects[3].Type);
+      Assert.Equal((component._StatusEffects[3] as StatusEffectTimed).StartTick, (newComponent._StatusEffects[3] as StatusEffectTimed).StartTick);
+      Assert.Equal((component._StatusEffects[3] as StatusEffectTimed).EndTick, (newComponent._StatusEffects[3] as StatusEffectTimed).EndTick);
       Assert.Equal(component.GetTotalBoost(StatusEffectType.BOOST_SPEED), newComponent.GetTotalBoost(StatusEffectType.BOOST_SPEED));
       Assert.Equal(component.GetTotalBoost(StatusEffectType.BOOST_POWER), newComponent.GetTotalBoost(StatusEffectType.BOOST_POWER));
     }
