@@ -29,7 +29,6 @@ namespace SpaceDodgeRL.scenes.components.AI {
     public override List<EncounterAction> _DecideNextAction(EncounterState state, Entity parent) {
       var actions = new List<EncounterAction>();
       var parentPos = parent.GetComponent<PositionComponent>().EncounterPosition;
-      // TODO: Player death! if you die this just NPEs, which aside from being inelegant kills the program.
       var playerPos = state.Player.GetComponent<PositionComponent>().EncounterPosition;
 
       // Carrier never moves

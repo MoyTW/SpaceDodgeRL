@@ -4,7 +4,7 @@ using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components.use {
 
-  public class UseEffectBoostPowerComponent: Component {
+  public class UseEffectBoostPowerComponent : Component {
     public static readonly string ENTITY_GROUP = "USE_EFFECT_BOOST_POWER_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
