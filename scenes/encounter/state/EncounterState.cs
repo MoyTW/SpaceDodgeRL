@@ -19,6 +19,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // TODO: put this somewhere proper!
     public static int PLAYER_VISION_RADIUS = 10;
     public static int EncounterLogSize = 50;
+    public static string RUN_STATUS_RUNNING = "ENCOUNTER_RUN_STATUS_RUNNING";
+    public static string RUN_STATUS_PLAYER_VICTORY = "ENCOUNTER_RUN_STATUS_PLAYER_VICTORY";
+    public static string RUN_STATUS_PLAYER_DEFEAT = "ENCOUNTER_RUN_STATUS_PLAYER_DEFEAT";
 
     public string SaveFilePath { get; private set; }
 
@@ -33,20 +36,24 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public int MapHeight { get; set; }
     // TODO: Come back to the builder & access levels
     public EncounterTile[,] _encounterTiles;
-    public FoVCache FoVCache { get; private set; }
     public List<EncounterZone> _zones;
     public ReadOnlyCollection<EncounterZone> Zones { get => _zones.AsReadOnly(); }
+    public int LevelsInDungeon { get => 10; } // TODO: Properly pass this in!
+    public int DungeonLevel { get; private set; }
+
+    // Entity tracking
+    private Dictionary<string, bool> _activationTracker;
     private Dictionary<string, Entity> _entitiesById;
 
-    private Dictionary<string, bool> _activationTracker;
-
+    // Time & runner state
+    public string RunStatus { get; private set; }
     private ActionTimeline _actionTimeline;
     public int CurrentTick { get => _actionTimeline.CurrentTick; }
     public Entity NextEntity { get => _actionTimeline.NextEntity; }
     public Entity Player { get; private set; }
-    public int LevelsInDungeon { get => 10; } // TODO: Properly pass this in!
-    public int DungeonLevel { get; private set; }
 
+    // Transitory data
+    public FoVCache FoVCache { get; private set; }
     public Random EncounterRand { get; private set; }
 
     // ##########################################################################################################################
@@ -364,6 +371,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this._encounterLog = new List<string>();
       this._entitiesById = new Dictionary<string, Entity>();
       this._activationTracker = new Dictionary<string, bool>();
+      this.RunStatus = EncounterState.RUN_STATUS_RUNNING;
       this._actionTimeline = new ActionTimeline(0);
       // We also need to reset the player's action time
       player.GetComponent<ActionTimeComponent>().SetNextTurnAtTo(0);
@@ -390,6 +398,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.UpdatePlayerOverlays();
     }
 
+    public void NotifyPlayerVictory() {
+      this.RunStatus = EncounterState.RUN_STATUS_PLAYER_VICTORY;
+    }
+
+    public void NotifyPlayerDefeat() {
+      this.RunStatus = EncounterState.RUN_STATUS_PLAYER_DEFEAT;
+    }
+
     public class SaveData {
       // TODO: Don't store the path in the save file itself (you can't move/rename save files which is real annoying)
       public string SaveFilePath { get; set; }
@@ -400,6 +416,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       public List<EncounterZone> Zones { get; set; }
       public Dictionary<string, Entity> EntitiesById { get; set; }
       public Dictionary<string, bool> ActivationTracker { get; set; }
+      public string RunStatus { get; set; }
       public ActionTimeline.SaveData ActionTimeline { get; set; }
       public string PlayerId { get; set; }
       public int LevelsInDungeon { get; set; }
@@ -430,6 +447,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         state.AddChild(entity);
       }
       state._activationTracker = data.ActivationTracker;
+      state.RunStatus = data.RunStatus != null ? data.RunStatus : EncounterState.RUN_STATUS_RUNNING;
       state._actionTimeline = ActionTimeline.FromSaveData(data.ActionTimeline, data.EntitiesById);
       state.Player = data.EntitiesById[data.PlayerId];
       // TODO: Dungeon height
@@ -471,6 +489,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       data.Zones = this._zones;
       data.EntitiesById = this._entitiesById;
       data.ActivationTracker = this._activationTracker;
+      data.RunStatus = this.RunStatus;
       data.ActionTimeline = this._actionTimeline.ToSaveData();
       data.PlayerId = this.Player.EntityId;
       data.LevelsInDungeon = this.LevelsInDungeon;

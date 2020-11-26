@@ -77,6 +77,16 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     private void RunTurn(EncounterState state, InputHandler inputHandler) {
+      if (state.RunStatus == EncounterState.RUN_STATUS_PLAYER_DEFEAT) {
+        var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+        sceneManager.ShowDefeatMenu(state);
+        return;
+      } else if (state.RunStatus == EncounterState.RUN_STATUS_PLAYER_VICTORY) {
+        var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+        sceneManager.ShowVictoryMenu(state);
+        return;
+      }
+
       var entity = state.NextEntity;
       var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
 

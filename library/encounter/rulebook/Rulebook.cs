@@ -196,9 +196,9 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
     private static void ResolveOnDeathEffect(string effectType, EncounterState state) {
       if (effectType == OnDeathEffectType.PLAYER_VICTORY) {
-        GD.Print("Congratulations! you won!");
+        state.NotifyPlayerVictory();
       } else if (effectType == OnDeathEffectType.PLAYER_DEFEAT) {
-        GD.Print("Oof, you lost. RIP. How do we get Rulebook to throw up a death screen?");
+        state.NotifyPlayerDefeat();
       } else {
         throw new NotImplementedException(String.Format("Don't know how to resolve on death effect type {0}", effectType));
       }
