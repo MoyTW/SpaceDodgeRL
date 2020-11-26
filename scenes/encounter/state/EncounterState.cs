@@ -77,7 +77,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
           return zone;
         }
       }
-      return null;
+      // This should never be hit, but it sometimes does get hit, apparently!
+      throw new NotImplementedException(
+        String.Format("Attempting to fetch zone id {0} but could not. Contents of zones: {1}", zoneId, JsonSerializer.Serialize(this._zones))
+      );
     }
 
     /**

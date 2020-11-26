@@ -58,7 +58,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
     private static bool ResolveAutopilotBegin(AutopilotBeginAction action, EncounterState state) {
       var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
-      EncounterZone zone = state.GetZoneById(action.ZoneId); // TODO: This returns null on level 2 (presumably higher levels too)
+      EncounterZone zone = state.GetZoneById(action.ZoneId);
 
       var foundPath = Pathfinder.AStarWithNewGrid(playerPosition, zone.Center, state, 9000);
       int autopilotTries = 0;
