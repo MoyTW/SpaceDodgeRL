@@ -94,7 +94,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // Add the player to the map
       var playerZoneIdx = seededRand.Next(0, zones.Count);
       state.PlaceEntity(player, zones[playerZoneIdx].Center);
-      // TODO: delete the following test item
+      /*
       var nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 2, zones[playerZoneIdx].Center.Y + 1);
       state.PlaceEntity(EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_RED_PAINT), nextToPlayer);
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 1, zones[playerZoneIdx].Center.Y + 1);
@@ -103,6 +103,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + i, zones[playerZoneIdx].Center.Y + 3);
         state.PlaceEntity(EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_EXTRA_BATTERY), nextToPlayer);
       }
+      */
       
       /*
       nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 5, zones[playerZoneIdx].Center.Y + 5);
@@ -117,16 +118,16 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       if (dungeonLevel != 10) {
         // Generate the stairs (maybe we should refer interally as something more themetically appropriate?)
         // You can get stairs in your starting zone, but you probably shouldn't take them...
-        var stairsZone = zones[playerZoneIdx]; // TODO: not this
-        //var stairsZone = zones[seededRand.Next(0, zones.Count)];
+        // var stairsZone = zones[playerZoneIdx]; // For testing
+        var stairsZone = zones[seededRand.Next(0, zones.Count)];
         var stairsPosition = stairsZone.RandomUnblockedPosition(seededRand, state);
         var stairs = EntityBuilder.CreateStairsEntity();
         state.PlaceEntity(stairs, stairsPosition);
         stairsZone.AddFeatureToReadout(stairs);
 
         // Generate intel
-        var intelZone = zones[playerZoneIdx]; // TODO: not this
-        //var intelZone = zones[seededRand.Next(0, zones.Count)];
+        // var intelZone = zones[playerZoneIdx]; // For testing
+        var intelZone = zones[seededRand.Next(0, zones.Count)];
         var intelPosition = intelZone.RandomUnblockedPosition(seededRand, state);
         var intel = EntityBuilder.CreateIntelEntity(dungeonLevel + 1);
         state.PlaceEntity(intel, intelPosition);

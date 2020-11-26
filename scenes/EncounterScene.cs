@@ -11,6 +11,8 @@ namespace SpaceDodgeRL.scenes {
     public EncounterState EncounterState { get; private set; }
     private Viewport encounterViewport;
     private EncounterRunner encounterRunner;
+    // TODO: Encounter log sometimes stops updating - unsure why, I think it has to do with not cycling properly when you get to
+    // max number of messages
     private RichTextLabel encounterLogLabel;
 
     public override void _Ready() {
