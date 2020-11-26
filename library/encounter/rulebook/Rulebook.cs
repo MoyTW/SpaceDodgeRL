@@ -290,6 +290,27 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       if (useEffectEMP != null) {
         state.LogMessage(String.Format("EMP detonated in radius {0} - disables {1} turns!",
           useEffectEMP.Radius, useEffectEMP.DisableTurns));
+        var userPosition = user.GetComponent<PositionComponent>().EncounterPosition;
+        // TODO: Make util code for "for each cell in radius"? we have at least one VERY similar invocation in calculating player
+        // overlays, and probably also would have it in the player laser targeting too
+        // TODO: boy is this just flat-out ugly
+        for (int x = userPosition.X - useEffectEMP.Radius; x <= userPosition.X + useEffectEMP.Radius; x++) {
+          for (int y = userPosition.Y - useEffectEMP.Radius; y <= userPosition.Y + useEffectEMP.Radius; y++) {
+            var distance = userPosition.DistanceTo(x, y);
+            if (distance <= useEffectEMP.Radius && state.IsInBounds(x, y)) {
+              var entitiesAtPosition = state.EntitiesAtPosition(x, y);
+              foreach (var entity in entitiesAtPosition) {
+                var speedComponent = entity.GetComponent<SpeedComponent>();
+                var statusTracker = entity.GetComponent<StatusEffectTrackerComponent>();
+                if (entity != user && speedComponent != null && statusTracker != null) {
+                  var disableTicks = speedComponent.Speed * useEffectEMP.DisableTurns;
+                  statusTracker.AddEffect(new StatusEffectTimedDisable(state.CurrentTick, state.CurrentTick + disableTicks));
+                  state.LogMessage(String.Format("{0} was disabled for {1} ticks!", entity.EntityName, disableTicks));
+                }
+              }
+            }
+          }
+        }
       }
 
       // We assume all items are single-use; this will change if I deviate from the reference implementation!

@@ -152,6 +152,10 @@ namespace SpaceDodgeRL.scenes.components {
       return this._StatusEffects.Where(effect => effect.Type == statusEffectType);
     }
 
+    public bool HasDisabledEffect() {
+      return GetStatusEffectsOfType(StatusEffectType.DISABLE).Count() > 0;
+    }
+
     public int GetTotalBoost(string statusEffectType) {
       return GetStatusEffectsOfType(statusEffectType).Sum(e => ((StatusEffectBoostStat)e).BoostPower);
     }

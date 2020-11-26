@@ -160,7 +160,14 @@ namespace SpaceDodgeRL.scenes.encounter {
         int numTurnsRan = 0;
         while (!entity.IsInGroup(PlayerComponent.ENTITY_GROUP) && numTurnsRan < numTurnsToRun) {
           AIComponent aIComponent = entity.GetComponent<AIComponent>();
-          var aIActions = aIComponent.DecideNextAction(state, entity);
+          StatusEffectTrackerComponent statusTracker = entity.GetComponent<StatusEffectTrackerComponent>();
+
+          List<EncounterAction> aIActions;
+          if (statusTracker != null && statusTracker.HasDisabledEffect()) {
+            aIActions = new List<EncounterAction>() { new WaitAction(entity.EntityId) };
+          } else {
+            aIActions = aIComponent.DecideNextAction(state, entity);
+          }
           Rulebook.ResolveActionsAndEndTurn(aIActions, state);
 
           // TODO: this seems...fragile?
