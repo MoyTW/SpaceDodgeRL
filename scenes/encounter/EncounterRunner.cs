@@ -12,6 +12,11 @@ using SpaceDodgeRL.scenes.entities;
 namespace SpaceDodgeRL.scenes.encounter {
   public class EncounterRunner : Node {
 
+    // We use this to determine whether the UI should refresh; this will cause a comical number of UI updates since we'll be
+    // sending it every end turn, but I don't want to have to go in and effectively instrument all my state changes to set up
+    // "change on data update" changes.
+    [Signal] public delegate void TurnEnded();
+
     public InputHandler inputHandlerRef = null;
 
     private EncounterState _encounterState;
@@ -24,7 +29,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     // TODO: Write a system that has a component which does this instead of hard-coding it into the player's turn end
-    private static void PlayerExecuteTurnEndingAction(EncounterAction action, EncounterState state) {
+    private void PlayerExecuteTurnEndingAction(EncounterAction action, EncounterState state) {
       var player = state.Player;
 
       bool actionResolvedSuccessfully = Rulebook.ResolveAction(action, state);
@@ -56,22 +61,23 @@ namespace SpaceDodgeRL.scenes.encounter {
       Rulebook.ResolveEndTurn(player.EntityId, state);
 
       // After the player executes their turn we need to update the UI
+      EmitSignal(nameof(EncounterRunner.TurnEnded));
       state.UpdateFoVAndFoW();
       state.UpdatePlayerOverlays();
     }
 
-    private static void PlayerMove(EncounterState state, int dx, int dy) {
+    private void PlayerMove(EncounterState state, int dx, int dy) {
       var positionComponent = state.Player.GetComponent<PositionComponent>();
       var oldPos = positionComponent.EncounterPosition;
       var moveAction = new MoveAction(state.Player.EntityId, new EncounterPosition(oldPos.X + dx, oldPos.Y + dy));
       PlayerMove(state, moveAction);
     }
 
-    private static void PlayerMove(EncounterState state, MoveAction moveAction) {
+    private void PlayerMove(EncounterState state, MoveAction moveAction) {
       PlayerExecuteTurnEndingAction(moveAction, state);
     }
 
-    private static void PlayerWait(EncounterState state) {
+    private void PlayerWait(EncounterState state) {
       var waitAction = new WaitAction(state.Player.EntityId);
       PlayerExecuteTurnEndingAction(waitAction, state);
     }
@@ -169,6 +175,7 @@ namespace SpaceDodgeRL.scenes.encounter {
             aIActions = aIComponent.DecideNextAction(state, entity);
           }
           Rulebook.ResolveActionsAndEndTurn(aIActions, state);
+          EmitSignal(nameof(EncounterRunner.TurnEnded));
 
           // TODO: this seems...fragile?
           if (aIComponent is PathAIComponent) {
