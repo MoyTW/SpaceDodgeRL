@@ -32,6 +32,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texSmallGatlingPath = "res://resources/tex_small_gatling.tres";
     private static string _texSmallShotgunPath = "res://resources/tex_small_shotgun.tres";
     private static string _texRailgunPath = "res://resources/tex_railgun.tres";
+    private static string _texRedPaintPath = "res://resources/tex_red_paint.tres";
     private static string _texReverserPath = "res://resources/tex_reverser.tres";
 
     private class ProjectileDisplayData {
@@ -230,8 +231,9 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateRedPaintEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "red paint");
 
-      // TODO: paint should be 'p'?
-      e.AddComponent(DisplayComponent.Create(_bPath, true));
+      // TODO: I put it down as 'r', but that's the same as the reverser shot. Well we'll replace all the sprites anwyays
+      // if I do make it pretty.
+      e.AddComponent(DisplayComponent.Create(_texRedPaintPath, true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create());
       e.AddComponent(UseEffectBoostSpeedComponent.Create(boostPower: 75, duration: 300));
