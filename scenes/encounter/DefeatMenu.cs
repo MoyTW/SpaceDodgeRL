@@ -18,26 +18,21 @@ public class DefeatMenu : Control {
     this._state = state;
   }
 
-  // TODO: Figure out what you want to happen to failed/successful runs!
   private void OnMainMenuBttonPressed() {
-    /* TODO: Write a morgue file and clear the slot?
     Godot.File write = new Godot.File();
     write.Open(this._state.SaveFilePath, File.ModeFlags.Write);
     write.StoreString(this._state.ToSaveData());
     write.Close();
-    */
 
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
     sceneManager.ExitToMainMenu();
   }
 
   private void OnSaveAndQuitButtonPressed() {
-    /* TODO: Write a morgue file and clear the slot?
     Godot.File write = new Godot.File();
     write.Open(this._state.SaveFilePath, File.ModeFlags.Write);
     write.StoreString(this._state.ToSaveData());
     write.Close();
-    */
 
     GetTree().Quit();
   }

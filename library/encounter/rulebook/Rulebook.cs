@@ -194,11 +194,13 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
-    private static void ResolveOnDeathEffect(string effectType, EncounterState state) {
+    private static bool ResolveOnDeathEffect(string effectType, EncounterState state) {
       if (effectType == OnDeathEffectType.PLAYER_VICTORY) {
         state.NotifyPlayerVictory();
+        return false;
       } else if (effectType == OnDeathEffectType.PLAYER_DEFEAT) {
         state.NotifyPlayerDefeat();
+        return false;
       } else {
         throw new NotImplementedException(String.Format("Don't know how to resolve on death effect type {0}", effectType));
       }
@@ -208,14 +210,23 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       Entity entity = state.GetEntityById(action.ActorId);
 
       var onDeathComponent = entity.GetComponent<OnDeathComponent>();
+      // this 'shouldRemoveEntity' code is slightly confusing, simplify it if you come back to it
+      bool shouldRemoveEntity = true;
       if (onDeathComponent != null) {
         foreach (var effectType in onDeathComponent.ActiveEffectTypes) {
-          ResolveOnDeathEffect(effectType, state);
+          var effectStopsRemoval = !ResolveOnDeathEffect(effectType, state);
+          if (effectStopsRemoval) {
+            shouldRemoveEntity = false;
+          }
         }
       }
 
-      state.RemoveEntity(entity);
-      return true;
+      if (shouldRemoveEntity) {
+        state.RemoveEntity(entity);
+        return true;
+      } else {
+        return false;
+      }
     }
 
     private static bool ResolveSpawnEntity(SpawnEntityAction action, EncounterState state) {
