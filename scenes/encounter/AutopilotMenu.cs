@@ -6,7 +6,7 @@ using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
 
 public class AutopilotMenu : HBoxContainer {
-
+  private static PackedScene _readoutPrefab = GD.Load<PackedScene>("res://scenes/encounter/AutopilotZoneReadout.tscn");
   private static string ZONE_BUTTON_GROUP = "ZONE_BUTTON_GROUP";
 
   private EncounterState _state;
@@ -22,15 +22,15 @@ public class AutopilotMenu : HBoxContainer {
 
   private void ResetZones(ReadOnlyCollection<EncounterZone> zones, int mapWidth, int mapHeight) {
     var systemMap = this.GetNode<Control>("SystemMap");
-    var sidebarContainer = this.GetNode<VBoxContainer>("SidebarContainer/ButtonConsole/DynamicButtonsContainer");
+    var sidebarButtons = this.GetNode<VBoxContainer>("SidebarContainer/ButtonConsole/DynamicButtonsContainer");
 
     // Clear all the old zone data
     foreach(Node child in systemMap.GetChildren()) {
       systemMap.RemoveChild(child);
       child.QueueFree();
     }
-    foreach (Node child in sidebarContainer.GetChildren()) {
-      sidebarContainer.RemoveChild(child);
+    foreach (Node child in sidebarButtons.GetChildren()) {
+      sidebarButtons.RemoveChild(child);
       child.QueueFree();
     }
 
@@ -59,10 +59,10 @@ public class AutopilotMenu : HBoxContainer {
       systemMap.AddChild(systemButton);
 
       // Add the sidebar
-      var sidebarButton = new Button();
-      sidebarButton.Text = zone.ZoneName;
-      sidebarButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
-      sidebarContainer.AddChild(sidebarButton);
+      var sidebarReadout = _readoutPrefab.Instance() as AutopilotZoneReadout;
+      sidebarReadout.SetReadout(zone);
+      sidebarReadout.AutopilotButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
+      sidebarButtons.AddChild(sidebarReadout);
     }
   }
 
