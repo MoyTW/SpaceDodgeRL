@@ -17,3 +17,16 @@ This isn't a comprehensive setup list, because really who's gonna set this up ot
   * `cp ./.mono/assemblies/Debug/GodotSharp.dll .mono/temp/bin/Debug/`
 
 This should let you run the project from Godot, probably.
+
+# Pages
+
+It's playable online at https://moytw.github.io/SpaceDodgeRL/SpaceDodgeRL.html -
+however, I'm only going to push specific commits because the game's .pck file is
+apparently ~21MB? which is suboptimal. It's cool that I got it to run online
+though! The online version is *significantly* slower than even my laptop (and my
+laptop is not a snappy machine), to the extent that I'd have to actually worry
+about optimization if I want browser to be the intended experience.
+
+Still it's really sweet that Godot makes it so easy!
+
+See https://posworkshop.space/posts/godot-deploy-web-export-to-github/ as well.
