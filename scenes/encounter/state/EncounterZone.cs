@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 using SpaceDodgeRL.library.encounter;
+using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
 
   public class EntityReadout {
     [JsonInclude] public string EntityName { get; private set; }
+    [JsonInclude] public string TexturePath { get; private set; }
 
     public EntityReadout() { }
 
     public EntityReadout(Entity entity) {
       this.EntityName = entity.EntityName;
+      this.TexturePath = entity.GetComponent<DisplayComponent>().TexturePath;
     }
   }
 
