@@ -9,8 +9,6 @@ public class AutopilotMenu : HBoxContainer {
   private static PackedScene _readoutPrefab = GD.Load<PackedScene>("res://scenes/encounter/AutopilotZoneReadout.tscn");
   private static string ZONE_BUTTON_GROUP = "ZONE_BUTTON_GROUP";
 
-  private EncounterState _state;
-  private int _dungeonLevel = int.MinValue;
   private Button _closeButton;
 
   public override void _Ready() {
@@ -67,12 +65,7 @@ public class AutopilotMenu : HBoxContainer {
   }
 
   public void PrepMenu(EncounterState state) {
-    bool isNewState = this._state != state;
-    if (isNewState || this._dungeonLevel != state.DungeonLevel) {
-      this._state = state;
-      this._dungeonLevel = state.DungeonLevel;
-      ResetZones(state.Zones, state.MapWidth, state.MapHeight);
-    }
+    ResetZones(state.Zones, state.MapWidth, state.MapHeight);
     
     // TODO: Add You Are Here onto the starmap too!
     // You Are Here label
