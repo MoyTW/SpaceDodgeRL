@@ -18,7 +18,7 @@ public class AutopilotMenu : HBoxContainer {
     _closeButton.Connect("tree_entered", this, nameof(OnTreeEntered));
   }
 
-  private void ResetZones(ReadOnlyCollection<EncounterZone> zones, int mapWidth, int mapHeight) {
+  private void ResetZones(ReadOnlyCollection<EncounterZone> zones, int mapWidth, int mapHeight, bool hasIntel) {
     var systemMap = this.GetNode<Control>("SystemMap");
     var sidebarButtons = this.GetNode<VBoxContainer>("SidebarContainer/ButtonConsole/DynamicButtonsContainer");
 
@@ -58,14 +58,15 @@ public class AutopilotMenu : HBoxContainer {
 
       // Add the sidebar
       var sidebarReadout = _readoutPrefab.Instance() as AutopilotZoneReadout;
-      sidebarReadout.SetReadout(zone);
+      sidebarReadout.SetReadout(zone, hasIntel);
       sidebarReadout.AutopilotButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
       sidebarButtons.AddChild(sidebarReadout);
     }
   }
 
   public void PrepMenu(EncounterState state) {
-    ResetZones(state.Zones, state.MapWidth, state.MapHeight);
+    bool hasIntel = state.Player.GetComponent<PlayerComponent>().KnowsIntel(state.DungeonLevel);
+    ResetZones(state.Zones, state.MapWidth, state.MapHeight, hasIntel);
     
     // TODO: Add You Are Here onto the starmap too!
     // You Are Here label

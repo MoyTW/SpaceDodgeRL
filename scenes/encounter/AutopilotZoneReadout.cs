@@ -19,20 +19,36 @@ public class AutopilotZoneReadout : HBoxContainer {
     return textureRect;
   }
 
-  public void SetReadout(EncounterZone zone) {
+  public void SetReadout(EncounterZone zone, bool hasIntel) {
     this.GetNode<Label>("ReadoutContainer/NameEncounterBar/ZoneNameLabel").Text = zone.ZoneName;
-    this.GetNode<Label>("ReadoutContainer/NameEncounterBar/ZoneEncounterLabel").Text = zone.ReadoutEncounterName;
+    if (hasIntel) {
+      this.GetNode<Label>("ReadoutContainer/NameEncounterBar/ZoneEncounterLabel").Text = zone.ReadoutEncounterName;
+    } else {
+      this.GetNode<Label>("ReadoutContainer/NameEncounterBar/ZoneEncounterLabel").Text = "NO INTEL";
+    }
 
     var itemsBar = this.GetNode<HBoxContainer>("ReadoutContainer/ItemsFeaturesBar/ItemsBar");
-    var itemsTextureSize = itemsBar.RectSize.y;
-    foreach (var itemReadout in zone.ReadoutItems) {
-      itemsBar.AddChild(BuildTextureRect(itemReadout.TexturePath, itemsTextureSize));
+    if (hasIntel) {
+      var itemsTextureSize = itemsBar.RectSize.y;
+      foreach (var itemReadout in zone.ReadoutItems) {
+        itemsBar.AddChild(BuildTextureRect(itemReadout.TexturePath, itemsTextureSize));
+      }
+    } else {
+      var noIntelLabel = new Label();
+      noIntelLabel.Text = "-?-";
+      itemsBar.AddChild(noIntelLabel);
     }
 
     var featuresBar = this.GetNode<HBoxContainer>("ReadoutContainer/ItemsFeaturesBar/FeaturesBar");
-    var featuresTextureSize = featuresBar.RectSize.y;
-    foreach (var featureReadout in zone.ReadoutFeatures) {
-      featuresBar.AddChild(BuildTextureRect(featureReadout.TexturePath, featuresTextureSize));
+    if (hasIntel) {
+      var featuresTextureSize = featuresBar.RectSize.y;
+      foreach (var featureReadout in zone.ReadoutFeatures) {
+        featuresBar.AddChild(BuildTextureRect(featureReadout.TexturePath, featuresTextureSize));
+      }
+    } else {
+      var noIntelLabel = new Label();
+      noIntelLabel.Text = "-?-";
+      featuresBar.AddChild(noIntelLabel);
     }
   }
 }
