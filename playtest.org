@@ -1,0 +1,11 @@
+* Session 2020-11-30 7a849c156b2f23bfdb8cd8d324f6a2de792a56a1
++ the map menu gets really hard to read at big resolutions
+  - buttons get spaced out
+  - hard to tell which "GO" correlated with which button
++ ESCAPE should close the map
++ Eventually the scroll in the event log freezes
++ Destroyer seems to fire, but the shot hangs (are they in the same tick as player?)
++ I could really use an "autoloot sector" button!
++ I think...it broke when I took up to my limit in items? yep, InventoryFullCannotStoreException
+  - I could use a readout on inventory size, that seems helpful
++ Well game crashed, I'll patch that and continue
