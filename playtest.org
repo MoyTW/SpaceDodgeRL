@@ -9,3 +9,19 @@
 + I think...it broke when I took up to my limit in items? yep, InventoryFullCannotStoreException
   - I could use a readout on inventory size, that seems helpful
 + Well game crashed, I'll patch that and continue
++ fixed, confirmed
++ sometimes cutting beam laser finishes SO FAST you don't even see it
+  - basically if you're right up next to a guy
+  - this is probably the same with a shot that hits you as you're right next to something
+  - fix that Tween timing issue?
++ even the inventory doesn't tell you how many slots you have left, that's definitely bad
++ inventory still has TODO: item descriptions, rip
++ there are white squares for...I think items that you've picked up? that vanish when you enter sight
++ FoW resets when you load
++ projectile paths not drawn when you load
++ newly picked-up items go to the last column in the inventory?
+  - if you use an item in the left column then pick an item up it goes to the right?
++ you can't hold down button to scroll your menu buttons...annoying!
++ intel doesn't auto-use which is annoying
++ path danger doesn't take into account collision
++ ending for now ~level 5
