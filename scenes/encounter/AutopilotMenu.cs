@@ -88,20 +88,6 @@ public class AutopilotMenu : HBoxContainer {
     }
     var youAreHereLabel = this.GetNode<RichTextLabel>("SidebarContainer/YouAreHereLabel");
     youAreHereLabel.BbcodeText = string.Format("You are currently near [b]{0}[/b]", closestZone.ZoneName);
-
-    // TODO: Put in a UI to display this onscreen
-    if (state.Player.GetComponent<PlayerComponent>().KnowsIntel(state.DungeonLevel)) {
-      GD.Print("##### INTEL READOUT FOR " + state.DungeonLevel + " #####");
-      foreach (EncounterZone zone in state.Zones) {
-        var items = "items=";
-        foreach (EntityReadout e in zone.ReadoutItems) { items += " " + e.EntityName; }
-        var features = "features=";
-        foreach (EntityReadout e in zone.ReadoutFeatures) { features += " " + e.EntityName; }
-        GD.Print(zone.ZoneName + " : " + zone.ReadoutEncounterName + " : " + items + " : " + features);
-      }
-    } else {
-      GD.Print("##### PLAYER DOES NOT KNOW INTEL FOR LEVEL " + state.DungeonLevel + " #####");
-    }
   }
 
   private void OnTreeEntered() {
