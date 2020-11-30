@@ -28,7 +28,6 @@ namespace SpaceDodgeRL.tests.scenes.components {
     public void SerializesAndDeserializesCorrectly() {
       var component = InventoryComponent.Create(91);
 
-      // TODO: Once you have Entity working, clean this up.
       var battery = EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_EXTRA_BATTERY);
       component.AddEntity(battery);
       var ductTape = EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_DUCT_TAPE);

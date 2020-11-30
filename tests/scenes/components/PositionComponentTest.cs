@@ -15,9 +15,6 @@ namespace SpaceDodgeRL.tests.scenes.components {
       this._output = output;
     }
 
-    // TODO: You can't run these via 'dotnet test' - you'll get a Godot error. "ECall methods must be packaged into a system
-    // module.". Which is a little inconvenient, as I think that means I can't really unit test any of the godot stuff until I
-    // find a way to fix it?
     [Fact]
     public void IncludesEntityGroup() {
       var component = PositionComponent.Create(new EncounterPosition(0, 0), "res://resources/tex_test.tres");
