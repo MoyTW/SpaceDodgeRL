@@ -178,19 +178,24 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
     private static bool ResolveGetItem(GetItemAction action, EncounterState state) {
       var actor = state.GetEntityById(action.ActorId);
+      var inventoryComponent = actor.GetComponent<InventoryComponent>();
       var actorPosition = actor.GetComponent<PositionComponent>().EncounterPosition;
       var item = state.EntitiesAtPosition(actorPosition.X, actorPosition.Y)
                       .FirstOrDefault(e => e.GetComponent<StorableComponent>() != null);
 
-      if (item != null) {
+      if (item == null) {
+        return false;
+      } else if (!inventoryComponent.CanFit(item)) {
+        state.LogMessage(string.Format("[b]{0}[/b] can't fit the [b]{1}[/b] in its inventory!",
+          actor.EntityName, item.EntityName));
+        return false;
+      } else {
         state.RemoveEntity(item);
         actor.GetComponent<InventoryComponent>().AddEntity(item);
 
         var logMessage = string.Format("[b]{0}[/b] has taken the [b]{1}[/b]", actor.EntityName, item.EntityName);
         state.LogMessage(logMessage);
         return true;
-      } else {
-        return false;
       }
     }
 
