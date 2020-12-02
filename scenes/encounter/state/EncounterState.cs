@@ -336,6 +336,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return state;
     }
 
+    // Should be for testing purposes only!
+    public static EncounterState CreateWithoutSaving() {
+      return _encounterPrefab.Instance() as EncounterState;
+    }
+
     public void SetStateForNewGame() {
       this.ResetStateForNewLevel(EntityBuilder.CreatePlayerEntity(0), 1);
     }
