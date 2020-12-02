@@ -18,7 +18,7 @@
 + TODO: inventory still has TODO: item descriptions, rip
 + TODO: there are white squares for...I think items that you've picked up? that vanish when you enter sight
 + TODO: FoW resets when you load
-+ TODO: projectile paths not drawn when you load
++ FIXED: projectile paths not drawn when you load
 + TODO: newly picked-up items go to the last column in the inventory?
   - if you use an item in the left column then pick an item up it goes to the right?
 + TODO: you can't hold down button to scroll your menu buttons...annoying!
@@ -31,7 +31,7 @@
 + TODO: carriers are pretty lol to fight, prioritize enemies that you can kill in one hit?
 + TODO: it doesn't tell you what sector you're in anywhere except for the starting log scroll
 + Approaching Infinity has its log reversed (new entries at top) - uh. wait. what's standard?
-+ TODO: somehow switching levels keeps the danger map from previous level...?
++ FIXED: somehow switching levels keeps the danger map from previous level...?
   - ah! it went away after switching to the save screen
   - probably is: jump under fire doesn't clear danger map properly
 + TODO: jump point can spawn under satellite lol

@@ -348,6 +348,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         camera.Current = true;
         Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
       }
+      this.UpdateDangerMap();
     }
 
     // TODO: Move into map gen & save/load
@@ -399,6 +400,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.InitFoWOverlay();
       this.UpdateFoVAndFoW();
       this.UpdatePlayerOverlays();
+      if (this.IsInsideTree()) {
+        this.UpdateDangerMap();
+      }
     }
 
     public void NotifyPlayerVictory() {
