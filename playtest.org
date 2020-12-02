@@ -1,46 +1,46 @@
 * Session 2020-11-30 7a849c156b2f23bfdb8cd8d324f6a2de792a56a1
-+ the map menu gets really hard to read at big resolutions
++ TODO: the map menu gets really hard to read at big resolutions
   - buttons get spaced out
   - hard to tell which "GO" correlated with which button
-+ ESCAPE should close the map
-+ Eventually the scroll in the event log freezes
-+ Destroyer seems to fire, but the shot hangs (are they in the same tick as player?)
-+ I could really use an "autoloot sector" button!
-+ I think...it broke when I took up to my limit in items? yep, InventoryFullCannotStoreException
++ TODO: ESCAPE should close the map
++ FIXED: Eventually the scroll in the event log freezes
++ TODO: Destroyer seems to fire, but the shot hangs (are they in the same tick as player?)
++ TODO: I could really use an "autoloot sector" button!
++ FIXED: I think...it broke when I took up to my limit in items? yep, InventoryFullCannotStoreException
   - I could use a readout on inventory size, that seems helpful
 + Well game crashed, I'll patch that and continue
 + fixed, confirmed
-+ sometimes cutting beam laser finishes SO FAST you don't even see it
++ TODO: sometimes cutting beam laser finishes SO FAST you don't even see it
   - basically if you're right up next to a guy
   - this is probably the same with a shot that hits you as you're right next to something
   - fix that Tween timing issue?
-+ even the inventory doesn't tell you how many slots you have left, that's definitely bad
-+ inventory still has TODO: item descriptions, rip
-+ there are white squares for...I think items that you've picked up? that vanish when you enter sight
-+ FoW resets when you load
-+ projectile paths not drawn when you load
-+ newly picked-up items go to the last column in the inventory?
++ TODO: even the inventory doesn't tell you how many slots you have left, that's definitely bad
++ TODO: inventory still has TODO: item descriptions, rip
++ TODO: there are white squares for...I think items that you've picked up? that vanish when you enter sight
++ TODO: FoW resets when you load
++ TODO: projectile paths not drawn when you load
++ TODO: newly picked-up items go to the last column in the inventory?
   - if you use an item in the left column then pick an item up it goes to the right?
-+ you can't hold down button to scroll your menu buttons...annoying!
-+ intel doesn't auto-use which is annoying
-+ path danger doesn't take into account collision
++ TODO: you can't hold down button to scroll your menu buttons...annoying!
++ TODO: intel doesn't auto-use which is annoying
++ TODO: path danger doesn't take into account collision
 + ending for now ~level 5
 + playing more
 + it'd be really sweet if the readout told you when you picked items up
-+ right...I have the seed the same for every level. should fix that.
-+ carriers are pretty lol to fight, prioritize enemies that you can kill in one hit?
-+ it doesn't tell you what sector you're in anywhere except for the starting log scroll
++ TODO: right...I have the seed the same for every level. should fix that.
++ TODO: carriers are pretty lol to fight, prioritize enemies that you can kill in one hit?
++ TODO: it doesn't tell you what sector you're in anywhere except for the starting log scroll
 + Approaching Infinity has its log reversed (new entries at top) - uh. wait. what's standard?
-+ somehow switching levels keeps the danger map from previous level...?
++ TODO: somehow switching levels keeps the danger map from previous level...?
   - ah! it went away after switching to the save screen
   - probably is: jump under fire doesn't clear danger map properly
-+ jump point can spawn under satellite lol
++ TODO: jump point can spawn under satellite lol
   - well THAT killed my run, RIP run
 + EMP disable is ABSURDLY long on some of the higher-tier enemies
   - Destroyer in particular
 
 * Session 2020-12-02 3a6c655cd26edb289da3390d656770784c737837
-+ crash with NPE:
++ TODO: crash with NPE:
 E 0:01:11.273   void SpaceDodgeRL.library.encounter.rulebook.Rulebook.Attack(SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.encounter.state.EncounterState ): System.NullReferenceException: Object reference not set to an instance of an object.
   <C++ Error>   Unhandled exception
   <C++ Source>  C:\Users\Travis Moy\Projects\Godot\SpaceDodgeRL\library\encounter\rulebook\Rulebook.cs:124 @ void SpaceDodgeRL.library.encounter.rulebook.Rulebook.Attack(SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
