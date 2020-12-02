@@ -119,6 +119,8 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
             attacker.EntityName, defender.EntityName, damage);
 
           // Assign XP to the entity that fired the projectile
+          // TODO: If the source has been destroyed in between the firing of the projectile and it destroying something else,
+          // then projectileSource will be null and this will crash.
           var projectileSource = state.GetEntityById(attackerComponent.SourceEntityId);
           var xpValueComponent = defender.GetComponent<XPValueComponent>();
           if (xpValueComponent != null && projectileSource.GetComponent<XPTrackerComponent>() != null) {

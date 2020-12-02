@@ -38,3 +38,25 @@
   - well THAT killed my run, RIP run
 + EMP disable is ABSURDLY long on some of the higher-tier enemies
   - Destroyer in particular
+
+* Session 2020-12-02 3a6c655cd26edb289da3390d656770784c737837
++ crash with NPE:
+E 0:01:11.273   void SpaceDodgeRL.library.encounter.rulebook.Rulebook.Attack(SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.encounter.state.EncounterState ): System.NullReferenceException: Object reference not set to an instance of an object.
+  <C++ Error>   Unhandled exception
+  <C++ Source>  C:\Users\Travis Moy\Projects\Godot\SpaceDodgeRL\library\encounter\rulebook\Rulebook.cs:124 @ void SpaceDodgeRL.library.encounter.rulebook.Rulebook.Attack(SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+  <Stack Trace> Rulebook.cs:124 @ void SpaceDodgeRL.library.encounter.rulebook.Rulebook.Attack(SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+                Rulebook.cs:152 @ Boolean SpaceDodgeRL.library.encounter.rulebook.Rulebook.ResolveMove(SpaceDodgeRL.library.encounter.rulebook.actions.MoveAction , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+                Rulebook.cs:18 @ Boolean SpaceDodgeRL.library.encounter.rulebook.Rulebook+<>c.<.cctor>b__17_2(SpaceDodgeRL.library.encounter.rulebook.EncounterAction , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+                Rulebook.cs:31 @ Boolean SpaceDodgeRL.library.encounter.rulebook.Rulebook.ResolveAction(SpaceDodgeRL.library.encounter.rulebook.EncounterAction , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+                Rulebook.cs:51 @ void SpaceDodgeRL.library.encounter.rulebook.Rulebook+<>c__DisplayClass3_0.<ResolveActionsAndEndTurn>b__0(SpaceDodgeRL.library.encounter.rulebook.EncounterAction )()
+                :0 @ void System.Collections.Generic.List`1[[SpaceDodgeRL.library.encounter.rulebook.EncounterAction, SpaceDodgeRL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]].ForEach(System.Action`1[SpaceDodgeRL.library.encounter.rulebook.EncounterAction] )()
+                Rulebook.cs:51 @ void SpaceDodgeRL.library.encounter.rulebook.Rulebook.ResolveActionsAndEndTurn(System.Collections.Generic.List`1[SpaceDodgeRL.library.encounter.rulebook.EncounterAction] , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+                EncounterRunner.cs:177 @ void SpaceDodgeRL.scenes.encounter.EncounterRunner.RunTurn(SpaceDodgeRL.scenes.encounter.state.EncounterState , SpaceDodgeRL.scenes.InputHandler )()
+                EncounterRunner.cs:28 @ void SpaceDodgeRL.scenes.encounter.EncounterRunner._Process(Single )()
++ error cause:
+  - immediately go to zone 6 every time
+  - travel up
+  - at sector ~6? the one with destroyers, kill [something]?
+  - get error in - OH! OK
++ error reason: `projectileSource` was null?
+  - OH! ok: if an entity gets destroyed, but then their bullet kills something after they're destroyed, it will error out, because they'll be out of the State map!
