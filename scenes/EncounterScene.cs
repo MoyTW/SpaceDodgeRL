@@ -11,8 +11,6 @@ namespace SpaceDodgeRL.scenes {
     public EncounterState EncounterState { get; private set; }
     private Viewport encounterViewport;
     private EncounterRunner encounterRunner;
-    // TODO: Encounter log sometimes stops updating - unsure why, I think it has to do with not cycling properly when you get to
-    // max number of messages
     private RichTextLabel encounterLogLabel;
 
     public override void _Ready() {
@@ -45,7 +43,6 @@ namespace SpaceDodgeRL.scenes {
     }
 
     // TODO: Decide if this is better placed directly onto the log label
-    // TODO: I think there's an issue where it stops updating after it hits its size limit
     private void OnEncounterLogMessageAdded(string bbCodeMessage, int encounterLogSize) {
       if (encounterLogLabel.GetLineCount() > encounterLogSize) {
         encounterLogLabel.RemoveLine(0);
