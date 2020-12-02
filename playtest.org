@@ -25,3 +25,14 @@
 + intel doesn't auto-use which is annoying
 + path danger doesn't take into account collision
 + ending for now ~level 5
++ playing more
++ it'd be really sweet if the readout told you when you picked items up
++ right...I have the seed the same for every level. should fix that.
++ carriers are pretty lol to fight, prioritize enemies that you can kill in one hit?
++ it doesn't tell you what sector you're in anywhere except for the starting log scroll
++ Approaching Infinity has its log reversed (new entries at top) - uh. wait. what's standard?
++ somehow switching levels keeps the danger map from previous level...?
+  - ah! it went away after switching to the save screen
+  - probably is: jump under fire doesn't clear danger map properly
++ jump point can spawn under satellite lol
+  - well THAT killed my run, RIP run
