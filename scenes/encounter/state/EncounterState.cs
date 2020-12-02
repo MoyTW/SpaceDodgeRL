@@ -327,7 +327,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         this._encounterLog.RemoveAt(0);
       }
       this._encounterLog.Add(bbCodeMessage);
-      this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, EncounterState.EncounterLogSize);
+      this.EmitSignal(nameof(EncounterLogMessageAdded), bbCodeMessage, EncounterState.EncounterLogSize);
     }
 
     public static EncounterState Create(string saveFilePath) {

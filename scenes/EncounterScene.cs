@@ -51,6 +51,7 @@ namespace SpaceDodgeRL.scenes {
         encounterLogLabel.RemoveLine(0);
       }
       encounterLogLabel.AppendBbcode(bbCodeMessage + "\n");
+      encounterLogLabel.Update();
     }
 
     private void OnTurnEnded() {
