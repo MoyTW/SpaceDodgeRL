@@ -69,8 +69,12 @@ namespace SpaceDodgeRL.scenes {
       var xpComponent = player.GetComponent<XPTrackerComponent>();
       var newLevelText = string.Format("Level: {0}", xpComponent.Level);
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/LevelLabel").Text = newLevelText;
-      var newXPText = string.Format("Experience: {0} / {1}", xpComponent.XP, xpComponent.NextLevelAtXP);
+      var newXPText = string.Format("Experience: {0}/{1}", xpComponent.XP, xpComponent.NextLevelAtXP);
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/ExperienceLabel").Text = newXPText;
+
+      var invComponent = player.GetComponent<InventoryComponent>();
+      var newInvText = string.Format("Inventory Space: {0}/{1}", invComponent.InventoryUsed, invComponent.InventorySize);
+      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/InventoryLabel").Text = newInvText;
     }
 
     // This could probably be a signal.

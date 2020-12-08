@@ -17,11 +17,29 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InventoryHeader" type="Label" parent="."]
+[node name="Header" type="CenterContainer" parent="."]
 margin_right = 1024.0
 margin_bottom = 40.0
+
+[node name="HeaderHBox" type="HBoxContainer" parent="Header"]
+margin_left = 360.0
+margin_right = 664.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+
+[node name="InventoryHeader" type="Label" parent="Header/HeaderHBox"]
+margin_right = 200.0
+margin_bottom = 40.0
 custom_fonts/font = SubResource( 1 )
-text = "Inventory"
+text = "Inventory "
+align = 1
+
+[node name="SpaceHeader" type="Label" parent="Header/HeaderHBox"]
+margin_left = 204.0
+margin_right = 304.0
+margin_bottom = 40.0
+custom_fonts/font = SubResource( 1 )
+text = "(x/y)"
 align = 1
 
 [node name="Columns" type="HBoxContainer" parent="."]

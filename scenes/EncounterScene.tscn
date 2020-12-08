@@ -117,4 +117,13 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 6 )
 text = "ExperienceLabel"
+
+[node name="InventoryLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
+margin_top = 48.0
+margin_right = 253.0
+margin_bottom = 68.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 6 )
+text = "InventoryLabel"
 [connection signal="resized" from="SceneFrame/ViewportContainer" to="SceneFrame/ViewportContainer" method="OnViewportContainerResized"]

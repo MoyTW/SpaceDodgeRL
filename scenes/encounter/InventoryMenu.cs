@@ -19,8 +19,15 @@ public class InventoryMenu : VBoxContainer {
     _displayedIdsToEntries = new Dictionary<string, InventoryEntry>();
   }
 
+  private void DisplaySpace(InventoryComponent inventory) {
+    var spaceLabel = this.GetNode<Label>("Header/HeaderHBox/SpaceHeader");
+    spaceLabel.Text = String.Format("({0}/{1})", inventory.InventoryUsed, inventory.InventorySize);
+  }
+
   public void PrepMenu(InventoryComponent inventory) {
     _closeButton.GrabFocus();
+
+    this.DisplaySpace(inventory);
 
     // Do a dumb full pass on both to diff & add/remove
     var inventoryIdsToEntities = inventory.StoredItems.ToDictionary(e => e.EntityId, e => e);
