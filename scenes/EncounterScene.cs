@@ -25,6 +25,7 @@ namespace SpaceDodgeRL.scenes {
       }
       this.encounterViewport.AddChild(this.EncounterState);
       this.encounterRunner.SetEncounterState(this.EncounterState);
+
       // Hook up the UI
       this.EncounterState.Connect(nameof(EncounterState.EncounterLogMessageAdded), this, nameof(OnEncounterLogMessageAdded));
       this.encounterRunner.Connect(nameof(EncounterRunner.TurnEnded), this, nameof(OnTurnEnded));
@@ -33,6 +34,27 @@ namespace SpaceDodgeRL.scenes {
       foreach (var logMessage in this.EncounterState.EncounterLog) {
         this.OnEncounterLogMessageAdded(logMessage, int.MaxValue);
       }
+      /**
+       * How should scanning work?
+       *
+       * 1. If you mouse over an enemy, it should show up in your scan screen
+       * 2. If you hit 's' ('l' is hjkl) and move with the normal directional navigation, it should move the scan cursor
+       *   2a. If you are in Scan Mode and hit either 's' or 'escape' it should drop you out of scan mode
+       *
+       * Q: What should happen if you have moused over something, and then hit 's'?
+       * A: You should convert to scan mode with the currently highlighted square selected.
+       *
+       * Q: What should happen if you are in scan mode, and then move the mouse?
+       * A: It should move the scanner as normal.
+       *
+       * Q: So is what you're saying that the mouse is always in scan mode, but the keyboard can sometimes not be?
+       * A: Yes.
+       *
+       * Q: Then, what should happen if you move the mouse, and then move your character?
+       * A: The mouse scan should be cleared and the last scanned entity should stay scanned.
+       *
+       * We'll see how that 'feels' though. Now, how do I implement this...?
+       */
 
       OnTurnEnded();
     }
