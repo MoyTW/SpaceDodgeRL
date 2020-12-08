@@ -16,7 +16,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // Add satellites
       int numSatellites = LevelData.GetNumberOfSatellites(dungeonLevel);
       for (int i = 0; i < numSatellites; i++) {
-        var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
+        var unblockedPosition = zone.RandomEmptyPosition(seededRand, state);
         var satellite = EntityBuilder.CreateSatelliteEntity();
         state.PlaceEntity(satellite, unblockedPosition);
       }
@@ -32,7 +32,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       if (encounterDef.EntityDefIds.Count > 0) {
         string activationGroupId = Guid.NewGuid().ToString();
         foreach (string entityDefId in encounterDef.EntityDefIds) {
-          var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
+          var unblockedPosition = zone.RandomEmptyPosition(seededRand, state);
           var newEntity = EntityBuilder.CreateEnemyByEntityDefId(entityDefId, activationGroupId, state.CurrentTick);
           state.PlaceEntity(newEntity, unblockedPosition);
         }
@@ -40,7 +40,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       var chosenItemDefs = LevelData.ChooseItemDefs(dungeonLevel, seededRand);
       foreach(string chosenItemDefId in chosenItemDefs) {
-        var unblockedPosition = zone.RandomUnblockedPosition(seededRand, state);
+        var unblockedPosition = zone.RandomEmptyPosition(seededRand, state);
         var newEntity = EntityBuilder.CreateItemByEntityDefId(chosenItemDefId);
         state.PlaceEntity(newEntity, unblockedPosition);
         zone.AddItemToReadout(newEntity);
@@ -120,7 +120,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         // You can get stairs in your starting zone, but you probably shouldn't take them...
         // var stairsZone = zones[playerZoneIdx]; // For testing
         var stairsZone = zones[seededRand.Next(0, zones.Count)];
-        var stairsPosition = stairsZone.RandomUnblockedPosition(seededRand, state);
+        var stairsPosition = stairsZone.RandomEmptyPosition(seededRand, state);
         var stairs = EntityBuilder.CreateStairsEntity();
         state.PlaceEntity(stairs, stairsPosition);
         stairsZone.AddFeatureToReadout(stairs);
@@ -128,7 +128,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         // Generate intel
         // var intelZone = zones[playerZoneIdx]; // For testing
         var intelZone = zones[seededRand.Next(0, zones.Count)];
-        var intelPosition = intelZone.RandomUnblockedPosition(seededRand, state);
+        var intelPosition = intelZone.RandomEmptyPosition(seededRand, state);
         var intel = EntityBuilder.CreateIntelEntity(dungeonLevel + 1);
         state.PlaceEntity(intel, intelPosition);
         intelZone.AddFeatureToReadout(intel);

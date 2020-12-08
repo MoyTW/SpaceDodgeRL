@@ -34,7 +34,7 @@
 + FIXED: somehow switching levels keeps the danger map from previous level...?
   - ah! it went away after switching to the save screen
   - probably is: jump under fire doesn't clear danger map properly
-+ TODO: jump point can spawn under satellite lol
++ FIXED: jump point can spawn under satellite lol
   - well THAT killed my run, RIP run
 + EMP disable is ABSURDLY long on some of the higher-tier enemies
   - Destroyer in particular

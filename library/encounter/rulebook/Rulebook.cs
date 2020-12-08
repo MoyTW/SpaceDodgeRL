@@ -63,7 +63,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       var foundPath = Pathfinder.AStarWithNewGrid(playerPosition, zone.Center, state, 9000);
       int autopilotTries = 0;
       while (foundPath == null && autopilotTries < 5) {
-        foundPath = Pathfinder.AStarWithNewGrid(playerPosition, zone.RandomUnblockedPosition(state.EncounterRand, state), state, 9000);
+        foundPath = Pathfinder.AStarWithNewGrid(playerPosition, zone.RandomEmptyPosition(state.EncounterRand, state), state, 9000);
         autopilotTries++;
       }
       if (foundPath != null && autopilotTries > 0) {

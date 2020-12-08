@@ -62,13 +62,13 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.Center = new EncounterPosition((this.X1 + this.X2) / 2, (this.Y1 + this.Y2) / 2);
     }
 
-    public EncounterPosition RandomUnblockedPosition(Random seededRand, EncounterState state) {
+    public EncounterPosition RandomEmptyPosition(Random seededRand, EncounterState state) {
       int attempts = 0;
       while (attempts < MAX_UNBLOCKED_POSITION_ATTEMPTS) {
         int x = seededRand.Next(this.Width);
         int y = seededRand.Next(this.Height);
 
-        if (!state.IsPositionBlocked(this.X1 + x, this.Y1 + y)) {
+        if (state.EntitiesAtPosition(this.X1 + x, this.Y1 + y).Count == 0) {
           return new EncounterPosition(this.X1 + x, this.Y1 + y);
         } else {
           attempts++;
