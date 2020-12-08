@@ -289,12 +289,24 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
     }
 
+    private void UpdateFoWForTile(TileMap overlaysMap, int x, int y) {
+      if (!this.IsInBounds(x, y)) {
+        // If you're out of bounds no-op
+      } else if (this.FoVCache.Contains(x, y)) {
+        overlaysMap.SetCell(x, y, -1);
+      } else if (this._encounterTiles[x, y].Explored) {
+        overlaysMap.SetCell(x, y, 1);
+      } else {
+        overlaysMap.SetCell(x, y, 2);
+      }
+    }
+
     private void InitFoWOverlay() {
       var overlaysMap = GetNode<TileMap>("FoWOverlay");
 
       for (int x = 0; x < this.MapWidth; x++) {
         for (int y = 0; y < this.MapWidth; y++) {
-          overlaysMap.SetCell(x, y, 2);
+          this.UpdateFoWForTile(overlaysMap, x, y);
         }
       }
     }
@@ -306,15 +318,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // TODO: When you move sometimes long vertical lines appear, there was something about that in a tutorial - hunt that down
       for (int x = playerPos.X - PLAYER_VISION_RADIUS - 1; x <= playerPos.X + PLAYER_VISION_RADIUS + 1; x++) {
         for (int y = playerPos.Y - PLAYER_VISION_RADIUS - 1; y <= playerPos.Y + PLAYER_VISION_RADIUS + 1; y++) {
-          if (!this.IsInBounds(x, y)) {
-            // If you're out of bounds no-op
-          } else if (this.FoVCache.Contains(x, y)) {
-            overlaysMap.SetCell(x, y, -1);
-          } else if (this._encounterTiles[x, y].Explored) {
-            overlaysMap.SetCell(x, y, 1);
-          } else {
-            overlaysMap.SetCell(x, y, 2);
-          }
+          this.UpdateFoWForTile(overlaysMap, x, y);
         }
       }
     }
@@ -430,9 +434,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       // Populate all our initial caches
       this.LogMessage(string.Format("Level {0} started!", dungeonLevel));
-      // Init FoW overlay as all back
-      this.InitFoWOverlay();
       this.UpdateFoVAndFoW();
+      this.InitFoWOverlay();
       this.UpdatePlayerOverlays();
       if (this.IsInsideTree()) {
         this.UpdateDangerMap();
@@ -503,11 +506,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       camera.Current = true;
       state.Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
 
-      // Init FoW overlay as all back
-      state.InitFoWOverlay();
       state.UpdateFoVAndFoW();
-      // TODO: when you load it doesn't show paths until after one move for some reason
-      // 's prolly something obvious and dumb
+      state.InitFoWOverlay();
       state.UpdatePlayerOverlays();
 
       return state;

@@ -17,7 +17,7 @@
 + FIXED: even the inventory doesn't tell you how many slots you have left, that's definitely bad
 + TODO: inventory still has TODO: item descriptions, rip
 + TODO: there are white squares for...I think items that you've picked up? that vanish when you enter sight
-+ TODO: FoW resets when you load
++ FIXED: FoW resets when you load
 + FIXED: projectile paths not drawn when you load
 + TODO: newly picked-up items go to the last column in the inventory?
   - if you use an item in the left column then pick an item up it goes to the right?
