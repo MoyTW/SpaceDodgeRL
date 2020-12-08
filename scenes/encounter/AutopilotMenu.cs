@@ -71,17 +71,13 @@ public class AutopilotMenu : HBoxContainer {
     // TODO: Add You Are Here onto the starmap too!
     // You Are Here label
     var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
-    EncounterZone closestZone = null;
-    float smallestDistance = float.MaxValue;
-    foreach (EncounterZone zone in state.Zones) {
-      var distance = zone.Center.DistanceTo(playerPosition);
-      if (distance < smallestDistance) {
-        smallestDistance = distance;
-        closestZone = zone;
-      }
-    }
+    EncounterZone closestZone = state.ClosestZone(playerPosition.X, playerPosition.Y);
     var youAreHereLabel = this.GetNode<RichTextLabel>("SidebarContainer/YouAreHereLabel");
-    youAreHereLabel.BbcodeText = string.Format("You are currently near [b]{0}[/b]", closestZone.ZoneName);
+    if (closestZone.Contains(playerPosition)) {
+      youAreHereLabel.BbcodeText = string.Format("You are currently in [b]{0}[/b]", closestZone.ZoneName);
+    } else {
+      youAreHereLabel.BbcodeText = string.Format("You are closest to [b]{0}[/b]", closestZone.ZoneName);
+    }
   }
 
   private void OnTreeEntered() {
