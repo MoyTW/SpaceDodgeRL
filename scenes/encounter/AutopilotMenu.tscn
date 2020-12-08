@@ -51,8 +51,8 @@ margin_bottom = 151.0
 custom_fonts/bold_font = ExtResource( 2 )
 custom_fonts/normal_font = ExtResource( 3 )
 bbcode_enabled = true
-bbcode_text = "You are currently in [b]An Unknown Zone[/b]"
-text = "You are currently in An Unknown Zone"
+bbcode_text = "You are in [b]Unknown Sector[/b],  [b]Unknown Zone[/b]"
+text = "You are in Unknown Sector,  Unknown Zone"
 fit_content_height = true
 
 [node name="ButtonConsole" type="HBoxContainer" parent="SidebarContainer"]

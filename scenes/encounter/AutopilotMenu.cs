@@ -74,9 +74,9 @@ public class AutopilotMenu : HBoxContainer {
     EncounterZone closestZone = state.ClosestZone(playerPosition.X, playerPosition.Y);
     var youAreHereLabel = this.GetNode<RichTextLabel>("SidebarContainer/YouAreHereLabel");
     if (closestZone.Contains(playerPosition)) {
-      youAreHereLabel.BbcodeText = string.Format("You are currently in [b]{0}[/b]", closestZone.ZoneName);
+      youAreHereLabel.BbcodeText = string.Format("You are in [b]Sector {0}[/b], [b]{1}[/b]", state.DungeonLevel, closestZone.ZoneName);
     } else {
-      youAreHereLabel.BbcodeText = string.Format("You are closest to [b]{0}[/b]", closestZone.ZoneName);
+      youAreHereLabel.BbcodeText = string.Format("You are in [b]Sector {0}[/b], near [b]{1}[/b]", state.DungeonLevel, closestZone.ZoneName);
     }
   }
 
