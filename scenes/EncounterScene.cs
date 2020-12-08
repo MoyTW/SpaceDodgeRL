@@ -28,6 +28,12 @@ namespace SpaceDodgeRL.scenes {
       // Hook up the UI
       this.EncounterState.Connect(nameof(EncounterState.EncounterLogMessageAdded), this, nameof(OnEncounterLogMessageAdded));
       this.encounterRunner.Connect(nameof(EncounterRunner.TurnEnded), this, nameof(OnTurnEnded));
+      // Since we can't have the state broadcast its events before we connect, we instead pull log messages; this will be empty
+      // on new game and populated on load.
+      foreach (var logMessage in this.EncounterState.EncounterLog) {
+        this.OnEncounterLogMessageAdded(logMessage, int.MaxValue);
+      }
+
       OnTurnEnded();
     }
 
