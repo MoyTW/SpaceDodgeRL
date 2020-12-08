@@ -123,7 +123,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
           // then projectileSource will be null and this will crash.
           var projectileSource = state.GetEntityById(attackerComponent.SourceEntityId);
           var xpValueComponent = defender.GetComponent<XPValueComponent>();
-          if (xpValueComponent != null && projectileSource.GetComponent<XPTrackerComponent>() != null) {
+          if (projectileSource != null && xpValueComponent != null && projectileSource.GetComponent<XPTrackerComponent>() != null) {
             projectileSource.GetComponent<XPTrackerComponent>().AddXP(xpValueComponent.XPValue);
             logMessage += String.Format(" [b]{0}[/b] gains {1} XP!", projectileSource.EntityName, xpValueComponent.XPValue);
           }
