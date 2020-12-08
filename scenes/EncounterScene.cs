@@ -63,19 +63,19 @@ namespace SpaceDodgeRL.scenes {
       // Left column
       var playerDefenderComponent = player.GetComponent<DefenderComponent>();
       var newHPText = String.Format("HP: {0}/{1}", playerDefenderComponent.CurrentHp, playerDefenderComponent.MaxHp);
-      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/HPLabel").Text = newHPText;
+      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/YourStatsBlock/HPLabel").Text = newHPText;
 
       var playerComponent = player.GetComponent<PlayerComponent>();
       var newAttackPowerText = String.Format("Cutting laser power: {0}", playerComponent.CuttingLaserPower);
-      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/AttackPowerLabel").Text = newAttackPowerText;
+      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/YourStatsBlock/AttackPowerLabel").Text = newAttackPowerText;
 
       var speedComponent = player.GetComponent<SpeedComponent>();
       var newSpeedText = String.Format("Speed: {0}", speedComponent.Speed);
-      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/SpeedLabel").Text = newSpeedText;
+      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/YourStatsBlock/SpeedLabel").Text = newSpeedText;
 
       var invComponent = player.GetComponent<InventoryComponent>();
       var newInvText = string.Format("Inventory Space: {0}/{1}", invComponent.InventoryUsed, invComponent.InventorySize);
-      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/InventoryLabel").Text = newInvText;
+      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/YourStatsBlock/InventoryLabel").Text = newInvText;
 
       // Right column
       var playerPos = player.GetComponent<PositionComponent>().EncounterPosition;
