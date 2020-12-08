@@ -94,6 +94,15 @@ size_flags_vertical = 1
 custom_fonts/font = ExtResource( 6 )
 text = "SpeedLabel"
 
+[node name="InventoryLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn"]
+margin_top = 72.0
+margin_right = 253.0
+margin_bottom = 92.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 6 )
+text = "InventoryLabel"
+
 [node name="StatsRightColumn" type="VBoxContainer" parent="SceneFrame/BottomUIContainer/StatsHBox"]
 margin_left = 257.0
 margin_right = 510.0
@@ -101,29 +110,38 @@ margin_bottom = 149.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LevelLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
+[node name="SectorZoneLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
 margin_right = 253.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 6 )
-text = "LevelLabel"
+text = "SectorZoneLabel"
 
-[node name="ExperienceLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
+[node name="PositionLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
 margin_top = 24.0
 margin_right = 253.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 6 )
-text = "ExperienceLabel"
+text = "PositionLabel"
 
-[node name="InventoryLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
+[node name="LevelLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
 margin_top = 48.0
 margin_right = 253.0
 margin_bottom = 68.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 6 )
-text = "InventoryLabel"
+text = "LevelLabel"
+
+[node name="ExperienceLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
+margin_top = 72.0
+margin_right = 253.0
+margin_bottom = 92.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 6 )
+text = "ExperienceLabel"
 [connection signal="resized" from="SceneFrame/ViewportContainer" to="SceneFrame/ViewportContainer" method="OnViewportContainerResized"]

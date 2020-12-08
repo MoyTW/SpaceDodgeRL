@@ -54,6 +54,7 @@ namespace SpaceDodgeRL.scenes {
     private void OnTurnEnded() {
       var player = this.EncounterState.Player;
 
+      // Left column
       var playerDefenderComponent = player.GetComponent<DefenderComponent>();
       var newHPText = String.Format("HP: {0}/{1}", playerDefenderComponent.CurrentHp, playerDefenderComponent.MaxHp);
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/HPLabel").Text = newHPText;
@@ -66,15 +67,30 @@ namespace SpaceDodgeRL.scenes {
       var newSpeedText = String.Format("Speed: {0}", speedComponent.Speed);
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/SpeedLabel").Text = newSpeedText;
 
+      var invComponent = player.GetComponent<InventoryComponent>();
+      var newInvText = string.Format("Inventory Space: {0}/{1}", invComponent.InventoryUsed, invComponent.InventorySize);
+      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/InventoryLabel").Text = newInvText;
+
+      // Right column
+      var playerPos = player.GetComponent<PositionComponent>().EncounterPosition;
+
+      var newSectorZoneText = string.Format("Sector: {0}", this.EncounterState.DungeonLevel);
+      var closestZone = this.EncounterState.ClosestZone(playerPos.X, playerPos.Y);
+      if (closestZone.Contains(playerPos)) {
+        newSectorZoneText += string.Format(" {0}", closestZone.ZoneName);
+      }
+      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/SectorZoneLabel").Text = newSectorZoneText;
+
+      string newPositionZoneText = string.Format("Position: ({0}, {1})", playerPos.X, playerPos.Y);
+      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/PositionLabel").Text = newPositionZoneText;
+
       var xpComponent = player.GetComponent<XPTrackerComponent>();
       var newLevelText = string.Format("Level: {0}", xpComponent.Level);
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/LevelLabel").Text = newLevelText;
       var newXPText = string.Format("Experience: {0}/{1}", xpComponent.XP, xpComponent.NextLevelAtXP);
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/ExperienceLabel").Text = newXPText;
 
-      var invComponent = player.GetComponent<InventoryComponent>();
-      var newInvText = string.Format("Inventory Space: {0}/{1}", invComponent.InventoryUsed, invComponent.InventorySize);
-      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/InventoryLabel").Text = newInvText;
+      var posComponent = player.GetComponent<PositionComponent>();
     }
 
     // This could probably be a signal.
