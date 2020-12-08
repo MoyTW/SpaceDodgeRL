@@ -11,12 +11,14 @@ namespace SpaceDodgeRL.scenes.components {
     public string EntityGroup => ENTITY_GROUP;
 
     [JsonInclude] public string TexturePath { get; private set; }
+    [JsonInclude] public string Description { get; private set; }
     [JsonInclude] public bool VisibleInFoW { get; private set; }
 
-    public static DisplayComponent Create(string texturePath, bool visibleInFoW) {
+    public static DisplayComponent Create(string texturePath, string description, bool visibleInFoW) {
       var component = new DisplayComponent();
 
       component.TexturePath = texturePath;
+      component.Description = description;
       component.VisibleInFoW = visibleInFoW;
 
       return component;

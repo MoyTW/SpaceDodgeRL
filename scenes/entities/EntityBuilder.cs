@@ -72,7 +72,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 10));
-      e.AddComponent(DisplayComponent.Create(_texScoutPath, false));
+      e.AddComponent(DisplayComponent.Create(_texScoutPath, "A small scout craft, armed with a shotgun.", false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 75));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 30));
@@ -90,7 +90,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 30));
-      e.AddComponent(DisplayComponent.Create(_FPath, false));
+      e.AddComponent(DisplayComponent.Create(_FPath, "An interceptor craft armed with a rapid-fire cannon.", false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 125));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 50));
@@ -108,7 +108,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 4, maxHp: 50));
-      e.AddComponent(DisplayComponent.Create(_texGunshipPath, false));
+      e.AddComponent(DisplayComponent.Create(_texGunshipPath, "A sturdy gunship, armed with anti-fighter flak and a cannon.", false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 100));
@@ -126,7 +126,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 10, maxHp: 150));
-      e.AddComponent(DisplayComponent.Create(_texFrigatePath, false));
+      e.AddComponent(DisplayComponent.Create(_texFrigatePath, "An escort ship sporting a reverser gun, as well as secondary batteries.", false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 250));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 200));
@@ -144,7 +144,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 15, maxHp: 200));
-      e.AddComponent(DisplayComponent.Create(_texDestroyerPath, false));
+      e.AddComponent(DisplayComponent.Create(_texDestroyerPath, "A larger anti-fighter craft with a ferocious flak barrage.", false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 300));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 500));
@@ -162,7 +162,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 10, maxHp: 300));
-      e.AddComponent(DisplayComponent.Create(_texCruiserPath, false));
+      e.AddComponent(DisplayComponent.Create(_texCruiserPath, "A heavily armed and armored behemoth with a ferocious railgun.", false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 400));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 1000));
@@ -180,7 +180,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 500));
-      e.AddComponent(DisplayComponent.Create(_texCarrierPath, false));
+      e.AddComponent(DisplayComponent.Create(_texCarrierPath, "An extremely slow carrier, which launches fighters or scouts every action.", false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 200));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 2000));
@@ -198,7 +198,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 100));
-      e.AddComponent(DisplayComponent.Create(_texDiplomatPath, false));
+      e.AddComponent(DisplayComponent.Create(_texDiplomatPath, "Your target, the diplomat!", false));
       e.AddComponent(OnDeathComponent.Create(new List<string>() { OnDeathEffectType.PLAYER_VICTORY }));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
       e.AddComponent(statusEffectTrackerComponent);
@@ -210,7 +210,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateExtraBatteryEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "extra battery");
 
-      e.AddComponent(DisplayComponent.Create(_bPath, true));
+      e.AddComponent(DisplayComponent.Create(_bPath, "An extra battery for your weapons. Gives 20 power for 450 ticks.", true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create());
       e.AddComponent(UseEffectBoostPowerComponent.Create(boostPower: 20, duration: 450));
@@ -221,7 +221,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateDuctTapeEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "duct tape");
 
-      e.AddComponent(DisplayComponent.Create(_tPath, true));
+      e.AddComponent(DisplayComponent.Create(_tPath, "Some duct tape. Heals 10 HP.", true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create());
       e.AddComponent(UseEffectHealComponent.Create(healpower: 10));
@@ -234,7 +234,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
       // TODO: I put it down as 'r', but that's the same as the reverser shot. Well we'll replace all the sprites anwyays
       // if I do make it pretty.
-      e.AddComponent(DisplayComponent.Create(_texRedPaintPath, true));
+      e.AddComponent(DisplayComponent.Create(_texRedPaintPath, "Red paint makes you go faster! Reduces turn time by 75 for 300 ticks (minimum time is 1).", true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create());
       e.AddComponent(UseEffectBoostSpeedComponent.Create(boostPower: 75, duration: 300));
@@ -245,7 +245,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateEMPEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "EMP");
 
-      e.AddComponent(DisplayComponent.Create(_texEMPPath, true));
+      e.AddComponent(DisplayComponent.Create(_texEMPPath, "An EMP burst. Disables enemies for 10 turns in radius 20.", true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create());
       // I seriously put 20 radius 10 turns? That's enough time to mop up an entire encounter!
@@ -298,7 +298,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.Create(true, false));
       e.AddComponent(DefenderComponent.Create(0, 100));
-      e.AddComponent(DisplayComponent.Create(_AtSignPath, false));
+      e.AddComponent(DisplayComponent.Create(_AtSignPath, "It's you!", false));
       e.AddComponent(InventoryComponent.Create(inventorySize: 26));
       e.AddComponent(OnDeathComponent.Create(new List<string>() { OnDeathEffectType.PLAYER_DEFEAT }));
       e.AddComponent(PlayerComponent.Create());
@@ -319,7 +319,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick)); // Should it go instantly or should it wait for its turn...?
       e.AddComponent(AttackerComponent.Create(source.EntityId, power));
       e.AddComponent(CollisionComponent.Create(false, false, true, true));
-      e.AddComponent(DisplayComponent.Create(displayData.TexturePath, false));
+      e.AddComponent(DisplayComponent.Create(displayData.TexturePath, "A projectile.", false));
       e.AddComponent(SpeedComponent.Create(speed));
 
       return e;
@@ -330,7 +330,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
       e.AddComponent(CollisionComponent.Create(true, false));
       e.AddComponent(DefenderComponent.Create(0, 100, logDamage: false, isInvincible: true));
-      e.AddComponent(DisplayComponent.Create(_StarPath, true));
+      e.AddComponent(DisplayComponent.Create(_StarPath, "TODO: think of something to say for the map edge blockers", true));
 
       return e;
     }
@@ -340,7 +340,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
       e.AddComponent(CollisionComponent.Create(blocksMovement: true, blocksVision: true));
       e.AddComponent(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, logDamage: false));
-      e.AddComponent(DisplayComponent.Create(_hashSignPath, true));
+      e.AddComponent(DisplayComponent.Create(_hashSignPath, "Space junk. Blocks movement and projectiles. Cannot be destroyed.", true));
 
       return e;
     }
@@ -348,7 +348,7 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateStairsEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "jump point");
 
-      e.AddComponent(DisplayComponent.Create(_JPath, true));
+      e.AddComponent(DisplayComponent.Create(_JPath, "The jump point to the next sector.", true));
       e.AddComponent(StairsComponent.Create());
 
       return e;
@@ -357,7 +357,7 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateIntelEntity(int targetDungeonLevel) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "intel for sector " + targetDungeonLevel);
 
-      e.AddComponent(DisplayComponent.Create(_iPath, true));
+      e.AddComponent(DisplayComponent.Create(_iPath, "Intel! Gives you zone information for the next sector. You want this.", true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create());
       e.AddComponent(UseEffectAddIntelComponent.Create(targetDungeonLevel));

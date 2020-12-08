@@ -22,15 +22,15 @@ namespace SpaceDodgeRL.tests.scenes.encounter.state {
       zone.ReadoutEncounterName = "some encounter name";
 
       var e1 = Entity.Create("e1 id", "e1 name");
-      e1.AddComponent(DisplayComponent.Create("e1 path", false));
+      e1.AddComponent(DisplayComponent.Create("e1 path", "", false));
       zone.AddFeatureToReadout(e1);
 
       var e2 = Entity.Create("e2 id", "e2 name");
-      e2.AddComponent(DisplayComponent.Create("e2 path", false));
+      e2.AddComponent(DisplayComponent.Create("e2 path", "", false));
       zone.AddItemToReadout(e2);
 
       var e3 = Entity.Create("e3 id", "e3 name");
-      e3.AddComponent(DisplayComponent.Create("e3 path", false));
+      e3.AddComponent(DisplayComponent.Create("e3 path", "", false));
       zone.AddFeatureToReadout(e3);
 
       var saved = JsonSerializer.Serialize(zone);

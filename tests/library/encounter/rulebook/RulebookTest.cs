@@ -36,12 +36,12 @@ public class RulebookTest {
     state.SetStateForNewGame();
 
     var entityA = Entity.Create("a", "entity a");
-    entityA.AddComponent(DisplayComponent.Create("res://resources/tex_test.tres", false));
+    entityA.AddComponent(DisplayComponent.Create("res://resources/tex_test.tres", "", false));
     var entityAPosition = new EncounterPosition(10, 10);
     state.PlaceEntity(entityA, entityAPosition);
 
     var entityB = Entity.Create("b", "entity b");
-    entityB.AddComponent(DisplayComponent.Create("res://resources/tex_test.tres", false));
+    entityB.AddComponent(DisplayComponent.Create("res://resources/tex_test.tres", "", false));
     entityB.AddComponent(CollisionComponent.CreateDefaultActor());
     entityB.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 1));
     entityB.AddComponent(XPValueComponent.Create(xpValue: 1));
