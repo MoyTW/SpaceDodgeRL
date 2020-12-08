@@ -20,13 +20,14 @@ script = ExtResource( 3 )
 
 [node name="EncounterRunner" parent="." instance=ExtResource( 4 )]
 
-[node name="SceneFrame" type="VBoxContainer" parent="."]
+[node name="SceneFrame" type="GridContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+columns = 2
 
 [node name="ViewportContainer" type="ViewportContainer" parent="SceneFrame"]
-margin_right = 1024.0
-margin_bottom = 447.0
+margin_right = 510.0
+margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.0
@@ -34,37 +35,26 @@ stretch = true
 script = ExtResource( 7 )
 
 [node name="EncounterViewport" type="Viewport" parent="SceneFrame/ViewportContainer"]
-size = Vector2( 1024, 447 )
+size = Vector2( 510, 600 )
 handle_input_locally = false
 render_target_update_mode = 3
 
-[node name="BottomUIContainer" type="HBoxContainer" parent="SceneFrame"]
-margin_top = 451.0
+[node name="BottomUIContainer" type="VBoxContainer" parent="SceneFrame"]
+margin_left = 514.0
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="EncounterLogLabel" type="RichTextLabel" parent="SceneFrame/BottomUIContainer"]
-margin_right = 510.0
-margin_bottom = 149.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_fonts/bold_font = ExtResource( 8 )
-custom_fonts/normal_font = ExtResource( 6 )
-bbcode_enabled = true
-scroll_following = true
-
 [node name="StatsHBox" type="HBoxContainer" parent="SceneFrame/BottomUIContainer"]
-margin_left = 514.0
-margin_right = 1024.0
-margin_bottom = 149.0
+margin_right = 510.0
+margin_bottom = 298.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="StatsLeftColumn" type="VBoxContainer" parent="SceneFrame/BottomUIContainer/StatsHBox"]
 margin_right = 253.0
-margin_bottom = 149.0
+margin_bottom = 298.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -106,7 +96,7 @@ text = "InventoryLabel"
 [node name="StatsRightColumn" type="VBoxContainer" parent="SceneFrame/BottomUIContainer/StatsHBox"]
 margin_left = 257.0
 margin_right = 510.0
-margin_bottom = 149.0
+margin_bottom = 298.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -144,4 +134,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 6 )
 text = "ExperienceLabel"
+
+[node name="EncounterLogLabel" type="RichTextLabel" parent="SceneFrame/BottomUIContainer"]
+margin_top = 302.0
+margin_right = 510.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/bold_font = ExtResource( 8 )
+custom_fonts/normal_font = ExtResource( 6 )
+bbcode_enabled = true
+scroll_following = true
 [connection signal="resized" from="SceneFrame/ViewportContainer" to="SceneFrame/ViewportContainer" method="OnViewportContainerResized"]
