@@ -384,7 +384,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         var camera = new Camera2D();
         camera.AddToGroup("ENCOUNTER_CAMERA_GROUP");
         camera.Current = true;
-        Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
+        this.Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
       }
       this.UpdateDangerMap();
     }

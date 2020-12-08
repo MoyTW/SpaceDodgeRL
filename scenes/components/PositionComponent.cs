@@ -52,7 +52,11 @@ namespace SpaceDodgeRL.scenes.components {
       tween.Start();
     }
 
-    private static Vector2 IndexToVector(int x, int y, int xOffset = 0, int yOffset = 0) {
+    public static EncounterPosition VectorToIndex(float x, float y) {
+      return new EncounterPosition((int)(x / STEP_X), (int)(y / STEP_Y));
+    }
+
+    private static Vector2 IndexToVector(int x, int y) {
       return new Vector2(START_X + STEP_X * x, START_Y + STEP_Y * y);
     }
 
