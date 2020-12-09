@@ -1,10 +1,11 @@
 using Godot;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.entities;
-using System;
 
 namespace SpaceDodgeRL.scenes {
-  public class ViewportContainer : Godot.ViewportContainer {
+  public class EncounterViewportContainer : Godot.ViewportContainer {
+    [Signal] public delegate void MousedOverPosition(int x, int y);
+
     private void ResizeViewport() {
       var viewport = GetNode<Viewport>("EncounterViewport");
       viewport.Size = RectSize;
@@ -25,12 +26,12 @@ namespace SpaceDodgeRL.scenes {
           var dx = position.x - (viewportRect.Size.x / 2);
           var dy = position.y - (viewportRect.Size.y / 2);
           var selectedPosition = PositionComponent.VectorToIndex(dx + spritePos.x, dy + spritePos.y);
-          GD.Print(string.Format("Player has moused over square {0}", selectedPosition));
+          EmitSignal(nameof(MousedOverPosition), selectedPosition.X, selectedPosition.Y);
         }
       }
     }
 
-    private void OnViewportContainerResized() {
+    private void OnEncounterViewportContainerResized() {
       ResizeViewport();
     }
   }

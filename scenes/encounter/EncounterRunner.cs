@@ -16,6 +16,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     // sending it every end turn, but I don't want to have to go in and effectively instrument all my state changes to set up
     // "change on data update" changes.
     [Signal] public delegate void TurnEnded();
+    [Signal] public delegate void PositionScanned(int x, int y, Entity scannedEntity);
 
     public InputHandler inputHandlerRef = null;
 
@@ -102,7 +103,6 @@ namespace SpaceDodgeRL.scenes.encounter {
           ShowCharacterMenu(state);
         }
 
-        // TODO: Not on every process()
         var action = inputHandler.PopQueue();
 
         // If you interrupt autopilot in any way it immediately shuts off
@@ -111,38 +111,50 @@ namespace SpaceDodgeRL.scenes.encounter {
         }
 
         // Super not a fan of the awkwardness of checking this twice! Switch string -> enum, maybe?
-        if (action == InputHandler.ActionMapping.MOVE_N) {
+        // TODO: this is a jank if & the conditions are hard to read
+        if (action != null && action.Mapping == InputHandler.ActionMapping.MOVE_N) {
           PlayerMove(state, 0, -1);
-        } else if (action == InputHandler.ActionMapping.MOVE_NE) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.MOVE_NE) {
           PlayerMove(state, 1, -1);
-        } else if (action == InputHandler.ActionMapping.MOVE_E) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.MOVE_E) {
           PlayerMove(state, 1, 0);
-        } else if (action == InputHandler.ActionMapping.MOVE_SE) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.MOVE_SE) {
           PlayerMove(state, 1, 1);
-        } else if (action == InputHandler.ActionMapping.MOVE_S) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.MOVE_S) {
           PlayerMove(state, 0, 1);
-        } else if (action == InputHandler.ActionMapping.MOVE_SW) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.MOVE_SW) {
           PlayerMove(state, -1, 1);
-        } else if (action == InputHandler.ActionMapping.MOVE_W) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.MOVE_W) {
           PlayerMove(state, -1, 0);
-        } else if (action == InputHandler.ActionMapping.MOVE_NW) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.MOVE_NW) {
           PlayerMove(state, -1, -1);
-        } else if (action == InputHandler.ActionMapping.WAIT) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.WAIT) {
           PlayerWait(state);
-        } else if (action == InputHandler.ActionMapping.AUTOPILOT) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.AUTOPILOT) {
           ShowAutopilotMenu(state);
-        } else if (action == InputHandler.ActionMapping.CHARACTER) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.CHARACTER) {
           ShowCharacterMenu(state);
-        } else if (action == InputHandler.ActionMapping.ESCAPE_MENU) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.ESCAPE_MENU) {
           ShowEscapeMenu(state);
-        } else if (action == InputHandler.ActionMapping.INVENTORY) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.INVENTORY) {
           ShowInventoryMenu(state);
-        } else if (action == InputHandler.ActionMapping.USE_STAIRS) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.USE_STAIRS) {
           PlayerExecuteTurnEndingAction(new UseStairsAction(entity.EntityId), state);
-        } else if (action == InputHandler.ActionMapping.GET_ITEM) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.GET_ITEM) {
           PlayerExecuteTurnEndingAction(new GetItemAction(entity.EntityId), state);
-        } else if (action == InputHandler.ActionMapping.USE_ITEM) {
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.USE_ITEM) {
           GD.Print("Select an item via the inventory menu instead!");
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.SCAN_POSITION) {
+          var scanAction = action as InputHandler.ScanInputAction;
+          var blockingEntity = state.BlockingEntityAtPosition(scanAction.X, scanAction.Y);
+          var allEntities = state.EntitiesAtPosition(scanAction.X, scanAction.Y);
+          if (blockingEntity != null) {
+            EmitSignal(nameof(PositionScanned), scanAction.X, scanAction.Y, blockingEntity);
+          } else if (allEntities.Count > 0) {
+            EmitSignal(nameof(PositionScanned), scanAction.X, scanAction.Y, allEntities[0]);
+          } else {
+            EmitSignal(nameof(PositionScanned), scanAction.X, scanAction.Y, null);
+          }
         } else if (entity.GetComponent<PlayerComponent>().IsAutopiloting) {
           // TODO: The player sprite lags the true position significantly because the Tween can't keep up
           var path = entity.GetComponent<PlayerComponent>().AutopilotPath;
@@ -210,6 +222,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       sceneManager.ShowInventoryMenu(state);
     }
 
+    // Instead of calling into runner like this, put it into InputHandler!
     public void HandleAutopilotSelection(string selectedZoneId) {
       var playerId = this._encounterState.Player.EntityId;
       Rulebook.ResolveAction(new AutopilotBeginAction(playerId, selectedZoneId), this._encounterState);

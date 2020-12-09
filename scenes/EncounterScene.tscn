@@ -4,8 +4,8 @@
 [ext_resource path="res://scenes/EncounterScene.cs" type="Script" id=2]
 [ext_resource path="res://scenes/InputHandler.cs" type="Script" id=3]
 [ext_resource path="res://scenes/encounter/EncounterRunner.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/EncounterViewportContainer.cs" type="Script" id=5]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Regular.tres" type="DynamicFont" id=6]
-[ext_resource path="res://scenes/ViewportContainer.cs" type="Script" id=7]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=8]
 
 [node name="EncounterScene" type="Container"]
@@ -26,16 +26,16 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 columns = 2
 
-[node name="ViewportContainer" type="ViewportContainer" parent="SceneFrame"]
+[node name="EncounterViewportContainer" type="ViewportContainer" parent="SceneFrame"]
 margin_right = 510.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.0
 stretch = true
-script = ExtResource( 7 )
+script = ExtResource( 5 )
 
-[node name="EncounterViewport" type="Viewport" parent="SceneFrame/ViewportContainer"]
+[node name="EncounterViewport" type="Viewport" parent="SceneFrame/EncounterViewportContainer"]
 size = Vector2( 510, 600 )
 handle_input_locally = false
 render_target_update_mode = 3
@@ -195,4 +195,4 @@ custom_fonts/bold_font = ExtResource( 8 )
 custom_fonts/normal_font = ExtResource( 6 )
 bbcode_enabled = true
 scroll_following = true
-[connection signal="resized" from="SceneFrame/ViewportContainer" to="SceneFrame/ViewportContainer" method="OnViewportContainerResized"]
+[connection signal="resized" from="SceneFrame/EncounterViewportContainer" to="SceneFrame/EncounterViewportContainer" method="OnViewportContainerResized"]

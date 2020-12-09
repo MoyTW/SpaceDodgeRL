@@ -10,15 +10,28 @@ namespace SpaceDodgeRL.scenes {
   public class EncounterScene : Container {
     public EncounterState EncounterState { get; private set; }
     private Viewport encounterViewport;
+    public InputHandler inputHandler;
     private EncounterRunner encounterRunner;
     private RichTextLabel encounterLogLabel;
 
-    public override void _Ready() {
-      encounterViewport = GetNode<Viewport>("SceneFrame/ViewportContainer/EncounterViewport");
-      encounterLogLabel = GetNode<RichTextLabel>("SceneFrame/BottomUIContainer/EncounterLogLabel");
+    private void OnPositionScanned(int x, int y, Entity entity) {
+      if (entity != null) {
+        GD.Print(string.Format("Scanned {0},{1}, found {2}", x, y, entity.EntityName));
+      }
+    }
 
-      encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
-      encounterRunner.inputHandlerRef = GetNode<InputHandler>("InputHandler");
+    private void OnMousedOverPosition(int x, int y) {
+      this.inputHandler.TryInsertInputAction(new InputHandler.ScanInputAction(x, y));
+    }
+
+    public override void _Ready() {
+      this.encounterViewport = GetNode<Viewport>("SceneFrame/EncounterViewportContainer/EncounterViewport");
+      this.encounterLogLabel = GetNode<RichTextLabel>("SceneFrame/BottomUIContainer/EncounterLogLabel");
+
+      this.inputHandler = GetNode<InputHandler>("InputHandler");
+
+      this.encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
+      this.encounterRunner.inputHandlerRef = this.inputHandler;
 
       if (this.EncounterState == null) {
         throw new NotImplementedException("must call SetEncounterState before adding to tree");
@@ -29,6 +42,9 @@ namespace SpaceDodgeRL.scenes {
       // Hook up the UI
       this.EncounterState.Connect(nameof(EncounterState.EncounterLogMessageAdded), this, nameof(OnEncounterLogMessageAdded));
       this.encounterRunner.Connect(nameof(EncounterRunner.TurnEnded), this, nameof(OnTurnEnded));
+      this.encounterRunner.Connect(nameof(EncounterRunner.PositionScanned), this, nameof(OnPositionScanned));
+      GetNode<ViewportContainer>("SceneFrame/EncounterViewportContainer")
+        .Connect(nameof(EncounterViewportContainer.MousedOverPosition), this, nameof(OnMousedOverPosition));
       // Since we can't have the state broadcast its events before we connect, we instead pull log messages; this will be empty
       // on new game and populated on load.
       foreach (var logMessage in this.EncounterState.EncounterLog) {

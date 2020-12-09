@@ -1,9 +1,26 @@
 using Godot;
+using SpaceDodgeRL.library.encounter;
 using System.Collections.Generic;
 
 namespace SpaceDodgeRL.scenes {
 
   public class InputHandler : Node {
+    public class InputAction {
+      public string Mapping { get; private set; }
+      public InputAction(string mapping) {
+        this.Mapping = mapping;
+      }
+    }
+
+    public class ScanInputAction : InputAction {
+      public int X { get; private set; }
+      public int Y { get; private set; }
+      public ScanInputAction(int x, int y) : base(ActionMapping.SCAN_POSITION) {
+        this.X = x;
+        this.Y = y;
+      }
+    }
+
     public class ActionMapping {
       public static string MOVE_N = "move_n";
       public static string MOVE_NE = "move_ne";
@@ -22,6 +39,8 @@ namespace SpaceDodgeRL.scenes {
       public static string GET_ITEM = "encounter_get_item";
       // Currently not used after the InventoryMenu got added; may be used if we add interactables on the encounter map
       public static string USE_ITEM = "encounter_use_item";
+      // Special actions (mouse & menu mostly)
+      public static string SCAN_POSITION = "scan_position";
       // PERF: make a set if perf bad?
       public static string[] AllMappings = new string[] { MOVE_N, MOVE_NE, MOVE_E, MOVE_SE, MOVE_S, MOVE_SW, MOVE_W, MOVE_NW,
         WAIT, AUTOPILOT, CHARACTER, ESCAPE_MENU, INVENTORY, USE_STAIRS, GET_ITEM, USE_ITEM
@@ -29,19 +48,29 @@ namespace SpaceDodgeRL.scenes {
     }
 
     private int _queueSize = 2;
-    private List<string> _playerMappingQueue = new List<string>();
+    private List<InputAction> _playerMappingQueue = new List<InputAction>();
 
     public override void _UnhandledKeyInput(InputEventKey @event) {
       // I don't like iterating over every single possible action every time - surely there's a nicer way to do this?
       foreach (string mapping in ActionMapping.AllMappings) {
         if (@event.IsActionPressed(mapping, true) && _playerMappingQueue.Count < _queueSize) {
-          _playerMappingQueue.Add(mapping);
+          _playerMappingQueue.Add(new InputAction(mapping));
           return;
         }
       }
     }
 
-    public string PopQueue() {
+    public bool TryInsertInputAction(InputAction inputAction) {
+      if (this._playerMappingQueue.Count < this._queueSize) {
+        this._playerMappingQueue.Add(inputAction);
+        return true;
+      } else {
+        return false;
+      }
+
+    }
+
+    public InputAction PopQueue() {
       if (_playerMappingQueue.Count > 0) {
         var mapping = _playerMappingQueue[0];
         _playerMappingQueue.RemoveAt(0);
