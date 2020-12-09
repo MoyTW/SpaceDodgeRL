@@ -141,7 +141,7 @@ custom_fonts/bold_font = ExtResource( 8 )
 custom_fonts/normal_font = ExtResource( 6 )
 bbcode_enabled = true
 bbcode_text = "Description Goes Here"
-text = "Description Goes Here!"
+text = "Description Goes Here"
 
 [node name="StatsRightColumn" type="VBoxContainer" parent="SceneFrame/BottomUIContainer/StatsHBox"]
 margin_left = 257.0
@@ -195,4 +195,4 @@ custom_fonts/bold_font = ExtResource( 8 )
 custom_fonts/normal_font = ExtResource( 6 )
 bbcode_enabled = true
 scroll_following = true
-[connection signal="resized" from="SceneFrame/EncounterViewportContainer" to="SceneFrame/EncounterViewportContainer" method="OnViewportContainerResized"]
+[connection signal="resized" from="SceneFrame/EncounterViewportContainer" to="SceneFrame/EncounterViewportContainer" method="OnEncounterViewportContainerResized"]
