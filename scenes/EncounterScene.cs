@@ -133,7 +133,6 @@ namespace SpaceDodgeRL.scenes {
         var scanTextureRect = GetNode<TextureRect>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/ScanBlock/ReadoutTextureRect");
         scanTextureRect.Texture = entity.GetComponent<PositionComponent>().SpriteTexture;
         var descriptionLabel = GetNode<RichTextLabel>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/ScanBlock/DescriptionLabel");
-        GD.Print(entity.GetComponent<DisplayComponent>().Description);
         descriptionLabel.BbcodeText = entity.GetComponent<DisplayComponent>().Description;
       }
     }
