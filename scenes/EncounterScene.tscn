@@ -131,7 +131,7 @@ texture = ExtResource( 1 )
 expand = true
 stretch_mode = 6
 
-[node name="RichTextLabel" type="RichTextLabel" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/ScanBlock"]
+[node name="DescriptionLabel" type="RichTextLabel" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/ScanBlock"]
 margin_top = 64.0
 margin_right = 253.0
 margin_bottom = 147.0

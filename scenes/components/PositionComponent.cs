@@ -20,6 +20,8 @@ namespace SpaceDodgeRL.scenes.components {
     public const int STEP_X = 24;
     public const int STEP_Y = 36;
 
+    public Texture SpriteTexture { get => GetNode<Sprite>("Sprite").Texture; }
+
     private EncounterPosition _encounterPosition = new EncounterPosition(int.MinValue, int.MinValue);
     public EncounterPosition EncounterPosition {
       get => _encounterPosition;

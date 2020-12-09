@@ -14,16 +14,6 @@ namespace SpaceDodgeRL.scenes {
     private EncounterRunner encounterRunner;
     private RichTextLabel encounterLogLabel;
 
-    private void OnPositionScanned(int x, int y, Entity entity) {
-      if (entity != null) {
-        GD.Print(string.Format("Scanned {0},{1}, found {2}", x, y, entity.EntityName));
-      }
-    }
-
-    private void OnMousedOverPosition(int x, int y) {
-      this.inputHandler.TryInsertInputAction(new InputHandler.ScanInputAction(x, y));
-    }
-
     public override void _Ready() {
       this.encounterViewport = GetNode<Viewport>("SceneFrame/EncounterViewportContainer/EncounterViewport");
       this.encounterLogLabel = GetNode<RichTextLabel>("SceneFrame/BottomUIContainer/EncounterLogLabel");
@@ -135,6 +125,21 @@ namespace SpaceDodgeRL.scenes {
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/ExperienceLabel").Text = newXPText;
 
       var posComponent = player.GetComponent<PositionComponent>();
+    }
+
+    private void OnPositionScanned(int x, int y, Entity entity) {
+      if (entity != null) {
+        // I think this is a sign we should break the scene up.
+        var scanTextureRect = GetNode<TextureRect>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/ScanBlock/ReadoutTextureRect");
+        scanTextureRect.Texture = entity.GetComponent<PositionComponent>().SpriteTexture;
+        var descriptionLabel = GetNode<RichTextLabel>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/ScanBlock/DescriptionLabel");
+        GD.Print(entity.GetComponent<DisplayComponent>().Description);
+        descriptionLabel.BbcodeText = entity.GetComponent<DisplayComponent>().Description;
+      }
+    }
+
+    private void OnMousedOverPosition(int x, int y) {
+      this.inputHandler.TryInsertInputAction(new InputHandler.ScanInputAction(x, y));
     }
 
     // This could probably be a signal.
