@@ -22,8 +22,8 @@
 + TODO: newly picked-up items go to the last column in the inventory?
   - if you use an item in the left column then pick an item up it goes to the right?
 + TODO: you can't hold down button to scroll your menu buttons...annoying!
-+ TODO: intel doesn't auto-use which is annoying
-+ TODO: path danger doesn't take into account collision
++ FIXED: intel doesn't auto-use which is annoying
++ FIXED: path danger doesn't take into account collision
 + ending for now ~level 5
 + playing more
 + it'd be really sweet if the readout told you when you picked items up
