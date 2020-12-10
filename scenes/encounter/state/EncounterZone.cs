@@ -9,12 +9,14 @@ using SpaceDodgeRL.scenes.entities;
 namespace SpaceDodgeRL.scenes.encounter.state {
 
   public class EntityReadout {
+    [JsonInclude] public string EntityId { get; private set; }
     [JsonInclude] public string EntityName { get; private set; }
     [JsonInclude] public string TexturePath { get; private set; }
 
     public EntityReadout() { }
 
     public EntityReadout(Entity entity) {
+      this.EntityId = entity.EntityId;
       this.EntityName = entity.EntityName;
       this.TexturePath = entity.GetComponent<DisplayComponent>().TexturePath;
     }

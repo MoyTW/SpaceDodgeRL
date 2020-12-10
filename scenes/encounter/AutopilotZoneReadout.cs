@@ -19,7 +19,7 @@ public class AutopilotZoneReadout : HBoxContainer {
     return textureRect;
   }
 
-  public void SetReadout(EncounterZone zone, bool hasIntel) {
+  public void SetReadout(EncounterState state, EncounterZone zone, bool hasIntel) {
     this.GetNode<Label>("ReadoutContainer/NameEncounterBar/ZoneNameLabel").Text = zone.ZoneName;
     if (hasIntel) {
       this.GetNode<Label>("ReadoutContainer/NameEncounterBar/ZoneEncounterLabel").Text = zone.ReadoutEncounterName;
@@ -31,7 +31,11 @@ public class AutopilotZoneReadout : HBoxContainer {
     if (hasIntel) {
       var itemsTextureSize = itemsBar.RectSize.y;
       foreach (var itemReadout in zone.ReadoutItems) {
-        itemsBar.AddChild(BuildTextureRect(itemReadout.TexturePath, itemsTextureSize));
+        if (state.GetEntityById(itemReadout.EntityId) != null) {
+          itemsBar.AddChild(BuildTextureRect(itemReadout.TexturePath, itemsTextureSize));
+        } else {
+          itemsBar.AddChild(BuildTextureRect("res://resources/checkmark_18x18.png", itemsTextureSize));
+        }
       }
     } else {
       var noIntelLabel = new Label();
@@ -43,7 +47,11 @@ public class AutopilotZoneReadout : HBoxContainer {
     if (hasIntel) {
       var featuresTextureSize = featuresBar.RectSize.y;
       foreach (var featureReadout in zone.ReadoutFeatures) {
-        featuresBar.AddChild(BuildTextureRect(featureReadout.TexturePath, featuresTextureSize));
+        if (state.GetEntityById(featureReadout.EntityId) != null) {
+          featuresBar.AddChild(BuildTextureRect(featureReadout.TexturePath, featuresTextureSize));
+        } else {
+          featuresBar.AddChild(BuildTextureRect("res://resources/checkmark_18x18.png", featuresTextureSize));
+        }
       }
     } else {
       var noIntelLabel = new Label();

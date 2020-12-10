@@ -17,7 +17,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       _closeButton.Connect("tree_entered", this, nameof(OnTreeEntered));
     }
 
-    private void ResetZones(ReadOnlyCollection<EncounterZone> zones, int mapWidth, int mapHeight, bool hasIntel) {
+    private void ResetZones(EncounterState state) {
       var systemMap = GetNode<Control>("SystemMap");
       var sidebarButtons = GetNode<VBoxContainer>("SidebarContainer/ButtonConsole/DynamicButtonsContainer");
 
@@ -31,7 +31,10 @@ namespace SpaceDodgeRL.scenes.encounter {
         child.QueueFree();
       }
 
-      foreach (EncounterZone zone in zones) {
+      bool hasIntel = state.Player.GetComponent<PlayerComponent>().KnowsIntel(state.DungeonLevel);
+
+
+      foreach (EncounterZone zone in state.Zones) {
         // Add the system
         var systemButton = new Button();
         systemButton.Text = zone.ZoneName;
@@ -39,15 +42,15 @@ namespace SpaceDodgeRL.scenes.encounter {
         systemButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
         // TODO: It doesn't scale if you resize the window
         // TODO: Make it look less dumb
-        float x1Percentage = (zone.X1 + 1) / (float)mapWidth;
-        float y1Percentage = (zone.Y1 + 1) / (float)mapHeight;
+        float x1Percentage = (zone.X1 + 1) / (float)state.MapWidth;
+        float y1Percentage = (zone.Y1 + 1) / (float)state.MapHeight;
         float scaledX1 = systemMap.RectSize.x * x1Percentage;
         float scaledY1 = systemMap.RectSize.y * y1Percentage;
 
         systemButton.RectPosition = new Vector2(scaledX1, scaledY1);
 
-        float widthPercentage = zone.Width / (float)mapWidth;
-        float heightPercentage = zone.Height / (float)mapHeight;
+        float widthPercentage = zone.Width / (float)state.MapWidth;
+        float heightPercentage = zone.Height / (float)state.MapHeight;
         float scaledWidth = systemMap.RectSize.x * widthPercentage;
         float scaledHeight = systemMap.RectSize.y * heightPercentage;
 
@@ -57,15 +60,14 @@ namespace SpaceDodgeRL.scenes.encounter {
 
         // Add the sidebar
         var sidebarReadout = _readoutPrefab.Instance() as AutopilotZoneReadout;
-        sidebarReadout.SetReadout(zone, hasIntel);
+        sidebarReadout.SetReadout(state, zone, hasIntel);
         sidebarReadout.AutopilotButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
         sidebarButtons.AddChild(sidebarReadout);
       }
     }
 
     public void PrepMenu(EncounterState state) {
-      bool hasIntel = state.Player.GetComponent<PlayerComponent>().KnowsIntel(state.DungeonLevel);
-      ResetZones(state.Zones, state.MapWidth, state.MapHeight, hasIntel);
+      ResetZones(state);
 
       // TODO: Add You Are Here onto the starmap too!
       // You Are Here label

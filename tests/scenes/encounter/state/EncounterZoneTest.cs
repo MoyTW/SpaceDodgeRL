@@ -42,10 +42,13 @@ namespace SpaceDodgeRL.tests.scenes.encounter.state {
       Assert.Equal(zone.Height, loaded.Height);
       Assert.Equal(zone.ZoneName, loaded.ZoneName);
       Assert.Equal(zone.ReadoutEncounterName, loaded.ReadoutEncounterName);
+      Assert.Equal(zone._ReadoutFeatures[0].EntityId, loaded._ReadoutFeatures[0].EntityId);
       Assert.Equal(zone._ReadoutFeatures[0].EntityName, loaded._ReadoutFeatures[0].EntityName);
       Assert.Equal(zone._ReadoutFeatures[0].TexturePath, loaded._ReadoutFeatures[0].TexturePath);
+      Assert.Equal(zone._ReadoutFeatures[1].EntityId, loaded._ReadoutFeatures[1].EntityId);
       Assert.Equal(zone._ReadoutFeatures[1].EntityName, loaded._ReadoutFeatures[1].EntityName);
       Assert.Equal(zone._ReadoutFeatures[1].TexturePath, loaded._ReadoutFeatures[1].TexturePath);
+      Assert.Equal(zone._ReadoutItems[0].EntityId, loaded._ReadoutItems[0].EntityId);
       Assert.Equal(zone._ReadoutItems[0].EntityName, loaded._ReadoutItems[0].EntityName);
       Assert.Equal(zone._ReadoutItems[0].TexturePath, loaded._ReadoutItems[0].TexturePath);
       Assert.Equal(zone.Center, loaded.Center);
