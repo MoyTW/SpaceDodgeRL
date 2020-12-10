@@ -41,7 +41,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
         power: playerPower,
         // TODO: Cutting laser range
         (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
-        speed: 1 // TODO: If the player fires on the same tick that the enemy moves, the enemy will move before the laser gets a chance, causing a miss!
+        speed: 0
       );
     }
 

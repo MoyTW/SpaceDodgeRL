@@ -215,9 +215,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this._encounterTiles[entityPosition.X, entityPosition.Y].AddEntity(entity);
       this._entitiesById[entity.EntityId] = entity;
 
-      // If it's an action entity, add it into the timeline
+      // If it's an action entity, add it into the timeline. Anything with speed 0 is set to the front so it will instantly resolve.
       if (entity.GetComponent<ActionTimeComponent>() != null) {
-        this._actionTimeline.AddEntityToTimeline(entity as Entity);
+        this._actionTimeline.AddEntityToTimeline(entity as Entity, entity.GetComponent<SpeedComponent>().Speed == 0);
       }
     }
 
@@ -303,7 +303,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       foreach (Entity pathEntity in pathEntities) {
         var pathEntitySpeed = pathEntity.GetComponent<SpeedComponent>().Speed;
         var path = pathEntity.GetComponent<PathAIComponent>().Path;
-        var dangerPositions = path.Project(timeToNextPlayerMove / pathEntitySpeed);
+
+        int stepsToProject = pathEntitySpeed != 0 ? timeToNextPlayerMove / pathEntitySpeed : Int16.MaxValue;
+        var dangerPositions = path.Project(stepsToProject);
 
         foreach (EncounterPosition dangerPosition in dangerPositions) {
           dangerMap.SetCell(dangerPosition.X, dangerPosition.Y, 0);
