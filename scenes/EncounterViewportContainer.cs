@@ -5,14 +5,17 @@ using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes {
   public class EncounterViewportContainer : Godot.ViewportContainer {
-    private Resource moveNCursor = ResourceLoader.Load("res://resources/cursors/move_n_24x24.png");
-    private Resource moveNECursor = ResourceLoader.Load("res://resources/cursors/move_ne_24x24.png");
-    private Resource moveECursor = ResourceLoader.Load("res://resources/cursors/move_e_24x24.png");
-    private Resource moveSECursor = ResourceLoader.Load("res://resources/cursors/move_se_24x24.png");
-    private Resource moveSCursor = ResourceLoader.Load("res://resources/cursors/move_s_24x24.png");
-    private Resource moveSWCursor = ResourceLoader.Load("res://resources/cursors/move_sw_24x24.png");
-    private Resource moveWCursor = ResourceLoader.Load("res://resources/cursors/move_w_24x24.png");
-    private Resource moveNWCursor = ResourceLoader.Load("res://resources/cursors/move_nw_24x24.png");
+    private Texture moveNCursor = ResourceLoader.Load<Texture>("res://resources/cursors/move_n_24x24.png");
+    private Texture moveNECursor = ResourceLoader.Load<Texture>("res://resources/cursors/move_ne_24x24.png");
+    private Texture moveECursor = ResourceLoader.Load<Texture>("res://resources/cursors/move_e_24x24.png");
+    private Texture moveSECursor = ResourceLoader.Load<Texture>("res://resources/cursors/move_se_24x24.png");
+    private Texture moveSCursor = ResourceLoader.Load<Texture>("res://resources/cursors/move_s_24x24.png");
+    private Texture moveSWCursor = ResourceLoader.Load<Texture>("res://resources/cursors/move_sw_24x24.png");
+    private Texture moveWCursor = ResourceLoader.Load<Texture>("res://resources/cursors/move_w_24x24.png");
+    private Texture moveNWCursor = ResourceLoader.Load<Texture>("res://resources/cursors/move_nw_24x24.png");
+
+    private int CursorWidth { get => this.moveNCursor.GetWidth(); }
+    private int CursorHeight { get => this.moveNCursor.GetHeight(); }
 
     [Signal] public delegate void ActionSelected(string actionMapping);
     [Signal] public delegate void MousedOverPosition(int x, int y);
@@ -46,7 +49,7 @@ namespace SpaceDodgeRL.scenes {
 
           // TODO: The cursor's position is the upper-left corner of the image, which is perfectly sensible with the default
           // cursor but also not really what I'd like!
-          var unitVectorToMouse = new Vector2(dx, dy).Normalized();
+          var unitVectorToMouse = new Vector2(dx + CursorWidth / 2, dy + CursorHeight / 2).Normalized();
           var unitYVec = new Vector2(0, -1);
           var deg = Mathf.Rad2Deg(unitYVec.AngleTo(unitVectorToMouse));
           if (deg >= -22.5f && deg <= 22.5f) {
@@ -85,7 +88,7 @@ namespace SpaceDodgeRL.scenes {
           // Determine which octant the player's mouse moved over and set the cursor appropriately
           // TODO: The cursor's position is the upper-left corner of the image, which is perfectly sensible with the default
           // cursor but also not really what I'd like!
-          var unitVectorToMouse = new Vector2(dx, dy).Normalized();
+          var unitVectorToMouse = new Vector2(dx + CursorWidth / 2, dy + CursorHeight / 2).Normalized();
           var unitYVec = new Vector2(0, -1);
           var deg = Mathf.Rad2Deg(unitYVec.AngleTo(unitVectorToMouse));
           if (deg >= -22.5f && deg <= 22.5f) {
