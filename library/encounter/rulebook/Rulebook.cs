@@ -187,6 +187,13 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
       if (item == null) {
         return false;
+      } else if (item.GetComponent<UsableComponent>() != null && item.GetComponent<UsableComponent>().UseOnGet) {
+        // The responsibility for removing/not removing the usable from the EncounterState is in the usage code.
+        bool successfulUsage = ResolveUse(new UseAction(actor.EntityId, item.EntityId, false), state);
+        if (!successfulUsage) {
+          GD.PrintErr(string.Format("Item {0} was not successfully used after being picked up!", item.EntityName));
+        }
+        return true;
       } else if (!inventoryComponent.CanFit(item)) {
         state.LogMessage(string.Format("[b]{0}[/b] can't fit the [b]{1}[/b] in its inventory!",
           actor.EntityName, item.EntityName));
@@ -311,10 +318,18 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
 
     // TODO: Consider putting all these effects under UsableComponent, instead of keeping them as components
     private static bool ResolveUse(UseAction action, EncounterState state) {
-      // We assume that the used entity must be in the inventory of the user - this is pretty fragile and might change.
       var user = state.GetEntityById(action.ActorId);
-      var userInventory = user.GetComponent<InventoryComponent>();
-      var usable = userInventory.StoredEntityById(action.UsableId);
+
+      // This is another issue that'd be solved with a global Entity lookup - though not the removal part.
+      Entity usable = null;
+      if (action.FromInventory) {
+        var userInventory = user.GetComponent<InventoryComponent>();
+        usable = userInventory.StoredEntityById(action.UsableId);
+        userInventory.RemoveEntity(usable);
+      } else {
+        usable = state.GetEntityById(action.UsableId);
+        state.RemoveEntity(usable);
+      }
 
       if (usable.GetComponent<UsableComponent>() == null) {
         throw new NotImplementedException("can't use non-usable thing TODO: Handle better!");
@@ -325,7 +340,6 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       ResolveUseEffects(user, usable, state);
 
       // We assume all items are single-use; this will change if I deviate from the reference implementation!
-      userInventory.RemoveEntity(usable);
       usable.QueueFree();
       return true;
     }

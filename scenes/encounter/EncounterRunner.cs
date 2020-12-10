@@ -231,7 +231,7 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     public void HandleUseItemSelection(string itemIdToUse) {
       var playerId = this._encounterState.Player.EntityId;
-      PlayerExecuteTurnEndingAction(new UseAction(playerId, itemIdToUse), this._encounterState);
+      PlayerExecuteTurnEndingAction(new UseAction(playerId, itemIdToUse, true), this._encounterState);
     }
   }
 }
