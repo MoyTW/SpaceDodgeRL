@@ -19,6 +19,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
     public void AddEntityToTimeline(Entity entity, bool front=false) {
       var nextTurnAtTick = entity.GetComponent<ActionTimeComponent>().NextTurnAtTick;
+      if (nextTurnAtTick < CurrentTick) {
+        Godot.GD.PrintErr(
+          string.Format("Entity {0} is somehow going back in time!? Next action at tick {1}, but current tick {2}!",
+                        entity.EntityName, nextTurnAtTick, CurrentTick));
+      }
 
       this._nextActiveTicks.Add(nextTurnAtTick);
       this._entityToTick[entity] = nextTurnAtTick;
