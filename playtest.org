@@ -4,7 +4,7 @@
   - hard to tell which "GO" correlated with which button
 + FIXED: ESCAPE should close the map (& other screens)
 + FIXED: Eventually the scroll in the event log freezes
-+ TODO: Destroyer seems to fire, but the shot hangs (are they in the same tick as player?)
++ FIXED: Destroyer seems to fire, but the shot hangs (are they in the same tick as player?)
 + TODO: I could really use an "autoloot sector" button!
 + FIXED: I think...it broke when I took up to my limit in items? yep, InventoryFullCannotStoreException
   - I could use a readout on inventory size, that seems helpful

@@ -49,7 +49,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       } else {
         _tickToEntities.Remove(nextTurnAtTick);
         _nextActiveTicks.Remove(nextTurnAtTick);
-        this.CurrentTick = _nextActiveTicks.Min;
+        this.CurrentTick = nextTurnAtTick;
       }
     }
 
