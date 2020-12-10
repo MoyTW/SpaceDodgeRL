@@ -271,6 +271,28 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // ##########################################################################################################################
     #region Display caches
 
+    /**
+     * Displays the danger map on the "DangerMap" TileMap.
+     *
+     * "Danger" is kind of tricky, because it's not binary. We have several basic states:
+     * 1: Safe - no projectile path crosses this tile at all
+     * 2: Dangerous - a projectile path crosses this tile, and cannot be stopped from doing so (see below)
+     * 3: Now safe, possibly dangerous - there is an obstruction in between the tile and the projectile, but the obstruction may
+     *    move or be destroyed before the projectile hits it.
+     * 4: Now dangerous, possibly safe - there is no obstruction, but there is the possibility of something moving between the
+     *    projectile and the tile before the projectile finishes its movement.
+     *
+     * The current rule should be "You can never get hit on a safe square, but can sometimes avoid getting hit on a dangerous
+     * square."
+     *
+     * With an infinite-speed projectile, cases 3 & 4 cease to exist; however all enemy projectiles have travel time. Therefore
+     * you're going to have a lot of states 3 & 4! At the moment we should err on marking dangerous by default, but we should
+     * come back to this and think about if we can have a different color/status to 3 & 4. Likewise, we currently do not attempt
+     * to distinguish between "you will take a shotgun shell if you move here" and "you're gonna get pasted by 4 railgun shots",
+     * which is another aspect that the danger map currently flattens.
+     *
+     * TODO: work out how to display blocking projectiles and danger magnitudes
+     */
     public void UpdateDangerMap() {
       var dangerMap = GetNode<TileMap>("DangerMap");
       var pathEntities = GetTree().GetNodesInGroup(PathAIComponent.ENTITY_GROUP);
