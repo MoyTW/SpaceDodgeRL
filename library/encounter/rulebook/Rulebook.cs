@@ -241,19 +241,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       return true;
     }
 
-    // TODO: Consider putting all these effects under UsableComponent, instead of keeping them as components
-    private static bool ResolveUse(UseAction action, EncounterState state) {
-      // We assume that the used entity must be in the inventory of the user - this is pretty fragile and might change.
-      var user = state.GetEntityById(action.ActorId);
-      var userInventory = user.GetComponent<InventoryComponent>();
-      var usable = userInventory.StoredEntityById(action.UsableId);
-
-      if (usable.GetComponent<UsableComponent>() == null) {
-        throw new NotImplementedException("can't use non-usable thing TODO: Handle better!");
-      }
-
-      state.LogMessage(string.Format("{0} used {1}!", user.EntityName, usable.EntityName));
-
+    private static void ResolveUseEffects(Entity user, Entity usable, EncounterState state) {
       // We keep this logic here instead of in the component itself because the component should have only state data. That said
       // we shouldn't keep it, like, *here* here, 'least not indefinitely.
       var useEffectHeal = usable.GetComponent<UseEffectHealComponent>();
@@ -319,6 +307,22 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
           }
         }
       }
+    }
+
+    // TODO: Consider putting all these effects under UsableComponent, instead of keeping them as components
+    private static bool ResolveUse(UseAction action, EncounterState state) {
+      // We assume that the used entity must be in the inventory of the user - this is pretty fragile and might change.
+      var user = state.GetEntityById(action.ActorId);
+      var userInventory = user.GetComponent<InventoryComponent>();
+      var usable = userInventory.StoredEntityById(action.UsableId);
+
+      if (usable.GetComponent<UsableComponent>() == null) {
+        throw new NotImplementedException("can't use non-usable thing TODO: Handle better!");
+      }
+
+      state.LogMessage(string.Format("{0} used {1}!", user.EntityName, usable.EntityName));
+
+      ResolveUseEffects(user, usable, state);
 
       // We assume all items are single-use; this will change if I deviate from the reference implementation!
       userInventory.RemoveEntity(usable);

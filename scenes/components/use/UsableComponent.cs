@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Godot;
+using System.Text.Json.Serialization;
 using SpaceDodgeRL.scenes.entities;
 
 namespace SpaceDodgeRL.scenes.components.use {
@@ -8,13 +8,16 @@ namespace SpaceDodgeRL.scenes.components.use {
     public static readonly string ENTITY_GROUP = "USABLE_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
 
-    public static UsableComponent Create() {
+    [JsonInclude] public bool UseOnGet { get; private set; }
+
+    public static UsableComponent Create(bool useOnGet) {
       var component = new UsableComponent();
+      component.UseOnGet = useOnGet;
       return component;
     }
 
     public static UsableComponent Create(string saveData) {
-      return UsableComponent.Create();
+      return JsonSerializer.Deserialize<UsableComponent>(saveData);
     }
 
     public string Save() {

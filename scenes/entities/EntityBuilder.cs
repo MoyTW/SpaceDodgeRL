@@ -212,7 +212,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
       e.AddComponent(DisplayComponent.Create(_bPath, "An extra battery for your weapons. Gives 20 power for 450 ticks.", true));
       e.AddComponent(StorableComponent.Create());
-      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UsableComponent.Create(useOnGet: false));
       e.AddComponent(UseEffectBoostPowerComponent.Create(boostPower: 20, duration: 450));
 
       return e;
@@ -223,7 +223,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
       e.AddComponent(DisplayComponent.Create(_tPath, "Some duct tape. Heals 10 HP.", true));
       e.AddComponent(StorableComponent.Create());
-      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UsableComponent.Create(useOnGet: false));
       e.AddComponent(UseEffectHealComponent.Create(healpower: 10));
 
       return e;
@@ -236,7 +236,7 @@ namespace SpaceDodgeRL.scenes.entities {
       // if I do make it pretty.
       e.AddComponent(DisplayComponent.Create(_texRedPaintPath, "Red paint makes you go faster! Reduces turn time by 75 for 300 ticks (minimum time is 1).", true));
       e.AddComponent(StorableComponent.Create());
-      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UsableComponent.Create(useOnGet: false));
       e.AddComponent(UseEffectBoostSpeedComponent.Create(boostPower: 75, duration: 300));
 
       return e;
@@ -247,7 +247,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
       e.AddComponent(DisplayComponent.Create(_texEMPPath, "An EMP burst. Disables enemies for 10 turns in radius 20.", true));
       e.AddComponent(StorableComponent.Create());
-      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UsableComponent.Create(useOnGet: false));
       // I seriously put 20 radius 10 turns? That's enough time to mop up an entire encounter!
       e.AddComponent(UseEffectEMPComponent.Create(radius: 20, disableTurns: 10));
 
@@ -359,7 +359,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
       e.AddComponent(DisplayComponent.Create(_iPath, "Intel! Gives you zone information for the next sector. You want this.", true));
       e.AddComponent(StorableComponent.Create());
-      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UsableComponent.Create(useOnGet: true));
       e.AddComponent(UseEffectAddIntelComponent.Create(targetDungeonLevel));
 
       return e;
