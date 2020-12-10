@@ -47,8 +47,6 @@ namespace SpaceDodgeRL.scenes {
           var dx = position.x - (viewportRect.Size.x / 2);
           var dy = position.y - (viewportRect.Size.y / 2);
 
-          // TODO: The cursor's position is the upper-left corner of the image, which is perfectly sensible with the default
-          // cursor but also not really what I'd like!
           var unitVectorToMouse = new Vector2(dx + CursorWidth / 2, dy + CursorHeight / 2).Normalized();
           var unitYVec = new Vector2(0, -1);
           var deg = Mathf.Rad2Deg(unitYVec.AngleTo(unitVectorToMouse));
@@ -86,8 +84,6 @@ namespace SpaceDodgeRL.scenes {
           var dy = position.y - (viewportRect.Size.y / 2);
 
           // Determine which octant the player's mouse moved over and set the cursor appropriately
-          // TODO: The cursor's position is the upper-left corner of the image, which is perfectly sensible with the default
-          // cursor but also not really what I'd like!
           var unitVectorToMouse = new Vector2(dx + CursorWidth / 2, dy + CursorHeight / 2).Normalized();
           var unitYVec = new Vector2(0, -1);
           var deg = Mathf.Rad2Deg(unitYVec.AngleTo(unitVectorToMouse));

@@ -475,7 +475,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       EncounterState state = _encounterPrefab.Instance() as EncounterState;
 
       state.SaveFilePath = data.SaveFilePath;
-      // TODO: This populates the internal representation but doesn't print; print old messages
+      // This populates the representation, but does not print - see EncounterScene._Ready() for the display code.
       state._encounterLog = data.EncounterLog;
       state.MapWidth = data.MapWidth;
       state.MapHeight = data.MapHeight;
