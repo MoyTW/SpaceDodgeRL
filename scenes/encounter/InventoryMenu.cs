@@ -41,7 +41,9 @@ public class InventoryMenu : VBoxContainer {
     var toAddThese = inventoryIdsToEntities.Where(e => !_displayedIdsToEntries.ContainsKey(e.Key)).ToList();
     foreach(KeyValuePair<string, Entity> held in toAddThese) {
       var newEntry = _inventoryPrefab.Instance() as InventoryEntry;
-      newEntry.PopulateData(held.Key, held.Value.EntityName, "TODO: Item descriptions");
+
+      var description = held.Value.GetComponent<DisplayComponent>().Description;
+      newEntry.PopulateData(held.Key, held.Value.EntityName, description);
       newEntry.Connect(nameof(InventoryEntry.UseItemSelected), this, nameof(OnUseButtonPressed), new Godot.Collections.Array{ held.Key });
 
       this._displayedIdsToEntries[held.Key] = newEntry;

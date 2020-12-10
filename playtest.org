@@ -15,7 +15,7 @@
   - this is probably the same with a shot that hits you as you're right next to something
   - fix that Tween timing issue?
 + FIXED: even the inventory doesn't tell you how many slots you have left, that's definitely bad
-+ TODO: inventory still has TODO: item descriptions, rip
++ FIXED: inventory still has TODO: item descriptions, rip
 + TODO: there are white squares for...I think items that you've picked up? that vanish when you enter sight
 + FIXED: FoW resets when you load
 + FIXED: projectile paths not drawn when you load
