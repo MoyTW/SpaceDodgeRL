@@ -132,6 +132,8 @@ namespace SpaceDodgeRL.scenes.encounter {
           PlayerWait(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.AUTOPILOT) {
           ShowAutopilotMenu(state);
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.AUTOEXPLORE) {
+          GD.Print("AUTOEXPLORE");
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.CHARACTER) {
           ShowCharacterMenu(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.ESCAPE_MENU) {
