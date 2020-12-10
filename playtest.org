@@ -2,7 +2,7 @@
 + TODO: the map menu gets really hard to read at big resolutions
   - buttons get spaced out
   - hard to tell which "GO" correlated with which button
-+ TODO: ESCAPE should close the map
++ FIXED: ESCAPE should close the map (& other screens)
 + FIXED: Eventually the scroll in the event log freezes
 + TODO: Destroyer seems to fire, but the shot hangs (are they in the same tick as player?)
 + TODO: I could really use an "autoloot sector" button!
