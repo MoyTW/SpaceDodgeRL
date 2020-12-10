@@ -307,6 +307,15 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
         foreach (EncounterPosition dangerPosition in dangerPositions) {
           dangerMap.SetCell(dangerPosition.X, dangerPosition.Y, 0);
+
+          // If we have a fully immobile, invincible entity at the position we stop the path - otherwise we still draw it.
+          var blockingEntity = this.BlockingEntityAtPosition(dangerPosition.X, dangerPosition.Y);
+          if (blockingEntity != null &&
+              blockingEntity.GetComponent<ActionTimeComponent>() == null &&
+              blockingEntity.GetComponent<DefenderComponent>() != null &&
+              blockingEntity.GetComponent<DefenderComponent>().IsInvincible) {
+            break;
+          }
         }
       }
     }

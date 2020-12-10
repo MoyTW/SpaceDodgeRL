@@ -339,7 +339,7 @@ namespace SpaceDodgeRL.scenes.entities {
       var e = CreateEntity(Guid.NewGuid().ToString(), "satellite");
 
       e.AddComponent(CollisionComponent.Create(blocksMovement: true, blocksVision: true));
-      e.AddComponent(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, logDamage: false));
+      e.AddComponent(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, isInvincible: true, logDamage: false));
       e.AddComponent(DisplayComponent.Create(_hashSignPath, "Space junk. Blocks movement and projectiles. Cannot be destroyed.", true));
 
       return e;
