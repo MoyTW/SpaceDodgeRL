@@ -14,7 +14,7 @@ public class CharacterMenu : VBoxContainer {
 
   public override void _Ready() {
     _closeButton = this.GetNode<Button>("Columns/CloseButton");
-    _closeButton.Connect("pressed", this, nameof(OnButtonPressed));
+    _closeButton.Connect("pressed", this, nameof(OnCloseButtonPressed));
     _closeButton.Connect("tree_entered", this, nameof(OnTreeEntered));
 
     // Hook up the level up menu
@@ -101,11 +101,18 @@ public class CharacterMenu : VBoxContainer {
     }
   }
 
+  public override void _UnhandledKeyInput(InputEventKey @event) {
+    if (@event.IsActionPressed("ui_cancel", true)) {
+      OnCloseButtonPressed();
+      return;
+    }
+  }
+
   private void OnTreeEntered() {
     _closeButton.GrabFocus();
   }
 
-  private void OnButtonPressed() {
+  private void OnCloseButtonPressed() {
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
     sceneManager.ReturnToPreviousScene();
   }
