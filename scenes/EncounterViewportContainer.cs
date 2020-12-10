@@ -14,6 +14,7 @@ namespace SpaceDodgeRL.scenes {
     private Resource moveWCursor = ResourceLoader.Load("res://resources/cursors/move_w_24x24.png");
     private Resource moveNWCursor = ResourceLoader.Load("res://resources/cursors/move_nw_24x24.png");
 
+    [Signal] public delegate void ActionSelected(string actionMapping);
     [Signal] public delegate void MousedOverPosition(int x, int y);
 
     private void ResizeViewport() {
@@ -26,7 +27,49 @@ namespace SpaceDodgeRL.scenes {
     }
 
     public override void _Input(InputEvent @event) {
-      if (@event is InputEventMouseMotion eventMouseMotion) {
+      if (@event is InputEventMouseButton eventMouseButton) {
+        Input.SetMouseMode(Input.MouseMode.Visible);
+
+        // We only want to move on release of left click (think Tangledeep but with mouse) (probably will change this later)
+        // Possibly we can add a hold but that runs the risk of you flying right into the middle of an encounter, since movement
+        // is so insanely fast.
+        if (eventMouseButton.Pressed || eventMouseButton.ButtonIndex != 1) {
+          return;
+        }
+
+        var viewportRect = this.GetRect();
+        var position = eventMouseButton.Position;
+
+        if (viewportRect.HasPoint(position)) {
+          var dx = position.x - (viewportRect.Size.x / 2);
+          var dy = position.y - (viewportRect.Size.y / 2);
+
+          // TODO: The cursor's position is the upper-left corner of the image, which is perfectly sensible with the default
+          // cursor but also not really what I'd like!
+          var unitVectorToMouse = new Vector2(dx, dy).Normalized();
+          var unitYVec = new Vector2(0, -1);
+          var deg = Mathf.Rad2Deg(unitYVec.AngleTo(unitVectorToMouse));
+          if (deg >= -22.5f && deg <= 22.5f) {
+            EmitSignal(nameof(ActionSelected), InputHandler.ActionMapping.MOVE_N);
+          } else if (deg >= 22.5f && deg <= 67.5f) {
+            EmitSignal(nameof(ActionSelected), InputHandler.ActionMapping.MOVE_NE);
+          } else if (deg >= 67.5f && deg <= 112.5f) {
+            EmitSignal(nameof(ActionSelected), InputHandler.ActionMapping.MOVE_E);
+          } else if (deg >= 112.5f && deg <= 157.5f) {
+            EmitSignal(nameof(ActionSelected), InputHandler.ActionMapping.MOVE_SE);
+          } else if (deg >= 157.5f || deg <= -157.5f) {
+            EmitSignal(nameof(ActionSelected), InputHandler.ActionMapping.MOVE_S);
+          } else if (deg >= -157.5f && deg <= -112.5f) {
+            EmitSignal(nameof(ActionSelected), InputHandler.ActionMapping.MOVE_SW);
+          } else if (deg >= -112.5f && deg <= -67.5f) {
+            EmitSignal(nameof(ActionSelected), InputHandler.ActionMapping.MOVE_W);
+          } else if (deg >= -67.5f && deg <= -22.5f) {
+            EmitSignal(nameof(ActionSelected), InputHandler.ActionMapping.MOVE_NW);
+          }
+        } else {
+          Input.SetCustomMouseCursor(null);
+        }
+      } else if (@event is InputEventMouseMotion eventMouseMotion) {
         Input.SetMouseMode(Input.MouseMode.Visible);
 
         var viewportRect = this.GetRect();
@@ -62,8 +105,6 @@ namespace SpaceDodgeRL.scenes {
           } else if (deg >= -67.5f && deg <= -22.5f) {
             Input.SetCustomMouseCursor(moveNWCursor);
           }
-          GD.Print(unitVectorToMouse, deg);
-          // GD.Print("X: ", unitXVec.Dot(unitVectorToMouse), " Y: ", unitYVec.Dot(unitVectorToMouse));
 
           var selectedPosition = PositionComponent.VectorToIndex(dx + spritePos.x, dy + spritePos.y);
           EmitSignal(nameof(MousedOverPosition), selectedPosition.X, selectedPosition.Y);

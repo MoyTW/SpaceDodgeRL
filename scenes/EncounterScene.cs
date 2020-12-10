@@ -33,8 +33,9 @@ namespace SpaceDodgeRL.scenes {
       this.EncounterState.Connect(nameof(EncounterState.EncounterLogMessageAdded), this, nameof(OnEncounterLogMessageAdded));
       this.encounterRunner.Connect(nameof(EncounterRunner.TurnEnded), this, nameof(OnTurnEnded));
       this.encounterRunner.Connect(nameof(EncounterRunner.PositionScanned), this, nameof(OnPositionScanned));
-      GetNode<ViewportContainer>("SceneFrame/EncounterViewportContainer")
-        .Connect(nameof(EncounterViewportContainer.MousedOverPosition), this, nameof(OnMousedOverPosition));
+      var viewportContainer = GetNode<ViewportContainer>("SceneFrame/EncounterViewportContainer");
+      viewportContainer.Connect(nameof(EncounterViewportContainer.MousedOverPosition), this, nameof(OnMousedOverPosition));
+      viewportContainer.Connect(nameof(EncounterViewportContainer.ActionSelected), this, nameof(OnActionSelected));
       // Since we can't have the state broadcast its events before we connect, we instead pull log messages; this will be empty
       // on new game and populated on load.
       foreach (var logMessage in this.EncounterState.EncounterLog) {
@@ -139,6 +140,10 @@ namespace SpaceDodgeRL.scenes {
 
     private void OnMousedOverPosition(int x, int y) {
       this.inputHandler.TryInsertInputAction(new InputHandler.ScanInputAction(x, y));
+    }
+
+    private void OnActionSelected(string actionMapping) {
+      this.inputHandler.TryInsertInputAction(new InputHandler.InputAction(actionMapping));
     }
 
     // This could probably be a signal.
