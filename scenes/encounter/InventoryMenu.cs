@@ -60,6 +60,13 @@ public class InventoryMenu : VBoxContainer {
     }
   }
 
+  public override void _UnhandledKeyInput(InputEventKey @event) {
+    if (@event.IsActionPressed("ui_cancel", true)) {
+      OnCloseButtonPressed();
+      return;
+    }
+  }
+
   private void OnUseButtonPressed(string entityId) {
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
     sceneManager.HandleItemToUseSelected(entityId);

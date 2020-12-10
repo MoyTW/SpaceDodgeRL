@@ -84,6 +84,13 @@ public class AutopilotMenu : HBoxContainer {
     _closeButton.GrabFocus();
   }
 
+  public override void _UnhandledKeyInput(InputEventKey @event) {
+    if (@event.IsActionPressed("ui_cancel", true)) {
+      OnButtonPressed(null);
+      return;
+    }
+  }
+
   private void OnButtonPressed(string zoneId) {
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
     sceneManager.CloseAutopilotMenu(zoneId);
