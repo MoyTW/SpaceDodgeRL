@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Godot;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.encounter;
@@ -119,7 +120,36 @@ namespace SpaceDodgeRL.scenes {
         var scanTextureRect = GetNode<TextureRect>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/ScanBlock/ReadoutTextureRect");
         scanTextureRect.Texture = entity.GetComponent<PositionComponent>().SpriteTexture;
         var descriptionLabel = GetNode<RichTextLabel>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/ScanBlock/DescriptionLabel");
-        descriptionLabel.BbcodeText = entity.GetComponent<DisplayComponent>().Description;
+
+        var descBuilder = new StringBuilder();
+
+        var attackerComponent = entity.GetComponent<AttackerComponent>();
+        if (attackerComponent != null) {
+          descBuilder.AppendLine(string.Format("[b]Damage:[/b] {0}", attackerComponent.Power));
+        }
+
+        var defenderComponent = entity.GetComponent<DefenderComponent>();
+        if (defenderComponent != null) {
+          if (defenderComponent.IsInvincible) {
+            descBuilder.AppendLine("[b]Invincible[/b]");
+          } else {
+            descBuilder.AppendLine(string.Format("[b]HP:[/b] {0}/{1}", defenderComponent.CurrentHp, defenderComponent.MaxHp));
+            descBuilder.AppendLine(string.Format("[b]Armor:[/b] {0}", defenderComponent.BaseDefense));
+          }
+        }
+
+        if (entity.GetComponent<SpeedComponent>() != null) {
+          descBuilder.AppendLine(string.Format("[b]Speed:[/b] {0}", entity.GetComponent<SpeedComponent>().Speed));
+        }
+
+        var xpValueComponent = entity.GetComponent<XPValueComponent>();
+        if (xpValueComponent != null) {
+          descBuilder.AppendLine(string.Format("[b]XP Value:[/b] {0}", xpValueComponent.XPValue));
+        }
+
+        descBuilder.AppendLine(entity.GetComponent<DisplayComponent>().Description);
+
+        descriptionLabel.BbcodeText = descBuilder.ToString();
       }
     }
 
