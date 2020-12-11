@@ -468,7 +468,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       player.GetComponent<ActionTimeComponent>().SetNextTurnAtTo(0);
 
       // TODO: Map gen seed properly
-      EncounterStateBuilder.PopulateStateForLevel(player, dungeonLevel, this, new Random(1));
+      var seed = new Random().Next();
+      GD.Print("Seed:", seed);
+      EncounterStateBuilder.PopulateStateForLevel(player, dungeonLevel, this, new Random(seed));
 
       // TODO: save/load the state of rand for reproducibility?
       this.EncounterRand = new Random(1);
