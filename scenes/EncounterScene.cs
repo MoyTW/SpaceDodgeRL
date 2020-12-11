@@ -95,9 +95,9 @@ namespace SpaceDodgeRL.scenes {
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/TurnReadoutLabel").Text = newTurnReadoutText;
 
       var newSectorZoneText = string.Format("Sector: {0}", this.EncounterState.DungeonLevel);
-      var closestZone = this.EncounterState.ClosestZone(playerPos.X, playerPos.Y);
-      if (closestZone.Contains(playerPos)) {
-        newSectorZoneText += string.Format(" {0}", closestZone.ZoneName);
+      var containingZone = this.EncounterState.ContainingZone(playerPos.X, playerPos.Y);
+      if (containingZone != null) {
+        newSectorZoneText += string.Format(" {0}", containingZone.ZoneName);
       }
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/SectorZoneLabel").Text = newSectorZoneText;
 

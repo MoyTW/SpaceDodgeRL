@@ -186,6 +186,18 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return this.GetZoneById(closestZoneId);
     }
 
+    /**
+     * Returns the zone containing the position. Returns null if the position is not inside a zone.
+     */
+    public EncounterZone ContainingZone(int x, int y) {
+      var closest = this.ClosestZone(x, y);
+      if (closest.Contains(x, y)) {
+        return closest;
+      } else {
+        return null;
+      }
+    }
+
     #endregion
     // ##########################################################################################################################
 

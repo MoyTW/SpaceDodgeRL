@@ -79,8 +79,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       throw new NotImplementedException("ok really we should probably handle this sanely but 250 attemps it a lotta attempts!");
     }
 
-    public bool Contains(EncounterPosition position) {
-      return this.X1 <= position.X && this.X2 >= position.X && this.Y1 <= position.Y && this.Y2 >= position.Y;
+    public bool Contains(int x, int y) {
+      return this.X1 <= x && this.X2 >= x && this.Y1 <= y && this.Y2 >= y;
     }
 
     public bool Intersects(EncounterZone other) {

@@ -74,7 +74,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
       EncounterZone closestZone = state.ClosestZone(playerPosition.X, playerPosition.Y);
       var youAreHereLabel = GetNode<RichTextLabel>("SidebarContainer/YouAreHereLabel");
-      if (closestZone.Contains(playerPosition)) {
+      if (closestZone.Contains(playerPosition.X, playerPosition.Y)) {
         youAreHereLabel.BbcodeText = string.Format("You are in [b]Sector {0}[/b], [b]{1}[/b]", state.DungeonLevel, closestZone.ZoneName);
       } else {
         youAreHereLabel.BbcodeText = string.Format("You are in [b]Sector {0}[/b], near [b]{1}[/b]", state.DungeonLevel, closestZone.ZoneName);
