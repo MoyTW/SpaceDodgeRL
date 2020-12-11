@@ -192,8 +192,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // ##########################################################################################################################
     #region Entity Management
 
-    public void UpdateTimelineForEntity(Entity entity) {
-      _actionTimeline.UpdateTimelineForEntity(entity);
+    public void EntityHasEndedTurn(Entity entity) {
+      _actionTimeline.EntityHasEndedTurn(entity);
     }
 
     public void PlaceEntity(Entity entity, EncounterPosition targetPosition, bool ignoreCollision = false) {

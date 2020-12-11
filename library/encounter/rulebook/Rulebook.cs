@@ -36,7 +36,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       if (entity != null) {
         var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
         actionTimeComponent.EndTurn(entity.GetComponent<SpeedComponent>(), entity.GetComponent<StatusEffectTrackerComponent>());
-        state.UpdateTimelineForEntity(entity);
+        state.EntityHasEndedTurn(entity);
         return true;
       } else {
         return false;
