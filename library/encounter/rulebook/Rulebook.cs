@@ -56,7 +56,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
-    private static bool ResolveAutopilotBegin(AutopilotBeginAction action, EncounterState state) {
+    private static bool ResolveAutopilotBeginTravel(AutopilotBeginAction action, EncounterState state) {
       var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
       EncounterZone zone = state.GetZoneById(action.ZoneId);
 
@@ -77,6 +77,22 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       } else {
         state.LogMessage(String.Format("Autopilot failed to plot course to to [b]{0}[/b]", zone.ZoneName));
         return false;
+      }
+    }
+
+    private static bool ResolveAutopilotBeginExplore(AutopilotBeginAction action, EncounterState state) {
+      var playerComponent = state.Player.GetComponent<PlayerComponent>();
+      playerComponent.BeginAutoexploring(action.ZoneId);
+      return true;
+    }
+
+    private static bool ResolveAutopilotBegin(AutopilotBeginAction action, EncounterState state) {
+      if (action.Mode == AutopilotMode.TRAVEL) {
+        return ResolveAutopilotBeginTravel(action, state);
+      } else if (action.Mode == AutopilotMode.EXPLORE) {
+        return ResolveAutopilotBeginExplore(action, state);
+      } else {
+        throw new NotImplementedException(string.Format("Rulebook doesn't know how to handle autopilot mode {0}", action.Mode));
       }
     }
 

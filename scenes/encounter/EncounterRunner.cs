@@ -133,7 +133,14 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.AUTOPILOT) {
           ShowAutopilotMenu(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.AUTOEXPLORE) {
-          GD.Print("AUTOEXPLORE");
+          var playerPos = entity.GetComponent<PositionComponent>().EncounterPosition;
+          var containingZone = state.ContainingZone(playerPos.X, playerPos.Y);
+          if (containingZone != null) {
+            Rulebook.ResolveAction(new AutopilotBeginAction(entity.EntityId, containingZone.ZoneId, AutopilotMode.EXPLORE), this._encounterState);
+            Rulebook.ResolveEndTurn(this._encounterState.Player.EntityId, this._encounterState);
+          } else {
+            state.LogMessage("Player is not within zone - cannot find autoexplore target!");
+          }
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.CHARACTER) {
           ShowCharacterMenu(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.ESCAPE_MENU) {
@@ -168,6 +175,16 @@ namespace SpaceDodgeRL.scenes.encounter {
             Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
           } else if (!path.AtEnd) {
             PlayerMove(state, new MoveAction(entity.EntityId, path.Step()));
+          } else {
+            Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.TASK_COMPLETED), state);
+          }
+        } else if (entity.GetComponent<PlayerComponent>().ActiveAutopilotMode == AutopilotMode.EXPLORE) {
+          var seesEnemies = state.FoVCache.VisibleCells
+              .Select(cell => state.EntitiesAtPosition(cell.X, cell.Y))
+              .Any(entitiesAtPosition => entitiesAtPosition.Any(e => e.GetComponent<AIComponent>() != null && !(e.GetComponent<PathAIComponent>() is PathAIComponent)));
+
+          if (seesEnemies) {
+            Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
           } else {
             Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.TASK_COMPLETED), state);
           }
@@ -227,7 +244,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     // Instead of calling into runner like this, put it into InputHandler!
     public void HandleAutopilotSelection(string selectedZoneId) {
       var playerId = this._encounterState.Player.EntityId;
-      Rulebook.ResolveAction(new AutopilotBeginAction(playerId, selectedZoneId), this._encounterState);
+      Rulebook.ResolveAction(new AutopilotBeginAction(playerId, selectedZoneId, AutopilotMode.TRAVEL), this._encounterState);
       Rulebook.ResolveEndTurn(this._encounterState.Player.EntityId, this._encounterState);
     }
 
