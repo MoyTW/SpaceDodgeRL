@@ -106,7 +106,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         var action = inputHandler.PopQueue();
 
         // If you interrupt autopilot in any way it immediately shuts off
-        if (action != null && entity.GetComponent<PlayerComponent>().IsAutopiloting) {
+        if (action != null && entity.GetComponent<PlayerComponent>().ActiveAutopilotMode != AutopilotMode.OFF) {
           Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.PLAYER_INPUT), state);
         }
 
@@ -157,7 +157,7 @@ namespace SpaceDodgeRL.scenes.encounter {
           } else {
             EmitSignal(nameof(PositionScanned), scanAction.X, scanAction.Y, null);
           }
-        } else if (entity.GetComponent<PlayerComponent>().IsAutopiloting) {
+        } else if (entity.GetComponent<PlayerComponent>().ActiveAutopilotMode == AutopilotMode.TRAVEL) {
           // TODO: The player sprite lags the true position significantly because the Tween can't keep up
           var path = entity.GetComponent<PlayerComponent>().AutopilotPath;
           var seesEnemies = state.FoVCache.VisibleCells
@@ -169,7 +169,7 @@ namespace SpaceDodgeRL.scenes.encounter {
           } else if (!path.AtEnd) {
             PlayerMove(state, new MoveAction(entity.EntityId, path.Step()));
           } else {
-            Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.DESTINATION_REACHED), state);
+            Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.TASK_COMPLETED), state);
           }
         } else if (action != null) {
           GD.Print("No handler yet for ", action);

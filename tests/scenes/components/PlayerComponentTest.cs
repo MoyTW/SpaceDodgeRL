@@ -42,7 +42,7 @@ namespace SpaceDodgeRL.tests.scenes.components {
       Assert.Equal(component.KnowsIntel(3), newComponent.KnowsIntel(3));
       Assert.Equal(component.CuttingLaserRange, newComponent.CuttingLaserRange);
       Assert.Equal(component.BaseCuttingLaserPower, newComponent.BaseCuttingLaserPower);
-      Assert.Equal(component.IsAutopiloting, newComponent.IsAutopiloting);
+      Assert.Equal(component.ActiveAutopilotMode, newComponent.ActiveAutopilotMode);
       Assert.Equal(component.AutopilotPath.CurrentPosition, newComponent.AutopilotPath.CurrentPosition);
     }
 

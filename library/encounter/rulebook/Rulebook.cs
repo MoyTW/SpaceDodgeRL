@@ -81,17 +81,25 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     }
 
     private static bool ResolveAutopilotEnd(AutopilotEndAction action, EncounterState state) {
-      state.Player.GetComponent<PlayerComponent>().StopAutopiloting();
+      var playerComponent = state.Player.GetComponent<PlayerComponent>();
 
       if (action.Reason == AutopilotEndReason.PLAYER_INPUT) {
         state.LogMessage(String.Format("Autopilot ending - [b]overridden by pilot[/b]"));
       } else if (action.Reason == AutopilotEndReason.ENEMY_DETECTED) {
         state.LogMessage(String.Format("Autopilot ending - [b]enemy detected[/b]"));
-      } else if (action.Reason == AutopilotEndReason.DESTINATION_REACHED) {
-        state.LogMessage(String.Format("Autopilot ending - [b]destination reached[/b]"));
+      } else if (action.Reason == AutopilotEndReason.TASK_COMPLETED) {
+        if (playerComponent.ActiveAutopilotMode == AutopilotMode.TRAVEL) {
+          state.LogMessage(String.Format("Autopilot ending - [b]travel completed[/b]"));
+        } else if (playerComponent.ActiveAutopilotMode == AutopilotMode.EXPLORE) {
+          state.LogMessage(String.Format("Autopilot ending - [b]exploration completed[/b]"));
+        } else {
+          throw new NotImplementedException("no such explore mode known");
+        }
       } else {
         throw new NotImplementedException("no such matching clause for enum");
       }
+
+      state.Player.GetComponent<PlayerComponent>().StopAutopiloting();
 
       return true;
     }
