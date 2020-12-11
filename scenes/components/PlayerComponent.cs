@@ -45,6 +45,7 @@ namespace SpaceDodgeRL.scenes.components {
     // distinct internally but should both be referred to as "autopilot".
     [JsonInclude] public string ActiveAutopilotMode { get; private set; } = AutopilotMode.OFF;
     [JsonInclude] public EncounterPath AutopilotPath { get; private set; }
+    [JsonInclude] public string AutopilotZoneId { get; private set; }
 
     public static PlayerComponent Create(
       int baseCuttingLaserPower = 26,
@@ -74,6 +75,11 @@ namespace SpaceDodgeRL.scenes.components {
 
     public bool KnowsIntel(int dungeonLevel) {
       return DungeonLevelsWithIntel.Contains(dungeonLevel);
+    }
+
+    public void BeginAutoexploring(string zoneId) {
+      this.ActiveAutopilotMode = AutopilotMode.EXPLORE;
+      this.AutopilotZoneId = zoneId;
     }
 
     public void LayInAutopilotPath(EncounterPath path) {
