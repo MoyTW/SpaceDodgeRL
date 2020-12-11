@@ -166,28 +166,9 @@ namespace SpaceDodgeRL.scenes.encounter {
           }
         } else if (entity.GetComponent<PlayerComponent>().ActiveAutopilotMode == AutopilotMode.TRAVEL) {
           // TODO: The player sprite lags the true position significantly because the Tween can't keep up
-          var path = entity.GetComponent<PlayerComponent>().AutopilotPath;
-          var seesEnemies = state.FoVCache.VisibleCells
-              .Select(cell => state.EntitiesAtPosition(cell.X, cell.Y))
-              .Any(entitiesAtPosition => entitiesAtPosition.Any(e => e.GetComponent<AIComponent>() != null && !(e.GetComponent<PathAIComponent>() is PathAIComponent)));
-
-          if (seesEnemies) {
-            Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
-          } else if (!path.AtEnd) {
-            PlayerMove(state, new MoveAction(entity.EntityId, path.Step()));
-          } else {
-            Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.TASK_COMPLETED), state);
-          }
+          PlayerExecuteTurnEndingAction(new AutopilotContinueAction(entity.EntityId), state);
         } else if (entity.GetComponent<PlayerComponent>().ActiveAutopilotMode == AutopilotMode.EXPLORE) {
-          var seesEnemies = state.FoVCache.VisibleCells
-              .Select(cell => state.EntitiesAtPosition(cell.X, cell.Y))
-              .Any(entitiesAtPosition => entitiesAtPosition.Any(e => e.GetComponent<AIComponent>() != null && !(e.GetComponent<PathAIComponent>() is PathAIComponent)));
-
-          if (seesEnemies) {
-            Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
-          } else {
-            Rulebook.ResolveAction(new AutopilotEndAction(entity.EntityId, AutopilotEndReason.TASK_COMPLETED), state);
-          }
+          PlayerExecuteTurnEndingAction(new AutopilotContinueAction(entity.EntityId), state);
         } else if (action != null) {
           GD.Print("No handler yet for ", action);
         }

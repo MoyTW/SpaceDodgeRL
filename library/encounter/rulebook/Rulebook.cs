@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.library.encounter.rulebook.actions;
 using SpaceDodgeRL.scenes.components;
+using SpaceDodgeRL.scenes.components.AI;
 using SpaceDodgeRL.scenes.components.use;
 using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
@@ -14,6 +15,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     // ...can't I just do <> like I can in Kotlin? C# why you no let me do this. Probably because "evolving languages are hard".
     private static Dictionary<ActionType, Func<EncounterAction, EncounterState, bool>> _actionMapping = new Dictionary<ActionType, Func<EncounterAction, EncounterState, bool>>() {
       { ActionType.AUTOPILOT_BEGIN, (a, s) => ResolveAutopilotBegin(a as AutopilotBeginAction, s) },
+      { ActionType.AUTOPILOT_CONTINUE, (a, s) => ResolveAutopilotContinue(a as AutopilotContinueAction, s) },
       { ActionType.AUTOPILOT_END, (a, s) => ResolveAutopilotEnd(a as AutopilotEndAction, s) },
       { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
       { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
@@ -93,6 +95,56 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         return ResolveAutopilotBeginExplore(action, state);
       } else {
         throw new NotImplementedException(string.Format("Rulebook doesn't know how to handle autopilot mode {0}", action.Mode));
+      }
+    }
+
+    private static bool PlayerSeesEnemies(EncounterState state) {
+      return state.FoVCache.VisibleCells
+          .Select(cell => state.EntitiesAtPosition(cell.X, cell.Y))
+          .Any(entitiesAtPosition => entitiesAtPosition.Any(e => e.GetComponent<AIComponent>() != null &&
+                                                                 !(e.GetComponent<PathAIComponent>() is PathAIComponent)));
+    }
+
+    private static bool ResolveAutopilotContinueTravel(EncounterState state) {
+      var player = state.Player;
+      var path = state.Player.GetComponent<PlayerComponent>().AutopilotPath;
+
+      if (PlayerSeesEnemies(state)) {
+        ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
+        return false;
+      } else if (!path.AtEnd) {
+        Rulebook.ResolveAction(new MoveAction(player.EntityId, path.Step()), state);
+        return true;
+      } else {
+        ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.TASK_COMPLETED), state);
+        return false;
+      }
+    }
+
+    private static bool ResolveAutopilotContinueExplore(EncounterState state) {
+      var player = state.Player;
+      var path = state.Player.GetComponent<PlayerComponent>().AutopilotPath;
+
+      if (PlayerSeesEnemies(state)) {
+        ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
+        return false;
+      } else {
+        ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.TASK_COMPLETED), state);
+        return false;
+      }
+    }
+
+    /**
+     * Handles autopilot according to player's internal state. Returns true if autopilot continues, false if it is ended.
+     */
+    private static bool ResolveAutopilotContinue(AutopilotContinueAction action, EncounterState state) {
+      var mode = state.Player.GetComponent<PlayerComponent>().ActiveAutopilotMode;
+      if (mode == AutopilotMode.TRAVEL) {
+        return ResolveAutopilotContinueTravel(state);
+      } else if (mode == AutopilotMode.EXPLORE) {
+        return ResolveAutopilotContinueExplore(state);
+      } else {
+        throw new NotImplementedException(string.Format("Rulebook doesn't know how to handle autopilot mode {0}", mode));
       }
     }
 
