@@ -150,36 +150,45 @@ margin_bottom = 510.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="SectorZoneLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
+[node name="TurnReadoutLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
 margin_right = 317.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 6 )
-text = "SectorZoneLabel"
+text = "TurnReadoutLabel"
 
-[node name="PositionLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
+[node name="SectorZoneLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
 margin_top = 24.0
 margin_right = 317.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 6 )
-text = "PositionLabel"
+text = "SectorZoneLabel"
 
-[node name="LevelLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
+[node name="PositionLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
 margin_top = 48.0
 margin_right = 317.0
 margin_bottom = 68.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 6 )
-text = "LevelLabel"
+text = "PositionLabel"
 
-[node name="ExperienceLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
+[node name="LevelLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
 margin_top = 72.0
 margin_right = 317.0
 margin_bottom = 92.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 6 )
+text = "LevelLabel"
+
+[node name="ExperienceLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
+margin_top = 96.0
+margin_right = 317.0
+margin_bottom = 116.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 6 )

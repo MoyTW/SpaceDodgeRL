@@ -91,6 +91,9 @@ namespace SpaceDodgeRL.scenes {
       // Right column
       var playerPos = player.GetComponent<PositionComponent>().EncounterPosition;
 
+      var newTurnReadoutText = string.Format("Turn: {0:0.00}", this.EncounterState.CurrentTick);
+      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/TurnReadoutLabel").Text = newTurnReadoutText;
+
       var newSectorZoneText = string.Format("Sector: {0}", this.EncounterState.DungeonLevel);
       var closestZone = this.EncounterState.ClosestZone(playerPos.X, playerPos.Y);
       if (closestZone.Contains(playerPos)) {
