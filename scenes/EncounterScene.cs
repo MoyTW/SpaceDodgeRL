@@ -91,7 +91,7 @@ namespace SpaceDodgeRL.scenes {
       // Right column
       var playerPos = player.GetComponent<PositionComponent>().EncounterPosition;
 
-      var newTurnReadoutText = string.Format("Turn: {0:0.00}", this.EncounterState.CurrentTick);
+      var newTurnReadoutText = string.Format("Turn: {0:0.00}", this.EncounterState.CurrentTick / 100);
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/TurnReadoutLabel").Text = newTurnReadoutText;
 
       var newSectorZoneText = string.Format("Sector: {0}", this.EncounterState.DungeonLevel);
