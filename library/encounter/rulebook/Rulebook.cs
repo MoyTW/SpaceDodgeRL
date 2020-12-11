@@ -70,11 +70,11 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
       if (foundPath != null && autopilotTries > 0) {
         state.LogMessage(String.Format("Autopilot could not find path to center of [b]{0}[/b]; autopiloting to randomly chosen position in [b]{0}[/b].", zone.ZoneName));
-        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(new EncounterPath(foundPath));
+        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPathForTravel(new EncounterPath(foundPath));
         return true;
       } else if (foundPath != null) {
         state.LogMessage(String.Format("Autopiloting to [b]{0}[/b]", zone.ZoneName));
-        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(new EncounterPath(foundPath));
+        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPathForTravel(new EncounterPath(foundPath));
         return true;
       } else {
         state.LogMessage(String.Format("Autopilot failed to plot course to to [b]{0}[/b]", zone.ZoneName));
@@ -121,14 +121,81 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
+    /**
+     * A zone is considered "explored" when:
+     * 1: All storables have been found
+     *   1a: If your inventory is not full, all storable items have been picked up
+     * 2: All non-storable features have been seen
+     *
+     * Actual % of FoW revealed is not important. This is kinda cheaty, because it implies the autopilot knows intel for the
+     * area, but also, who cares? It's fine. Likewise it doesn't factor into account having destroyed the enemies because if
+     * there is an encounter, you'll definitely run into it!
+     */
     private static bool ResolveAutopilotContinueExplore(EncounterState state) {
       var player = state.Player;
-      var path = state.Player.GetComponent<PlayerComponent>().AutopilotPath;
+      var playerComponent = player.GetComponent<PlayerComponent>();
+      var playerPos = player.GetComponent<PositionComponent>().EncounterPosition;
+      var path = playerComponent.AutopilotPath;
+
+      var zone = state.GetZoneById(playerComponent.AutopilotZoneId);
+      var nextUngottenStorable =
+        zone.ReadoutItems.Concat(zone.ReadoutFeatures)
+                         .FirstOrDefault(i => state.GetEntityById(i.EntityId) != null && 
+                                              state.GetEntityById(i.EntityId).GetComponent<StorableComponent>() != null);
+      var nextUnexplored =
+        zone.ReadoutItems.Concat(zone.ReadoutFeatures)
+                         .Where(r => state.GetEntityById(r.EntityId) != null)
+                         .Select(r => state.GetEntityById(r.EntityId))
+                         .Where(e => !state.IsExplored(e.GetComponent<PositionComponent>().EncounterPosition))
+                         .FirstOrDefault();
 
       if (PlayerSeesEnemies(state)) {
         ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
         return false;
-      } else {
+      } // If you are already on a path, progress on the path
+      else if (path != null) {
+        if (path.AtEnd) {
+          playerComponent.ClearAutopilotPath();
+          return false;
+        } else {
+          Rulebook.ResolveAction(new MoveAction(player.EntityId, path.Step()), state);
+          return true;
+        }
+      } // If you're on top of a storable item, get it
+      else if (state.EntitiesAtPosition(playerPos.X, playerPos.Y).Any(e => e.GetComponent<StorableComponent>() != null)) {
+        var nextStorable = state.EntitiesAtPosition(playerPos.X, playerPos.Y).First(e => e.GetComponent<StorableComponent>() != null);
+        if (ResolveAction(new GetItemAction(player.EntityId), state)) {
+          return true;
+        } else {
+          // TODO: Allow player to autoexplore even if their inventory is full!
+          ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.INVENTORY_FULL), state);
+          return false;
+        }
+      } // If there are any storable items, move towards them
+      else if (nextUngottenStorable != null) {
+        var nextPos = state.GetEntityById(nextUngottenStorable.EntityId).GetComponent<PositionComponent>().EncounterPosition;
+        var foundPath = Pathfinder.AStarWithNewGrid(playerPos, nextPos, state, 900);
+        if (foundPath == null) {
+          ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.NO_PATH), state);
+          return false;
+        } else {
+          foundPath.Add(nextPos);
+          playerComponent.LayInAutopilotPathForExploration(new EncounterPath(foundPath));
+          return true;
+        }
+      } // If there are any explored features go to them
+      else if (nextUnexplored != null) {
+        var nextPos = state.GetEntityById(nextUnexplored.EntityId).GetComponent<PositionComponent>().EncounterPosition;
+        var foundPath = Pathfinder.AStarWithNewGrid(playerPos, nextPos, state, 900);
+        if (foundPath == null) {
+          ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.NO_PATH), state);
+          return false;
+        } else {
+          playerComponent.LayInAutopilotPathForExploration(new EncounterPath(foundPath));
+          return true;
+        }
+      } // Otherwise you're done!
+      else {
         ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.TASK_COMPLETED), state);
         return false;
       }
@@ -163,6 +230,11 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         } else {
           throw new NotImplementedException("no such explore mode known");
         }
+      } else if (action.Reason == AutopilotEndReason.INVENTORY_FULL) {
+        state.LogMessage(String.Format("Autopilot ending - [b]inventory was full[/b]"));
+      } else if (action.Reason == AutopilotEndReason.NO_PATH) {
+        // TODO: This is kinda cryptic
+        state.LogMessage(String.Format("Autopilot ending - [b]could not find path to next location[/b]"));
       } else {
         throw new NotImplementedException("no such matching clause for enum");
       }

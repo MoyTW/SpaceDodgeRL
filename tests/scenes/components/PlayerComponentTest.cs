@@ -28,7 +28,7 @@ namespace SpaceDodgeRL.tests.scenes.components {
       var path = new EncounterPath(new List<EncounterPosition>() { new EncounterPosition(15, 53) });
 
       var component = PlayerComponent.Create();
-      component.LayInAutopilotPath(path);
+      component.LayInAutopilotPathForTravel(path);
       component.RegisterIntel(3);
       string saved = component.Save();
 

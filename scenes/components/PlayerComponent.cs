@@ -82,8 +82,16 @@ namespace SpaceDodgeRL.scenes.components {
       this.AutopilotZoneId = zoneId;
     }
 
-    public void LayInAutopilotPath(EncounterPath path) {
+    public void ClearAutopilotPath() {
+      this.AutopilotPath = null;
+    }
+
+    public void LayInAutopilotPathForTravel(EncounterPath path) {
       this.ActiveAutopilotMode = AutopilotMode.TRAVEL;
+      this.AutopilotPath = path;
+    }
+
+    public void LayInAutopilotPathForExploration(EncounterPath path) {
       this.AutopilotPath = path;
     }
 

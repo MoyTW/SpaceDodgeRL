@@ -109,6 +109,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return IsInBounds(position.X, position.Y);
     }
 
+    public bool IsExplored(EncounterPosition position) {
+      return this._encounterTiles[position.X, position.Y].Explored;
+    }
+
     public bool ArePositionsAdjacent(EncounterPosition left, EncounterPosition right) {
       var dx = Math.Abs(left.X - right.X);
       var dy = Math.Abs(left.Y - right.Y);
