@@ -143,6 +143,7 @@ namespace SpaceDodgeRL.scenes.singletons {
 
     private void DeferredShowSettingsMenu() {
       DeferredSwitchScene(_settingsMenu);
+      this._settingsMenu.SetFocus();
     }
 
     #endregion
