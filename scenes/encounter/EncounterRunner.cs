@@ -189,14 +189,10 @@ namespace SpaceDodgeRL.scenes.encounter {
           Rulebook.ResolveActionsAndEndTurn(aIActions, state);
           EmitSignal(nameof(EncounterRunner.TurnEnded));
 
-          // TODO: this seems...fragile?
-          if (aIComponent is PathAIComponent) {
-            state.UpdateDangerMap();
-          }
-
           entity = state.NextEntity;
           numTurnsRan += 1;
         }
+        state.UpdateDangerMap();
       }
     }
 
