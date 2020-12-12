@@ -1,6 +1,6 @@
 using Godot;
-using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.encounter.state;
+using SpaceDodgeRL.scenes.singletons;
 
 public class DefeatMenu : Control {
 

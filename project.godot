@@ -20,7 +20,7 @@ run/main_scene="res://scenes/IntroMenuScene.tscn"
 
 [autoload]
 
-SceneManager="*res://scenes/SceneManager.cs"
+SceneManager="*res://scenes/singletons/SceneManager.cs"
 
 [display]
 

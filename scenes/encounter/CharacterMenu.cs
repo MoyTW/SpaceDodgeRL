@@ -1,7 +1,7 @@
 using Godot;
-using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.encounter.state;
+using SpaceDodgeRL.scenes.singletons;
 using System;
 using System.Collections.Generic;
 

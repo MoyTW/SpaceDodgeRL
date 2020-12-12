@@ -1,5 +1,5 @@
 using Godot;
-using SpaceDodgeRL.scenes;
+using SpaceDodgeRL.scenes.singletons;
 
 public class IntroMenuScene : Control {
   public override void _Ready() {

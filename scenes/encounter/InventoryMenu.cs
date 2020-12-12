@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.entities;
+using SpaceDodgeRL.scenes.singletons;
 using System.Collections.Generic;
 using System.Linq;
 

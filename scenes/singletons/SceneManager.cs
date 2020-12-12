@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace SpaceDodgeRL.scenes {
+namespace SpaceDodgeRL.scenes.singletons {
 
   public class SceneManager : Node {
 
@@ -23,23 +23,23 @@ namespace SpaceDodgeRL.scenes {
     private ReadOnlyCollection<EncounterZone> _autopilotMenuZones;
 
     public override void _Ready() {
-      root = this.GetTree().Root;
+      root = GetTree().Root;
       sceneStack = new List<Node>();
 
-      this._autopilotMenu = GD.Load<PackedScene>("res://scenes/encounter/AutopilotMenu.tscn").Instance() as AutopilotMenu;
-      this._characterMenu = GD.Load<PackedScene>("res://scenes/encounter/CharacterMenu.tscn").Instance() as CharacterMenu;
-      this._defeatMenu = GD.Load<PackedScene>("res://scenes/encounter/DefeatMenu.tscn").Instance() as DefeatMenu;
-      this._escapeMenu = GD.Load<PackedScene>("res://scenes/encounter/EscapeMenu.tscn").Instance() as EscapeMenu;
-      this._inventoryMenu = GD.Load<PackedScene>("res://scenes/encounter/InventoryMenu.tscn").Instance() as InventoryMenu;
-      this._settingsMenu = GD.Load<PackedScene>("res://scenes/SettingsMenu.tscn").Instance() as SettingsMenu;
-      this._victoryMenu = GD.Load<PackedScene>("res://scenes/encounter/VictoryMenu.tscn").Instance() as VictoryMenu;
+      _autopilotMenu = GD.Load<PackedScene>("res://scenes/encounter/AutopilotMenu.tscn").Instance() as AutopilotMenu;
+      _characterMenu = GD.Load<PackedScene>("res://scenes/encounter/CharacterMenu.tscn").Instance() as CharacterMenu;
+      _defeatMenu = GD.Load<PackedScene>("res://scenes/encounter/DefeatMenu.tscn").Instance() as DefeatMenu;
+      _escapeMenu = GD.Load<PackedScene>("res://scenes/encounter/EscapeMenu.tscn").Instance() as EscapeMenu;
+      _inventoryMenu = GD.Load<PackedScene>("res://scenes/encounter/InventoryMenu.tscn").Instance() as InventoryMenu;
+      _settingsMenu = GD.Load<PackedScene>("res://scenes/SettingsMenu.tscn").Instance() as SettingsMenu;
+      _victoryMenu = GD.Load<PackedScene>("res://scenes/encounter/VictoryMenu.tscn").Instance() as VictoryMenu;
     }
 
     #region Autopilot Menu
 
     public void ShowAutopilotMenu(EncounterState state) {
-      this._autopilotMenu.PrepMenu(state);
-      CallDeferred(nameof(DeferredSwitchScene), this._autopilotMenu);
+      _autopilotMenu.PrepMenu(state);
+      CallDeferred(nameof(DeferredSwitchScene), _autopilotMenu);
     }
 
     public void CloseAutopilotMenu(string selectedZoneId) {
@@ -61,15 +61,15 @@ namespace SpaceDodgeRL.scenes {
     }
 
     private void DeferredShowCharacterMenu(EncounterState state) {
-      DeferredSwitchScene(this._characterMenu);
-      this._characterMenu.PrepMenu(state);
+      DeferredSwitchScene(_characterMenu);
+      _characterMenu.PrepMenu(state);
     }
 
     // Definitely an awkward call structuring here that could be nicer with signals
     public void HandleLevelUpSelected(string levelUpSelection) {
       var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
       previousScene.HandleLevelUpSelected(previousScene.EncounterState.Player, levelUpSelection);
-      this._characterMenu.PrepMenu(previousScene.EncounterState);
+      _characterMenu.PrepMenu(previousScene.EncounterState);
     }
 
     #endregion
@@ -81,8 +81,8 @@ namespace SpaceDodgeRL.scenes {
     }
 
     private void DeferredShowDefeatMenu(EncounterState state) {
-      DeferredSwitchScene(this._defeatMenu);
-      this._defeatMenu.PrepMenu(state);
+      DeferredSwitchScene(_defeatMenu);
+      _defeatMenu.PrepMenu(state);
     }
 
     #endregion
@@ -94,8 +94,8 @@ namespace SpaceDodgeRL.scenes {
     }
 
     private void DeferredShowEscapeMenu(EncounterState state) {
-      DeferredSwitchScene(this._escapeMenu);
-      this._escapeMenu.PrepMenu(state);
+      DeferredSwitchScene(_escapeMenu);
+      _escapeMenu.PrepMenu(state);
     }
 
     #endregion
@@ -119,8 +119,8 @@ namespace SpaceDodgeRL.scenes {
     }
 
     private void DeferredShowInventoryMenu(EncounterState state) {
-      DeferredSwitchScene(this._inventoryMenu);
-      this._inventoryMenu.PrepMenu(state.Player.GetComponent<InventoryComponent>());
+      DeferredSwitchScene(_inventoryMenu);
+      _inventoryMenu.PrepMenu(state.Player.GetComponent<InventoryComponent>());
     }
 
     public void HandleItemToUseSelected(string itemIdToUse) {
@@ -142,7 +142,7 @@ namespace SpaceDodgeRL.scenes {
     }
 
     private void DeferredShowSettingsMenu() {
-      DeferredSwitchScene(this._settingsMenu);
+      DeferredSwitchScene(_settingsMenu);
     }
 
     #endregion
@@ -154,8 +154,8 @@ namespace SpaceDodgeRL.scenes {
     }
 
     private void DeferredShowVictoryMenu(EncounterState state) {
-      DeferredSwitchScene(this._victoryMenu);
-      this._victoryMenu.PrepMenu(state);
+      DeferredSwitchScene(_victoryMenu);
+      _victoryMenu.PrepMenu(state);
     }
 
     #endregion
@@ -195,7 +195,7 @@ namespace SpaceDodgeRL.scenes {
     private void DeferredSwitchScene(Node scene, bool previous) {
       var lastScene = root.GetChild(root.GetChildCount() - 1);
       if (!previous) {
-        this.sceneStack.Add(lastScene);
+        sceneStack.Add(lastScene);
       }
       root.RemoveChild(lastScene);
       root.AddChild(scene);

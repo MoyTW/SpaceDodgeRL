@@ -1,4 +1,5 @@
 using Godot;
+using SpaceDodgeRL.scenes.singletons;
 using System;
 
 namespace SpaceDodgeRL.scenes {

@@ -8,6 +8,7 @@ using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
 using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
+using SpaceDodgeRL.scenes.singletons;
 
 namespace SpaceDodgeRL.scenes.encounter {
   public class EncounterRunner : Node {

@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.encounter.state;
+using SpaceDodgeRL.scenes.singletons;
 using System;
 
 public class SaveSlotScene : HBoxContainer {
