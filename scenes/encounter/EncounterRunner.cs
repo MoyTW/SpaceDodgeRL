@@ -29,9 +29,10 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     public override void _Process(float delta) {
-      // TODO: Only apply delay when appropriate (to minimize input lag & allow non-slow autopiloting)
-      // seriously, autopilot sucks now!!!
-      if (msUntilTurn <= 0) {
+      // Special-case for fast (1 frame per action) autopiloting
+      var isAutopiloting = this._encounterState.Player.GetComponent<PlayerComponent>().ActiveAutopilotMode != AutopilotMode.OFF;
+
+      if (isAutopiloting || msUntilTurn <= 0) {
         RunTurn(this._encounterState, inputHandlerRef);
         msUntilTurn = turnTimeMs;
       } else {
