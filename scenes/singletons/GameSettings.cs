@@ -4,6 +4,7 @@ namespace SpaceDodgeRL.scenes.singletons {
 
   public class GameSettings : Node {
 
+    public int DeafultTurnTimeMs { get; } = 100;
     public int TurnTimeMs { get; set; }
 
     public override void _Ready() {
