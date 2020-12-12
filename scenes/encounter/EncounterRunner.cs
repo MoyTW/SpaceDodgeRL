@@ -20,13 +20,23 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     public InputHandler inputHandlerRef = null;
 
+    private static float turnTimeMs = 0.1f;
+    private float msUntilTurn = 0;
+
     private EncounterState _encounterState;
     public void SetEncounterState(EncounterState encounterState) {
       this._encounterState = encounterState;
     }
 
     public override void _Process(float delta) {
-      RunTurn(this._encounterState, inputHandlerRef);
+      // TODO: Only apply delay when appropriate (to minimize input lag & allow non-slow autopiloting)
+      // seriously, autopilot sucks now!!!
+      if (msUntilTurn <= 0) {
+        RunTurn(this._encounterState, inputHandlerRef);
+        msUntilTurn = turnTimeMs;
+      } else {
+        msUntilTurn -= delta;
+      }
     }
 
     // TODO: Write a system that has a component which does this instead of hard-coding it into the player's turn end
@@ -65,6 +75,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       EmitSignal(nameof(EncounterRunner.TurnEnded));
       state.UpdateFoVAndFoW();
       state.UpdatePlayerOverlays();
+      state.UpdateDangerMap();
     }
 
     private void PlayerMove(EncounterState state, int dx, int dy) {
@@ -173,10 +184,11 @@ namespace SpaceDodgeRL.scenes.encounter {
           GD.Print("No handler yet for ", action);
         }
       } else {
-        // TODO: Figure out using the delta in Process how many of these we permit to run?
-        int numTurnsToRun = 15;
+        int maxTurnsToRun = 1000;
         int numTurnsRan = 0;
-        while (!entity.IsInGroup(PlayerComponent.ENTITY_GROUP) && numTurnsRan < numTurnsToRun) {
+
+        var firstEntity = entity;
+        while (!entity.IsInGroup(PlayerComponent.ENTITY_GROUP) && numTurnsRan < maxTurnsToRun) {
           AIComponent aIComponent = entity.GetComponent<AIComponent>();
           StatusEffectTrackerComponent statusTracker = entity.GetComponent<StatusEffectTrackerComponent>();
 
@@ -191,6 +203,15 @@ namespace SpaceDodgeRL.scenes.encounter {
 
           entity = state.NextEntity;
           numTurnsRan += 1;
+
+          // Special-case for 0-speed entities; if the next entity is 0-speed, start a new frame. If the entity which started
+          // the frame is 0-speed, continue resolving it. This means each 0-speed entity gets its own frame and once it gets its
+          // frame it fully resolves. Yes, this means that the Tween (and any future animations) don't work in this solution, but
+          // it does let the danger map update. The issue with removing the `firstEntity` clause is that it causes every turn of
+          // the 0-speed entity to take up its own frame cycle, which is a painfully slow resolution.
+          if (entity.GetComponent<SpeedComponent>().Speed == 0 && entity != firstEntity) {
+            break;
+          }
         }
         state.UpdateDangerMap();
       }
