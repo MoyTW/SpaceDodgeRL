@@ -1,5 +1,6 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Regular.tres" type="DynamicFont" id=1]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=2]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://scenes/IntroMenuScene.cs" type="Script" id=4]
@@ -65,3 +66,20 @@ margin_top = 128.0
 margin_right = 860.0
 margin_bottom = 154.0
 SlotNumber = 3
+
+[node name="SettingsButton" type="Button" parent="CenterContainer"]
+margin_top = 158.0
+margin_right = 860.0
+margin_bottom = 184.0
+custom_fonts/font = ExtResource( 1 )
+text = "Game Settings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExitButton" type="Button" parent="CenterContainer"]
+margin_top = 188.0
+margin_right = 860.0
+margin_bottom = 214.0
+custom_fonts/font = ExtResource( 1 )
+text = "Exit To Desktop"
