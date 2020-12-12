@@ -296,15 +296,15 @@ namespace SpaceDodgeRL.scenes.entities {
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
       e.AddComponent(ActionTimeComponent.Create(currentTick));
-      e.AddComponent(CollisionComponent.Create(true, false));
-      e.AddComponent(DefenderComponent.Create(0, 100));
+      e.AddComponent(CollisionComponent.Create(blocksMovement: true, blocksVision: false));
+      e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 100, isInvincible: false));
       e.AddComponent(DisplayComponent.Create(_AtSignPath, "It's you!", false));
       e.AddComponent(InventoryComponent.Create(inventorySize: 26));
       e.AddComponent(OnDeathComponent.Create(new List<string>() { OnDeathEffectType.PLAYER_DEFEAT }));
       e.AddComponent(PlayerComponent.Create());
       e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
       e.AddComponent(statusEffectTrackerComponent);
-      e.AddComponent(XPTrackerComponent.Create(200, 150));
+      e.AddComponent(XPTrackerComponent.Create(levelUpBase: 200, levelUpFactor: 150));
 
       return e;
     }
