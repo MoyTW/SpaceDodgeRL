@@ -1,4 +1,5 @@
 using Godot;
+using SpaceDodgeRL.scenes;
 
 public class IntroMenuScene : Control {
   public override void _Ready() {
@@ -14,7 +15,8 @@ public class IntroMenuScene : Control {
   }
 
   private void OnSettingsButtonPressed() {
-    GD.Print("Attempting to access settings.");
+    var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+    sceneManager.ShowSettingsMenu();
   }
 
   private void OnExitButtonPressed() {

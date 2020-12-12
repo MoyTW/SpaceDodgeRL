@@ -18,6 +18,7 @@ namespace SpaceDodgeRL.scenes {
     private DefeatMenu _defeatMenu;
     private EscapeMenu _escapeMenu;
     private InventoryMenu _inventoryMenu;
+    private SettingsMenu _settingsMenu;
     private VictoryMenu _victoryMenu;
     private ReadOnlyCollection<EncounterZone> _autopilotMenuZones;
 
@@ -30,6 +31,7 @@ namespace SpaceDodgeRL.scenes {
       this._defeatMenu = GD.Load<PackedScene>("res://scenes/encounter/DefeatMenu.tscn").Instance() as DefeatMenu;
       this._escapeMenu = GD.Load<PackedScene>("res://scenes/encounter/EscapeMenu.tscn").Instance() as EscapeMenu;
       this._inventoryMenu = GD.Load<PackedScene>("res://scenes/encounter/InventoryMenu.tscn").Instance() as InventoryMenu;
+      this._settingsMenu = GD.Load<PackedScene>("res://scenes/SettingsMenu.tscn").Instance() as SettingsMenu;
       this._victoryMenu = GD.Load<PackedScene>("res://scenes/encounter/VictoryMenu.tscn").Instance() as VictoryMenu;
     }
 
@@ -133,7 +135,19 @@ namespace SpaceDodgeRL.scenes {
 
     #endregion
 
-    # region Victory Menu
+    #region Settings Menu
+
+    public void ShowSettingsMenu() {
+      CallDeferred(nameof(DeferredShowSettingsMenu));
+    }
+
+    private void DeferredShowSettingsMenu() {
+      DeferredSwitchScene(this._settingsMenu);
+    }
+
+    #endregion
+
+    #region Victory Menu
 
     public void ShowVictoryMenu(EncounterState state) {
       CallDeferred(nameof(DeferredShowVictoryMenu), state);
