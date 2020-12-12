@@ -21,13 +21,14 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     public InputHandler inputHandlerRef = null;
 
-    private static float turnTimeMs = 0.1f;
-    private float msUntilTurn = 0;
-
     private EncounterState _encounterState;
+    private GameSettings _gameSettings;
     public void SetEncounterState(EncounterState encounterState) {
       this._encounterState = encounterState;
+      this._gameSettings = (GameSettings)GetNode("/root/GameSettings");
     }
+
+    private float msUntilTurn = 0;
 
     public override void _Process(float delta) {
       // Special-case for fast (1 frame per action) autopiloting
@@ -35,7 +36,7 @@ namespace SpaceDodgeRL.scenes.encounter {
 
       if (isAutopiloting || msUntilTurn <= 0) {
         RunTurn(this._encounterState, inputHandlerRef);
-        msUntilTurn = turnTimeMs;
+        msUntilTurn = this._gameSettings.TurnTimeMs / 1000f;
       } else {
         msUntilTurn -= delta;
       }

@@ -21,6 +21,7 @@ run/main_scene="res://scenes/IntroMenuScene.tscn"
 [autoload]
 
 SceneManager="*res://scenes/singletons/SceneManager.cs"
+GameSettings="*res://scenes/singletons/GameSettings.cs"
 
 [display]
 
