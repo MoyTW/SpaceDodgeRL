@@ -109,3 +109,15 @@ There are a couple of approaches I'm thinking of:
 + Resolve all the calculations ASAP but move entities and projectiles in
   different - wait, no, this is exactly the same as the above, but with an added
   "and now the projectiles move".
+
+One thing to note is we *cannot* have a fixed "n ticks -> real-time" conversion,
+because the cutting laser must have 0 ticks and still display. Is there a way to
+get around this by modifying the way the cutting laser works?
+
+After thinking about it; no, not really. Okay then.
+
+We should conceptualize the draw display as serving the task of "show the player
+all actions that happened between their last input and the state at the start of
+their next input" - therefore we should feel unconstrained by the simulation so
+long as it accurately gives the player that information.
+
