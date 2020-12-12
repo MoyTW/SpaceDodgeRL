@@ -121,3 +121,16 @@ all actions that happened between their last input and the state at the start of
 their next input" - therefore we should feel unconstrained by the simulation so
 long as it accurately gives the player that information.
 
+* Session 2020-12-12 05df03376f2860baf938e8eec67a1879e8d3337c
+** seeds
+1: 445841002
+2: 771852981
+3: 1977636596
+4: 894846129
+5: 2085172750
+** notes
++ Fighters are kinda ferocious if you don't play carefully around them! 6 damage a pop is not trivial!
++ If level-up screen comes up while projectiles are on screen/enemies are moving, they get offset from their squares
+  - I guess the Tween is paged away from before it finishes?
++ Fighters get waaaaay easier to deal with when you enter one-shot territory
++ Done for day now
