@@ -98,6 +98,9 @@ There are a couple of approaches I'm thinking of:
   at the same speed, and would significantly increase turn times (1 frame per
   turn taken by projectile...which would end up as, like, 4 frames for a
   25-speed projectile? so not that much).
+    - This doesn't work - it does show the paths but it's too fast for the eye
+      to reliably track (I mean it's literally, like, two frames for a cannon
+      shot if you're close to the fighter, so no duh it's too fast)
 + Do all the calculations in one sum but limit the turn duration to a minimum
   time of, I dunno, 100ms? so that we can ensure multiple frames and visual
   feedback. This requires the sprites be decoupled from the state of the map,
