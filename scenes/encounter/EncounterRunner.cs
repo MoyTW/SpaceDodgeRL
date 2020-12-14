@@ -209,12 +209,19 @@ namespace SpaceDodgeRL.scenes.encounter {
           entity = state.NextEntity;
           numTurnsRan += 1;
 
+          // Note that the special cases below break the "every turn takes the same amount of real time" rule - some turns will
+          // be shorter (travel & no projectiles at all) and some will be longer (player engaged in combat & taking a bunch of
+          // hits). I think this is fine because otherwise visual feedback becomes difficult (for example, player takes 3
+          // different hits - if they resolved at exact same time it'd be hard to tell) but it's also kinda bad for "flow".
+
           // Special-case for 0-speed entities; if the next entity is 0-speed, start a new frame. If the entity which started
-          // the frame is 0-speed, continue resolving it. This means each 0-speed entity gets its own frame and once it gets its
-          // frame it fully resolves. Yes, this means that the Tween (and any future animations) don't work in this solution, but
-          // it does let the danger map update. The issue with removing the `firstEntity` clause is that it causes every turn of
-          // the 0-speed entity to take up its own frame cycle, which is a painfully slow resolution.
+          // the frame is 0-speed, continue resolving it until it has fully resolved, then start a new frame. This ensures that
+          // you can see the start and end of the 0-frame entity's Tween. It also causes a discontinuity in the danger map, since
+          // the danger map instantly resolves while Tweens don't, (TODO that) and means that each 0-speed action takes TWO
+          // entire turns.
           if (entity.GetComponent<SpeedComponent>().Speed == 0 && entity != firstEntity) {
+            break;
+          } else if (firstEntity.GetComponent<SpeedComponent>().Speed == 0 && entity != firstEntity) {
             break;
           }
           // Special case for projectiles which are about to hit the player - always start a new turn for these so the player can
