@@ -150,3 +150,6 @@ long as it accurately gives the player that information.
 + When you reach carrier & screening force it gets really choppy, it doesn't degrade performance very gracefully
 + TODO: On main map a "you are here" and maybe a minimap even? It's hard to know "What zones will autopilot bring me through to get to the jump point"
 + It gets really brutal near the end! You pretty much have to hoard items in the early-game and then pop them all at once to get through that.
++ TODO: If a fighter moves into you and fires you don't see any visible feedback even on high turn times!
+  - Funny...it certainly has multiple frames.
++ TODO: High turn times introduce noticable input lag, even when they shouldn't.
