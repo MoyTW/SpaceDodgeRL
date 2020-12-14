@@ -30,7 +30,6 @@ namespace SpaceDodgeRL.scenes.components {
       return this._gameSettings;
     } }
 
-
     private EncounterPosition _encounterPosition = new EncounterPosition(int.MinValue, int.MinValue);
     public EncounterPosition EncounterPosition {
       get => _encounterPosition;

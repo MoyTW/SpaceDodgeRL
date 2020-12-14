@@ -153,3 +153,35 @@ long as it accurately gives the player that information.
 + TODO: If a fighter moves into you and fires you don't see any visible feedback even on high turn times!
   - Funny...it certainly has multiple frames.
 + TODO: High turn times introduce noticable input lag, even when they shouldn't.
+
+** TODO: Issue: 'instant' projectile creation & destruction
+
+Okay, so, we fixed the laser issue by splitting it out into its own 'turn' that
+always takes 'turn_time' frames to resolve. Cool. How do we fix the issue of 'a
+projectile launches on the same turn, instantly hits the player, and vanishes'?
+
+THe issue isn't "this is displayed for too few frames" but "this is displayed
+for zero frames". Because it happens on the same frame, because we batch all
+turns (exclusing zero-length turns) into one frame. In fact, it happens on the
+same *tick* - that is, in game-engine-logic, it's spent literally zero ticks
+existing! It gets plopped into the timeline directly after the firing entity,
+immediately executes its turn, and in the execution of its turn destroys itself
+against the target. So there's even if we do something like 'tie the tick rate
+to a constant frame rate' it doesn't work out because no game time passes
+between creation and destruction, it's an instant action.
+
+Gnarly! Such are the issues with UI, I guess. If I could just do all the game
+logic and magically wave a wand and say "UI Be Done!" I'd be real happy. Then
+again, if such a thing were possible, programmers would be out of a job, so I
+guess I'd be less happy about that (at least in the short term) though maybe
+society as a whole wold be happier.
+
+Anyways.
+
+We do *not* want the framerate to be tied to the number of items on the screen
+(though this is possibly unavoidable in laggy situations). Therefore we do *not*
+want to say "every entity gets their own display turn" or something similar - I
+admit we are doing that with zero-length entities but right now there's only one
+player. For example, we specifically don't want six entities sitting up against
+the player firing to take more time than one entity sitting up against the
+player and firing.
