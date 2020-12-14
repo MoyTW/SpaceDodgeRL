@@ -55,6 +55,16 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // Transitory data
     public FoVCache FoVCache { get; private set; }
     public Random EncounterRand { get; private set; }
+    private List<PositionComponent> _tweeningSprites = new List<PositionComponent>();
+
+    public override void _Process(float delta) {
+      foreach(var c in this._tweeningSprites) {
+        if (!c.IsTweening) {
+          this.RemoveChild(c);
+        }
+      }
+      this._tweeningSprites.RemoveAll(c => !c.IsTweening);
+    }
 
     // ##########################################################################################################################
     #region Data Access
@@ -240,8 +250,17 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public void RemoveEntity(Entity entity) {
       // Remove the position component from both
       var positionComponent = entity.GetComponent<PositionComponent>();
-      entity.RemoveComponent(positionComponent);
-      positionComponent.QueueFree();
+      // This is absurdly awkward; it turns out removing the PositionComponent from the entity clears the Tween (because it
+      // removes it from the tree, I believe?) which means we need to manually restart the tween. It also causes a shadow effect
+      // where the projectile now overshoots the target instead of undershooting it.
+      if (positionComponent.IsTweening) {
+        entity.RemoveComponent(positionComponent);
+        this.AddChild(positionComponent);
+        positionComponent.RestartTween();
+        this._tweeningSprites.Add(positionComponent);
+      } else {
+        entity.RemoveComponent(positionComponent);
+      }
 
       var entityPosition = positionComponent.EncounterPosition;
       RemoveChild(entity);
@@ -257,11 +276,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     /**
     * Disregards intervening terrain; only checks for collisions at the target position.
     */
-    public void TeleportEntity(Entity entity, EncounterPosition targetPosition) {
+    public void TeleportEntity(Entity entity, EncounterPosition targetPosition, bool ignoreCollision) {
       if (!IsInBounds(targetPosition)) {
         throw new NotImplementedException("out of bounds");
       }
-      if (IsPositionBlocked(targetPosition)) {
+      if (!ignoreCollision && IsPositionBlocked(targetPosition)) {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
       var positionComponent = entity.GetComponent<PositionComponent>();

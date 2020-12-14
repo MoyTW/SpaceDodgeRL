@@ -301,11 +301,12 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         }
         // TODO: This causes the projectile to vanish, which is...awkward, visually, since we're Tweening it at the time!
         if (actorCollision.OnCollisionSelfDestruct) {
+          state.TeleportEntity(actor, action.TargetPosition, ignoreCollision: true);
           ResolveAction(new SelfDestructAction(action.ActorId), state);
         }
         return true;
       } else {
-        state.TeleportEntity(actor, action.TargetPosition);
+        state.TeleportEntity(actor, action.TargetPosition, ignoreCollision: false);
         return true;
       }
     }

@@ -39,6 +39,12 @@ namespace SpaceDodgeRL.scenes.components {
       }
     }
 
+    public bool IsTweening { get {
+      var encounterPosition = IndexToVector(this.EncounterPosition.X, this.EncounterPosition.Y);
+      var sprite = GetNode<Sprite>("Sprite");
+      return sprite.Position != encounterPosition;
+    } }
+
     public static PositionComponent Create(EncounterPosition position, string texturePath) {
       var component = _scenePrefab.Instance() as PositionComponent;
 
@@ -53,6 +59,14 @@ namespace SpaceDodgeRL.scenes.components {
     public static PositionComponent Create(string saveData) {
       var loaded = JsonSerializer.Deserialize<SaveData>(saveData);
       return PositionComponent.Create(loaded.EncounterPosition, loaded.TexturePath);
+    }
+
+    public void RestartTween() {
+      var tween = GetNode<Tween>("Tween");
+      var sprite = GetNode<Sprite>("Sprite");
+      var encounterPosition = IndexToVector(this.EncounterPosition.X, this.EncounterPosition.Y);
+      tween.InterpolateProperty(sprite, "position", sprite.Position, encounterPosition, this.GameSettings.TurnTimeMs / 1000f);
+      tween.Start();
     }
 
     private void Tween(Vector2 newPosition) {
