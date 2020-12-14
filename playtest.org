@@ -10,7 +10,7 @@
   - I could use a readout on inventory size, that seems helpful
 + Well game crashed, I'll patch that and continue
 + fixed, confirmed
-+ TODO: sometimes cutting beam laser finishes SO FAST you don't even see it
++ FIXED: sometimes cutting beam laser finishes SO FAST you don't even see it
   - basically if you're right up next to a guy
   - this is probably the same with a shot that hits you as you're right next to something
   - fix that Tween timing issue?
@@ -150,11 +150,11 @@ long as it accurately gives the player that information.
 + When you reach carrier & screening force it gets really choppy, it doesn't degrade performance very gracefully
 + TODO: On main map a "you are here" and maybe a minimap even? It's hard to know "What zones will autopilot bring me through to get to the jump point"
 + It gets really brutal near the end! You pretty much have to hoard items in the early-game and then pop them all at once to get through that.
-+ TODO: If a fighter moves into you and fires you don't see any visible feedback even on high turn times!
++ FIXED: If a fighter moves into you and fires you don't see any visible feedback even on high turn times!
   - Funny...it certainly has multiple frames.
 + TODO: High turn times introduce noticable input lag, even when they shouldn't.
 
-** TODO: Issue: 'instant' projectile creation & destruction
+** ADDRESSED: Issue: 'instant' projectile creation & destruction
 
 Okay, so, we fixed the laser issue by splitting it out into its own 'turn' that
 always takes 'turn_time' frames to resolve. Cool. How do we fix the issue of 'a
@@ -185,3 +185,15 @@ admit we are doing that with zero-length entities but right now there's only one
 player. For example, we specifically don't want six entities sitting up against
 the player firing to take more time than one entity sitting up against the
 player and firing.
+
+*** Changes
+
+Ok, so, I made it so:
++ Tween time synced with turn time
++ Tweens always fully complete
++ Laser (0-pt action actually) always takes 2 turns to give Tween & danger map
+  time to resolve
++ Damage to player always takes an entire turn to give the player time to see
+
+I'm not confident in the way this plays but at least it means you never get 6
+pts of invisible damage from a fighter next to you which is really important!
