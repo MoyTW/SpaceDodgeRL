@@ -187,6 +187,8 @@ namespace SpaceDodgeRL.scenes.encounter {
           GD.Print("No handler yet for ", action);
         }
       } else {
+        var playerPos = state.Player.GetComponent<PositionComponent>().EncounterPosition;
+
         int maxTurnsToRun = 1000;
         int numTurnsRan = 0;
 
@@ -213,6 +215,12 @@ namespace SpaceDodgeRL.scenes.encounter {
           // it does let the danger map update. The issue with removing the `firstEntity` clause is that it causes every turn of
           // the 0-speed entity to take up its own frame cycle, which is a painfully slow resolution.
           if (entity.GetComponent<SpeedComponent>().Speed == 0 && entity != firstEntity) {
+            break;
+          }
+          // Special case for projectiles which are about to hit the player - always start a new turn for these so the player can
+          // see what's hitting them.
+          var pathAIComponent = entity.GetComponent<PathAIComponent>();
+          if (pathAIComponent != null && pathAIComponent.Path.Project(1).Any(p => p == playerPos)) {
             break;
           }
         }
