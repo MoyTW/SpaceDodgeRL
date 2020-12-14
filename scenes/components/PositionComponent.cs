@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.scenes.entities;
+using SpaceDodgeRL.scenes.singletons;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -21,6 +22,14 @@ namespace SpaceDodgeRL.scenes.components {
     public const int STEP_Y = 36;
 
     public Texture SpriteTexture { get => GetNode<Sprite>("Sprite").Texture; }
+    private GameSettings _gameSettings;
+    private GameSettings GameSettings { get {
+      if (this._gameSettings == null) {
+        this._gameSettings = this.GetNode<GameSettings>("/root/GameSettings");
+      }
+      return this._gameSettings;
+    } }
+
 
     private EncounterPosition _encounterPosition = new EncounterPosition(int.MinValue, int.MinValue);
     public EncounterPosition EncounterPosition {
@@ -50,7 +59,7 @@ namespace SpaceDodgeRL.scenes.components {
     private void Tween(Vector2 newPosition) {
       var tween = GetNode<Tween>("Tween");
       var sprite = GetNode<Sprite>("Sprite");
-      tween.InterpolateProperty(sprite, "position", sprite.Position, newPosition, 0.1f);
+      tween.InterpolateProperty(sprite, "position", sprite.Position, newPosition, this.GameSettings.TurnTimeMs / 1000f);
       tween.Start();
     }
 
