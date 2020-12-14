@@ -1,5 +1,6 @@
 using Godot;
 using SpaceDodgeRL.library.encounter;
+using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
 using SpaceDodgeRL.scenes.singletons;
 using System;
@@ -39,10 +40,9 @@ namespace SpaceDodgeRL.scenes.components {
       }
     }
 
-    public bool IsTweening { get {
+    public bool IsAnimating { get {
       var encounterPosition = IndexToVector(this.EncounterPosition.X, this.EncounterPosition.Y);
-      var sprite = GetNode<Sprite>("Sprite");
-      return sprite.Position != encounterPosition;
+      return GetNode<Sprite>("Sprite").Position != encounterPosition || GetNode<AnimatedSprite>("ExplosionSprite").Visible == true;
     } }
 
     public static PositionComponent Create(EncounterPosition position, string texturePath) {
@@ -53,12 +53,23 @@ namespace SpaceDodgeRL.scenes.components {
       sprite.Position = IndexToVector(position.X, position.Y);
       sprite.Texture = GD.Load<Texture>(texturePath);
 
+      var explosionSprite = component.GetNode<AnimatedSprite>("ExplosionSprite");
+      explosionSprite.Connect("animation_finished", component, nameof(OnExplosionAnimationFinished));
+
       return component;
     }
 
     public static PositionComponent Create(string saveData) {
       var loaded = JsonSerializer.Deserialize<SaveData>(saveData);
       return PositionComponent.Create(loaded.EncounterPosition, loaded.TexturePath);
+    }
+
+    // TODO: Attempt to sync this up with the turn time?
+    public void PlayExplosion() {
+      var explosionSprite = this.GetNode<AnimatedSprite>("ExplosionSprite");
+      explosionSprite.Position = IndexToVector(this.EncounterPosition.X, this.EncounterPosition.Y);
+      explosionSprite.Visible = true;
+      explosionSprite.Play();
     }
 
     public void RestartTween() {
@@ -74,6 +85,11 @@ namespace SpaceDodgeRL.scenes.components {
       var sprite = GetNode<Sprite>("Sprite");
       tween.InterpolateProperty(sprite, "position", sprite.Position, newPosition, this.GameSettings.TurnTimeMs / 1000f);
       tween.Start();
+    }
+
+    private void OnExplosionAnimationFinished() {
+      var explosionSprite = this.GetNode<AnimatedSprite>("ExplosionSprite");
+      explosionSprite.Visible = false;
     }
 
     public static EncounterPosition VectorToIndex(float x, float y) {

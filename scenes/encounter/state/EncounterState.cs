@@ -55,15 +55,16 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // Transitory data
     public FoVCache FoVCache { get; private set; }
     public Random EncounterRand { get; private set; }
-    private List<PositionComponent> _tweeningSprites = new List<PositionComponent>();
+    private List<PositionComponent> _animatingSprites = new List<PositionComponent>();
 
     public override void _Process(float delta) {
-      foreach(var c in this._tweeningSprites) {
-        if (!c.IsTweening) {
+      foreach(var c in this._animatingSprites) {
+        if (!c.IsAnimating) {
           this.RemoveChild(c);
+          c.QueueFree();
         }
       }
-      this._tweeningSprites.RemoveAll(c => !c.IsTweening);
+      this._animatingSprites.RemoveAll(c => !c.IsAnimating);
     }
 
     // ##########################################################################################################################
@@ -253,11 +254,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // This is absurdly awkward; it turns out removing the PositionComponent from the entity clears the Tween (because it
       // removes it from the tree, I believe?) which means we need to manually restart the tween. It also causes a shadow effect
       // where the projectile now overshoots the target instead of undershooting it.
-      if (positionComponent.IsTweening) {
+      if (positionComponent.IsAnimating) {
         entity.RemoveComponent(positionComponent);
         this.AddChild(positionComponent);
         positionComponent.RestartTween();
-        this._tweeningSprites.Add(positionComponent);
+        this._animatingSprites.Add(positionComponent);
       } else {
         entity.RemoveComponent(positionComponent);
       }
