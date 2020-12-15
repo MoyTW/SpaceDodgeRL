@@ -25,7 +25,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texDestroyerPath = "res://resources/tex_destroyer.tres";
     private static string _texEMPPath = "res://resources/tex_EMP.tres";
     private static string _texDiplomatPath = "res://resources/tex_diplomat.tres";
-    private static string _texGunshipPath = "res://resources/tex_gunship.tres";
+    private static string _texGunshipPath = "res://resources/sprites/gunship.png";
     private static string _texFighterPath = "res://resources/sprites/fighter.png";
     private static string _texFrigatePath = "res://resources/tex_frigate.tres";
     private static string _texScoutPath = "res://resources/sprites/scout.png";
