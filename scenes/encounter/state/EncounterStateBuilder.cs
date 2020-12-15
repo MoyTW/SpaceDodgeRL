@@ -104,14 +104,24 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         state.PlaceEntity(EntityBuilder.CreateItemByEntityDefId(EntityDefId.ITEM_EXTRA_BATTERY), nextToPlayer);
       }
       */
-      
-      /*
-      nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 5, zones[playerZoneIdx].Center.Y + 5);
-      ActivationGroup activationGroup = new ActivationGroup();
-      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.CARRIER, activationGroup, 0), nextToPlayer);
-      nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 30, zones[playerZoneIdx].Center.Y + 30);
-      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.SCOUT, activationGroup, 0), nextToPlayer);
-      */
+
+      var nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 2, zones[playerZoneIdx].Center.Y + 2);
+      nextToPlayer = new EncounterPosition(nextToPlayer.X + 1, nextToPlayer.Y);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.SCOUT, "12345", 0), nextToPlayer);
+      nextToPlayer = new EncounterPosition(nextToPlayer.X + 1, nextToPlayer.Y);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.FIGHTER, "12345", 0), nextToPlayer);
+      nextToPlayer = new EncounterPosition(nextToPlayer.X + 1, nextToPlayer.Y);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.GUNSHIP, "12345", 0), nextToPlayer);
+      nextToPlayer = new EncounterPosition(nextToPlayer.X + 1, nextToPlayer.Y);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.FRIGATE, "12345", 0), nextToPlayer);
+      nextToPlayer = new EncounterPosition(nextToPlayer.X + 1, nextToPlayer.Y);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.DESTROYER, "12345", 0), nextToPlayer);
+      nextToPlayer = new EncounterPosition(nextToPlayer.X + 1, nextToPlayer.Y);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.CRUISER, "12345", 0), nextToPlayer);
+      nextToPlayer = new EncounterPosition(nextToPlayer.X + 1, nextToPlayer.Y);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.CARRIER, "12345", 0), nextToPlayer);
+      nextToPlayer = new EncounterPosition(nextToPlayer.X + 1, nextToPlayer.Y);
+      state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(EntityDefId.DIPLOMAT, "12345", 0), nextToPlayer);
 
       // Add all the various zone features to the map
       // TODO: Draw this from LevelData instead of literally special-casing level 10 here
