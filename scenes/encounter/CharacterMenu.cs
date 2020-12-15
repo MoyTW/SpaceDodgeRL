@@ -72,8 +72,8 @@ namespace SpaceDodgeRL.scenes.encounter {
       GetNode<Label>("Columns/StatsColumn/StatsHPLabel").Text = string.Format("HP: {0}/{1}", defenderComponent.CurrentHp, defenderComponent.MaxHp);
 
       var playerComponent = state.Player.GetComponent<PlayerComponent>();
-      GetNode<Label>("Columns/StatsColumn/StatsAttackPowerLabel").Text = string.Format("Cutting laser power: {0}", playerComponent.CuttingLaserPower);
-      GetNode<Label>("Columns/StatsColumn/StatsAttackRangeLabel").Text = string.Format("Cutting laser range: {0}", playerComponent.CuttingLaserRange);
+      GetNode<Label>("Columns/StatsColumn/StatsAttackPowerLabel").Text = string.Format("Laser Power: {0}", playerComponent.CuttingLaserPower);
+      GetNode<Label>("Columns/StatsColumn/StatsAttackRangeLabel").Text = string.Format("Laser Range: {0}", playerComponent.CuttingLaserRange);
 
       var speed = state.Player.GetComponent<SpeedComponent>().Speed;
       GetNode<Label>("Columns/StatsColumn/StatsSpeedLabel").Text = string.Format("Speed: {0}", speed);

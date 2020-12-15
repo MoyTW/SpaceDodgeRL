@@ -299,7 +299,6 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         if (actorCollision.OnCollisionAttack) {
           Attack(actor, blocker, state);
         }
-        // TODO: This causes the projectile to vanish, which is...awkward, visually, since we're Tweening it at the time!
         if (actorCollision.OnCollisionSelfDestruct) {
           state.TeleportEntity(actor, action.TargetPosition, ignoreCollision: true);
           positionComponent.PlayExplosion();

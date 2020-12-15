@@ -17,7 +17,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     private static PackedScene _encounterPrefab = GD.Load<PackedScene>("res://scenes/encounter/state/EncounterState.tscn");
 
     // TODO: put this somewhere proper!
-    public static int PLAYER_VISION_RADIUS = 10;
+    // Original 7DRL had vision radius = 20, but I dropped it for screen space reasons. If we bump up the screen/downsize the
+    // tiles maybe I will add it back.
+    public static int PLAYER_VISION_RADIUS = 16;
     public static int EncounterLogSize = 50;
     public static string RUN_STATUS_RUNNING = "ENCOUNTER_RUN_STATUS_RUNNING";
     public static string RUN_STATUS_PLAYER_VICTORY = "ENCOUNTER_RUN_STATUS_PLAYER_VICTORY";

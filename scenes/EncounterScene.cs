@@ -78,7 +78,7 @@ namespace SpaceDodgeRL.scenes {
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/YourStatsBlock/HPLabel").Text = newHPText;
 
       var playerComponent = player.GetComponent<PlayerComponent>();
-      var newAttackPowerText = String.Format("Cutting laser power: {0}", playerComponent.CuttingLaserPower);
+      var newAttackPowerText = String.Format("Laser Power: {0}", playerComponent.CuttingLaserPower);
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/YourStatsBlock/AttackPowerLabel").Text = newAttackPowerText;
 
       var speedComponent = player.GetComponent<SpeedComponent>();
@@ -86,7 +86,7 @@ namespace SpaceDodgeRL.scenes {
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/YourStatsBlock/SpeedLabel").Text = newSpeedText;
 
       var invComponent = player.GetComponent<InventoryComponent>();
-      var newInvText = string.Format("Inventory Space: {0}/{1}", invComponent.InventoryUsed, invComponent.InventorySize);
+      var newInvText = string.Format("Cargo Space: {0}/{1}", invComponent.InventoryUsed, invComponent.InventorySize);
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/YourStatsBlock/InventoryLabel").Text = newInvText;
 
       // Right column
