@@ -66,10 +66,15 @@ namespace SpaceDodgeRL.scenes.components {
 
     // TODO: Attempt to sync this up with the turn time?
     public void PlayExplosion() {
-      var explosionSprite = this.GetNode<AnimatedSprite>("ExplosionSprite");
-      explosionSprite.Position = IndexToVector(this.EncounterPosition.X, this.EncounterPosition.Y);
-      explosionSprite.Visible = true;
-      explosionSprite.Play();
+      var tween = this.GetNode<Tween>("Tween");
+      if (tween.IsActive()) {
+        tween.Connect("tween_completed", this, nameof(OnTweenAllCompletedQueueExplosion));
+      } else {
+        var explosionSprite = this.GetNode<AnimatedSprite>("ExplosionSprite");
+        explosionSprite.Position = IndexToVector(this.EncounterPosition.X, this.EncounterPosition.Y);
+        explosionSprite.Visible = true;
+        explosionSprite.Play();
+      }
     }
 
     public void RestartTween() {
@@ -85,6 +90,14 @@ namespace SpaceDodgeRL.scenes.components {
       var sprite = GetNode<Sprite>("Sprite");
       tween.InterpolateProperty(sprite, "position", sprite.Position, newPosition, this.GameSettings.TurnTimeMs / 1000f);
       tween.Start();
+    }
+
+    private void OnTweenAllCompletedQueueExplosion(Godot.Object o, Godot.NodePath path) {
+      this.GetNode<Sprite>("Sprite").Visible = false;
+      var explosionSprite = this.GetNode<AnimatedSprite>("ExplosionSprite");
+      explosionSprite.Position = IndexToVector(this.EncounterPosition.X, this.EncounterPosition.Y);
+      explosionSprite.Visible = true;
+      explosionSprite.Play();
     }
 
     private void OnExplosionAnimationFinished() {
