@@ -15,7 +15,6 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _bPath = "res://resources/atlas_b.tres";
     private static string _iPath = "res://resources/atlas_i.tres";
     private static string _tPath = "res://resources/atlas_t.tres";
-    private static string _FPath = "res://resources/atlas_F.tres";
     private static string _JPath = "res://resources/atlas_J.tres";
     private static string _AtSignPath = "res://resources/atlas_@.tres";
     private static string _StarPath = "res://resources/atlas_Star.tres";
@@ -27,8 +26,9 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texEMPPath = "res://resources/tex_EMP.tres";
     private static string _texDiplomatPath = "res://resources/tex_diplomat.tres";
     private static string _texGunshipPath = "res://resources/tex_gunship.tres";
+    private static string _texFighterPath = "res://resources/sprites/fighter.png";
     private static string _texFrigatePath = "res://resources/tex_frigate.tres";
-    private static string _texScoutPath = "res://resources/tex_scout.tres";
+    private static string _texScoutPath = "res://resources/sprites/scout.png";
     private static string _texSmallCannonPath = "res://resources/tex_small_cannon.tres";
     private static string _texSmallGatlingPath = "res://resources/tex_small_gatling.tres";
     private static string _texSmallShotgunPath = "res://resources/tex_small_shotgun.tres";
@@ -90,7 +90,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 30));
-      e.AddComponent(DisplayComponent.Create(_FPath, "An interceptor craft armed with a rapid-fire cannon.", false));
+      e.AddComponent(DisplayComponent.Create(_texFighterPath, "An interceptor craft armed with a rapid-fire cannon.", false));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 125));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 50));

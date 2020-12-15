@@ -40,8 +40,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ExitButton" type="Button" parent="."]
+[node name="CreditsLine3" type="Label" parent="."]
 margin_top = 60.0
 margin_right = 1280.0
-margin_bottom = 80.0
+margin_bottom = 74.0
+text = "Ship art: Surt (https://opengameart.org/content/modular-ships)"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExitButton" type="Button" parent="."]
+margin_top = 78.0
+margin_right = 1280.0
+margin_bottom = 98.0
 text = "Exit to Main Menu"
