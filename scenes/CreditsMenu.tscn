@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scenes/CreditsMenu.cs" type="Script" id=2]
+
+[node name="CreditsMenu" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CreditsHeader" type="Label" parent="."]
+margin_right = 1280.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 1 )
+text = "Credits"
+align = 1
+
+[node name="CreditsLine" type="Label" parent="."]
+margin_top = 24.0
+margin_right = 1280.0
+margin_bottom = 38.0
+text = "Programming, Design: Travis Moy"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CreditsLine2" type="Label" parent="."]
+margin_top = 42.0
+margin_right = 1280.0
+margin_bottom = 56.0
+text = "Explosion art: Master484 (https://m484games.ucoz.com/index/shoot_39_em_up_gfx/0-38)"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExitButton" type="Button" parent="."]
+margin_top = 60.0
+margin_right = 1280.0
+margin_bottom = 80.0
+text = "Exit to Main Menu"

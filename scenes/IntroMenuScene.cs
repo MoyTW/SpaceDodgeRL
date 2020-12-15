@@ -5,6 +5,7 @@ public class IntroMenuScene : Control {
   public override void _Ready() {
     this.GetNode<SaveSlotScene>("CenterContainer/SaveSlot1").FocusLoadButton();
     this.GetNode<Button>("CenterContainer/SettingsButton").Connect("pressed", this, nameof(OnSettingsButtonPressed));
+    this.GetNode<Button>("CenterContainer/CreditsButton").Connect("pressed", this, nameof(OnCreditsButtonPressed));
     this.GetNode<Button>("CenterContainer/ExitButton").Connect("pressed", this, nameof(OnExitButtonPressed));
   }
 
@@ -17,6 +18,11 @@ public class IntroMenuScene : Control {
   private void OnSettingsButtonPressed() {
     var sceneManager = (SceneManager)GetNode("/root/SceneManager");
     sceneManager.ShowSettingsMenu();
+  }
+
+  private void OnCreditsButtonPressed() {
+    var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+    sceneManager.ShowCreditsMenu();
   }
 
   private void OnExitButtonPressed() {

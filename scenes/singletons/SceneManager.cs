@@ -15,6 +15,7 @@ namespace SpaceDodgeRL.scenes.singletons {
 
     private AutopilotMenu _autopilotMenu;
     private CharacterMenu _characterMenu;
+    private CreditsMenu _creditsMenu;
     private DefeatMenu _defeatMenu;
     private EscapeMenu _escapeMenu;
     private InventoryMenu _inventoryMenu;
@@ -28,6 +29,7 @@ namespace SpaceDodgeRL.scenes.singletons {
 
       _autopilotMenu = GD.Load<PackedScene>("res://scenes/encounter/AutopilotMenu.tscn").Instance() as AutopilotMenu;
       _characterMenu = GD.Load<PackedScene>("res://scenes/encounter/CharacterMenu.tscn").Instance() as CharacterMenu;
+      _creditsMenu = GD.Load<PackedScene>("res://scenes/CreditsMenu.tscn").Instance() as CreditsMenu;
       _defeatMenu = GD.Load<PackedScene>("res://scenes/encounter/DefeatMenu.tscn").Instance() as DefeatMenu;
       _escapeMenu = GD.Load<PackedScene>("res://scenes/encounter/EscapeMenu.tscn").Instance() as EscapeMenu;
       _inventoryMenu = GD.Load<PackedScene>("res://scenes/encounter/InventoryMenu.tscn").Instance() as InventoryMenu;
@@ -70,6 +72,19 @@ namespace SpaceDodgeRL.scenes.singletons {
       var previousScene = sceneStack[sceneStack.Count - 1] as EncounterScene;
       previousScene.HandleLevelUpSelected(previousScene.EncounterState.Player, levelUpSelection);
       _characterMenu.PrepMenu(previousScene.EncounterState);
+    }
+
+    #endregion
+
+    #region Credits Menu
+
+    public void ShowCreditsMenu() {
+      CallDeferred(nameof(DeferredShowCreditsMenu));
+    }
+
+    private void DeferredShowCreditsMenu() {
+      DeferredSwitchScene(_creditsMenu);
+      _creditsMenu.PrepMenu();
     }
 
     #endregion

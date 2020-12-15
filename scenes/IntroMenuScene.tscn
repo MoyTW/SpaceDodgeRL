@@ -77,9 +77,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ExitButton" type="Button" parent="CenterContainer"]
+[node name="CreditsButton" type="Button" parent="CenterContainer"]
 margin_top = 188.0
 margin_right = 860.0
 margin_bottom = 214.0
+custom_fonts/font = ExtResource( 1 )
+text = "Credits"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExitButton" type="Button" parent="CenterContainer"]
+margin_top = 218.0
+margin_right = 860.0
+margin_bottom = 244.0
 custom_fonts/font = ExtResource( 1 )
 text = "Exit To Desktop"
