@@ -65,6 +65,7 @@ namespace SpaceDodgeRL.scenes.components {
     }
 
     // TODO: Attempt to sync this up with the turn time?
+    // TODO: More than one animation
     public void PlayExplosion() {
       var tween = this.GetNode<Tween>("Tween");
       if (tween.IsActive()) {
