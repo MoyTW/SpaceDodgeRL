@@ -2,7 +2,7 @@
 
 [ext_resource path="res://scenes/encounter/state/EncounterState.cs" type="Script" id=1]
 [ext_resource path="res://resources/red_yellow_24x36.png" type="Texture" id=2]
-[ext_resource path="res://resources/targeting_overlay_24x36.png" type="Texture" id=3]
+[ext_resource path="res://resources/targeting_overlay_32x32.png" type="Texture" id=3]
 
 [sub_resource type="TileSet" id=1]
 0/name = "red_yellow_24x36.png 0"
@@ -63,12 +63,21 @@
 3/z_index = 0
 
 [sub_resource type="TileSet" id=2]
-0/name = "targeting_overlay_24x36.png 0"
+0/name = "targeting_overlay_32x32.png 3"
 0/texture = ExtResource( 3 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 0, 0, 24, 36 )
-0/tile_mode = 0
+0/region = Rect2( 0, 0, 32, 32 )
+0/tile_mode = 1
+0/autotile/bitmask_mode = 0
+0/autotile/bitmask_flags = [  ]
+0/autotile/icon_coordinate = Vector2( 0, 0 )
+0/autotile/tile_size = Vector2( 32, 32 )
+0/autotile/spacing = 0
+0/autotile/occluder_map = [  ]
+0/autotile/navpoly_map = [  ]
+0/autotile/priority_map = [  ]
+0/autotile/z_index_map = [  ]
 0/occluder_offset = Vector2( 0, 0 )
 0/navigation_offset = Vector2( 0, 0 )
 0/shape_offset = Vector2( 0, 0 )
@@ -77,11 +86,11 @@
 0/shape_one_way_margin = 0.0
 0/shapes = [  ]
 0/z_index = 0
-1/name = "targeting_overlay_24x36.png 1"
+1/name = "targeting_overlay_32x32.png 4"
 1/texture = ExtResource( 3 )
 1/tex_offset = Vector2( 0, 0 )
 1/modulate = Color( 1, 1, 1, 1 )
-1/region = Rect2( 24, 0, 24, 36 )
+1/region = Rect2( 32, 0, 31, 32 )
 1/tile_mode = 0
 1/occluder_offset = Vector2( 0, 0 )
 1/navigation_offset = Vector2( 0, 0 )
@@ -91,11 +100,11 @@
 1/shape_one_way_margin = 0.0
 1/shapes = [  ]
 1/z_index = 0
-2/name = "targeting_overlay_24x36.png 2"
+2/name = "targeting_overlay_32x32.png 5"
 2/texture = ExtResource( 3 )
 2/tex_offset = Vector2( 0, 0 )
 2/modulate = Color( 1, 1, 1, 1 )
-2/region = Rect2( 48, 0, 24, 36 )
+2/region = Rect2( 63, 0, 33, 32 )
 2/tile_mode = 0
 2/occluder_offset = Vector2( 0, 0 )
 2/navigation_offset = Vector2( 0, 0 )
