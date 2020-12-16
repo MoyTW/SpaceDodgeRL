@@ -114,8 +114,8 @@ __meta__ = {
 
 [node name="DangerMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
-cell_size = Vector2( 24, 36 )
-cell_custom_transform = Transform2D( 24, 0, 0, 36, 0, 0 )
+cell_size = Vector2( 32, 32 )
+cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
 format = 1
 __meta__ = {
 "_edit_lock_": true
@@ -124,9 +124,10 @@ __meta__ = {
 [node name="PlayerOverlays" type="TileMap" parent="."]
 z_index = 1
 tile_set = SubResource( 2 )
-cell_size = Vector2( 24, 36 )
-cell_custom_transform = Transform2D( 24, 0, 0, 36, 0, 0 )
+cell_size = Vector2( 32, 32 )
+cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
 format = 1
+tile_data = PoolIntArray( 58, 0, 0 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -134,8 +135,8 @@ __meta__ = {
 [node name="FoWOverlay" type="TileMap" parent="."]
 z_index = 1
 tile_set = SubResource( 2 )
-cell_size = Vector2( 24, 36 )
-cell_custom_transform = Transform2D( 24, 0, 0, 36, 0, 0 )
+cell_size = Vector2( 32, 32 )
+cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
 format = 1
 __meta__ = {
 "_edit_lock_": true

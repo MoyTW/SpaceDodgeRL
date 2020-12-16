@@ -17,10 +17,10 @@ namespace SpaceDodgeRL.scenes.components {
     public string EntityGroup => ENTITY_GROUP;
 
     // TODO: Don't put this here
-    public const int START_X = 12;
-    public const int START_Y = 18;
-    public const int STEP_X = 24;
-    public const int STEP_Y = 36;
+    public const int START_X = 16;
+    public const int START_Y = 16;
+    public const int STEP_X = 32;
+    public const int STEP_Y = 32;
 
     public Texture SpriteTexture { get => GetNode<Sprite>("Sprite").Texture; }
     private GameSettings _gameSettings;
