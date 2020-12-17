@@ -12,11 +12,8 @@ namespace SpaceDodgeRL.scenes.entities {
 
   public static class EntityBuilder {
 
-    private static string _bPath = "res://resources/atlas_b.tres";
     private static string _iPath = "res://resources/atlas_i.tres";
-    private static string _tPath = "res://resources/atlas_t.tres";
     private static string _JPath = "res://resources/atlas_J.tres";
-    private static string _AtSignPath = "res://resources/atlas_@.tres";
     private static string _StarPath = "res://resources/atlas_Star.tres";
     private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
 
@@ -38,7 +35,6 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texSmallGatlingPath = "res://resources/tex_small_gatling.tres";
     private static string _texSmallShotgunPath = "res://resources/tex_small_shotgun.tres";
     private static string _texRailgunPath = "res://resources/tex_railgun.tres";
-    private static string _texRedPaintPath = "res://resources/tex_red_paint.tres";
     private static string _texReverserPath = "res://resources/tex_reverser.tres";
 
     private class ProjectileDisplayData {
