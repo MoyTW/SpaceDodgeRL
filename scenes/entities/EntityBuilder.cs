@@ -28,6 +28,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texGunshipPath = "res://resources/sprites/gunship.png";
     private static string _texFighterPath = "res://resources/sprites/fighter.png";
     private static string _texFrigatePath = "res://resources/sprites/frigate.png";
+    private static string _texPlayerPath = "res://resources/sprites/player.png";
     private static string _texScoutPath = "res://resources/sprites/scout.png";
     private static string _texSmallCannonPath = "res://resources/tex_small_cannon.tres";
     private static string _texSmallGatlingPath = "res://resources/tex_small_gatling.tres";
@@ -298,7 +299,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.Create(blocksMovement: true, blocksVision: false));
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 100, isInvincible: false));
-      e.AddComponent(DisplayComponent.Create(_AtSignPath, "It's you!", false));
+      e.AddComponent(DisplayComponent.Create(_texPlayerPath, "It's you!", false));
       e.AddComponent(InventoryComponent.Create(inventorySize: 26));
       e.AddComponent(OnDeathComponent.Create(new List<string>() { OnDeathEffectType.PLAYER_DEFEAT }));
       e.AddComponent(PlayerComponent.Create());
