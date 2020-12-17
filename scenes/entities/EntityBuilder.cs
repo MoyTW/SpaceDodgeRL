@@ -31,11 +31,14 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texItemRedPaintPath = "res://resources/sprites/item/red_paint.png";
     private static string _texPlayerPath = "res://resources/sprites/player.png";
     private static string _texScoutPath = "res://resources/sprites/scout.png";
-    private static string _texSmallCannonPath = "res://resources/tex_small_cannon.tres";
-    private static string _texSmallGatlingPath = "res://resources/tex_small_gatling.tres";
-    private static string _texSmallShotgunPath = "res://resources/tex_small_shotgun.tres";
-    private static string _texRailgunPath = "res://resources/tex_railgun.tres";
-    private static string _texReverserPath = "res://resources/tex_reverser.tres";
+
+    // Projectiles
+    private static string _texCuttingLaserPath = "res://resources/sprites/projectile/cutting_laser.png";
+    private static string _texSmallCannonPath = "res://resources/sprites/projectile/small_cannon.png";
+    private static string _texSmallGatlingPath = "res://resources/sprites/projectile/small_gatling.png";
+    private static string _texSmallShotgunPath = "res://resources/sprites/projectile/small_shotgun.png";
+    private static string _texRailgunPath = "res://resources/sprites/projectile/railgun.png";
+    private static string _texReverserPath = "res://resources/sprites/projectile/reverser.png";
 
     private class ProjectileDisplayData {
       public ProjectileType Type { get; }
@@ -50,7 +53,7 @@ namespace SpaceDodgeRL.scenes.entities {
     }
 
     private static Dictionary<ProjectileType, ProjectileDisplayData> projectileTypeToProjectileDisplay = new Dictionary<ProjectileType, ProjectileDisplayData>() {
-      { ProjectileType.CUTTING_LASER, new ProjectileDisplayData(ProjectileType.CUTTING_LASER, "cutting laser beam", _StarPath) }, // TODO: Maybe change this?
+      { ProjectileType.CUTTING_LASER, new ProjectileDisplayData(ProjectileType.CUTTING_LASER, "cutting laser beam", _texCuttingLaserPath) },
       { ProjectileType.SMALL_CANNON, new ProjectileDisplayData(ProjectileType.SMALL_CANNON, "small cannon shell", _texSmallCannonPath) },
       { ProjectileType.SMALL_GATLING, new ProjectileDisplayData(ProjectileType.SMALL_GATLING, "small gatling shell", _texSmallGatlingPath) },
       { ProjectileType.SMALL_SHOTGUN, new ProjectileDisplayData(ProjectileType.SMALL_SHOTGUN, "small shotgun pellet", _texSmallShotgunPath) },
