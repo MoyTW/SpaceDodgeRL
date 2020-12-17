@@ -1,15 +1,15 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/encounter/state/EncounterState.cs" type="Script" id=1]
-[ext_resource path="res://resources/red_yellow_24x36.png" type="Texture" id=2]
+[ext_resource path="res://resources/red_yellow_32x32.png" type="Texture" id=2]
 [ext_resource path="res://resources/targeting_overlay_32x32.png" type="Texture" id=3]
 
 [sub_resource type="TileSet" id=1]
-0/name = "red_yellow_24x36.png 0"
+0/name = "red_yellow_32x32.png 0"
 0/texture = ExtResource( 2 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 0, 0, 24, 36 )
+0/region = Rect2( 0, 0, 32, 32 )
 0/tile_mode = 0
 0/occluder_offset = Vector2( 0, 0 )
 0/navigation_offset = Vector2( 0, 0 )
@@ -19,11 +19,11 @@
 0/shape_one_way_margin = 0.0
 0/shapes = [  ]
 0/z_index = 0
-1/name = "red_yellow_24x36.png 1"
+1/name = "red_yellow_32x32.png 1"
 1/texture = ExtResource( 2 )
 1/tex_offset = Vector2( 0, 0 )
 1/modulate = Color( 1, 1, 1, 1 )
-1/region = Rect2( 72, 0, 24, 36 )
+1/region = Rect2( 32, 0, 32, 32 )
 1/tile_mode = 0
 1/occluder_offset = Vector2( 0, 0 )
 1/navigation_offset = Vector2( 0, 0 )
@@ -33,11 +33,11 @@
 1/shape_one_way_margin = 0.0
 1/shapes = [  ]
 1/z_index = 0
-2/name = "red_yellow_24x36.png 2"
+2/name = "red_yellow_32x32.png 2"
 2/texture = ExtResource( 2 )
 2/tex_offset = Vector2( 0, 0 )
 2/modulate = Color( 1, 1, 1, 1 )
-2/region = Rect2( 48, 0, 24, 36 )
+2/region = Rect2( 64, 0, 32, 32 )
 2/tile_mode = 0
 2/occluder_offset = Vector2( 0, 0 )
 2/navigation_offset = Vector2( 0, 0 )
@@ -47,11 +47,11 @@
 2/shape_one_way_margin = 0.0
 2/shapes = [  ]
 2/z_index = 0
-3/name = "red_yellow_24x36.png 3"
+3/name = "red_yellow_32x32.png 3"
 3/texture = ExtResource( 2 )
 3/tex_offset = Vector2( 0, 0 )
 3/modulate = Color( 1, 1, 1, 1 )
-3/region = Rect2( 24, 0, 24, 36 )
+3/region = Rect2( 96, 0, 32, 32 )
 3/tile_mode = 0
 3/occluder_offset = Vector2( 0, 0 )
 3/navigation_offset = Vector2( 0, 0 )
