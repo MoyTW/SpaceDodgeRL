@@ -106,11 +106,13 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       */
 
       var nextToPlayer = new EncounterPosition(zones[playerZoneIdx].Center.X + 2, zones[playerZoneIdx].Center.Y + 2);
-      string[] defs = new string[] { EntityDefId.SCOUT, EntityDefId.FIGHTER, EntityDefId.GUNSHIP, EntityDefId.FRIGATE, EntityDefId.DESTROYER, EntityDefId.CRUISER, EntityDefId.CARRIER, EntityDefId.DIPLOMAT };
+      //string[] defs = new string[] { EntityDefId.SCOUT, EntityDefId.FIGHTER, EntityDefId.GUNSHIP, EntityDefId.FRIGATE, EntityDefId.DESTROYER, EntityDefId.CRUISER, EntityDefId.CARRIER, EntityDefId.DIPLOMAT };
+      string[] defs = new string[] { EntityDefId.ITEM_DUCT_TAPE, EntityDefId.ITEM_EMP, EntityDefId.ITEM_EXTRA_BATTERY, EntityDefId.ITEM_RED_PAINT };
       for (int x = 0; x < defs.Length; x++) {
         for (int y = 0; y < 3; y++) {
           var pos = new EncounterPosition(nextToPlayer.X + x, nextToPlayer.Y + y);
-          state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(defs[x], "12345", 0), pos, ignoreCollision: true);
+          //state.PlaceEntity(EntityBuilder.CreateEnemyByEntityDefId(defs[x], "12345", 0), pos, ignoreCollision: true);
+          state.PlaceEntity(EntityBuilder.CreateItemByEntityDefId(defs[x]), pos, ignoreCollision: true);
         }
       }
 
