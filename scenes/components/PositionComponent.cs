@@ -35,6 +35,28 @@ namespace SpaceDodgeRL.scenes.components {
     public EncounterPosition EncounterPosition {
       get => _encounterPosition;
       set {
+        var dx = value.X - _encounterPosition.X;
+        var dy = 0 - (value.Y - _encounterPosition.Y);
+
+        var sprite = this.GetNode<Sprite>("Sprite");
+        if (dx == 0 && dy > 0) {
+          sprite.RotationDegrees = 0;
+        } else if (dx > 0 && dy > 0) {
+          sprite.RotationDegrees = 45;
+        } else if (dx > 0 && dy == 0) {
+          sprite.RotationDegrees = 90;
+        } else if (dx > 0 && dy < 0) {
+          sprite.RotationDegrees = 135;
+        } else if (dx == 0 && dy < 0) {
+          sprite.RotationDegrees = 180;
+        } else if (dx < 0 && dy < 0) {
+          sprite.RotationDegrees = 225;
+        } else if (dx < 0 && dy == 0) {
+          sprite.RotationDegrees = 270;
+        } else if (dx < 0 && dy > 0) {
+          sprite.RotationDegrees = 315;
+        }
+
         _encounterPosition = value;
         Tween(IndexToVector(value.X, value.Y));
       }
