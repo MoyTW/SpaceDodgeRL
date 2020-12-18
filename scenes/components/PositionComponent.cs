@@ -36,26 +36,8 @@ namespace SpaceDodgeRL.scenes.components {
       get => _encounterPosition;
       set {
         var dx = value.X - _encounterPosition.X;
-        var dy = 0 - (value.Y - _encounterPosition.Y);
-
-        var sprite = this.GetNode<Sprite>("Sprite");
-        if (dx == 0 && dy > 0) {
-          sprite.RotationDegrees = 0;
-        } else if (dx > 0 && dy > 0) {
-          sprite.RotationDegrees = 45;
-        } else if (dx > 0 && dy == 0) {
-          sprite.RotationDegrees = 90;
-        } else if (dx > 0 && dy < 0) {
-          sprite.RotationDegrees = 135;
-        } else if (dx == 0 && dy < 0) {
-          sprite.RotationDegrees = 180;
-        } else if (dx < 0 && dy < 0) {
-          sprite.RotationDegrees = 225;
-        } else if (dx < 0 && dy == 0) {
-          sprite.RotationDegrees = 270;
-        } else if (dx < 0 && dy > 0) {
-          sprite.RotationDegrees = 315;
-        }
+        var dy = value.Y - _encounterPosition.Y;
+        RotateSpriteTowards(dx, dy);
 
         _encounterPosition = value;
         Tween(IndexToVector(value.X, value.Y));
@@ -84,6 +66,29 @@ namespace SpaceDodgeRL.scenes.components {
     public static PositionComponent Create(string saveData) {
       var loaded = JsonSerializer.Deserialize<SaveData>(saveData);
       return PositionComponent.Create(loaded.EncounterPosition, loaded.TexturePath);
+    }
+
+    public void RotateSpriteTowards(int dx, int dy) {
+      // Invert y
+      dy = 0 - dy;
+      var sprite = this.GetNode<Sprite>("Sprite");
+      if (dx == 0 && dy > 0) {
+        sprite.RotationDegrees = 0;
+      } else if (dx > 0 && dy > 0) {
+        sprite.RotationDegrees = 45;
+      } else if (dx > 0 && dy == 0) {
+        sprite.RotationDegrees = 90;
+      } else if (dx > 0 && dy < 0) {
+        sprite.RotationDegrees = 135;
+      } else if (dx == 0 && dy < 0) {
+        sprite.RotationDegrees = 180;
+      } else if (dx < 0 && dy < 0) {
+        sprite.RotationDegrees = 225;
+      } else if (dx < 0 && dy == 0) {
+        sprite.RotationDegrees = 270;
+      } else if (dx < 0 && dy > 0) {
+        sprite.RotationDegrees = 315;
+      }
     }
 
     // TODO: Attempt to sync this up with the turn time?

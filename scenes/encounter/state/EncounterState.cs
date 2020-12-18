@@ -344,6 +344,12 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
         int stepsToProject = pathEntitySpeed != 0 ? timeToNextPlayerMove / pathEntitySpeed : Int16.MaxValue;
         var dangerPositions = path.Project(stepsToProject);
+        if (dangerPositions.Count > 0) {
+          var pathEntityPositionComponent = pathEntity.GetComponent<PositionComponent>();
+          var pathEntityPos = pathEntityPositionComponent.EncounterPosition;
+          var lastDangerPosition = dangerPositions[dangerPositions.Count - 1];
+          pathEntityPositionComponent.RotateSpriteTowards( lastDangerPosition.X - pathEntityPos.X, lastDangerPosition.Y - pathEntityPos.Y);
+        }
 
         foreach (EncounterPosition dangerPosition in dangerPositions) {
           dangerMap.SetCell(dangerPosition.X, dangerPosition.Y, 0);
