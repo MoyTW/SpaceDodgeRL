@@ -20,18 +20,20 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texCarrierPath = "res://resources/sprites/carrier.png";
     private static string _texCruiserPath = "res://resources/sprites/cruiser.png";
     private static string _texDestroyerPath = "res://resources/sprites/destroyer.png";
-    private static string _texEMPPath = "res://resources/tex_EMP.tres";
     private static string _texDiplomatPath = "res://resources/sprites/diplomat.png";
     private static string _texGunshipPath = "res://resources/sprites/gunship.png";
     private static string _texFighterPath = "res://resources/sprites/fighter.png";
     private static string _texFrigatePath = "res://resources/sprites/frigate.png";
-    private static string _texItemBatteryPath = "res://resources/sprites/item/battery.png";
-    private static string _texItemDuctTapePath = "res://resources/sprites/item/duct_tape.png";
-    private static string _texItemEMPPath = "res://resources/sprites/item/emp.png";
-    private static string _texItemRedPaintPath = "res://resources/sprites/item/red_paint.png";
+    private static string _texIntelPath = "res://resources/sprites/intel.png";
     private static string _texPlayerPath = "res://resources/sprites/player.png";
     private static string _texSatellitePath = "res://resources/sprites/satellite.png";
     private static string _texScoutPath = "res://resources/sprites/scout.png";
+
+    // Items
+    private static string _texBatteryPath = "res://resources/sprites/item/battery.png";
+    private static string _texDuctTapePath = "res://resources/sprites/item/duct_tape.png";
+    private static string _texEMPPath = "res://resources/sprites/item/emp.png";
+    private static string _texRedPaintPath = "res://resources/sprites/item/red_paint.png";
 
     // Projectiles
     private static string _texCuttingLaserPath = "res://resources/sprites/projectile/cutting_laser.png";
@@ -215,7 +217,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateExtraBatteryEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "extra battery");
 
-      e.AddComponent(DisplayComponent.Create(_texItemBatteryPath, "An extra battery for your weapons. Gives 20 power for 450 ticks.", true));
+      e.AddComponent(DisplayComponent.Create(_texBatteryPath, "An extra battery for your weapons. Gives 20 power for 450 ticks.", true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create(useOnGet: false));
       e.AddComponent(UseEffectBoostPowerComponent.Create(boostPower: 20, duration: 450));
@@ -226,7 +228,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateDuctTapeEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "duct tape");
 
-      e.AddComponent(DisplayComponent.Create(_texItemDuctTapePath, "Some duct tape. Heals 10 HP.", true));
+      e.AddComponent(DisplayComponent.Create(_texDuctTapePath, "Some duct tape. Heals 10 HP.", true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create(useOnGet: false));
       e.AddComponent(UseEffectHealComponent.Create(healpower: 10));
@@ -239,7 +241,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
       // TODO: I put it down as 'r', but that's the same as the reverser shot. Well we'll replace all the sprites anwyays
       // if I do make it pretty.
-      e.AddComponent(DisplayComponent.Create(_texItemRedPaintPath, "Red paint makes you go faster! Reduces turn time by 75 for 300 ticks (minimum time is 1).", true));
+      e.AddComponent(DisplayComponent.Create(_texRedPaintPath, "Red paint makes you go faster! Reduces turn time by 75 for 300 ticks (minimum time is 1).", true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create(useOnGet: false));
       e.AddComponent(UseEffectBoostSpeedComponent.Create(boostPower: 75, duration: 300));
@@ -250,7 +252,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateEMPEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "EMP");
 
-      e.AddComponent(DisplayComponent.Create(_texItemEMPPath, "An EMP burst. Disables enemies for 10 turns in radius 20.", true));
+      e.AddComponent(DisplayComponent.Create(_texEMPPath, "An EMP burst. Disables enemies for 10 turns in radius 20.", true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create(useOnGet: false));
       // I seriously put 20 radius 10 turns? That's enough time to mop up an entire encounter!
@@ -362,7 +364,7 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateIntelEntity(int targetDungeonLevel) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "intel for sector " + targetDungeonLevel);
 
-      e.AddComponent(DisplayComponent.Create(_iPath, "Intel! Gives you zone information for the next sector. You want this.", true));
+      e.AddComponent(DisplayComponent.Create(_texIntelPath, "Intel! Gives you zone information for the next sector. You want this.", true));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create(useOnGet: true));
       e.AddComponent(UseEffectAddIntelComponent.Create(targetDungeonLevel));
