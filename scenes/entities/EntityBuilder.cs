@@ -12,10 +12,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
   public static class EntityBuilder {
 
-    private static string _iPath = "res://resources/atlas_i.tres";
-    private static string _JPath = "res://resources/atlas_J.tres";
     private static string _StarPath = "res://resources/atlas_Star.tres";
-    
 
     private static string _texCarrierPath = "res://resources/sprites/carrier.png";
     private static string _texCruiserPath = "res://resources/sprites/cruiser.png";
@@ -25,6 +22,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texFighterPath = "res://resources/sprites/fighter.png";
     private static string _texFrigatePath = "res://resources/sprites/frigate.png";
     private static string _texIntelPath = "res://resources/sprites/intel.png";
+    private static string _texJumpPointPath = "res://resources/sprites/jump_point.png";
     private static string _texPlayerPath = "res://resources/sprites/player.png";
     private static string _texSatellitePath = "res://resources/sprites/satellite.png";
     private static string _texScoutPath = "res://resources/sprites/scout.png";
@@ -355,7 +353,7 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateStairsEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "jump point");
 
-      e.AddComponent(DisplayComponent.Create(_JPath, "The jump point to the next sector.", true));
+      e.AddComponent(DisplayComponent.Create(_texJumpPointPath, "The jump point to the next sector.", true));
       e.AddComponent(StairsComponent.Create());
 
       return e;
