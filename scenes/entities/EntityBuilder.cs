@@ -15,7 +15,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _iPath = "res://resources/atlas_i.tres";
     private static string _JPath = "res://resources/atlas_J.tres";
     private static string _StarPath = "res://resources/atlas_Star.tres";
-    private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
+    
 
     private static string _texCarrierPath = "res://resources/sprites/carrier.png";
     private static string _texCruiserPath = "res://resources/sprites/cruiser.png";
@@ -30,6 +30,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texItemEMPPath = "res://resources/sprites/item/emp.png";
     private static string _texItemRedPaintPath = "res://resources/sprites/item/red_paint.png";
     private static string _texPlayerPath = "res://resources/sprites/player.png";
+    private static string _texSatellitePath = "res://resources/sprites/satellite.png";
     private static string _texScoutPath = "res://resources/sprites/scout.png";
 
     // Projectiles
@@ -344,7 +345,7 @@ namespace SpaceDodgeRL.scenes.entities {
 
       e.AddComponent(CollisionComponent.Create(blocksMovement: true, blocksVision: true));
       e.AddComponent(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, isInvincible: true, logDamage: false));
-      e.AddComponent(DisplayComponent.Create(_hashSignPath, "Space junk. Blocks movement and projectiles. Cannot be destroyed.", true));
+      e.AddComponent(DisplayComponent.Create(_texSatellitePath, "Space junk. Blocks movement and projectiles. Cannot be destroyed.", true));
 
       return e;
     }
