@@ -62,7 +62,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
           if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-            state.PlaceEntity(EntityBuilder.CreateMapWallEntity(), new EncounterPosition(x, y));
+            state.PlaceEntity(EntityBuilder.CreateEdgeBlockerEntity(), new EncounterPosition(x, y));
           }
         }
       }

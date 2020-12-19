@@ -12,12 +12,11 @@ namespace SpaceDodgeRL.scenes.entities {
 
   public static class EntityBuilder {
 
-    private static string _StarPath = "res://resources/atlas_Star.tres";
-
     private static string _texCarrierPath = "res://resources/sprites/carrier.png";
     private static string _texCruiserPath = "res://resources/sprites/cruiser.png";
     private static string _texDestroyerPath = "res://resources/sprites/destroyer.png";
     private static string _texDiplomatPath = "res://resources/sprites/diplomat.png";
+    private static string _texEdgeBlockerPath = "res://resources/sprites/edge_blocker.png";
     private static string _texGunshipPath = "res://resources/sprites/gunship.png";
     private static string _texFighterPath = "res://resources/sprites/fighter.png";
     private static string _texFrigatePath = "res://resources/sprites/frigate.png";
@@ -330,12 +329,12 @@ namespace SpaceDodgeRL.scenes.entities {
       return e;
     }
 
-    public static Entity CreateMapWallEntity() {
-      var e = CreateEntity(Guid.NewGuid().ToString(), "map wall");
+    public static Entity CreateEdgeBlockerEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "boundary sign");
 
       e.AddComponent(CollisionComponent.Create(true, false));
       e.AddComponent(DefenderComponent.Create(0, 100, logDamage: false, isInvincible: true));
-      e.AddComponent(DisplayComponent.Create(_StarPath, "TODO: think of something to say for the map edge blockers", true));
+      e.AddComponent(DisplayComponent.Create(_texEdgeBlockerPath, "Trying to run away, eh? Get back to your mission!", true));
 
       return e;
     }
