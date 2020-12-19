@@ -169,6 +169,10 @@ namespace SpaceDodgeRL.scenes.encounter {
           GD.Print("Select an item via the inventory menu instead!");
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.SCAN_POSITION) {
           var scanAction = action as InputHandler.ScanInputAction;
+          if (!state.IsInBounds(scanAction.X, scanAction.Y)) {
+            return;
+          }
+
           var blockingEntity = state.BlockingEntityAtPosition(scanAction.X, scanAction.Y);
           var allEntities = state.EntitiesAtPosition(scanAction.X, scanAction.Y);
           if (blockingEntity != null) {

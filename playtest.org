@@ -198,7 +198,7 @@ Ok, so, I made it so:
 I'm not confident in the way this plays but at least it means you never get 6
 pts of invisible damage from a fighter next to you which is really important!
 
-* TODO: OOB crash - b9c682ab3009dae1dc763680ba1baff0cf6fe173
+* FIXED: OOB crash - b9c682ab3009dae1dc763680ba1baff0cf6fe173
 
 E 0:00:16.320   SpaceDodgeRL.scenes.entities.Entity SpaceDodgeRL.scenes.encounter.state.EncounterState.BlockingEntityAtPosition(Int32 , Int32 ): System.NotImplementedException: out of bounds
   <C++ Error>   Unhandled exception
