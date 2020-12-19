@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scenes/encounter/state/EncounterState.cs" type="Script" id=1]
 [ext_resource path="res://resources/red_yellow_32x32.png" type="Texture" id=2]
 [ext_resource path="res://resources/targeting_overlay_32x32.png" type="Texture" id=3]
+[ext_resource path="res://resources/Milky_Way_IR_Spitzer.jpg" type="Texture" id=4]
 
 [sub_resource type="TileSet" id=1]
 0/name = "red_yellow_32x32.png 0"
@@ -150,3 +151,7 @@ format = 1
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Background" type="Sprite" parent="."]
+z_index = -1
+texture = ExtResource( 4 )

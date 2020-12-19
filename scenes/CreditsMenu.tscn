@@ -62,8 +62,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ExitButton" type="Button" parent="."]
+[node name="CreditsLine5" type="Label" parent="."]
 margin_top = 96.0
 margin_right = 1280.0
-margin_bottom = 116.0
+margin_bottom = 110.0
+text = "Background image:  Credit: NASA/JPL-Caltech/S. Stolovy (Spitzer Science Center/Caltech) from https://commons.wikimedia.org/wiki/File:Milky_Way_IR_Spitzer.jpg"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExitButton" type="Button" parent="."]
+margin_top = 114.0
+margin_right = 1280.0
+margin_bottom = 134.0
 text = "Exit to Main Menu"

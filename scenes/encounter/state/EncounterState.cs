@@ -464,6 +464,13 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         this.Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
       }
       this.UpdateDangerMap();
+
+      // Set the background image
+      var background = GetNode<Sprite>("Background");
+      var pixelsWidth = PositionComponent.STEP_X * this.MapWidth + PositionComponent.START_X;
+      var pixelsHeight = PositionComponent.STEP_Y * this.MapWidth + PositionComponent.START_Y;
+      background.Position = new Vector2(pixelsWidth / 2, pixelsHeight / 2);
+      background.Scale = new Vector2(pixelsWidth, pixelsHeight) / background.Texture.GetSize();
     }
 
     // TODO: Move into map gen & save/load
