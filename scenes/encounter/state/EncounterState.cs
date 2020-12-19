@@ -465,12 +465,13 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
       this.UpdateDangerMap();
 
-      // Set the background image
+      // Set the background image - stretch it out so that it covers visible OOB areas too.
       var background = GetNode<Sprite>("Background");
       var pixelsWidth = PositionComponent.STEP_X * this.MapWidth + PositionComponent.START_X;
       var pixelsHeight = PositionComponent.STEP_Y * this.MapWidth + PositionComponent.START_Y;
       background.Position = new Vector2(pixelsWidth / 2, pixelsHeight / 2);
-      background.Scale = new Vector2(pixelsWidth, pixelsHeight) / background.Texture.GetSize();
+      background.RegionEnabled = true;
+      background.RegionRect = new Rect2(new Vector2(0, 0), pixelsWidth * 2, pixelsHeight * 2);
     }
 
     // TODO: Move into map gen & save/load
