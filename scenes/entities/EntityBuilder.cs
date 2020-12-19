@@ -24,7 +24,7 @@ namespace SpaceDodgeRL.scenes.entities {
     private static string _texIntelPath = "res://resources/sprites/intel.png";
     private static string _texJumpPointPath = "res://resources/sprites/jump_point.png";
     private static string _texPlayerPath = "res://resources/sprites/player.png";
-    private static string _texSatellitePath = "res://resources/sprites/satellite.png";
+    private static string _texSatellitePath = "res://resources/sprites/asteroid.png";
     private static string _texScoutPath = "res://resources/sprites/scout.png";
 
     // Items
