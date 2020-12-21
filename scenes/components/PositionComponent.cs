@@ -137,7 +137,7 @@ namespace SpaceDodgeRL.scenes.components {
       return new EncounterPosition((int)(x / STEP_X), (int)(y / STEP_Y));
     }
 
-    private static Vector2 IndexToVector(int x, int y) {
+    public static Vector2 IndexToVector(int x, int y) {
       return new Vector2(START_X + STEP_X * x, START_Y + STEP_Y * y);
     }
 

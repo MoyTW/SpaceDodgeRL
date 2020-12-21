@@ -1,6 +1,5 @@
 using Godot;
 using SpaceDodgeRL.library.encounter;
-using SpaceDodgeRL.resources.gamedata;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
 using SpaceDodgeRL.scenes.entities;
@@ -9,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
 
@@ -58,6 +56,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public FoVCache FoVCache { get; private set; }
     public Random EncounterRand { get; private set; }
     private List<PositionComponent> _animatingSprites = new List<PositionComponent>();
+    private DynamicFont _damageFont;
+    private List<Label> _damageLabels = new List<Label>();
 
     public override void _Process(float delta) {
       foreach(var c in this._animatingSprites) {
@@ -336,9 +336,17 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       var pathEntities = GetTree().GetNodesInGroup(PathAIComponent.ENTITY_GROUP);
       var timeToNextPlayerMove = this.Player.GetComponent<SpeedComponent>().Speed;
 
+      var positionsToPotentialDamage = new Dictionary<EncounterPosition, int>();
+
       dangerMap.Clear();
       // TODO: We don't actually need to update every entity, every time, since we only need to set the cell when the projectile itself moves
       foreach (Entity pathEntity in pathEntities) {
+        int attackerPower = 0;
+        var attackerComponent = pathEntity.GetComponent<AttackerComponent>();
+        if (attackerComponent != null) {
+          attackerPower = attackerComponent.Power;
+        }
+
         var pathEntitySpeed = pathEntity.GetComponent<SpeedComponent>().Speed;
         var path = pathEntity.GetComponent<PathAIComponent>().Path;
 
@@ -352,8 +360,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         }
 
         foreach (EncounterPosition dangerPosition in dangerPositions) {
-          dangerMap.SetCell(dangerPosition.X, dangerPosition.Y, 0);
-
           // If we have a fully immobile, invincible entity at the position we stop the path - otherwise we still draw it.
           var blockingEntity = this.BlockingEntityAtPosition(dangerPosition.X, dangerPosition.Y);
           if (blockingEntity != null &&
@@ -362,7 +368,45 @@ namespace SpaceDodgeRL.scenes.encounter.state {
               blockingEntity.GetComponent<DefenderComponent>().IsInvincible) {
             break;
           }
+
+          if (positionsToPotentialDamage.ContainsKey(dangerPosition)) {
+            positionsToPotentialDamage[dangerPosition] += attackerPower;
+          } else {
+            positionsToPotentialDamage[dangerPosition] = attackerPower;
+          }
+
+          dangerMap.SetCell(dangerPosition.X, dangerPosition.Y, 0);
         }
+      }
+
+      // If all this creation/deletion is a significant source of slowdown you can make an object pool, max size FoW area tiles
+      foreach (var damageLabel in this._damageLabels) {
+        this.RemoveChild(damageLabel);
+        damageLabel.QueueFree();
+      }
+      _damageLabels.Clear();
+      foreach (var pair in positionsToPotentialDamage) {
+        // TODO: Work out a less insane initialization scheme, there's no "one place" to put this kind of stuff
+        if (_damageFont == null) {
+          var fontData = GD.Load<DynamicFontData>("res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf");
+          _damageFont = new DynamicFont();
+          _damageFont.FontData = fontData;
+        }
+
+        // This is kinda silly, might want to put it into its own function - or better yet pull all the overlay functionality
+        // out into its own class.
+        var label = new Label();
+        label.Text = pair.Value.ToString();
+        var numCenterPos = PositionComponent.IndexToVector(pair.Key.X, pair.Key.Y);
+        label.AddFontOverride("font", this._damageFont);
+        label.AddColorOverride("font_color", new Color(1f, 0f, 0f));
+        // The size isn't determined until after it's first placed, so we place, then reposition according to size to center it.
+        label.SetPosition(numCenterPos);
+        var size = label.RectSize;
+        label.SetPosition(new Vector2(numCenterPos.x - size.x / 2, numCenterPos.y - size.y / 2));
+
+        this._damageLabels.Add(label);
+        this.AddChild(label);
       }
     }
 
