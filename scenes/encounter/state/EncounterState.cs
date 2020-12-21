@@ -332,7 +332,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
      * TODO: work out how to display blocking projectiles and danger magnitudes
      */
     public void UpdateDangerMap() {
-      var dangerMap = GetNode<TileMap>("DangerMap");
+      var dangerMap = GetNode<TileMap>("CanvasLayer/DangerMap");
       var pathEntities = GetTree().GetNodesInGroup(PathAIComponent.ENTITY_GROUP);
       var timeToNextPlayerMove = this.Player.GetComponent<SpeedComponent>().Speed;
 
@@ -381,7 +381,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       // If all this creation/deletion is a significant source of slowdown you can make an object pool, max size FoW area tiles
       foreach (var damageLabel in this._damageLabels) {
-        this.RemoveChild(damageLabel);
+        dangerMap.RemoveChild(damageLabel);
         damageLabel.QueueFree();
       }
       _damageLabels.Clear();
@@ -406,7 +406,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         label.SetPosition(new Vector2(numCenterPos.x - size.x / 2, numCenterPos.y - size.y / 2));
 
         this._damageLabels.Add(label);
-        this.AddChild(label);
+        dangerMap.AddChild(label);
       }
     }
 
