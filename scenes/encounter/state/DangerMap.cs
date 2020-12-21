@@ -46,30 +46,16 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public void UpdateAllTiles(EncounterState state) {
       var pathEntities = GetTree().GetNodesInGroup(PathAIComponent.ENTITY_GROUP);
       var timeToNextPlayerMove = state.Player.GetComponent<SpeedComponent>().Speed;
-
       var positionsToPotentialDamage = new Dictionary<EncounterPosition, int>();
 
+      // Fill the TileMap as appropriate & tally positionsToPotentialDamage
       this.Clear();
       // TODO: We don't actually need to update every entity, every time, since we only need to set the cell when the projectile itself moves
       foreach (Entity pathEntity in pathEntities) {
-        int attackerPower = 0;
-        var attackerComponent = pathEntity.GetComponent<AttackerComponent>();
-        if (attackerComponent != null) {
-          attackerPower = attackerComponent.Power;
-        }
+        int attackerPower = GetAttackerPower(pathEntity);
+        var dangerPositions = CalcDangerPositions(pathEntity, timeToNextPlayerMove);
 
-        var pathEntitySpeed = pathEntity.GetComponent<SpeedComponent>().Speed;
-        var path = pathEntity.GetComponent<PathAIComponent>().Path;
-
-        int stepsToProject = pathEntitySpeed != 0 ? timeToNextPlayerMove / pathEntitySpeed : Int16.MaxValue;
-        var dangerPositions = path.Project(stepsToProject);
-        if (dangerPositions.Count > 0) {
-          var pathEntityPositionComponent = pathEntity.GetComponent<PositionComponent>();
-          var pathEntityPos = pathEntityPositionComponent.EncounterPosition;
-          var lastDangerPosition = dangerPositions[dangerPositions.Count - 1];
-          pathEntityPositionComponent.RotateSpriteTowards( lastDangerPosition.X - pathEntityPos.X, lastDangerPosition.Y - pathEntityPos.Y);
-        }
-
+        RotateSpriteTowardsDestination(pathEntity, dangerPositions);
         foreach (EncounterPosition dangerPosition in dangerPositions) {
           // If we have a fully immobile, invincible entity at the position we stop the path - otherwise we still draw it.
           var blockingEntity = state.BlockingEntityAtPosition(dangerPosition.X, dangerPosition.Y);
@@ -85,11 +71,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
           } else {
             positionsToPotentialDamage[dangerPosition] = attackerPower;
           }
-
           this.SetCell(dangerPosition.X, dangerPosition.Y, 0);
         }
       }
 
+      // Draw the damage numbers
       // If all this creation/deletion is a significant source of slowdown you can make an object pool, max size FoW area tiles
       foreach (var damageLabel in this._damageLabels) {
         this.RemoveChild(damageLabel);
@@ -97,20 +83,48 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
       _damageLabels.Clear();
       foreach (var pair in positionsToPotentialDamage) {
-        // This is kinda silly, might want to put it into its own function - or better yet pull all the overlay functionality
-        // out into its own class.
-        var label = new Label();
-        label.Text = pair.Value.ToString();
-        var numCenterPos = PositionComponent.IndexToVector(pair.Key.X, pair.Key.Y);
-        label.AddFontOverride("font", this._damageFont);
-        label.AddColorOverride("font_color", new Color(1f, 0f, 0f));
-        // The size isn't determined until after it's first placed, so we place, then reposition according to size to center it.
-        label.SetPosition(numCenterPos);
-        var size = label.RectSize;
-        label.SetPosition(new Vector2(numCenterPos.x - size.x / 2, numCenterPos.y - size.y / 2));
-
+        var label = CreateLabel(pair.Value, pair.Key);
         this._damageLabels.Add(label);
         this.AddChild(label);
+      }
+    }
+
+    private Label CreateLabel(int power, EncounterPosition position) {
+      var label = new Label();
+      label.Text = power.ToString();
+      var numCenterPos = PositionComponent.IndexToVector(position.X, position.Y);
+      label.AddFontOverride("font", this._damageFont);
+      label.AddColorOverride("font_color", new Color(1f, 0f, 0f));
+      // The size isn't determined until after it's first placed, so we place, then reposition according to size to center it.
+      label.SetPosition(numCenterPos);
+      var size = label.RectSize;
+      label.SetPosition(new Vector2(numCenterPos.x - size.x / 2, numCenterPos.y - size.y / 2));
+      return label;
+    }
+
+    private int GetAttackerPower(Entity entity) {
+      var attackerComponent = entity.GetComponent<AttackerComponent>();
+      if (attackerComponent != null) {
+        return attackerComponent.Power;
+      } else {
+        return 0;
+      }
+    }
+
+    private List<EncounterPosition> CalcDangerPositions(Entity pathEntity, int timeToNextPlayerMove) {
+      var pathEntitySpeed = pathEntity.GetComponent<SpeedComponent>().Speed;
+      var path = pathEntity.GetComponent<PathAIComponent>().Path;
+
+      int stepsToProject = pathEntitySpeed != 0 ? timeToNextPlayerMove / pathEntitySpeed : Int16.MaxValue;
+      return path.Project(stepsToProject);
+    }
+
+    private void RotateSpriteTowardsDestination(Entity entity, List<EncounterPosition> dangerPositions) {
+      if (dangerPositions.Count > 0) {
+        var pathEntityPositionComponent = entity.GetComponent<PositionComponent>();
+        var pathEntityPos = pathEntityPositionComponent.EncounterPosition;
+        var lastDangerPosition = dangerPositions[dangerPositions.Count - 1];
+        pathEntityPositionComponent.RotateSpriteTowards(lastDangerPosition.X - pathEntityPos.X, lastDangerPosition.Y - pathEntityPos.Y);
       }
     }
   }
