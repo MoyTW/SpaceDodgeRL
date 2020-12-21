@@ -317,7 +317,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     private void UpdateFoWForTile(TileMap overlaysMap, int x, int y) {
       if (!this.IsInBounds(x, y)) {
         // If you're out of bounds no-op
-      } else if (this.FoVCache.Contains(x, y)) {
+      } else if (this.FoVCache.IsVisible(x, y)) {
         overlaysMap.SetCell(x, y, -1);
       } else if (this._encounterTiles[x, y].Explored) {
         overlaysMap.SetCell(x, y, 1);

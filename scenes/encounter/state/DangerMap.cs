@@ -87,6 +87,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         this._damageLabels.Add(label);
         this.AddChild(label);
       }
+
+      this.HighlightEnemies(state, timeToNextPlayerMove);
     }
 
     private Label CreateLabel(int power, EncounterPosition position) {
@@ -125,6 +127,32 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         var pathEntityPos = pathEntityPositionComponent.EncounterPosition;
         var lastDangerPosition = dangerPositions[dangerPositions.Count - 1];
         pathEntityPositionComponent.RotateSpriteTowards(lastDangerPosition.X - pathEntityPos.X, lastDangerPosition.Y - pathEntityPos.Y);
+      }
+    }
+
+    private bool ShouldHighlightEntity(EncounterState state, Entity entity, EncounterPosition entityPos, int nextPlayerTick) {
+      var aiComponent = entity.GetComponent<AIComponent>();
+
+      return aiComponent != null &&
+        !(aiComponent is PathAIComponent) &&
+        state.FoVCache.IsVisible(entityPos) &&
+        entity.GetComponent<ActionTimeComponent>().NextTurnAtTick < nextPlayerTick;
+    }
+
+    private void HighlightEnemies(EncounterState state, int timeToNextPlayerMove) {
+      var nextPlayerTick = state.Player.GetComponent<ActionTimeComponent>().NextTurnAtTick + timeToNextPlayerMove;
+      var actionEntities = state.ActionEntities();
+
+      foreach (Entity actionEntity in actionEntities) {
+        var actionEntityPos = actionEntity.GetComponent<PositionComponent>().EncounterPosition;
+
+        if (ShouldHighlightEntity(state, actionEntity, actionEntityPos, nextPlayerTick)) {
+          if (this.GetCell(actionEntityPos.X, actionEntityPos.Y) == 0) {
+            this.SetCell(actionEntityPos.X, actionEntityPos.Y, 2);
+          } else {
+            this.SetCell(actionEntityPos.X, actionEntityPos.Y, 1);
+          }
+        }
       }
     }
   }

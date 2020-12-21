@@ -20,7 +20,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return asPositions.AsReadOnly();
     } }
 
-    public bool Contains(int x, int y) {
+    public bool IsVisible(EncounterPosition position) {
+      return this.IsVisible(position.X, position.Y);
+    }
+
+    public bool IsVisible(int x, int y) {
       int cX = x - _x;
       int cY = y - _y;
       if (cX >= 0 && cX < _visibleCells.GetLength(0) && cY >= 0 && cY < _visibleCells.GetLength(1)) {
