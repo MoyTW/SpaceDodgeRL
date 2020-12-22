@@ -1,0 +1,220 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://resources/tex_test.tres" type="Texture" id=1]
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Regular.tres" type="DynamicFont" id=2]
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=3]
+[ext_resource path="res://resources/ui/menu.png" type="Texture" id=4]
+[ext_resource path="res://scenes/encounter/SidebarDisplay.cs" type="Script" id=5]
+
+[node name="SidebarBackground" type="TextureRect"]
+margin_right = 432.0
+margin_bottom = 256.0
+grow_horizontal = 0
+texture = ExtResource( 4 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SidebarVBox" type="VBoxContainer" parent="."]
+margin_bottom = 1024.0
+rect_min_size = Vector2( 432, 0 )
+size_flags_horizontal = 0
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StatsAndPositionHBox" type="HBoxContainer" parent="SidebarVBox"]
+margin_right = 432.0
+margin_bottom = 256.0
+rect_min_size = Vector2( 0, 256 )
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StatsBlock" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox"]
+margin_right = 214.0
+margin_bottom = 256.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="StatsSpacer" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_right = 214.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 2 )
+
+[node name="YourStatsHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 24.0
+margin_right = 214.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+text = "Ship Status"
+align = 1
+
+[node name="HPLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 48.0
+margin_right = 214.0
+margin_bottom = 68.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+text = "HPLabel"
+align = 1
+
+[node name="AttackPowerLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 72.0
+margin_right = 214.0
+margin_bottom = 92.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+text = "AttackPowerLabel"
+align = 1
+
+[node name="SpeedLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 96.0
+margin_right = 214.0
+margin_bottom = 116.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+text = "SpeedLabel"
+align = 1
+
+[node name="InventoryLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 120.0
+margin_right = 214.0
+margin_bottom = 140.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+text = "InventoryLabel"
+align = 1
+
+[node name="PositionBlock" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox"]
+margin_left = 218.0
+margin_right = 432.0
+margin_bottom = 256.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PositionSpacer" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_right = 214.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TurnReadoutLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 24.0
+margin_right = 214.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+text = "TurnReadoutLabel"
+align = 1
+
+[node name="SectorZoneLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 48.0
+margin_right = 214.0
+margin_bottom = 68.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+text = "SectorZoneLabel"
+align = 1
+
+[node name="PositionLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 72.0
+margin_right = 214.0
+margin_bottom = 92.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+text = "PositionLabel"
+align = 1
+
+[node name="LevelLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 96.0
+margin_right = 214.0
+margin_bottom = 116.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+text = "LevelLabel"
+align = 1
+
+[node name="ExperienceLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 120.0
+margin_right = 214.0
+margin_bottom = 140.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+text = "ExperienceLabel"
+align = 1
+
+[node name="StatsHBox" type="HBoxContainer" parent="SidebarVBox"]
+margin_top = 260.0
+margin_right = 432.0
+margin_bottom = 640.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="StatsLeftColumn" type="VBoxContainer" parent="SidebarVBox/StatsHBox"]
+margin_right = 432.0
+margin_bottom = 380.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScanBlock" type="VBoxContainer" parent="SidebarVBox/StatsHBox/StatsLeftColumn"]
+margin_right = 432.0
+margin_bottom = 380.0
+size_flags_vertical = 3
+
+[node name="ScanBlockHeader" type="Label" parent="SidebarVBox/StatsHBox/StatsLeftColumn/ScanBlock"]
+margin_right = 432.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+text = "Scan Readout"
+align = 1
+
+[node name="ReadoutTextureRect" type="TextureRect" parent="SidebarVBox/StatsHBox/StatsLeftColumn/ScanBlock"]
+margin_top = 24.0
+margin_right = 432.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 36, 36 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="DescriptionLabel" type="RichTextLabel" parent="SidebarVBox/StatsHBox/StatsLeftColumn/ScanBlock"]
+margin_top = 64.0
+margin_right = 432.0
+margin_bottom = 380.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/bold_font = ExtResource( 3 )
+custom_fonts/normal_font = ExtResource( 2 )
+bbcode_enabled = true
+bbcode_text = "Description Goes Here"
+text = "Description Goes Here"
+
+[node name="EncounterLogLabel" type="RichTextLabel" parent="SidebarVBox"]
+margin_top = 644.0
+margin_right = 432.0
+margin_bottom = 1024.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/bold_font = ExtResource( 3 )
+custom_fonts/normal_font = ExtResource( 2 )
+bbcode_enabled = true
+scroll_following = true
