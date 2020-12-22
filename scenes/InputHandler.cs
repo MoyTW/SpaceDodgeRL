@@ -40,11 +40,15 @@ namespace SpaceDodgeRL.scenes {
       public static string GET_ITEM = "encounter_get_item";
       // Currently not used after the InventoryMenu got added; may be used if we add interactables on the encounter map
       public static string USE_ITEM = "encounter_use_item";
+      public static string ZOOM_IN = "encounter_camera_zoom_in";
+      public static string ZOOM_OUT = "encounter_camera_zoom_out";
+      public static string ZOOM_RESET = "encounter_camera_zoom_reset";
       // Special actions (mouse & menu mostly)
       public static string SCAN_POSITION = "scan_position";
       // PERF: make a set if perf bad?
       public static string[] AllMappings = new string[] { MOVE_N, MOVE_NE, MOVE_E, MOVE_SE, MOVE_S, MOVE_SW, MOVE_W, MOVE_NW,
-        WAIT, AUTOPILOT, AUTOEXPLORE, CHARACTER, ESCAPE_MENU, INVENTORY, USE_STAIRS, GET_ITEM, USE_ITEM
+        WAIT, AUTOPILOT, AUTOEXPLORE, CHARACTER, ESCAPE_MENU, INVENTORY, USE_STAIRS, GET_ITEM, USE_ITEM, ZOOM_IN, ZOOM_OUT,
+        ZOOM_RESET
       };
     }
 

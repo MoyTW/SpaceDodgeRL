@@ -167,6 +167,12 @@ namespace SpaceDodgeRL.scenes.encounter {
           PlayerExecuteTurnEndingAction(new GetItemAction(entity.EntityId), state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.USE_ITEM) {
           GD.Print("Select an item via the inventory menu instead!");
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.ZOOM_IN) {
+          state.ZoomIn();
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.ZOOM_OUT) {
+          state.ZoomOut();
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.ZOOM_RESET) {
+          state.ZoomReset();
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.SCAN_POSITION) {
           var scanAction = action as InputHandler.ScanInputAction;
           if (!state.IsInBounds(scanAction.X, scanAction.Y)) {

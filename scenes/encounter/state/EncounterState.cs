@@ -388,6 +388,23 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.EmitSignal(nameof(EncounterLogMessageAdded), bbCodeMessage, EncounterState.EncounterLogSize);
     }
 
+    public void ZoomIn() {
+      Camera2D cam = (Camera2D)GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP")[0];
+      var oldZoom = cam.Zoom;
+      cam.Zoom = new Vector2(oldZoom.x - .2f, oldZoom.y - .2f);
+    }
+
+    public void ZoomOut() {
+      Camera2D cam = (Camera2D)GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP")[0];
+      var oldZoom = cam.Zoom;
+      cam.Zoom = new Vector2(oldZoom.x + .2f, oldZoom.y + .2f);
+    }
+
+    public void ZoomReset() {
+      Camera2D cam = (Camera2D)GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP")[0];
+      cam.Zoom = new Vector2(1f, 1f);
+    }
+
     public static EncounterState Create(string saveFilePath) {
       var state = _encounterPrefab.Instance() as EncounterState;
       state.SaveFilePath = saveFilePath;
