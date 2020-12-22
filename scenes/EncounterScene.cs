@@ -102,7 +102,7 @@ namespace SpaceDodgeRL.scenes {
       }
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/SectorZoneLabel").Text = newSectorZoneText;
 
-      string newPositionZoneText = string.Format("Position: ({0}, {1})", playerPos.X, playerPos.Y);
+      string newPositionZoneText = string.Format("Coords: ({0}, {1})", playerPos.X, playerPos.Y);
       GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/PositionLabel").Text = newPositionZoneText;
 
       var xpComponent = player.GetComponent<XPTrackerComponent>();
