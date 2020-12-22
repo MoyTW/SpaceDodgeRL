@@ -391,7 +391,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public void ZoomIn() {
       Camera2D cam = (Camera2D)GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP")[0];
       var oldZoom = cam.Zoom;
-      cam.Zoom = new Vector2(oldZoom.x - .2f, oldZoom.y - .2f);
+      // If you zoom past 0 it appears to invert, but we should stop it before it gets there.
+      if (oldZoom.x > .4f) {
+        cam.Zoom = new Vector2(oldZoom.x - .2f, oldZoom.y - .2f);
+      }
     }
 
     public void ZoomOut() {
