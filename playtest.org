@@ -208,3 +208,10 @@ E 0:00:16.320   SpaceDodgeRL.scenes.entities.Entity SpaceDodgeRL.scenes.encounte
                 EncounterRunner.cs:38 @ void SpaceDodgeRL.scenes.encounter.EncounterRunner._Process(Single )()
 
 Okay, apparently if you mouse OOB it explodes. Fair 'nuff. Gotta get that fixed.
+* Session 2020-12-22 bdb6e4bb83d81b83e408078ccc02b3cf4ffa2169
++ Scaling changes the UI size and also doesn't actually make it bigger
+  - Ideally we'd have an option to scale the UI and the gameworld separately
+  - Options could be
+    - Resolution
+    - UI scale (scales ALL fonts)
+    - Game area scale (zoom in & out basically...so, yeah, it's just camera zoom)
