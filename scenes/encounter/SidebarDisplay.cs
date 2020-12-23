@@ -13,6 +13,8 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     public override void _Ready() {
       this._encounterLogLabel = this.GetNode<RichTextLabel>("SidebarVBox/EncounterLogLabel");
+      GetNode<VBoxContainer>("SidebarVBox/ScanOptionBlock/ScanBlock").Hide();
+      GetNode<Label>("SidebarVBox/ScanOptionBlock/NoEntityScannedLabel").Show();
     }
 
     public void AddEncounterLogMessage(string bbCodeMessage, int encounterLogSize) {
@@ -112,14 +114,20 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     public void DisplayScannedEntity(int x, int y, Entity entity) {
-      if (entity != null) {
-        var scanTextureRect = GetNode<TextureRect>("SidebarVBox/StatsLeftColumn/ScanBlock/ReadoutTextureName/ReadoutTextureRect");
+      if (entity == null) {
+        GetNode<VBoxContainer>("SidebarVBox/ScanOptionBlock/ScanBlock").Hide();
+        GetNode<Label>("SidebarVBox/ScanOptionBlock/NoEntityScannedLabel").Show();
+      } else {
+        GetNode<Label>("SidebarVBox/ScanOptionBlock/NoEntityScannedLabel").Hide();
+        GetNode<VBoxContainer>("SidebarVBox/ScanOptionBlock/ScanBlock").Show();
+
+        var scanTextureRect = GetNode<TextureRect>("SidebarVBox/ScanOptionBlock/ScanBlock/ReadoutTextureName/ReadoutTextureRect");
         scanTextureRect.Texture = entity.GetComponent<PositionComponent>().SpriteTexture;
 
-        var scanNameLabel = GetNode<Label>("SidebarVBox/StatsLeftColumn/ScanBlock/ReadoutTextureName/ScanReadoutName");
+        var scanNameLabel = GetNode<Label>("SidebarVBox/ScanOptionBlock/ScanBlock/ReadoutTextureName/ScanReadoutName");
         scanNameLabel.Text = entity.EntityName;
 
-        var descriptionLabel = GetNode<RichTextLabel>("SidebarVBox/StatsLeftColumn/ScanBlock/DescriptionLabel");
+        var descriptionLabel = GetNode<RichTextLabel>("SidebarVBox/ScanOptionBlock/ScanBlock/DescriptionLabel");
 
         var descBuilder = new StringBuilder();
 

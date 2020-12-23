@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://resources/tex_test.tres" type="Texture" id=1]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Regular.tres" type="DynamicFont" id=2]
@@ -6,6 +6,11 @@
 [ext_resource path="res://resources/ui/menu.png" type="Texture" id=4]
 [ext_resource path="res://scenes/encounter/SidebarDisplay.cs" type="Script" id=5]
 [ext_resource path="res://resources/menu_theme.tres" type="Theme" id=6]
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=7]
+
+[sub_resource type="DynamicFont" id=1]
+size = 64
+font_data = ExtResource( 7 )
 
 [node name="SidebarBackground" type="TextureRect"]
 margin_right = 432.0
@@ -345,20 +350,16 @@ margin_right = 106.0
 margin_bottom = 19.0
 size_flags_horizontal = 3
 
-[node name="StatsLeftColumn" type="VBoxContainer" parent="SidebarVBox"]
+[node name="ScanOptionBlock" type="VBoxContainer" parent="SidebarVBox"]
 margin_top = 260.0
 margin_right = 400.0
-margin_bottom = 527.0
+margin_bottom = 528.0
+rect_min_size = Vector2( 0, 268 )
 size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.56
+size_flags_vertical = 0
+size_flags_stretch_ratio = 0.19
 
-[node name="ScanBlock" type="VBoxContainer" parent="SidebarVBox/StatsLeftColumn"]
-margin_right = 400.0
-margin_bottom = 267.0
-size_flags_vertical = 3
-
-[node name="ScanBlockHeader" type="Label" parent="SidebarVBox/StatsLeftColumn/ScanBlock"]
+[node name="ScanBlockHeader" type="Label" parent="SidebarVBox/ScanOptionBlock"]
 margin_right = 400.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -368,12 +369,29 @@ custom_fonts/font = ExtResource( 3 )
 text = "Scan Readout"
 align = 1
 
-[node name="ReadoutTextureName" type="HBoxContainer" parent="SidebarVBox/StatsLeftColumn/ScanBlock"]
+[node name="NoEntityScannedLabel" type="Label" parent="SidebarVBox/ScanOptionBlock"]
+visible = false
 margin_top = 24.0
 margin_right = 400.0
-margin_bottom = 88.0
+margin_bottom = 187.0
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+custom_fonts/font = SubResource( 1 )
+text = "NO ENTITY SCANNED"
+align = 1
+autowrap = true
 
-[node name="ReadoutTextureRect" type="TextureRect" parent="SidebarVBox/StatsLeftColumn/ScanBlock/ReadoutTextureName"]
+[node name="ScanBlock" type="VBoxContainer" parent="SidebarVBox/ScanOptionBlock"]
+margin_top = 24.0
+margin_right = 400.0
+margin_bottom = 268.0
+size_flags_vertical = 3
+
+[node name="ReadoutTextureName" type="HBoxContainer" parent="SidebarVBox/ScanOptionBlock/ScanBlock"]
+margin_right = 400.0
+margin_bottom = 64.0
+
+[node name="ReadoutTextureRect" type="TextureRect" parent="SidebarVBox/ScanOptionBlock/ScanBlock/ReadoutTextureName"]
 margin_right = 198.0
 margin_bottom = 64.0
 rect_min_size = Vector2( 64, 64 )
@@ -382,7 +400,7 @@ texture = ExtResource( 1 )
 expand = true
 stretch_mode = 6
 
-[node name="ScanReadoutName" type="Label" parent="SidebarVBox/StatsLeftColumn/ScanBlock/ReadoutTextureName"]
+[node name="ScanReadoutName" type="Label" parent="SidebarVBox/ScanOptionBlock/ScanBlock/ReadoutTextureName"]
 margin_left = 202.0
 margin_right = 400.0
 margin_bottom = 64.0
@@ -393,10 +411,10 @@ custom_fonts/font = ExtResource( 3 )
 text = "Entity Name"
 valign = 1
 
-[node name="DescriptionLabel" type="RichTextLabel" parent="SidebarVBox/StatsLeftColumn/ScanBlock"]
-margin_top = 92.0
+[node name="DescriptionLabel" type="RichTextLabel" parent="SidebarVBox/ScanOptionBlock/ScanBlock"]
+margin_top = 68.0
 margin_right = 400.0
-margin_bottom = 267.0
+margin_bottom = 244.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 6 )
@@ -405,9 +423,9 @@ bbcode_text = "Description Goes Here"
 text = "Description Goes Here"
 
 [node name="EncounterLogLabel" type="RichTextLabel" parent="SidebarVBox"]
-margin_top = 531.0
+margin_top = 532.0
 margin_right = 400.0
-margin_bottom = 1008.0
+margin_bottom = 1934.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 6 )
