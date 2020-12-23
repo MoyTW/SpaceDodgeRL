@@ -1,31 +1,42 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
+[ext_resource path="res://resources/menu_theme.tres" type="Theme" id=1]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://scenes/encounter/InventoryMenu.cs" type="Script" id=3]
+[ext_resource path="res://resources/ui/inventory.png" type="Texture" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
 font_data = ExtResource( 2 )
 
-[node name="InventoryMenu" type="VBoxContainer"]
+[node name="InventoryMenu" type="TextureRect"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource( 1 )
+texture = ExtResource( 4 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Header" type="CenterContainer" parent="."]
-margin_right = 1280.0
-margin_bottom = 40.0
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 1264.0
+margin_bottom = 144.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="HeaderHBox" type="HBoxContainer" parent="Header"]
-margin_left = 488.0
-margin_right = 792.0
-margin_bottom = 40.0
+margin_left = 474.0
+margin_top = 44.0
+margin_right = 774.0
+margin_bottom = 84.0
 size_flags_horizontal = 3
+custom_constants/separation = 0
 
 [node name="InventoryHeader" type="Label" parent="Header/HeaderHBox"]
 margin_right = 200.0
@@ -35,41 +46,57 @@ text = "Inventory "
 align = 1
 
 [node name="SpaceHeader" type="Label" parent="Header/HeaderHBox"]
-margin_left = 204.0
-margin_right = 304.0
+margin_left = 200.0
+margin_right = 300.0
 margin_bottom = 40.0
 custom_fonts/font = SubResource( 1 )
 text = "(x/y)"
 align = 1
 
 [node name="Columns" type="HBoxContainer" parent="."]
-margin_top = 44.0
+margin_top = 160.0
 margin_right = 1280.0
-margin_bottom = 64.0
+custom_constants/separation = 16
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control5" type="Control" parent="Columns"]
+margin_bottom = 848.0
 
 [node name="LeftColumn" type="VBoxContainer" parent="Columns"]
-margin_right = 407.0
-margin_bottom = 20.0
+margin_left = 16.0
+margin_right = 384.0
+margin_bottom = 848.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_constants/separation = 16
 
 [node name="MiddleColumn" type="VBoxContainer" parent="Columns"]
-margin_left = 411.0
-margin_right = 818.0
-margin_bottom = 20.0
+margin_left = 400.0
+margin_right = 768.0
+margin_bottom = 848.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_constants/separation = 16
 
 [node name="RightColumn" type="VBoxContainer" parent="Columns"]
-margin_left = 822.0
-margin_right = 1229.0
-margin_bottom = 20.0
+margin_left = 784.0
+margin_right = 1152.0
+margin_bottom = 848.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_constants/separation = 16
 
 [node name="CloseButton" type="Button" parent="Columns"]
-margin_left = 1233.0
-margin_right = 1280.0
-margin_bottom = 20.0
+margin_left = 1168.0
+margin_right = 1264.0
+margin_bottom = 848.0
+rect_min_size = Vector2( 96, 848 )
 size_flags_vertical = 3
 text = "Close"
+
+[node name="Control" type="Control" parent="Columns"]
+margin_left = 1280.0
+margin_right = 1280.0
+margin_bottom = 848.0

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace SpaceDodgeRL.scenes.encounter {
-  public class InventoryMenu : VBoxContainer {
+  public class InventoryMenu : TextureRect {
     private static PackedScene _inventoryPrefab = GD.Load<PackedScene>("res://scenes/encounter/InventoryEntry.tscn");
 
     private Button _closeButton;
