@@ -47,7 +47,7 @@ margin_bottom = 20.0
 theme = ExtResource( 6 )
 custom_fonts/font = ExtResource( 2 )
 
-[node name="YourStatsHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+[node name="ShipStatsHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
 margin_top = 24.0
 margin_right = 214.0
 margin_bottom = 44.0
@@ -78,10 +78,20 @@ theme = ExtResource( 6 )
 text = "AttackPowerLabel"
 align = 1
 
-[node name="SpeedLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+[node name="LaserRangeLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
 margin_top = 96.0
 margin_right = 214.0
 margin_bottom = 116.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "Laser Range: 3"
+align = 1
+
+[node name="SpeedLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 120.0
+margin_right = 214.0
+margin_bottom = 140.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme = ExtResource( 6 )
@@ -89,13 +99,44 @@ text = "SpeedLabel"
 align = 1
 
 [node name="InventoryLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
-margin_top = 120.0
+margin_top = 144.0
 margin_right = 214.0
-margin_bottom = 140.0
+margin_bottom = 164.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme = ExtResource( 6 )
 text = "InventoryLabel"
+align = 1
+
+[node name="CrewStatusHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 168.0
+margin_right = 214.0
+margin_bottom = 188.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+custom_fonts/font = ExtResource( 3 )
+text = "Pilot Status"
+align = 1
+
+[node name="LevelLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 192.0
+margin_right = 214.0
+margin_bottom = 212.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "LevelLabel"
+align = 1
+
+[node name="ExperienceLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 216.0
+margin_right = 214.0
+margin_bottom = 236.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "ExperienceLabel"
 align = 1
 
 [node name="PositionBlock" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox"]
@@ -124,45 +165,177 @@ theme = ExtResource( 6 )
 text = "TurnReadoutLabel"
 align = 1
 
-[node name="SectorZoneLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+[node name="PositionHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
 margin_top = 48.0
 margin_right = 214.0
 margin_bottom = 68.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme = ExtResource( 6 )
-text = "SectorZoneLabel"
+custom_fonts/font = ExtResource( 3 )
+text = "Current Position"
 align = 1
 
-[node name="PositionLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+[node name="SectorLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
 margin_top = 72.0
 margin_right = 214.0
 margin_bottom = 92.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme = ExtResource( 6 )
-text = "PositionLabel"
+text = "SectorLabel"
 align = 1
 
-[node name="LevelLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+[node name="PositionLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
 margin_top = 96.0
 margin_right = 214.0
 margin_bottom = 116.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme = ExtResource( 6 )
-text = "LevelLabel"
+text = "PositionLabel"
 align = 1
 
-[node name="ExperienceLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+[node name="ZoneHeaderLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
 margin_top = 120.0
 margin_right = 214.0
 margin_bottom = 140.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme = ExtResource( 6 )
-text = "ExperienceLabel"
+custom_fonts/font = ExtResource( 3 )
+text = "Zone Header"
 align = 1
+
+[node name="ZoneBlock" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 144.0
+margin_right = 214.0
+margin_bottom = 247.0
+
+[node name="EnemiesWarningContainer" type="HBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock"]
+margin_right = 214.0
+margin_bottom = 43.0
+
+[node name="EnemiesLeftSpacer2" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/EnemiesWarningContainer"]
+margin_top = 14.0
+margin_right = 4.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnemiesWarningLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/EnemiesWarningContainer"]
+margin_left = 8.0
+margin_right = 200.0
+margin_bottom = 43.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 20.0
+theme = ExtResource( 6 )
+text = "Ever Victorious Army"
+align = 1
+autowrap = true
+
+[node name="EnemiesRightSpacer" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/EnemiesWarningContainer"]
+margin_left = 204.0
+margin_top = 14.0
+margin_right = 214.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+
+[node name="ItemsFeatureReadout" type="HBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock"]
+margin_top = 47.0
+margin_right = 214.0
+margin_bottom = 103.0
+
+[node name="ZoneItemReadout" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout"]
+margin_right = 105.0
+margin_bottom = 56.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ZoneItemHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout"]
+margin_right = 105.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "Items"
+align = 1
+autowrap = true
+
+[node name="ZoneItems" type="HBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout"]
+margin_top = 24.0
+margin_right = 105.0
+margin_bottom = 56.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ZoneItem1" type="TextureRect" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout/ZoneItems"]
+margin_right = 32.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="ZoneItem2" type="TextureRect" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout/ZoneItems"]
+margin_left = 36.0
+margin_right = 68.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="ZoneItem3" type="TextureRect" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout/ZoneItems"]
+margin_left = 72.0
+margin_right = 104.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="ZoneFeaturesReadout" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout"]
+margin_left = 109.0
+margin_right = 214.0
+margin_bottom = 56.0
+size_flags_horizontal = 3
+
+[node name="ZoneFeatureHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout"]
+margin_right = 105.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "Features"
+align = 1
+autowrap = true
+
+[node name="ZoneFeatures" type="HBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout"]
+margin_top = 24.0
+margin_right = 105.0
+margin_bottom = 56.0
+
+[node name="ZoneFeature1" type="TextureRect" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout/ZoneFeatures"]
+margin_right = 32.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="ZoneFeature2" type="TextureRect" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout/ZoneFeatures"]
+margin_left = 36.0
+margin_right = 68.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
 
 [node name="StatsHBox" type="HBoxContainer" parent="SidebarVBox"]
 margin_top = 260.0

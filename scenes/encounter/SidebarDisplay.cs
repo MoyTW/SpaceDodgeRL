@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using Godot;
 using SpaceDodgeRL.scenes.components;
@@ -42,29 +43,72 @@ namespace SpaceDodgeRL.scenes.encounter {
       var newInvText = string.Format("Cargo Space: {0}/{1}", invComponent.InventoryUsed, invComponent.InventorySize);
       GetNode<Label>("SidebarVBox/StatsAndPositionHBox/StatsBlock/InventoryLabel").Text = newInvText;
 
+      var xpComponent = player.GetComponent<XPTrackerComponent>();
+      var newLevelText = string.Format("Level: {0}", xpComponent.Level);
+      GetNode<Label>("SidebarVBox/StatsAndPositionHBox/StatsBlock/LevelLabel").Text = newLevelText;
+      var newXPText = string.Format("Experience: {0}/{1}", xpComponent.XP, xpComponent.NextLevelAtXP);
+      GetNode<Label>("SidebarVBox/StatsAndPositionHBox/StatsBlock/ExperienceLabel").Text = newXPText;
+
       // Right column
       var playerPos = player.GetComponent<PositionComponent>().EncounterPosition;
 
-      var newTurnReadoutText = string.Format("Turn: {0:0.00}", state.CurrentTick / 100);
+      var newTurnReadoutText = string.Format("Current Turn: {0:0.00}", state.CurrentTick / 100);
       GetNode<Label>("SidebarVBox/StatsAndPositionHBox/PositionBlock/TurnReadoutLabel").Text = newTurnReadoutText;
 
-      var newSectorZoneText = string.Format("Sector: {0}", state.DungeonLevel);
-      var containingZone = state.ContainingZone(playerPos.X, playerPos.Y);
-      if (containingZone != null) {
-        newSectorZoneText += string.Format(" {0}", containingZone.ZoneName);
-      }
-      GetNode<Label>("SidebarVBox/StatsAndPositionHBox/PositionBlock/SectorZoneLabel").Text = newSectorZoneText;
+      var newSectorZoneText = string.Format("Current Sector: {0}", state.DungeonLevel);
+      GetNode<Label>("SidebarVBox/StatsAndPositionHBox/PositionBlock/SectorLabel").Text = newSectorZoneText;
 
-      string newPositionZoneText = string.Format("Position: ({0}, {1})", playerPos.X, playerPos.Y);
+      string newPositionZoneText = string.Format("Point: ({0}, {1})", playerPos.X, playerPos.Y);
       GetNode<Label>("SidebarVBox/StatsAndPositionHBox/PositionBlock/PositionLabel").Text = newPositionZoneText;
 
-      var xpComponent = player.GetComponent<XPTrackerComponent>();
-      var newLevelText = string.Format("Level: {0}", xpComponent.Level);
-      GetNode<Label>("SidebarVBox/StatsAndPositionHBox/PositionBlock/LevelLabel").Text = newLevelText;
-      var newXPText = string.Format("Experience: {0}/{1}", xpComponent.XP, xpComponent.NextLevelAtXP);
-      GetNode<Label>("SidebarVBox/StatsAndPositionHBox/PositionBlock/ExperienceLabel").Text = newXPText;
+      var containingZone = state.ContainingZone(playerPos.X, playerPos.Y);
+      if (containingZone == null) {
+        GetNode<Label>("SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneHeaderLabel").Text = "Not In Zone";
+        GetNode<VBoxContainer>("SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock").Hide();
+      } else {
+        GetNode<Label>("SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneHeaderLabel").Text = containingZone.ZoneName;
+        GetNode<VBoxContainer>("SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock").Show();
+        // ...that's a really long line, am I abusing the layout?
+        GetNode<Label>("SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/EnemiesWarningContainer/EnemiesWarningLabel").Text = containingZone.ReadoutEncounterName;
 
-      var posComponent = player.GetComponent<PositionComponent>();
+        // This is very fragile!
+        var itemsBasePath = "SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout/ZoneItems/ZoneItem";
+        var itemReadouts = new List<EntityReadout>(containingZone.ReadoutItems);
+        for (int i = 0; i < 3; i++) {
+          var textureRect = GetNode<TextureRect>(itemsBasePath + (i + 1));
+          if (itemReadouts.Count >= i + 1) {
+            var readout = itemReadouts[i];
+            textureRect.Show();
+            var entity = state.GetEntityById(readout.EntityId);
+            if (entity != null) {
+              textureRect.Texture = GD.Load<Texture>(entity.GetComponent<DisplayComponent>().TexturePath);
+            } else {
+              textureRect.Texture = GD.Load<Texture>("res://resources/checkmark_18x18.png");
+            }
+          } else {
+            textureRect.Hide();
+          }
+        }
+
+        var featuresBasePath = "SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout/ZoneFeatures/ZoneFeature";
+        var featureReadouts = new List<EntityReadout>(containingZone.ReadoutFeatures);
+        for (int i = 0; i < 2; i++) {
+          var textureRect = GetNode<TextureRect>(featuresBasePath + (i + 1));
+          if (featureReadouts.Count >= i + 1) {
+            var readout = featureReadouts[i];
+            textureRect.Show();
+            var entity = state.GetEntityById(readout.EntityId);
+            if (entity != null) {
+              textureRect.Texture = GD.Load<Texture>(entity.GetComponent<DisplayComponent>().TexturePath);
+            } else {
+              textureRect.Texture = GD.Load<Texture>("res://resources/checkmark_18x18.png");
+            }
+          } else {
+            textureRect.Hide();
+          }
+        }
+        
+      }
     }
 
     public void DisplayScannedEntity(int x, int y, Entity entity) {
