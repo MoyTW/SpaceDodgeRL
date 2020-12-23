@@ -52,7 +52,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       // Right column
       var playerPos = player.GetComponent<PositionComponent>().EncounterPosition;
 
-      var newTurnReadoutText = string.Format("Current Turn: {0:0.00}", state.CurrentTick / 100);
+      var newTurnReadoutText = string.Format("Turn: {0:0.00}", state.CurrentTick / 100);
       GetNode<Label>("SidebarVBox/StatsAndPositionHBox/PositionBlock/TurnReadoutLabel").Text = newTurnReadoutText;
 
       var newSectorZoneText = string.Format("Current Sector: {0}", state.DungeonLevel);
@@ -113,9 +113,13 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     public void DisplayScannedEntity(int x, int y, Entity entity) {
       if (entity != null) {
-        var scanTextureRect = GetNode<TextureRect>("SidebarVBox/StatsHBox/StatsLeftColumn/ScanBlock/ReadoutTextureRect");
+        var scanTextureRect = GetNode<TextureRect>("SidebarVBox/StatsLeftColumn/ScanBlock/ReadoutTextureName/ReadoutTextureRect");
         scanTextureRect.Texture = entity.GetComponent<PositionComponent>().SpriteTexture;
-        var descriptionLabel = GetNode<RichTextLabel>("SidebarVBox/StatsHBox/StatsLeftColumn/ScanBlock/DescriptionLabel");
+
+        var scanNameLabel = GetNode<Label>("SidebarVBox/StatsLeftColumn/ScanBlock/ReadoutTextureName/ScanReadoutName");
+        scanNameLabel.Text = entity.EntityName;
+
+        var descriptionLabel = GetNode<RichTextLabel>("SidebarVBox/StatsLeftColumn/ScanBlock/DescriptionLabel");
 
         var descBuilder = new StringBuilder();
 
