@@ -11,10 +11,14 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     private Button _closeButton;
     private Dictionary<string, InventoryEntry> _displayedIdsToEntries;
+    private bool _currentlyHovered;
+    private Button _lastHovered;
 
     public override void _Ready() {
       _closeButton = GetNode<Button>("Columns/CloseButton");
       _closeButton.Connect("pressed", this, nameof(OnCloseButtonPressed));
+      _closeButton.Connect("mouse_entered", this, nameof(OnMouseEntered), new Godot.Collections.Array() { _closeButton });
+      _closeButton.Connect("mouse_exited", this, nameof(OnMouseExited), new Godot.Collections.Array() { _closeButton });
 
       _displayedIdsToEntries = new Dictionary<string, InventoryEntry>();
     }
@@ -22,6 +26,23 @@ namespace SpaceDodgeRL.scenes.encounter {
     private void DisplaySpace(InventoryComponent inventory) {
       var spaceLabel = GetNode<Label>("Header/HeaderHBox/SpaceHeader");
       spaceLabel.Text = string.Format("({0}/{1})", inventory.InventoryUsed, inventory.InventorySize);
+    }
+
+    public override void _Input(InputEvent @event) {
+      if (@event is InputEventMouseMotion && Input.GetMouseMode() != Input.MouseMode.Visible) {
+        Input.SetMouseMode(Input.MouseMode.Visible);
+        this.GetFocusOwner().ReleaseFocus();
+        if (this._currentlyHovered) {
+          this._lastHovered.GrabFocus();
+        }
+      } else if (@event is InputEventKey && Input.GetMouseMode() == Input.MouseMode.Visible) {
+        Input.SetMouseMode(Input.MouseMode.Hidden);
+        if (this.GetFocusOwner() == null && this._lastHovered != null) {
+          this._lastHovered.GrabFocus();
+        } else if (this.GetFocusOwner() == null && this._lastHovered == null) {
+          this._closeButton.GrabFocus();
+        }
+      }
     }
 
     public void PrepMenu(InventoryComponent inventory) {
@@ -41,6 +62,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       var toAddThese = inventoryIdsToEntities.Where(e => !_displayedIdsToEntries.ContainsKey(e.Key)).ToList();
       foreach (KeyValuePair<string, Entity> held in toAddThese) {
         var newEntry = _inventoryPrefab.Instance() as InventoryEntry;
+        newEntry.Connect("mouse_entered", this, nameof(OnMouseEntered), new Godot.Collections.Array() { newEntry });
 
         var description = held.Value.GetComponent<DisplayComponent>().Description;
         newEntry.PopulateData(held.Key, held.Value.EntityName, description);
@@ -65,6 +87,15 @@ namespace SpaceDodgeRL.scenes.encounter {
         OnCloseButtonPressed();
         return;
       }
+    }
+
+    private void OnMouseEntered(Button entered) {
+      this._currentlyHovered = true;
+      this._lastHovered = entered;
+    }
+
+    private void OnMouseExited(Button exited) {
+      this._currentlyHovered = false;
     }
 
     private void OnUseButtonPressed(string entityId) {
