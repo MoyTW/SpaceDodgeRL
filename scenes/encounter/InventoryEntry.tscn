@@ -4,8 +4,11 @@
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=2]
 [ext_resource path="res://scenes/encounter/InventoryEntry.cs" type="Script" id=3]
 
-[node name="InventoryEntry" type="HBoxContainer"]
+[node name="InventoryEntry" type="Button"]
 anchor_right = 1.0
+margin_right = -912.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 0, 80 )
 size_flags_horizontal = 3
 script = ExtResource( 3 )
 __meta__ = {
@@ -13,12 +16,16 @@ __meta__ = {
 }
 
 [node name="EntryText" type="VBoxContainer" parent="."]
-margin_right = 1239.0
-margin_bottom = 44.0
+anchor_right = 1.0
+margin_right = 3.05176e-05
+margin_bottom = 80.0
 size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="EntryName" type="Label" parent="EntryText"]
-margin_right = 1239.0
+margin_right = 368.0
 margin_bottom = 20.0
 custom_fonts/font = ExtResource( 2 )
 text = "Red Paint"
@@ -29,8 +36,9 @@ __meta__ = {
 
 [node name="EntryDescription" type="Label" parent="EntryText"]
 margin_top = 24.0
-margin_right = 1239.0
+margin_right = 368.0
 margin_bottom = 44.0
+size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
 text = "Gives a 75-pt boost to speed"
 align = 1
@@ -38,9 +46,3 @@ autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="EntryUseButton" type="Button" parent="."]
-margin_left = 1243.0
-margin_right = 1280.0
-margin_bottom = 44.0
-text = "Use"

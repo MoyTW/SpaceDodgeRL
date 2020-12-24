@@ -1,6 +1,6 @@
 using Godot;
 
-public class InventoryEntry : HBoxContainer {
+public class InventoryEntry : Button {
   [Export]
   public string EntityId { get; private set; }
 
@@ -11,7 +11,7 @@ public class InventoryEntry : HBoxContainer {
     this.EntityId = entityId;
     this.GetNode<Label>("EntryText/EntryName").Text = name;
     this.GetNode<Label>("EntryText/EntryDescription").Text = description;
-    this.GetNode<Button>("EntryUseButton").Connect("pressed", this, nameof(OnUseButtonPressed));
+    this.Connect("pressed", this, nameof(OnUseButtonPressed));
   }
 
   private void OnUseButtonPressed() {
