@@ -1,15 +1,15 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://scenes/encounter/AutopilotZoneReadout.cs" type="Script" id=1]
-[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=2]
-[ext_resource path="res://resources/menu_theme.tres" type="Theme" id=3]
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=1]
+[ext_resource path="res://resources/menu_theme.tres" type="Theme" id=2]
+[ext_resource path="res://scenes/encounter/AutopilotZoneEntry.cs" type="Script" id=3]
 
-[node name="AutopilotZoneReadout" type="Button"]
+[node name="AutopilotZoneEntry" type="Button"]
 margin_right = 256.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 256, 80 )
-theme = ExtResource( 3 )
-script = ExtResource( 1 )
+theme = ExtResource( 2 )
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -35,7 +35,7 @@ margin_top = 5.0
 margin_right = 90.0
 margin_bottom = 37.0
 rect_min_size = Vector2( 0, 32 )
-custom_fonts/font = ExtResource( 2 )
+custom_fonts/font = ExtResource( 1 )
 text = "Zone Name"
 valign = 1
 

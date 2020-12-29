@@ -6,7 +6,7 @@ using SpaceDodgeRL.scenes.singletons;
 
 namespace SpaceDodgeRL.scenes.encounter {
   public class AutopilotMenu : TextureRect {
-    private static PackedScene _readoutPrefab = GD.Load<PackedScene>("res://scenes/encounter/AutopilotZoneReadout.tscn");
+    private static PackedScene _readoutPrefab = GD.Load<PackedScene>("res://scenes/encounter/AutopilotZoneEntry.tscn");
     private static string ZONE_BUTTON_GROUP = "ZONE_BUTTON_GROUP";
 
     private Button _closeButton;
@@ -63,7 +63,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         systemMap.AddChild(systemButton);
 
         // Add the sidebar
-        var sidebarReadout = _readoutPrefab.Instance() as AutopilotZoneReadout;
+        var sidebarReadout = _readoutPrefab.Instance() as AutopilotZoneEntry;
         sidebarReadout.SetReadout(state, zone, hasIntel);
         sidebarReadout.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
         sidebarButtons.AddChild(sidebarReadout);
