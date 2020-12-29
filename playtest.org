@@ -218,7 +218,7 @@ Okay, apparently if you mouse OOB it explodes. Fair 'nuff. Gotta get that fixed.
     - Game area scale (zoom in & out basically...so, yeah, it's just camera zoom)
 
 * Session 2020-12-29 7969c0cdbe6bab7f27c62ded32b649d6bf258f85
-+ TODO: In autopilot readout if items = 3 & feeatures = 1, runs right off the
++ DONE: In autopilot readout if items = 3 & feeatures = 1, runs right off the
   side of the screen. rip. put a sizer on them sprites.
 + TODO: You can't expand the play space horizontally it's basically fixed
   resolution.

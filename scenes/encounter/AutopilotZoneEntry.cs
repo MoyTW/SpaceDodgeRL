@@ -25,7 +25,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         GetNode<Label>("ReadoutContainer/NameEncounterBar/ZoneEncounterLabel").Text = "NO INTEL";
       }
 
-      var itemsBar = GetNode<HBoxContainer>("ReadoutContainer/ItemsFeaturesBar/ItemsBar");
+      var itemsBar = GetNode<HBoxContainer>("ReadoutContainer/ItemsFeaturesBar");
       if (hasIntel) {
         var itemsTextureSize = itemsBar.RectSize.y;
         foreach (var itemReadout in zone.ReadoutItems) {
@@ -41,7 +41,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         itemsBar.AddChild(noIntelLabel);
       }
 
-      var featuresBar = GetNode<HBoxContainer>("ReadoutContainer/ItemsFeaturesBar/FeaturesBar");
+      var featuresBar = GetNode<HBoxContainer>("ReadoutContainer/ItemsFeaturesBar");
       if (hasIntel) {
         var featuresTextureSize = featuresBar.RectSize.y;
         foreach (var featureReadout in zone.ReadoutFeatures) {
