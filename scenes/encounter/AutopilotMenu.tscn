@@ -21,7 +21,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SystemMap" type="Container" parent="."]
+[node name="SystemMap" type="Control" parent="."]
 anchor_bottom = 1.0
 margin_left = 16.0
 margin_top = 144.0
@@ -31,6 +31,12 @@ rect_min_size = Vector2( 864, 864 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
+
+[node name="YouAreHereLabel" type="Label" parent="SystemMap"]
+margin_right = 40.0
+margin_bottom = 20.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "<- You Are Here"
 
 [node name="SidebarContainer" type="VBoxContainer" parent="."]
 anchor_right = 1.0

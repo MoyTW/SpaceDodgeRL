@@ -25,8 +25,10 @@ namespace SpaceDodgeRL.scenes.encounter {
 
       // Clear all the old zone data
       foreach (Node child in systemMap.GetChildren()) {
-        systemMap.RemoveChild(child);
-        child.QueueFree();
+        if (child is Button) {
+          systemMap.RemoveChild(child);
+          child.QueueFree();
+        }
       }
       foreach (Node child in sidebarButtons.GetChildren()) {
         sidebarButtons.RemoveChild(child);
@@ -34,7 +36,6 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
 
       bool hasIntel = state.Player.GetComponent<PlayerComponent>().KnowsIntel(state.DungeonLevel);
-
 
       foreach (EncounterZone zone in state.Zones) {
         // Add the system
@@ -71,6 +72,24 @@ namespace SpaceDodgeRL.scenes.encounter {
         sidebarReadout.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
         sidebarButtons.AddChild(sidebarReadout);
       }
+
+      // You Are Here label
+      var label = systemMap.GetNode<Label>("YouAreHereLabel");
+      // Nodes are drawn in the order they're added, so we remove/add it to draw it over the buttons
+      systemMap.RemoveChild(label);
+      systemMap.AddChild(label);
+      var playerPos = state.Player.GetComponent<PositionComponent>().EncounterPosition;
+      float xPercentage = (playerPos.X + 1) / (float)state.MapWidth;
+      float yPercentage = (playerPos.Y + 1) / (float)state.MapHeight;
+      float scaledX = systemMap.RectMinSize.x * xPercentage;
+      float scaledY = systemMap.RectMinSize.y * yPercentage - label.RectSize.y / 2;
+      if (scaledX + label.RectSize.x > systemMap.RectMinSize.x) {
+        scaledX -= label.RectSize.x;
+        label.Text = "You Are Here ->";
+      } else {
+        label.Text = "<- You Are Here";
+      }
+      label.RectPosition = new Vector2(scaledX, scaledY);
     }
 
     public void PrepMenu(EncounterState state) {
