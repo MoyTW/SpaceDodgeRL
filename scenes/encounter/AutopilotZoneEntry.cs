@@ -2,7 +2,7 @@ using Godot;
 using SpaceDodgeRL.scenes.encounter.state;
 
 namespace SpaceDodgeRL.scenes.encounter {
-  public class AutopilotZoneEntry : Button {
+  public class AutopilotZoneEntry : EntryButton {
 
     private TextureRect BuildTextureRect(string path, float squareWidth) {
       var textureRect = new TextureRect();
