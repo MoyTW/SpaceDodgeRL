@@ -1,33 +1,42 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/encounter/AutopilotMenu.cs" type="Script" id=1]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=2]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Regular.tres" type="DynamicFont" id=3]
+[ext_resource path="res://resources/menu_theme.tres" type="Theme" id=4]
+[ext_resource path="res://resources/ui/autopilot.png" type="Texture" id=5]
 
-[node name="AutopilotMenu" type="HBoxContainer"]
+[node name="AutopilotMenu" type="TextureRect"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 4 )
+texture = ExtResource( 5 )
 script = ExtResource( 1 )
+
+[node name="SystemMap" type="Container" parent="."]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 880.0
+margin_bottom = 880.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+
+[node name="SidebarContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 896.0
+margin_top = 16.0
+margin_right = -16.0
+margin_bottom = 16.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SystemMap" type="Container" parent="."]
-margin_right = 850.0
-margin_bottom = 1024.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
-
-[node name="SidebarContainer" type="VBoxContainer" parent="."]
-margin_left = 854.0
-margin_right = 1280.0
-margin_bottom = 1024.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
 [node name="Instructions" type="RichTextLabel" parent="SidebarContainer"]
-margin_right = 426.0
+margin_right = 368.0
 margin_bottom = 105.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -46,8 +55,8 @@ fit_content_height = true
 
 [node name="YouAreHereLabel" type="RichTextLabel" parent="SidebarContainer"]
 margin_top = 109.0
-margin_right = 426.0
-margin_bottom = 130.0
+margin_right = 368.0
+margin_bottom = 151.0
 custom_fonts/bold_font = ExtResource( 2 )
 custom_fonts/normal_font = ExtResource( 3 )
 bbcode_enabled = true
@@ -56,25 +65,34 @@ text = "You are in Unknown Sector,  Unknown Zone"
 fit_content_height = true
 
 [node name="ButtonConsole" type="HBoxContainer" parent="SidebarContainer"]
-margin_top = 134.0
-margin_right = 426.0
-margin_bottom = 154.0
+margin_top = 155.0
+margin_right = 368.0
+margin_bottom = 175.0
 
 [node name="DynamicButtonsContainer" type="VBoxContainer" parent="SidebarContainer/ButtonConsole"]
-margin_right = 344.0
+margin_right = 274.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="CloseButton" type="Button" parent="SidebarContainer/ButtonConsole"]
-margin_left = 348.0
-margin_right = 426.0
+margin_left = 278.0
+margin_right = 368.0
 margin_bottom = 20.0
 size_flags_vertical = 3
 text = "Close Map"
 
 [node name="BottomSpacer" type="Control" parent="SidebarContainer"]
-margin_top = 158.0
-margin_right = 426.0
+margin_top = 179.0
+margin_right = 368.0
 margin_bottom = 1024.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 1280.0
+margin_bottom = 1024.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}

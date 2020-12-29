@@ -5,7 +5,7 @@ using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.singletons;
 
 namespace SpaceDodgeRL.scenes.encounter {
-  public class AutopilotMenu : HBoxContainer {
+  public class AutopilotMenu : TextureRect {
     private static PackedScene _readoutPrefab = GD.Load<PackedScene>("res://scenes/encounter/AutopilotZoneReadout.tscn");
     private static string ZONE_BUTTON_GROUP = "ZONE_BUTTON_GROUP";
 
