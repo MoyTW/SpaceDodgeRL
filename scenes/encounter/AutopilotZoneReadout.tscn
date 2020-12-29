@@ -4,23 +4,23 @@
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=2]
 
 [node name="AutopilotZoneReadout" type="HBoxContainer"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 258.0
-margin_bottom = 32.0
-size_flags_horizontal = 3
+margin_right = 352.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 0, 64 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ReadoutContainer" type="VBoxContainer" parent="."]
-margin_right = 214.0
-margin_bottom = 38.0
+margin_right = 318.0
+margin_bottom = 64.0
 size_flags_horizontal = 3
 
 [node name="NameEncounterBar" type="HBoxContainer" parent="ReadoutContainer"]
-margin_right = 214.0
+margin_right = 318.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 
@@ -33,7 +33,7 @@ text = "Zone Name"
 [node name="ZoneEncounterLabel" type="Label" parent="ReadoutContainer/NameEncounterBar"]
 margin_left = 94.0
 margin_top = 3.0
-margin_right = 214.0
+margin_right = 318.0
 margin_bottom = 17.0
 size_flags_horizontal = 3
 text = "Encounter Name"
@@ -41,12 +41,12 @@ align = 1
 
 [node name="ItemsFeaturesBar" type="HBoxContainer" parent="ReadoutContainer"]
 margin_top = 24.0
-margin_right = 214.0
+margin_right = 318.0
 margin_bottom = 38.0
 size_flags_horizontal = 3
 
 [node name="ItemsBar" type="HBoxContainer" parent="ReadoutContainer/ItemsFeaturesBar"]
-margin_right = 105.0
+margin_right = 157.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 
@@ -56,8 +56,8 @@ margin_bottom = 14.0
 text = "Items"
 
 [node name="FeaturesBar" type="HBoxContainer" parent="ReadoutContainer/ItemsFeaturesBar"]
-margin_left = 109.0
-margin_right = 214.0
+margin_left = 161.0
+margin_right = 318.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 
@@ -67,7 +67,7 @@ margin_bottom = 14.0
 text = "Features"
 
 [node name="AutopilotButton" type="Button" parent="."]
-margin_left = 218.0
-margin_right = 248.0
-margin_bottom = 38.0
+margin_left = 322.0
+margin_right = 352.0
+margin_bottom = 64.0
 text = "Go"

@@ -12,7 +12,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     private Button _closeButton;
 
     public override void _Ready() {
-      _closeButton = GetNode<Button>("SidebarContainer/ButtonConsole/CloseButton");
+      _closeButton = GetNode<Button>("ButtonConsole/CloseButton");
       _closeButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { null });
       _closeButton.GrabFocus();
       _closeButton.Connect("tree_entered", this, nameof(OnTreeEntered));
@@ -20,7 +20,7 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     private void ResetZones(EncounterState state) {
       var systemMap = GetNode<Control>("SystemMap");
-      var sidebarButtons = GetNode<VBoxContainer>("SidebarContainer/ButtonConsole/DynamicButtonsContainer");
+      var sidebarButtons = GetNode<VBoxContainer>("ButtonConsole/DynamicButtonsContainer");
 
       // Clear all the old zone data
       foreach (Node child in systemMap.GetChildren()) {
