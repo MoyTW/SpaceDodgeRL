@@ -237,4 +237,8 @@ Okay, apparently if you mouse OOB it explodes. Fair 'nuff. Gotta get that fixed.
   upper right has some empty space)
 + TODO: Your scan cursor is seriously off-center; re-work that
   - TODO: Make a full playthrough with mouse only
-
+** Bugs while in process of fixing some of the above issues
++ TODO: If you hover over a zone in one run of the autopilot menu, and then exit
+  the autopilot menu, then open the menu again and move the mouse, it will crash
+  with "Cannot access a disposed object". Makes sense - we redo the entire scene
+  and throw away all the old stuff every time...
