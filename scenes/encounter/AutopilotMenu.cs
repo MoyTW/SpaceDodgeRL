@@ -42,18 +42,21 @@ namespace SpaceDodgeRL.scenes.encounter {
         systemButton.AddToGroup(ZONE_BUTTON_GROUP);
         systemButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
         // TODO: It doesn't scale if you resize the window
-        // TODO: Make it look less dumb
+        // TODO: There's an issue with the way I set it up such that the rectangle size doesn't seem to be present?
+        // My theory is that if something isn't in a container the sizes you set in the editor are just zero'd out (?), and by
+        // taking the SystemMap out of the container it just doesn't...have a size? Unsure; anyways, that's why we're using
+        // RectMinSize for the calculations instead.
         float x1Percentage = (zone.X1 + 1) / (float)state.MapWidth;
         float y1Percentage = (zone.Y1 + 1) / (float)state.MapHeight;
-        float scaledX1 = systemMap.RectSize.x * x1Percentage;
-        float scaledY1 = systemMap.RectSize.y * y1Percentage;
+        float scaledX1 = systemMap.RectMinSize.x * x1Percentage;
+        float scaledY1 = systemMap.RectMinSize.y * y1Percentage;
 
         systemButton.RectPosition = new Vector2(scaledX1, scaledY1);
 
         float widthPercentage = zone.Width / (float)state.MapWidth;
         float heightPercentage = zone.Height / (float)state.MapHeight;
-        float scaledWidth = systemMap.RectSize.x * widthPercentage;
-        float scaledHeight = systemMap.RectSize.y * heightPercentage;
+        float scaledWidth = systemMap.RectMinSize.x * widthPercentage;
+        float scaledHeight = systemMap.RectMinSize.y * heightPercentage;
 
         systemButton.RectSize = new Vector2(scaledWidth, scaledHeight);
 

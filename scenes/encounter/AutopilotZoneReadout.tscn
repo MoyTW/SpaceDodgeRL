@@ -6,7 +6,7 @@
 [node name="AutopilotZoneReadout" type="HBoxContainer"]
 margin_right = 352.0
 margin_bottom = 64.0
-rect_min_size = Vector2( 0, 64 )
+rect_min_size = Vector2( 0, 80 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 script = ExtResource( 1 )
@@ -16,7 +16,7 @@ __meta__ = {
 
 [node name="ReadoutContainer" type="VBoxContainer" parent="."]
 margin_right = 318.0
-margin_bottom = 64.0
+margin_bottom = 80.0
 size_flags_horizontal = 3
 
 [node name="NameEncounterBar" type="HBoxContainer" parent="ReadoutContainer"]
@@ -69,5 +69,5 @@ text = "Features"
 [node name="AutopilotButton" type="Button" parent="."]
 margin_left = 322.0
 margin_right = 352.0
-margin_bottom = 64.0
+margin_bottom = 80.0
 text = "Go"

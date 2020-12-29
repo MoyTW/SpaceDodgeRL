@@ -17,44 +17,45 @@ anchor_bottom = 1.0
 theme = ExtResource( 4 )
 texture = ExtResource( 5 )
 script = ExtResource( 1 )
-
-[node name="SystemMap" type="Container" parent="."]
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 880.0
-margin_bottom = 880.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-size_flags_stretch_ratio = 2.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="SystemMap" type="Container" parent="."]
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = 144.0
+margin_right = 880.0
+margin_bottom = -16.0
+rect_min_size = Vector2( 864, 864 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
 [node name="SidebarContainer" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 896.0
+margin_left = 16.0
 margin_top = 16.0
-margin_right = -16.0
-margin_bottom = 16.0
+margin_right = -400.0
+margin_bottom = -897.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
-custom_constants/separation = 16
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="SidebarContainer"]
-margin_right = 368.0
+margin_right = 864.0
 margin_bottom = 36.0
 custom_fonts/font = SubResource( 1 )
 text = "AUTOPILOT"
 align = 1
 
 [node name="Instructions" type="RichTextLabel" parent="SidebarContainer"]
-margin_top = 52.0
-margin_right = 368.0
-margin_bottom = 136.0
+margin_top = 40.0
+margin_right = 864.0
+margin_bottom = 82.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 custom_fonts/bold_font = ExtResource( 2 )
@@ -65,9 +66,9 @@ text = "Press the designated button to autopilot to the target zone. Autopilot w
 fit_content_height = true
 
 [node name="YouAreHereLabel" type="RichTextLabel" parent="SidebarContainer"]
-margin_top = 152.0
-margin_right = 368.0
-margin_bottom = 194.0
+margin_top = 86.0
+margin_right = 864.0
+margin_bottom = 107.0
 custom_fonts/bold_font = ExtResource( 2 )
 custom_fonts/normal_font = ExtResource( 3 )
 bbcode_enabled = true
@@ -76,9 +77,9 @@ text = "You are in Unknown Sector,  Unknown Zone"
 fit_content_height = true
 
 [node name="BottomSpacer" type="Control" parent="SidebarContainer"]
-margin_top = 210.0
-margin_right = 368.0
-margin_bottom = 1024.0
+margin_top = 111.0
+margin_right = 864.0
+margin_bottom = 111.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -86,7 +87,7 @@ size_flags_vertical = 3
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 896.0
-margin_top = 224.0
+margin_top = 64.0
 margin_right = -16.0
 margin_bottom = -16.0
 custom_constants/separation = 16
@@ -103,7 +104,7 @@ custom_constants/separation = 16
 [node name="CloseButton" type="Button" parent="ButtonConsole"]
 margin_left = 288.0
 margin_right = 368.0
-margin_bottom = 784.0
+margin_bottom = 944.0
 rect_min_size = Vector2( 80, 0 )
 size_flags_vertical = 3
 text = "Close"
