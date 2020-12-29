@@ -13,13 +13,15 @@ namespace SpaceDodgeRL.scenes.components {
     [JsonInclude] public string TexturePath { get; private set; }
     [JsonInclude] public string Description { get; private set; }
     [JsonInclude] public bool VisibleInFoW { get; private set; }
+    [JsonInclude] public int ZIndex { get; private set; }
 
-    public static DisplayComponent Create(string texturePath, string description, bool visibleInFoW) {
+    public static DisplayComponent Create(string texturePath, string description, bool visibleInFoW, int zIndex) {
       var component = new DisplayComponent();
 
       component.TexturePath = texturePath;
       component.Description = description;
       component.VisibleInFoW = visibleInFoW;
+      component.ZIndex = zIndex;
 
       return component;
     }

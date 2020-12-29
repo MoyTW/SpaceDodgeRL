@@ -15,14 +15,14 @@ namespace SpaceDodgeRL.tests.scenes.components {
 
     [Fact]
     public void IncludesEntityGroup() {
-      var component = DisplayComponent.Create("", "", true);
+      var component = DisplayComponent.Create("", "", true, 0);
       JsonElement deserialized = JsonSerializer.Deserialize<JsonElement>(component.Save());
       Assert.Equal(DisplayComponent.ENTITY_GROUP, deserialized.GetProperty("EntityGroup").GetString());
     }
 
     [Fact]
     public void SerializesAndDeserializesCorrectly() {
-      var component = DisplayComponent.Create("path", "description", true);
+      var component = DisplayComponent.Create("path", "description", true, 4);
       string saved = component.Save();
 
       var newComponent = DisplayComponent.Create(saved);
@@ -30,6 +30,7 @@ namespace SpaceDodgeRL.tests.scenes.components {
       Assert.Equal(component.TexturePath, newComponent.TexturePath);
       Assert.Equal(component.Description, newComponent.Description);
       Assert.Equal(component.VisibleInFoW, newComponent.VisibleInFoW);
+      Assert.Equal(component.ZIndex, 4);
     }
   }
 }

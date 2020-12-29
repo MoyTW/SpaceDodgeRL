@@ -226,7 +226,7 @@ Okay, apparently if you mouse OOB it explodes. Fair 'nuff. Gotta get that fixed.
   diagonally shoot at a SW enemy and there's an asteroid to W it will hit the
   asteroid. I guess this is because shots don't actually do diagonals but do
   4-directional paths.
-+ TODO: Item sprites are drawn over ship sprites whereas opposite should be true
++ DONE: Item sprites are drawn over ship sprites whereas opposite should be true
 + DONE: You Are Here on the autopilot map
 + TODO: Draw sprites on inventory page? (sprite + name on left, description
   right maybe?)

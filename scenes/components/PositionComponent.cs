@@ -49,13 +49,14 @@ namespace SpaceDodgeRL.scenes.components {
       return GetNode<Sprite>("Sprite").Position != encounterPosition || GetNode<AnimatedSprite>("ExplosionSprite").Visible == true;
     } }
 
-    public static PositionComponent Create(EncounterPosition position, string texturePath) {
+    public static PositionComponent Create(EncounterPosition position, string texturePath, int zIndex) {
       var component = _scenePrefab.Instance() as PositionComponent;
 
       component._encounterPosition = position;
       var sprite = component.GetNode<Sprite>("Sprite");
       sprite.Position = IndexToVector(position.X, position.Y);
       sprite.Texture = GD.Load<Texture>(texturePath);
+      sprite.ZIndex = zIndex;
 
       var explosionSprite = component.GetNode<AnimatedSprite>("ExplosionSprite");
       explosionSprite.Connect("animation_finished", component, nameof(OnExplosionAnimationFinished));
@@ -65,7 +66,7 @@ namespace SpaceDodgeRL.scenes.components {
 
     public static PositionComponent Create(string saveData) {
       var loaded = JsonSerializer.Deserialize<SaveData>(saveData);
-      return PositionComponent.Create(loaded.EncounterPosition, loaded.TexturePath);
+      return PositionComponent.Create(loaded.EncounterPosition, loaded.TexturePath, loaded.ZIndex);
     }
 
     public void RotateSpriteTowards(int dx, int dy) {
@@ -145,13 +146,17 @@ namespace SpaceDodgeRL.scenes.components {
       public string EntityGroup { get; set; }
       public EncounterPosition EncounterPosition { get; set; }
       public string TexturePath { get; set; }
+      public int ZIndex { get; set; }
 
       public SaveData() { }
 
       public SaveData(PositionComponent component) {
+        var sprite = component.GetNode<Sprite>("Sprite");
+
         this.EntityGroup = PositionComponent.ENTITY_GROUP;
         this.EncounterPosition = component.EncounterPosition;
-        this.TexturePath = component.GetNode<Sprite>("Sprite").Texture.ResourcePath;
+        this.TexturePath = sprite.Texture.ResourcePath;
+        this.ZIndex = sprite.ZIndex;
       }
     }
 
