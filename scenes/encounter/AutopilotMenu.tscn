@@ -13,21 +13,21 @@ __meta__ = {
 }
 
 [node name="SystemMap" type="Container" parent="."]
-margin_right = 680.0
-margin_bottom = 600.0
+margin_right = 850.0
+margin_bottom = 1024.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 
 [node name="SidebarContainer" type="VBoxContainer" parent="."]
-margin_left = 684.0
-margin_right = 1024.0
-margin_bottom = 600.0
+margin_left = 854.0
+margin_right = 1280.0
+margin_bottom = 1024.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Instructions" type="RichTextLabel" parent="SidebarContainer"]
-margin_right = 340.0
+margin_right = 426.0
 margin_bottom = 105.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -46,8 +46,8 @@ fit_content_height = true
 
 [node name="YouAreHereLabel" type="RichTextLabel" parent="SidebarContainer"]
 margin_top = 109.0
-margin_right = 340.0
-margin_bottom = 151.0
+margin_right = 426.0
+margin_bottom = 130.0
 custom_fonts/bold_font = ExtResource( 2 )
 custom_fonts/normal_font = ExtResource( 3 )
 bbcode_enabled = true
@@ -56,25 +56,25 @@ text = "You are in Unknown Sector,  Unknown Zone"
 fit_content_height = true
 
 [node name="ButtonConsole" type="HBoxContainer" parent="SidebarContainer"]
-margin_top = 155.0
-margin_right = 340.0
-margin_bottom = 175.0
+margin_top = 134.0
+margin_right = 426.0
+margin_bottom = 154.0
 
 [node name="DynamicButtonsContainer" type="VBoxContainer" parent="SidebarContainer/ButtonConsole"]
-margin_right = 258.0
+margin_right = 344.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="CloseButton" type="Button" parent="SidebarContainer/ButtonConsole"]
-margin_left = 262.0
-margin_right = 340.0
+margin_left = 348.0
+margin_right = 426.0
 margin_bottom = 20.0
 size_flags_vertical = 3
 text = "Close Map"
 
 [node name="BottomSpacer" type="Control" parent="SidebarContainer"]
-margin_top = 179.0
-margin_right = 340.0
-margin_bottom = 600.0
+margin_top = 158.0
+margin_right = 426.0
+margin_bottom = 1024.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
