@@ -65,7 +65,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         // Add the sidebar
         var sidebarReadout = _readoutPrefab.Instance() as AutopilotZoneReadout;
         sidebarReadout.SetReadout(state, zone, hasIntel);
-        sidebarReadout.AutopilotButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
+        sidebarReadout.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
         sidebarButtons.AddChild(sidebarReadout);
       }
     }

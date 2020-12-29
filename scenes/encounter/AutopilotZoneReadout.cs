@@ -1,10 +1,7 @@
 using Godot;
 using SpaceDodgeRL.scenes.encounter.state;
-using System;
 
-public class AutopilotZoneReadout : HBoxContainer {
-
-  public Button AutopilotButton { get => this.GetNode<Button>("AutopilotButton"); }
+public class AutopilotZoneReadout : Button {
 
   private TextureRect BuildTextureRect(string path, float squareWidth) {
     var textureRect = new TextureRect();
