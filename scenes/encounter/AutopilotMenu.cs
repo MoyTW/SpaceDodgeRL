@@ -5,7 +5,7 @@ using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.singletons;
 
 namespace SpaceDodgeRL.scenes.encounter {
-  public class AutopilotMenu : TextureRect {
+  public class AutopilotMenu : BaseMenu {
     private static PackedScene _readoutPrefab = GD.Load<PackedScene>("res://scenes/encounter/AutopilotZoneEntry.tscn");
     private static string ZONE_BUTTON_GROUP = "ZONE_BUTTON_GROUP";
 
@@ -16,6 +16,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       _closeButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { null });
       _closeButton.GrabFocus();
       _closeButton.Connect("tree_entered", this, nameof(OnTreeEntered));
+      RegisterHoverable(_closeButton);
     }
 
     private void ResetZones(EncounterState state) {
@@ -38,6 +39,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       foreach (EncounterZone zone in state.Zones) {
         // Add the system
         var systemButton = new Button();
+        RegisterHoverable(systemButton);
         systemButton.Text = zone.ZoneName;
         systemButton.AddToGroup(ZONE_BUTTON_GROUP);
         systemButton.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
@@ -64,6 +66,7 @@ namespace SpaceDodgeRL.scenes.encounter {
 
         // Add the sidebar
         var sidebarReadout = _readoutPrefab.Instance() as AutopilotZoneEntry;
+        RegisterHoverable(sidebarReadout);
         sidebarReadout.SetReadout(state, zone, hasIntel);
         sidebarReadout.Connect("pressed", this, nameof(OnButtonPressed), new Godot.Collections.Array() { zone.ZoneId });
         sidebarButtons.AddChild(sidebarReadout);
@@ -99,6 +102,10 @@ namespace SpaceDodgeRL.scenes.encounter {
     private void OnButtonPressed(string zoneId) {
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
       sceneManager.CloseAutopilotMenu(zoneId);
+    }
+
+    public override void HandleNeedsFocusButNoFocusSet() {
+      _closeButton.GrabFocus();
     }
   }
 }
