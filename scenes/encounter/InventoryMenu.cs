@@ -10,7 +10,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     private static PackedScene _inventoryPrefab = GD.Load<PackedScene>("res://scenes/encounter/InventoryEntry.tscn");
 
     private Button _closeButton;
-    private Dictionary<string, InventoryEntry> _displayedIdsToEntries;
+    public List<InventoryEntry> _inventoryEntries;
     private bool _currentlyHovered;
     private Button _lastHovered;
 
@@ -20,7 +20,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       _closeButton.Connect("mouse_entered", this, nameof(OnMouseEntered), new Godot.Collections.Array() { _closeButton });
       _closeButton.Connect("mouse_exited", this, nameof(OnMouseExited), new Godot.Collections.Array() { _closeButton });
 
-      _displayedIdsToEntries = new Dictionary<string, InventoryEntry>();
+      _inventoryEntries = new List<InventoryEntry>();
     }
 
     private void DisplaySpace(InventoryComponent inventory) {
@@ -45,39 +45,44 @@ namespace SpaceDodgeRL.scenes.encounter {
       }
     }
 
+    private void ResizeEntriesToInventorySize(int inventorySize) {
+      if (_inventoryEntries.Count != inventorySize) {
+        foreach (var entry in _inventoryEntries) {
+          entry.QueueFree();
+        }
+        _inventoryEntries.Clear();
+
+        for (int i = 0; i < inventorySize; i++) {
+          var newEntry = _inventoryPrefab.Instance() as InventoryEntry;
+          newEntry.Connect("mouse_entered", this, nameof(OnMouseEntered), new Godot.Collections.Array() { newEntry });
+          newEntry.Connect(nameof(InventoryEntry.UseItemSelected), this, nameof(OnUseButtonPressed), new Godot.Collections.Array { newEntry });
+          _inventoryEntries.Add(newEntry);
+
+          if (i < 9) {
+            GetNode<VBoxContainer>("Columns/LeftColumn").AddChild(newEntry);
+          } else if (i < 18) {
+            GetNode<VBoxContainer>("Columns/MiddleColumn").AddChild(newEntry);
+          } else {
+            GetNode<VBoxContainer>("Columns/RightColumn").AddChild(newEntry);
+          }
+        }
+      }
+    }
+
     public void PrepMenu(InventoryComponent inventory) {
       _closeButton.GrabFocus();
 
       DisplaySpace(inventory);
+      ResizeEntriesToInventorySize(inventory.InventorySize);
 
-      // Do a dumb full pass on both to diff & add/remove
-      var inventoryIdsToEntities = inventory.StoredItems.ToDictionary(e => e.EntityId, e => e);
-
-      var toRemoveThese = _displayedIdsToEntries.Where(e => !inventoryIdsToEntities.ContainsKey(e.Key)).Select(e => e.Key).ToList();
-      foreach (string toRemove in toRemoveThese) {
-        _displayedIdsToEntries[toRemove].QueueFree();
-        _displayedIdsToEntries.Remove(toRemove);
-      }
-
-      var toAddThese = inventoryIdsToEntities.Where(e => !_displayedIdsToEntries.ContainsKey(e.Key)).ToList();
-      foreach (KeyValuePair<string, Entity> held in toAddThese) {
-        var newEntry = _inventoryPrefab.Instance() as InventoryEntry;
-        newEntry.Connect("mouse_entered", this, nameof(OnMouseEntered), new Godot.Collections.Array() { newEntry });
-
-        var description = held.Value.GetComponent<DisplayComponent>().Description;
-        newEntry.PopulateData(held.Key, held.Value.EntityName, description);
-        newEntry.Connect(nameof(InventoryEntry.UseItemSelected), this, nameof(OnUseButtonPressed), new Godot.Collections.Array { held.Key });
-
-        _displayedIdsToEntries[held.Key] = newEntry;
-
-        // TODO: A less fixed layout
-        // TODO: When you use an item, it should collapse the column instead of leaving a hole - maybe we should just redraw it all?
-        if (_displayedIdsToEntries.Count < 10) {
-          GetNode<VBoxContainer>("Columns/LeftColumn").AddChild(newEntry);
-        } else if (_displayedIdsToEntries.Count < 20) {
-          GetNode<VBoxContainer>("Columns/MiddleColumn").AddChild(newEntry);
+      var storedItems = inventory.StoredItems.ToList();
+      for (int i = 0; i < _inventoryEntries.Count; i++) {
+        if (i < storedItems.Count) {
+          _inventoryEntries[i].Show();
+          var item = storedItems[i];
+          _inventoryEntries[i].SetData(item.EntityId, item.EntityName, item.GetComponent<DisplayComponent>().Description);
         } else {
-          GetNode<VBoxContainer>("Columns/RightColumn").AddChild(newEntry);
+          _inventoryEntries[i].Hide();
         }
       }
     }
@@ -98,9 +103,9 @@ namespace SpaceDodgeRL.scenes.encounter {
       this._currentlyHovered = false;
     }
 
-    private void OnUseButtonPressed(string entityId) {
+    private void OnUseButtonPressed(InventoryEntry entryPressed) {
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-      sceneManager.HandleItemToUseSelected(entityId);
+      sceneManager.HandleItemToUseSelected(entryPressed.EntityId);
     }
 
     private void OnCloseButtonPressed() {

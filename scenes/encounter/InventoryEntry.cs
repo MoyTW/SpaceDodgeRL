@@ -1,7 +1,6 @@
 using Godot;
 
 public class InventoryEntry : Button {
-  [Export]
   public string EntityId { get; private set; }
 
   [Signal]
@@ -18,14 +17,17 @@ public class InventoryEntry : Button {
     this.Connect("pressed", this, nameof(OnUseButtonPressed));
   }
 
-  public void PopulateData(string entityId, string name, string description) {
+  public void SetData(string entityId, string name, string description) {
     this.EntityId = entityId;
 
-    this._nameLabel = this.GetNode<Label>("EntryText/EntryName");
-    this._descriptionLabel =this.GetNode<Label>("EntryText/EntryDescription");
+    if (this._nameLabel == null) {
+      this._nameLabel = this.GetNode<Label>("EntryText/EntryName");
+      this._descriptionLabel =this.GetNode<Label>("EntryText/EntryDescription");
+    }
 
     this._nameLabel.Text = name;
     this._descriptionLabel.Text = description;
+    this.OnFocusExited();
   }
 
   // Because we're painting labels on top of a button, the font doesn't switch automatically on hover, so we must do it here.
