@@ -32,8 +32,6 @@ namespace SpaceDodgeRL.scenes {
       this.EncounterState.Connect(nameof(EncounterState.EncounterLogMessageAdded), this, nameof(OnEncounterLogMessageAdded));
       this.encounterRunner.Connect(nameof(EncounterRunner.TurnEnded), this, nameof(OnTurnEnded));
       // TODO: Add keyboard look via "s"
-      // TODO: Add button to pick up item (for full mouse compatibility)
-      // TODO: Add buttons to go to all the various screens (for full mouse compatibility)
       this.encounterRunner.Connect(nameof(EncounterRunner.PositionScanned), this, nameof(OnPositionScanned));
       var viewportContainer = GetNode<ViewportContainer>("SceneFrame/SceneVBox/EncounterViewportContainer");
       viewportContainer.Connect(nameof(EncounterViewportContainer.MousedOverPosition), this, nameof(OnMousedOverPosition));

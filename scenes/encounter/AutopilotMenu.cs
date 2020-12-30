@@ -95,7 +95,6 @@ namespace SpaceDodgeRL.scenes.encounter {
     public void PrepMenu(EncounterState state) {
       ResetZones(state);
 
-      // TODO: Add You Are Here onto the starmap too!
       // You Are Here label
       var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
       EncounterZone closestZone = state.ClosestZone(playerPosition.X, playerPosition.Y);
