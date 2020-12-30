@@ -77,7 +77,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.Player.GetComponent<PlayerComponent>().LayInAutopilotPathForTravel(new EncounterPath(foundPath));
         return true;
       } else {
-        state.LogMessage(String.Format("Autopilot failed to plot course to to [b]{0}[/b]", zone.ZoneName));
+        state.LogMessage(String.Format("Autopilot failed to plot course to to [b]{0}[/b]", zone.ZoneName), failed: true);
         return false;
       }
     }
@@ -333,6 +333,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
                       .FirstOrDefault(e => e.GetComponent<StorableComponent>() != null);
 
       if (item == null) {
+        state.LogMessage("No item found!", failed: true);
         return false;
       } else if (item.GetComponent<UsableComponent>() != null && item.GetComponent<UsableComponent>().UseOnGet) {
         // The responsibility for removing/not removing the usable from the EncounterState is in the usage code.
@@ -343,7 +344,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         return true;
       } else if (!inventoryComponent.CanFit(item)) {
         state.LogMessage(string.Format("[b]{0}[/b] can't fit the [b]{1}[/b] in its inventory!",
-          actor.EntityName, item.EntityName));
+          actor.EntityName, item.EntityName), failed: true);
         return false;
       } else {
         state.RemoveEntity(item);
@@ -500,6 +501,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.WriteToFile();
         return true;
       } else {
+        state.LogMessage("No jump point found!", failed: true);
         return false;
       }
     }

@@ -379,7 +379,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     #endregion
     // ##########################################################################################################################
 
-    public void LogMessage(string bbCodeMessage) {
+    public void LogMessage(string bbCodeMessage, bool failed=false) {
+      if (failed) {
+        bbCodeMessage = string.Format("[b]Failed:[/b] {0}", bbCodeMessage);
+      }
+
       if (this._encounterLog.Count >= EncounterState.EncounterLogSize) {
         this._encounterLog.RemoveAt(0);
       }

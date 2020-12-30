@@ -50,6 +50,8 @@ render_target_update_mode = 3
 
 [node name="MenuButtonBar" parent="SceneFrame/SceneVBox" instance=ExtResource( 7 )]
 margin_top = 912.0
+margin_right = 848.0
+margin_bottom = 1024.0
 
 [node name="SidebarDisplay" parent="SceneFrame" instance=ExtResource( 1 )]
 margin_left = 848.0
