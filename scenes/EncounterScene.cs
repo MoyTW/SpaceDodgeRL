@@ -55,6 +55,7 @@ namespace SpaceDodgeRL.scenes {
       }
 
       this.EncounterState = state;
+      this.GetNode<MenuButtonBar>("SceneFrame/SceneVBox/MenuButtonBar").SetState(state);
     }
 
     private void OnEncounterLogMessageAdded(string bbCodeMessage, int encounterLogSize) {

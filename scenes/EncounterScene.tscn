@@ -6,7 +6,7 @@
 [ext_resource path="res://scenes/encounter/EncounterRunner.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/EncounterViewportContainer.cs" type="Script" id=5]
 [ext_resource path="res://resources/menu_theme.tres" type="Theme" id=6]
-[ext_resource path="res://resources/ui/button_bar.png" type="Texture" id=7]
+[ext_resource path="res://scenes/encounter/MenuButtonBar.tscn" type="PackedScene" id=7]
 
 [node name="EncounterScene" type="Container"]
 anchor_right = 1.0
@@ -48,67 +48,7 @@ size = Vector2( 848, 960 )
 handle_input_locally = false
 render_target_update_mode = 3
 
-[node name="BottomButtonBar" type="TextureRect" parent="SceneFrame/SceneVBox"]
-margin_top = 960.0
-margin_right = 848.0
-margin_bottom = 1024.0
-texture = ExtResource( 7 )
-
-[node name="ButtonBarContainer" type="HBoxContainer" parent="SceneFrame/SceneVBox/BottomButtonBar"]
-margin_top = 16.0
-margin_right = 848.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 848, 32 )
-size_flags_horizontal = 0
-size_flags_vertical = 0
-custom_constants/separation = 16
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="LeftSpacer" type="Control" parent="SceneFrame/SceneVBox/BottomButtonBar/ButtonBarContainer"]
-margin_bottom = 32.0
-
-[node name="AutopilotButton" type="Button" parent="SceneFrame/SceneVBox/BottomButtonBar/ButtonBarContainer"]
-margin_left = 16.0
-margin_right = 208.0
-margin_bottom = 32.0
-focus_mode = 0
-size_flags_horizontal = 3
-enabled_focus_mode = 0
-text = "Autopilot (a)"
-
-[node name="CharacterButton" type="Button" parent="SceneFrame/SceneVBox/BottomButtonBar/ButtonBarContainer"]
-margin_left = 224.0
-margin_right = 416.0
-margin_bottom = 32.0
-focus_mode = 0
-size_flags_horizontal = 3
-enabled_focus_mode = 0
-text = "Character (c)"
-
-[node name="InventoryButton" type="Button" parent="SceneFrame/SceneVBox/BottomButtonBar/ButtonBarContainer"]
-margin_left = 432.0
-margin_right = 624.0
-margin_bottom = 32.0
-focus_mode = 0
-size_flags_horizontal = 3
-enabled_focus_mode = 0
-text = "Inventory (i)"
-
-[node name="EscapeButton" type="Button" parent="SceneFrame/SceneVBox/BottomButtonBar/ButtonBarContainer"]
-margin_left = 640.0
-margin_right = 832.0
-margin_bottom = 32.0
-focus_mode = 0
-size_flags_horizontal = 3
-enabled_focus_mode = 0
-text = "Escape (esc)"
-
-[node name="RightSpacer" type="Control" parent="SceneFrame/SceneVBox/BottomButtonBar/ButtonBarContainer"]
-margin_left = 848.0
-margin_right = 848.0
-margin_bottom = 32.0
+[node name="MenuButtonBar" parent="SceneFrame/SceneVBox" instance=ExtResource( 7 )]
 
 [node name="SidebarDisplay" parent="SceneFrame" instance=ExtResource( 1 )]
 margin_left = 848.0
