@@ -1,70 +1,116 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://resources/ui/button_bar.png" type="Texture" id=1]
 [ext_resource path="res://scenes/encounter/MenuButtonBar.cs" type="Script" id=2]
+[ext_resource path="res://resources/menu_theme.tres" type="Theme" id=3]
 
 [node name="MenuButtonBar" type="TextureRect"]
-margin_top = 960.0
-margin_right = 848.0
-margin_bottom = 1024.0
+theme = ExtResource( 3 )
 texture = ExtResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ButtonBarContainer" type="HBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 16.0
 margin_top = 16.0
-margin_right = 848.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 848, 32 )
-size_flags_horizontal = 0
+margin_right = 832.0
+margin_bottom = 96.0
+custom_constants/separation = 16
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TopButtonBar" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 816.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
 size_flags_vertical = 0
 custom_constants/separation = 16
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LeftSpacer" type="Control" parent="ButtonBarContainer"]
+[node name="GetButton" type="Button" parent="VBoxContainer/TopButtonBar"]
+margin_right = 192.0
 margin_bottom = 32.0
+focus_mode = 0
+size_flags_horizontal = 3
+enabled_focus_mode = 0
+text = "Get Item (g)"
 
-[node name="AutopilotButton" type="Button" parent="ButtonBarContainer"]
-margin_left = 16.0
-margin_right = 208.0
+[node name="JumpButton" type="Button" parent="VBoxContainer/TopButtonBar"]
+margin_left = 208.0
+margin_right = 400.0
+margin_bottom = 32.0
+focus_mode = 0
+size_flags_horizontal = 3
+enabled_focus_mode = 0
+text = "Use Jump Point (<)"
+
+[node name="ExploreZoneButton" type="Button" parent="VBoxContainer/TopButtonBar"]
+margin_left = 416.0
+margin_right = 608.0
+margin_bottom = 32.0
+focus_mode = 0
+size_flags_horizontal = 3
+enabled_focus_mode = 0
+text = "Explore Zone (x)"
+
+[node name="EscapeButton" type="Button" parent="VBoxContainer/TopButtonBar"]
+margin_left = 624.0
+margin_right = 816.0
+margin_bottom = 32.0
+focus_mode = 0
+size_flags_horizontal = 3
+enabled_focus_mode = 0
+text = "Help (?)"
+
+[node name="BottomButtonBar" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 48.0
+margin_right = 816.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_constants/separation = 16
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AutopilotButton" type="Button" parent="VBoxContainer/BottomButtonBar"]
+margin_right = 192.0
 margin_bottom = 32.0
 focus_mode = 0
 size_flags_horizontal = 3
 enabled_focus_mode = 0
 text = "Autopilot (a)"
 
-[node name="CharacterButton" type="Button" parent="ButtonBarContainer"]
-margin_left = 224.0
-margin_right = 416.0
+[node name="CharacterButton" type="Button" parent="VBoxContainer/BottomButtonBar"]
+margin_left = 208.0
+margin_right = 400.0
 margin_bottom = 32.0
 focus_mode = 0
 size_flags_horizontal = 3
 enabled_focus_mode = 0
 text = "Character (c)"
 
-[node name="InventoryButton" type="Button" parent="ButtonBarContainer"]
-margin_left = 432.0
-margin_right = 624.0
+[node name="InventoryButton" type="Button" parent="VBoxContainer/BottomButtonBar"]
+margin_left = 416.0
+margin_right = 608.0
 margin_bottom = 32.0
 focus_mode = 0
 size_flags_horizontal = 3
 enabled_focus_mode = 0
 text = "Inventory (i)"
 
-[node name="EscapeButton" type="Button" parent="ButtonBarContainer"]
-margin_left = 640.0
-margin_right = 832.0
+[node name="EscapeButton" type="Button" parent="VBoxContainer/BottomButtonBar"]
+margin_left = 624.0
+margin_right = 816.0
 margin_bottom = 32.0
 focus_mode = 0
 size_flags_horizontal = 3
 enabled_focus_mode = 0
-text = "Escape (esc)"
-
-[node name="RightSpacer" type="Control" parent="ButtonBarContainer"]
-margin_left = 848.0
-margin_right = 848.0
-margin_bottom = 32.0
+text = "Menu (esc)"

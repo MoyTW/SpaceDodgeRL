@@ -13,10 +13,10 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     public override void _Ready() {
-      this.GetNode<Button>("ButtonBarContainer/AutopilotButton").Connect("pressed", this, nameof(OnAutopilotButtonPressed));
-      this.GetNode<Button>("ButtonBarContainer/CharacterButton").Connect("pressed", this, nameof(OnCharacterButtonPressed));
-      this.GetNode<Button>("ButtonBarContainer/InventoryButton").Connect("pressed", this, nameof(OnInventoryButtonPressed));
-      this.GetNode<Button>("ButtonBarContainer/EscapeButton").Connect("pressed", this, nameof(OnEscapeButtonPressed));
+      this.GetNode<Button>("VBoxContainer/BottomButtonBar/AutopilotButton").Connect("pressed", this, nameof(OnAutopilotButtonPressed));
+      this.GetNode<Button>("VBoxContainer/BottomButtonBar/CharacterButton").Connect("pressed", this, nameof(OnCharacterButtonPressed));
+      this.GetNode<Button>("VBoxContainer/BottomButtonBar/InventoryButton").Connect("pressed", this, nameof(OnInventoryButtonPressed));
+      this.GetNode<Button>("VBoxContainer/BottomButtonBar/EscapeButton").Connect("pressed", this, nameof(OnEscapeButtonPressed));
     }
 
     private void OnAutopilotButtonPressed() {
