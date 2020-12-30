@@ -20,6 +20,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     [Signal] public delegate void PositionScanned(int x, int y, Entity scannedEntity);
 
     public InputHandler inputHandlerRef = null;
+    public SceneManager _sceneManager { get => (SceneManager)GetNode("/root/SceneManager"); }
 
     private EncounterState _encounterState;
     private GameSettings _gameSettings;
@@ -99,12 +100,10 @@ namespace SpaceDodgeRL.scenes.encounter {
 
     private void RunTurn(EncounterState state, InputHandler inputHandler) {
       if (state.RunStatus == EncounterState.RUN_STATUS_PLAYER_DEFEAT) {
-        var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-        sceneManager.ShowDefeatMenu(state);
+        this._sceneManager.ShowDefeatMenu(state);
         return;
       } else if (state.RunStatus == EncounterState.RUN_STATUS_PLAYER_VICTORY) {
-        var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-        sceneManager.ShowVictoryMenu(state);
+        this._sceneManager.ShowVictoryMenu(state);
         return;
       }
 
@@ -114,7 +113,7 @@ namespace SpaceDodgeRL.scenes.encounter {
       if (entity.IsInGroup(PlayerComponent.ENTITY_GROUP)) {
         // We force the player to pick a level-up if they have any available.
         if (entity.GetComponent<XPTrackerComponent>().UnusedLevelUps.Count > 0) {
-          ShowCharacterMenu(state);
+          this._sceneManager.ShowCharacterMenu(state);
         }
 
         var action = inputHandler.PopQueue();
@@ -145,7 +144,7 @@ namespace SpaceDodgeRL.scenes.encounter {
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.WAIT) {
           PlayerWait(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.AUTOPILOT) {
-          ShowAutopilotMenu(state);
+          this._sceneManager.ShowAutopilotMenu(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.AUTOEXPLORE) {
           var playerPos = entity.GetComponent<PositionComponent>().EncounterPosition;
           var containingZone = state.ContainingZone(playerPos.X, playerPos.Y);
@@ -156,11 +155,11 @@ namespace SpaceDodgeRL.scenes.encounter {
             state.LogMessage("Player is not within zone - cannot find autoexplore target!");
           }
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.CHARACTER) {
-          ShowCharacterMenu(state);
+          this._sceneManager.ShowCharacterMenu(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.ESCAPE_MENU) {
-          ShowEscapeMenu(state);
+          this._sceneManager.ShowEscapeMenu(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.INVENTORY) {
-          ShowInventoryMenu(state);
+          this._sceneManager.ShowInventoryMenu(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.USE_STAIRS) {
           PlayerExecuteTurnEndingAction(new UseStairsAction(entity.EntityId), state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.GET_ITEM) {
@@ -243,28 +242,6 @@ namespace SpaceDodgeRL.scenes.encounter {
         }
         state.UpdateDangerMap();
       }
-    }
-
-    // TODO: These are basically identical we can conslidate
-    private void ShowAutopilotMenu(EncounterState state) {
-      // TODO: We could probably make the cleaner by using signals?
-      var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-      sceneManager.ShowAutopilotMenu(state);
-    }
-
-    private void ShowCharacterMenu(EncounterState state) {
-      var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-      sceneManager.ShowCharacterMenu(state);
-    }
-
-    private void ShowEscapeMenu(EncounterState state) {
-      var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-      sceneManager.ShowEscapeMenu(state);
-    }
-
-    private void ShowInventoryMenu(EncounterState state) {
-      var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-      sceneManager.ShowInventoryMenu(state);
     }
 
     // Instead of calling into runner like this, put it into InputHandler!
