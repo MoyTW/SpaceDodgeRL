@@ -233,8 +233,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       } else if (action.Reason == AutopilotEndReason.INVENTORY_FULL) {
         state.LogMessage(String.Format("Autopilot ending - [b]inventory was full[/b]"));
       } else if (action.Reason == AutopilotEndReason.NO_PATH) {
-        // TODO: This is kinda cryptic
-        state.LogMessage(String.Format("Autopilot ending - [b]could not find path to next location[/b]"));
+        state.LogMessage(String.Format("Autopilot ending - [b]path to next location blocked[/b]"));
       } else {
         throw new NotImplementedException("no such matching clause for enum");
       }
