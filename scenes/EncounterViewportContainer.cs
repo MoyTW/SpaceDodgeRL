@@ -42,8 +42,10 @@ namespace SpaceDodgeRL.scenes {
 
         var viewportRect = this.GetRect();
         var position = eventMouseButton.Position;
+        var movementIndicator = GetNode<Sprite>("MovementIndicator");
 
         if (viewportRect.HasPoint(position)) {
+          movementIndicator.Show();
           var dx = position.x - (viewportRect.Size.x / 2);
           var dy = position.y - (viewportRect.Size.y / 2);
 
@@ -68,15 +70,17 @@ namespace SpaceDodgeRL.scenes {
             EmitSignal(nameof(ActionSelected), InputHandler.ActionMapping.MOVE_NW);
           }
         } else {
-          Input.SetCustomMouseCursor(null);
+          movementIndicator.Hide();
         }
       } else if (@event is InputEventMouseMotion eventMouseMotion) {
         Input.SetMouseMode(Input.MouseMode.Visible);
 
         var viewportRect = this.GetRect();
         var position = eventMouseMotion.Position;
+        var movementIndicator = GetNode<Sprite>("MovementIndicator");
 
         if (viewportRect.HasPoint(position)) {
+          movementIndicator.Show();
           var player = GetTree().GetNodesInGroup(PlayerComponent.ENTITY_GROUP)[0] as Entity;
           var spritePos = player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").Position;
 
@@ -87,30 +91,40 @@ namespace SpaceDodgeRL.scenes {
           var unitVectorToMouse = new Vector2(dx + CursorWidth / 2, dy + CursorHeight / 2).Normalized();
           var unitYVec = new Vector2(0, -1);
           var deg = Mathf.Rad2Deg(unitYVec.AngleTo(unitVectorToMouse));
+
           if (deg >= -22.5f && deg <= 22.5f) {
-            Input.SetCustomMouseCursor(moveNCursor);
+            movementIndicator.Texture = moveNCursor;
+            movementIndicator.Position = new Vector2(viewportRect.Size.x / 2, viewportRect.Size.y / 2 - 28);
           } else if (deg >= 22.5f && deg <= 67.5f) {
-            Input.SetCustomMouseCursor(moveNECursor);
+            movementIndicator.Texture = moveNECursor;
+            movementIndicator.Position = new Vector2(viewportRect.Size.x / 2 + 28, viewportRect.Size.y / 2 - 28);
           } else if (deg >= 67.5f && deg <= 112.5f) {
-            Input.SetCustomMouseCursor(moveECursor);
+            movementIndicator.Texture = moveECursor;
+            movementIndicator.Position = new Vector2(viewportRect.Size.x / 2 + 28, viewportRect.Size.y / 2);
           } else if (deg >= 112.5f && deg <= 157.5f) {
-            Input.SetCustomMouseCursor(moveSECursor);
+            movementIndicator.Texture = moveSECursor;
+            movementIndicator.Position = new Vector2(viewportRect.Size.x / 2 + 28, viewportRect.Size.y / 2 + 28);
           } else if (deg >= 157.5f || deg <= -157.5f) {
-            Input.SetCustomMouseCursor(moveSCursor);
+            movementIndicator.Texture = moveSCursor;
+            movementIndicator.Position = new Vector2(viewportRect.Size.x / 2, viewportRect.Size.y / 2 + 28);
           } else if (deg >= -157.5f && deg <= -112.5f) {
-            Input.SetCustomMouseCursor(moveSWCursor);
+            movementIndicator.Texture = moveSWCursor;
+            movementIndicator.Position = new Vector2(viewportRect.Size.x / 2 - 28, viewportRect.Size.y / 2 + 28);
           } else if (deg >= -112.5f && deg <= -67.5f) {
-            Input.SetCustomMouseCursor(moveWCursor);
+            movementIndicator.Texture = moveWCursor;
+            movementIndicator.Position = new Vector2(viewportRect.Size.x / 2 - 28, viewportRect.Size.y / 2);
           } else if (deg >= -67.5f && deg <= -22.5f) {
-            Input.SetCustomMouseCursor(moveNWCursor);
+            movementIndicator.Texture = moveNWCursor;
+            movementIndicator.Position = new Vector2(viewportRect.Size.x / 2 - 28, viewportRect.Size.y / 2 - 28);
           }
 
           var selectedPosition = PositionComponent.VectorToIndex(dx + spritePos.x, dy + spritePos.y);
           EmitSignal(nameof(MousedOverPosition), selectedPosition.X, selectedPosition.Y);
         } else {
-          Input.SetCustomMouseCursor(null);
+          movementIndicator.Hide();
         }
       } else if (@event is InputEventKey) {
+        GetNode<Sprite>("MovementIndicator").Hide();
         Input.SetMouseMode(Input.MouseMode.Hidden);
       }
     }
