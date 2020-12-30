@@ -1,6 +1,6 @@
 
 * Session 2020-11-30 7a849c156b2f23bfdb8cd8d324f6a2de792a56a1
-+ TODO: the map menu gets really hard to read at big resolutions
++ FIXED: the map menu gets really hard to read at big resolutions
   - buttons get spaced out
   - hard to tell which "GO" correlated with which button
 + FIXED: ESCAPE should close the map (& other screens)
@@ -16,11 +16,11 @@
   - this is probably the same with a shot that hits you as you're right next to something
   - fix that Tween timing issue?
 + FIXED: even the inventory doesn't tell you how many slots you have left, that's definitely bad
-+ FIXED: inventory still has TODO: item descriptions, rip
++ FIXED: inventory still has FIXED: item descriptions, rip
 + TODO: there are white squares for...I think items that you've picked up? that vanish when you enter sight
 + FIXED: FoW resets when you load
 + FIXED: projectile paths not drawn when you load
-+ TODO: newly picked-up items go to the last column in the inventory?
++ FIXED: newly picked-up items go to the last column in the inventory?
   - if you use an item in the left column then pick an item up it goes to the right?
 + TODO: you can't hold down button to scroll your menu buttons...annoying!
 + FIXED: intel doesn't auto-use which is annoying
@@ -28,7 +28,7 @@
 + ending for now ~level 5
 + playing more
 + it'd be really sweet if the readout told you when you picked items up
-+ TODO: right...I have the seed the same for every level. should fix that.
++ FIXED: right...I have the seed the same for every level. should fix that.
 + TODO: carriers are pretty lol to fight, prioritize enemies that you can kill in one hit?
 + FIXED: it doesn't tell you what sector you're in anywhere except for the starting log scroll
 + Approaching Infinity has its log reversed (new entries at top) - uh. wait. what's standard?
@@ -64,13 +64,13 @@ E 0:01:11.273   void SpaceDodgeRL.library.encounter.rulebook.Rulebook.Attack(Spa
 
 * Session 2020-12-11 ccc366d6d2895f049f56c30309afcf76523a4710
 + TODO: Place map of level generation seeds into the save file, so we can run it back if there's a bug
-+ TODO: Inventory screen items with short descriptions/long descriptions are differently-sized
++ FIXED: Inventory screen items with short descriptions/long descriptions are differently-sized
 + ADDRESSED: Frigates with cannon shells can move, fire, and hit you with no recourse on your part! Rethink projectile timings, that seems...bad.
   - Also you won't notice because they're resolved entirely in one frame so you don't see it drawing paths at you! ADDRESSED: that is very bad.
   - On the other hand you *can* counter this and the damage isn't unavoidable - move away from them on their turn
-  - TODO: Indicate if an enemy will move before your next turn?
+  - FIXED: Indicate if an enemy will move before your next turn?
 + TODO: Batteries kind of suck, since you have to burn a turn to use them and turns are very valuable!
-+ TODO: It looks like it's shoving new inventory items into the far-right column always?
++ FIXED: It looks like it's shoving new inventory items into the far-right column always?
 + I died to a carrier, RIP
   - I thought I was taking no damage but apparently I was! huh. ok then. ...I could really use a replay of the game there because I have no idea what killed me.
 
@@ -140,7 +140,7 @@ long as it accurately gives the player that information.
   - I guess the Tween is paged away from before it finishes?
 + Fighters get waaaaay easier to deal with when you enter one-shot territory
 + Done for day now
-+ TODO: Inventory screen re-columnizes items when you save/quit - should be consistent across games!
++ FIXED: Inventory screen re-columnizes items when you save/quit - should be consistent across games!
 + TODO: White squares showing up again - is this on load? They vanish when I tab away (?) and re-tab in (?)
   - I don't have any code that explicitly sets white squares do I?
 + TODO: Carrier - if you are 4 squares away and move towards a carrier, it can spawn a fighter and the fighter can blap you for 6 damage

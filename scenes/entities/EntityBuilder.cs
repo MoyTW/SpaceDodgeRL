@@ -239,8 +239,6 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateRedPaintEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "red paint");
 
-      // TODO: I put it down as 'r', but that's the same as the reverser shot. Well we'll replace all the sprites anwyays
-      // if I do make it pretty.
       e.AddComponent(DisplayComponent.Create(_texRedPaintPath, "Reduces turn time by 75 for 300 ticks (minimum time is 1).", true, ITEM_Z_INDEX));
       e.AddComponent(StorableComponent.Create());
       e.AddComponent(UsableComponent.Create(useOnGet: false));
