@@ -218,7 +218,7 @@ Okay, apparently if you mouse OOB it explodes. Fair 'nuff. Gotta get that fixed.
     - Game area scale (zoom in & out basically...so, yeah, it's just camera zoom)
 
 * Session 2020-12-29 7969c0cdbe6bab7f27c62ded32b649d6bf258f85
-+ DONE: In autopilot readout if items = 3 & feeatures = 1, runs right off the
++ FIXED: In autopilot readout if items = 3 & feeatures = 1, runs right off the
   side of the screen. rip. put a sizer on them sprites.
 + TODO: You can't expand the play space horizontally it's basically fixed
   resolution.
@@ -226,9 +226,9 @@ Okay, apparently if you mouse OOB it explodes. Fair 'nuff. Gotta get that fixed.
   diagonally shoot at a SW enemy and there's an asteroid to W it will hit the
   asteroid. I guess this is because shots don't actually do diagonals but do
   4-directional paths.
-+ DONE: Item sprites are drawn over ship sprites whereas opposite should be true
++ FIXED: Item sprites are drawn over ship sprites whereas opposite should be true
 + DONE: You Are Here on the autopilot map
-+ TODO: Draw sprites on inventory page? (sprite + name on left, description
++ DONE: Draw sprites on inventory page? (sprite + name on left, description
   right maybe?)
 + TODO: You (and enemies) are willing to shoot straight into asteroids
 + TODO: Autoexplore should end at jump gate if present

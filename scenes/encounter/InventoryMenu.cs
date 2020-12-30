@@ -62,7 +62,8 @@ namespace SpaceDodgeRL.scenes.encounter {
         if (i < storedItems.Count) {
           _inventoryEntries[i].Show();
           var item = storedItems[i];
-          _inventoryEntries[i].SetData(item.EntityId, item.EntityName, item.GetComponent<DisplayComponent>().Description);
+          var displayComponent = item.GetComponent<DisplayComponent>();
+          _inventoryEntries[i].SetData(item.EntityId, item.EntityName, displayComponent.Description, displayComponent.TexturePath);
         } else {
           _inventoryEntries[i].Hide();
         }
