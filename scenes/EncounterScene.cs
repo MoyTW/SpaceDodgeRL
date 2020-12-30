@@ -14,7 +14,7 @@ namespace SpaceDodgeRL.scenes {
     private EncounterRunner encounterRunner;
 
     public override void _Ready() {
-      this.encounterViewport = GetNode<Viewport>("SceneFrame/EncounterViewportContainer/EncounterViewport");
+      this.encounterViewport = GetNode<Viewport>("SceneFrame/SceneVBox/EncounterViewportContainer/EncounterViewport");
 
       this.inputHandler = GetNode<InputHandler>("InputHandler");
 
@@ -34,7 +34,7 @@ namespace SpaceDodgeRL.scenes {
       // TODO: Add button to pick up item (for full mouse compatibility)
       // TODO: Add buttons to go to all the various screens (for full mouse compatibility)
       this.encounterRunner.Connect(nameof(EncounterRunner.PositionScanned), this, nameof(OnPositionScanned));
-      var viewportContainer = GetNode<ViewportContainer>("SceneFrame/EncounterViewportContainer");
+      var viewportContainer = GetNode<ViewportContainer>("SceneFrame/SceneVBox/EncounterViewportContainer");
       viewportContainer.Connect(nameof(EncounterViewportContainer.MousedOverPosition), this, nameof(OnMousedOverPosition));
       viewportContainer.Connect(nameof(EncounterViewportContainer.ActionSelected), this, nameof(OnActionSelected));
       // Since we can't have the state broadcast its events before we connect, we instead pull log messages; this will be empty
