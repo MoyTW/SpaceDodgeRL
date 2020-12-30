@@ -152,7 +152,7 @@ namespace SpaceDodgeRL.scenes.encounter {
             Rulebook.ResolveAction(new AutopilotBeginAction(entity.EntityId, containingZone.ZoneId, AutopilotMode.EXPLORE), this._encounterState);
             Rulebook.ResolveEndTurn(this._encounterState.Player.EntityId, this._encounterState);
           } else {
-            state.LogMessage("Player is not within zone - cannot find autoexplore target!");
+            state.LogMessage("Player is not within zone!", failed: true);
           }
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.CHARACTER) {
           this._sceneManager.ShowCharacterMenu(state);
