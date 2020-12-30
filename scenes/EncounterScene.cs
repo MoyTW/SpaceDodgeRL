@@ -26,6 +26,7 @@ namespace SpaceDodgeRL.scenes {
       }
       this.encounterViewport.AddChild(this.EncounterState);
       this.encounterRunner.SetEncounterState(this.EncounterState);
+      this.GetNode<MenuButtonBar>("SceneFrame/SceneVBox/MenuButtonBar").SetState(this.EncounterState, inputHandler);
 
       // Hook up the UI
       this.EncounterState.Connect(nameof(EncounterState.EncounterLogMessageAdded), this, nameof(OnEncounterLogMessageAdded));
@@ -55,7 +56,6 @@ namespace SpaceDodgeRL.scenes {
       }
 
       this.EncounterState = state;
-      this.GetNode<MenuButtonBar>("SceneFrame/SceneVBox/MenuButtonBar").SetState(state);
     }
 
     private void OnEncounterLogMessageAdded(string bbCodeMessage, int encounterLogSize) {
