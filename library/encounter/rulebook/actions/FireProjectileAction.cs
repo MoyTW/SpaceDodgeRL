@@ -39,8 +39,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
         playerId,
         ProjectileType.CUTTING_LASER,
         power: playerPower,
-        // TODO: Cutting laser range
-        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
+        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, numSteps: 3),
         speed: 0
       );
     }
@@ -60,7 +59,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
         actorId,
         ProjectileType.SMALL_SHOTGUN,
         power: 1,
-        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
+        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, numSteps: 25),
         speed: 25
       );
     }
@@ -87,7 +86,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
         actorId,
         ProjectileType.SMALL_GATLING,
         power: 2,
-        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
+        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, numSteps: 25),
         speed: 50
       );
     }
@@ -97,7 +96,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
         actorId,
         ProjectileType.SMALL_CANNON,
         power: 5,
-        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 25),
+        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, numSteps: 25),
         speed: 50
       );
     }
@@ -107,7 +106,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
         actorId,
         ProjectileType.RAILGUN,
         power: 15,
-        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, 40),
+        (sourcePos) => EncounterPathBuilder.BuildStraightLinePath(sourcePos, targetPosition, numSteps: 40),
         speed: 20
       );
     }
