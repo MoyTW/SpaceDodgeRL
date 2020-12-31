@@ -1,3 +1,4 @@
+using SpaceDodgeRL.library;
 using SpaceDodgeRL.library.encounter;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,12 +46,11 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       int _y = center.Y - radius;
       bool[,] visibleCells = new bool[radius * 2 + 1, radius * 2 + 1];
 
-      // TODO: Implement actual FoV calculations
-      for (int x = center.X - radius; x <= center.X + radius; x++) {
-        for (int y = center.Y - radius; y <= center.Y + radius; y++) {
-          if (center.DistanceTo(x, y) <= radius && state.IsInBounds(x, y)) {
-            visibleCells[x - _x, y - _y] = true;
-          }
+      var rpasCalc = new RPASCalculator();
+      var visible = rpasCalc.CalcVisibleCellsFrom(center.X, center.Y, radius, state.IsPositionVisible);
+      foreach((int, int) pos in visible) {
+        if (state.IsInBounds(pos.Item1, pos.Item2)) {
+          visibleCells[pos.Item1 - _x, pos.Item2 - _y] = true;
         }
       }
 

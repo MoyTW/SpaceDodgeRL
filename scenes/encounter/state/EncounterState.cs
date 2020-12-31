@@ -151,6 +151,17 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return BlockingEntityAtPosition(x, y) != null;
     }
 
+    public bool IsPositionVisible(int x, int y) {
+      if (!IsInBounds(x, y)) {
+        return false;
+      }
+
+      return !this._encounterTiles[x, y].Entities.Any<Entity>(e => {
+        var collisionComponent = e.GetComponent<CollisionComponent>();
+        return collisionComponent != null && collisionComponent.BlocksVision;
+      });
+    }
+
     public bool IsPositionBlocked(EncounterPosition position) {
       return IsPositionBlocked(position.X, position.Y);
     }
