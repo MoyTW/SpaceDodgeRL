@@ -300,7 +300,9 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         }
         if (actorCollision.OnCollisionSelfDestruct) {
           state.TeleportEntity(actor, action.TargetPosition, ignoreCollision: true);
-          positionComponent.PlayExplosion();
+          if (state.FoVCache.IsVisible(action.TargetPosition)) {
+            positionComponent.PlayExplosion();
+          }
           ResolveAction(new SelfDestructAction(action.ActorId), state);
         }
         return true;
