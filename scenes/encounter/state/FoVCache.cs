@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 namespace SpaceDodgeRL.scenes.encounter.state {
 
   public class FoVCache {
+    private static RPASCalculator rpasCalc = new RPASCalculator();
     private int timesCalledContains = 0;
     private int _x, _y;
     private bool[,] _visibleCells;
@@ -46,7 +47,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       int _y = center.Y - radius;
       bool[,] visibleCells = new bool[radius * 2 + 1, radius * 2 + 1];
 
-      var rpasCalc = new RPASCalculator();
+      // TODO: You can't actually tell much difference between black background and FoW, because the background is...a starfield.
+      // Fix that somehow.
       var visible = rpasCalc.CalcVisibleCellsFrom(center.X, center.Y, radius, state.IsPositionVisible);
       foreach((int, int) pos in visible) {
         if (state.IsInBounds(pos.Item1, pos.Item2)) {
