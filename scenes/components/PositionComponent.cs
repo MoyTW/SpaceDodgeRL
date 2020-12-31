@@ -69,6 +69,14 @@ namespace SpaceDodgeRL.scenes.components {
       return PositionComponent.Create(loaded.EncounterPosition, loaded.TexturePath, loaded.ZIndex);
     }
 
+    public void Show() {
+      this.GetNode<Sprite>("Sprite").Show();
+    }
+
+    public void Hide() {
+      this.GetNode<Sprite>("Sprite").Hide();
+    }
+
     public void RotateSpriteTowards(int dx, int dy) {
       // Invert y
       dy = 0 - dy;

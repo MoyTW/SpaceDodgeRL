@@ -10,8 +10,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     private int timesCalledContains = 0;
     private int _x, _y;
     private bool[,] _visibleCells;
-    public ReadOnlyCollection<EncounterPosition> VisibleCells { get {
-      List<EncounterPosition> asPositions = new List<EncounterPosition>();
+    public HashSet<EncounterPosition> VisibleCells { get {
+      HashSet<EncounterPosition> asPositions = new HashSet<EncounterPosition>();
+
       for (int x = 0; x < _visibleCells.GetLength(0); x++) {
         for (int y = 0; y < _visibleCells.GetLength(1); y++) {
           if (_visibleCells[x, y]) {
@@ -19,7 +20,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
           }
         }
       }
-      return asPositions.AsReadOnly();
+      return asPositions;
     } }
 
     public bool IsVisible(EncounterPosition position) {

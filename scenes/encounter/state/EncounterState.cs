@@ -361,12 +361,25 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // Those are very similar but the same, but anywhere you'd want to update your FoV you'd want to update your FoW;
     // contemplating just eliding one of the two in names?
     public void UpdateFoVAndFoW() {
-      // TODO: Appropriate vision radius
-      // TODO: Hide sprites out of FoW and show sprites in FoW, according to their VisibleInFoW property
+      HashSet<EncounterPosition> oldVisibleCells = this.FoVCache != null ? this.FoVCache.VisibleCells : new HashSet<EncounterPosition>();
       this.FoVCache = FoVCache.ComputeFoV(this, this.Player.GetComponent<PositionComponent>().EncounterPosition, PLAYER_VISION_RADIUS);
-      foreach (EncounterPosition position in this.FoVCache.VisibleCells) {
+      var newVisibleCells = FoVCache.VisibleCells;
+
+      // When we recalculate FoW we forcefully show/hide entities in the new FoV
+      foreach (EncounterPosition position in newVisibleCells) {
         this._encounterTiles[position.X, position.Y].Explored = true;
+        foreach (Entity entity in this._encounterTiles[position.X, position.Y].Entities) {
+          entity.GetComponent<PositionComponent>().Show();
+        }
       }
+      foreach (EncounterPosition position in oldVisibleCells.Except(newVisibleCells)) {
+        foreach (Entity entity in this._encounterTiles[position.X, position.Y].Entities) {
+          if (!entity.GetComponent<DisplayComponent>().VisibleInFoW) {
+            entity.GetComponent<PositionComponent>().Hide();
+          }
+        }
+      }
+
       this.UpdateFoWOverlay();
     }
 

@@ -52,6 +52,7 @@ script = ExtResource( 1 )
 [node name="Tween" type="Tween" parent="."]
 
 [node name="Sprite" type="Sprite" parent="."]
+visible = false
 
 [node name="ExplosionSprite" type="AnimatedSprite" parent="."]
 visible = false
