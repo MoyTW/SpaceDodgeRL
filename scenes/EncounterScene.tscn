@@ -1,15 +1,18 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
+[ext_resource path="res://scenes/encounter/SidebarDisplay.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/EncounterScene.cs" type="Script" id=2]
 [ext_resource path="res://scenes/InputHandler.cs" type="Script" id=3]
 [ext_resource path="res://scenes/encounter/EncounterRunner.tscn" type="PackedScene" id=4]
-[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Regular.tres" type="DynamicFont" id=6]
-[ext_resource path="res://scenes/ViewportContainer.cs" type="Script" id=7]
-[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=8]
+[ext_resource path="res://scenes/EncounterViewportContainer.cs" type="Script" id=5]
+[ext_resource path="res://resources/menu_theme.tres" type="Theme" id=6]
+[ext_resource path="res://scenes/encounter/MenuButtonBar.tscn" type="PackedScene" id=7]
+[ext_resource path="res://resources/tex_test.tres" type="Texture" id=8]
 
 [node name="EncounterScene" type="Container"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 6 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -20,101 +23,42 @@ script = ExtResource( 3 )
 
 [node name="EncounterRunner" parent="." instance=ExtResource( 4 )]
 
-[node name="SceneFrame" type="VBoxContainer" parent="."]
+[node name="SceneFrame" type="HBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+custom_constants/separation = 0
 
-[node name="ViewportContainer" type="ViewportContainer" parent="SceneFrame"]
-margin_right = 1024.0
-margin_bottom = 447.0
+[node name="SceneVBox" type="VBoxContainer" parent="SceneFrame"]
+margin_right = 848.0
+margin_bottom = 1024.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 3.0
-stretch = true
-script = ExtResource( 7 )
+custom_constants/separation = 0
 
-[node name="EncounterViewport" type="Viewport" parent="SceneFrame/ViewportContainer"]
-size = Vector2( 1024, 447 )
+[node name="EncounterViewportContainer" type="ViewportContainer" parent="SceneFrame/SceneVBox"]
+margin_right = 848.0
+margin_bottom = 912.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+stretch = true
+script = ExtResource( 5 )
+
+[node name="MovementIndicator" type="Sprite" parent="SceneFrame/SceneVBox/EncounterViewportContainer"]
+texture = ExtResource( 8 )
+
+[node name="EncounterViewport" type="Viewport" parent="SceneFrame/SceneVBox/EncounterViewportContainer"]
+size = Vector2( 848, 912 )
 handle_input_locally = false
 render_target_update_mode = 3
 
-[node name="BottomUIContainer" type="HBoxContainer" parent="SceneFrame"]
-margin_top = 451.0
-margin_right = 1024.0
-margin_bottom = 600.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="MenuButtonBar" parent="SceneFrame/SceneVBox" instance=ExtResource( 7 )]
+margin_top = 912.0
+margin_right = 848.0
+margin_bottom = 1024.0
 
-[node name="EncounterLogLabel" type="RichTextLabel" parent="SceneFrame/BottomUIContainer"]
-margin_right = 510.0
-margin_bottom = 149.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_fonts/bold_font = ExtResource( 8 )
-custom_fonts/normal_font = ExtResource( 6 )
-bbcode_enabled = true
-scroll_following = true
-
-[node name="StatsHBox" type="HBoxContainer" parent="SceneFrame/BottomUIContainer"]
-margin_left = 514.0
-margin_right = 1024.0
-margin_bottom = 149.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="StatsLeftColumn" type="VBoxContainer" parent="SceneFrame/BottomUIContainer/StatsHBox"]
-margin_right = 253.0
-margin_bottom = 149.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="HPLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn"]
-margin_right = 253.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 6 )
-text = "HPLabel"
-
-[node name="AttackPowerLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn"]
-margin_top = 24.0
-margin_right = 253.0
-margin_bottom = 44.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 6 )
-text = "AttackPowerLabel"
-
-[node name="SpeedLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn"]
-margin_top = 48.0
-margin_right = 253.0
-margin_bottom = 68.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 6 )
-text = "SpeedLabel"
-
-[node name="StatsRightColumn" type="VBoxContainer" parent="SceneFrame/BottomUIContainer/StatsHBox"]
-margin_left = 257.0
-margin_right = 510.0
-margin_bottom = 149.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="LevelLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
-margin_right = 253.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 6 )
-text = "LevelLabel"
-
-[node name="ExperienceLabel" type="Label" parent="SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn"]
-margin_top = 24.0
-margin_right = 253.0
-margin_bottom = 44.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 6 )
-text = "ExperienceLabel"
-[connection signal="resized" from="SceneFrame/ViewportContainer" to="SceneFrame/ViewportContainer" method="OnViewportContainerResized"]
+[node name="SidebarDisplay" parent="SceneFrame" instance=ExtResource( 1 )]
+margin_left = 848.0
+margin_right = 1280.0
+size_flags_horizontal = 0
+[connection signal="resized" from="SceneFrame/SceneVBox/EncounterViewportContainer" to="SceneFrame/SceneVBox/EncounterViewportContainer" method="OnEncounterViewportContainerResized"]

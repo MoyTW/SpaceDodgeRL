@@ -106,7 +106,7 @@ namespace SpaceDodgeRL.resources.gamedata {
       { EncounterDefId.EMPTY_ENCOUNTER,
         new EncounterDef(
           EncounterDefId.EMPTY_ENCOUNTER,
-          "none",
+          "zone clear",
           new List<string>()
         ) },
       { EncounterDefId.SCOUT_ENCOUNTER,

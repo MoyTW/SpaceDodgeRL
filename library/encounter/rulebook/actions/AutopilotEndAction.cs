@@ -3,7 +3,9 @@ namespace SpaceDodgeRL.library.encounter.rulebook.actions {
   public enum AutopilotEndReason {
     PLAYER_INPUT,
     ENEMY_DETECTED,
-    DESTINATION_REACHED
+    TASK_COMPLETED,
+    INVENTORY_FULL,
+    NO_PATH
   }
 
   public class AutopilotEndAction : EncounterAction {

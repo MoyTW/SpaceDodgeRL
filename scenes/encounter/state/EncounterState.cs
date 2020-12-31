@@ -1,6 +1,5 @@
 using Godot;
 using SpaceDodgeRL.library.encounter;
-using SpaceDodgeRL.resources.gamedata;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
 using SpaceDodgeRL.scenes.entities;
@@ -9,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
 
@@ -17,7 +15,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     private static PackedScene _encounterPrefab = GD.Load<PackedScene>("res://scenes/encounter/state/EncounterState.tscn");
 
     // TODO: put this somewhere proper!
-    public static int PLAYER_VISION_RADIUS = 10;
+    // Original 7DRL had vision radius = 20, but I dropped it for screen space reasons. If we bump up the screen/downsize the
+    // tiles maybe I will add it back.
+    public static int PLAYER_VISION_RADIUS = 12;
     public static int EncounterLogSize = 50;
     public static string RUN_STATUS_RUNNING = "ENCOUNTER_RUN_STATUS_RUNNING";
     public static string RUN_STATUS_PLAYER_VICTORY = "ENCOUNTER_RUN_STATUS_PLAYER_VICTORY";
@@ -55,6 +55,27 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // Transitory data
     public FoVCache FoVCache { get; private set; }
     public Random EncounterRand { get; private set; }
+    private List<PositionComponent> _animatingSprites = new List<PositionComponent>();
+    private DynamicFont _damageFont;
+    private List<Label> _damageLabels = new List<Label>();
+    public bool HasAnimatingSprites { get {
+      foreach (Entity e in this.PositionEntities()) {
+        if (e.GetComponent<PositionComponent>().IsAnimating) {
+          return true;
+        }
+      }
+      return this._animatingSprites.Count > 0;
+    } }
+
+    public override void _Process(float delta) {
+      foreach(var c in this._animatingSprites) {
+        if (!c.IsAnimating) {
+          this.RemoveChild(c);
+          c.QueueFree();
+        }
+      }
+      this._animatingSprites.RemoveAll(c => !c.IsAnimating);
+    }
 
     // ##########################################################################################################################
     #region Data Access
@@ -109,6 +130,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return IsInBounds(position.X, position.Y);
     }
 
+    public bool IsExplored(EncounterPosition position) {
+      return this._encounterTiles[position.X, position.Y].Explored;
+    }
+
     public bool ArePositionsAdjacent(EncounterPosition left, EncounterPosition right) {
       var dx = Math.Abs(left.X - right.X);
       var dy = Math.Abs(left.Y - right.Y);
@@ -134,6 +159,17 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return BlockingEntityAtPosition(x, y) != null;
     }
 
+    public bool IsPositionVisible(int x, int y) {
+      if (!IsInBounds(x, y)) {
+        return false;
+      }
+
+      return !this._encounterTiles[x, y].Entities.Any<Entity>(e => {
+        var collisionComponent = e.GetComponent<CollisionComponent>();
+        return collisionComponent != null && collisionComponent.BlocksVision;
+      });
+    }
+
     public bool IsPositionBlocked(EncounterPosition position) {
       return IsPositionBlocked(position.X, position.Y);
     }
@@ -157,14 +193,55 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       });
     }
 
+    public EncounterZone ClosestZone(int x, int y) {
+      if (!IsInBounds(x, y)) {
+        throw new NotImplementedException("out of bounds");
+      }
+
+      // It's a little silly to have this calculated on first invocation instead of on creation/on load; in practice computers
+      // are fast and this is unnoticable; it might be annoying to track down six months from now if I'm still working on it
+      // though...it'd definitely be annoying if somebody else was working on it!
+      var closestZoneId = this._encounterTiles[x, y].ClosestZoneId;
+      if (closestZoneId == null) {
+        for (int tx = 0; tx < this.MapWidth; tx++) {
+          for (int ty = 0; ty < this.MapHeight; ty++) {
+            EncounterZone closestZone = null;
+            float smallestDistance = float.MaxValue;
+            foreach (EncounterZone zone in this.Zones) {
+              var distance = zone.Center.DistanceTo(tx, ty);
+              if (distance < smallestDistance) {
+                smallestDistance = distance;
+                closestZone = zone;
+              }
+            }
+            this._encounterTiles[tx, ty].ClosestZoneId = closestZone.ZoneId;
+          }
+        }
+        closestZoneId = this._encounterTiles[x, y].ClosestZoneId;
+      }
+      return this.GetZoneById(closestZoneId);
+    }
+
+    /**
+     * Returns the zone containing the position. Returns null if the position is not inside a zone.
+     */
+    public EncounterZone ContainingZone(int x, int y) {
+      var closest = this.ClosestZone(x, y);
+      if (closest.Contains(x, y)) {
+        return closest;
+      } else {
+        return null;
+      }
+    }
+
     #endregion
     // ##########################################################################################################################
 
     // ##########################################################################################################################
     #region Entity Management
 
-    public void UpdateTimelineForEntity(Entity entity) {
-      _actionTimeline.UpdateTimelineForEntity(entity);
+    public void EntityHasEndedTurn(Entity entity) {
+      _actionTimeline.EntityHasEndedTurn(entity);
     }
 
     public void PlaceEntity(Entity entity, EncounterPosition targetPosition, bool ignoreCollision = false) {
@@ -177,8 +254,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       // Add the position component
       var spriteData = entity.GetComponent<DisplayComponent>();
-      
-      var positionComponent = PositionComponent.Create(targetPosition, spriteData.TexturePath);
+      var positionComponent = PositionComponent.Create(targetPosition, spriteData.TexturePath, spriteData.ZIndex);
       entity.AddComponent(positionComponent);
 
       var entityPosition = positionComponent.EncounterPosition;
@@ -186,17 +262,26 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this._encounterTiles[entityPosition.X, entityPosition.Y].AddEntity(entity);
       this._entitiesById[entity.EntityId] = entity;
 
-      // If it's an action entity, add it into the timeline
+      // If it's an action entity, add it into the timeline. Anything with speed 0 is set to the front so it will instantly resolve.
       if (entity.GetComponent<ActionTimeComponent>() != null) {
-        this._actionTimeline.AddEntityToTimeline(entity as Entity);
+        this._actionTimeline.AddEntityToTimeline(entity as Entity, entity.GetComponent<SpeedComponent>().Speed == 0);
       }
     }
 
     public void RemoveEntity(Entity entity) {
       // Remove the position component from both
       var positionComponent = entity.GetComponent<PositionComponent>();
-      entity.RemoveComponent(positionComponent);
-      positionComponent.QueueFree();
+      // This is absurdly awkward; it turns out removing the PositionComponent from the entity clears the Tween (because it
+      // removes it from the tree, I believe?) which means we need to manually restart the tween. It also causes a shadow effect
+      // where the projectile now overshoots the target instead of undershooting it.
+      if (positionComponent.IsAnimating) {
+        entity.RemoveComponent(positionComponent);
+        this.AddChild(positionComponent);
+        positionComponent.RestartTween();
+        this._animatingSprites.Add(positionComponent);
+      } else {
+        entity.RemoveComponent(positionComponent);
+      }
 
       var entityPosition = positionComponent.EncounterPosition;
       RemoveChild(entity);
@@ -212,18 +297,19 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     /**
     * Disregards intervening terrain; only checks for collisions at the target position.
     */
-    public void TeleportEntity(Entity entity, EncounterPosition targetPosition) {
+    public void TeleportEntity(Entity entity, EncounterPosition targetPosition, bool ignoreCollision) {
       if (!IsInBounds(targetPosition)) {
         throw new NotImplementedException("out of bounds");
       }
-      if (IsPositionBlocked(targetPosition)) {
+      if (!ignoreCollision && IsPositionBlocked(targetPosition)) {
         throw new NotImplementedException("probably handle this more gracefully than exploding");
       }
       var positionComponent = entity.GetComponent<PositionComponent>();
       var oldPosition = positionComponent.EncounterPosition;
 
       this._encounterTiles[oldPosition.X, oldPosition.Y].RemoveEntity(entity);
-      positionComponent.EncounterPosition = targetPosition;
+      bool shouldBeVisible = entity.GetComponent<DisplayComponent>().VisibleInFoW || this.FoVCache.IsVisible(targetPosition);
+      positionComponent.SetEncounterPosition(targetPosition, shouldBeVisible);
       this._encounterTiles[targetPosition.X, targetPosition.Y].AddEntity(entity);
     }
 
@@ -243,20 +329,19 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     #region Display caches
 
     public void UpdateDangerMap() {
-      var dangerMap = GetNode<TileMap>("DangerMap");
-      var pathEntities = GetTree().GetNodesInGroup(PathAIComponent.ENTITY_GROUP);
-      var timeToNextPlayerMove = this.Player.GetComponent<SpeedComponent>().Speed;
+      var dangerMap = GetNode<DangerMap>("CanvasLayer/DangerMap");
+      dangerMap.UpdateAllTiles(this);
+    }
 
-      dangerMap.Clear();
-      // TODO: We don't actually need to update every entity, every time, since we only need to set the cell when the projectile itself moves
-      foreach (Entity pathEntity in pathEntities) {
-        var pathEntitySpeed = pathEntity.GetComponent<SpeedComponent>().Speed;
-        var path = pathEntity.GetComponent<PathAIComponent>().Path;
-        var dangerPositions = path.Project(timeToNextPlayerMove / pathEntitySpeed);
-
-        foreach (EncounterPosition dangerPosition in dangerPositions) {
-          dangerMap.SetCell(dangerPosition.X, dangerPosition.Y, 0);
-        }
+    private void UpdateFoWForTile(TileMap overlaysMap, int x, int y) {
+      if (!this.IsInBounds(x, y)) {
+        // If you're out of bounds no-op
+      } else if (this.FoVCache.IsVisible(x, y)) {
+        overlaysMap.SetCell(x, y, -1);
+      } else if (this._encounterTiles[x, y].Explored) {
+        overlaysMap.SetCell(x, y, 1);
+      } else {
+        overlaysMap.SetCell(x, y, 2);
       }
     }
 
@@ -265,7 +350,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       for (int x = 0; x < this.MapWidth; x++) {
         for (int y = 0; y < this.MapWidth; y++) {
-          overlaysMap.SetCell(x, y, 2);
+          this.UpdateFoWForTile(overlaysMap, x, y);
         }
       }
     }
@@ -277,15 +362,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // TODO: When you move sometimes long vertical lines appear, there was something about that in a tutorial - hunt that down
       for (int x = playerPos.X - PLAYER_VISION_RADIUS - 1; x <= playerPos.X + PLAYER_VISION_RADIUS + 1; x++) {
         for (int y = playerPos.Y - PLAYER_VISION_RADIUS - 1; y <= playerPos.Y + PLAYER_VISION_RADIUS + 1; y++) {
-          if (!this.IsInBounds(x, y)) {
-            // If you're out of bounds no-op
-          } else if (this.FoVCache.Contains(x, y)) {
-            overlaysMap.SetCell(x, y, -1);
-          } else if (this._encounterTiles[x, y].Explored) {
-            overlaysMap.SetCell(x, y, 1);
-          } else {
-            overlaysMap.SetCell(x, y, 2);
-          }
+          this.UpdateFoWForTile(overlaysMap, x, y);
         }
       }
     }
@@ -293,12 +370,25 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     // Those are very similar but the same, but anywhere you'd want to update your FoV you'd want to update your FoW;
     // contemplating just eliding one of the two in names?
     public void UpdateFoVAndFoW() {
-      // TODO: Appropriate vision radius
-      // TODO: Hide sprites out of FoW and show sprites in FoW, according to their VisibleInFoW property
+      HashSet<EncounterPosition> oldVisibleCells = this.FoVCache != null ? this.FoVCache.VisibleCells : new HashSet<EncounterPosition>();
       this.FoVCache = FoVCache.ComputeFoV(this, this.Player.GetComponent<PositionComponent>().EncounterPosition, PLAYER_VISION_RADIUS);
-      foreach (EncounterPosition position in this.FoVCache.VisibleCells) {
+      var newVisibleCells = FoVCache.VisibleCells;
+
+      // When we recalculate FoW we forcefully show/hide entities in the new FoV
+      foreach (EncounterPosition position in newVisibleCells) {
         this._encounterTiles[position.X, position.Y].Explored = true;
+        foreach (Entity entity in this._encounterTiles[position.X, position.Y].Entities) {
+          entity.GetComponent<PositionComponent>().Show();
+        }
       }
+      foreach (EncounterPosition position in oldVisibleCells.Except(newVisibleCells)) {
+        foreach (Entity entity in this._encounterTiles[position.X, position.Y].Entities) {
+          if (!entity.GetComponent<DisplayComponent>().VisibleInFoW) {
+            entity.GetComponent<PositionComponent>().Hide();
+          }
+        }
+      }
+
       this.UpdateFoWOverlay();
     }
 
@@ -322,18 +412,47 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     #endregion
     // ##########################################################################################################################
 
-    public void LogMessage(string bbCodeMessage) {
+    public void LogMessage(string bbCodeMessage, bool failed=false) {
+      if (failed) {
+        bbCodeMessage = string.Format("[b]Failed:[/b] {0}", bbCodeMessage);
+      }
+
       if (this._encounterLog.Count >= EncounterState.EncounterLogSize) {
         this._encounterLog.RemoveAt(0);
       }
       this._encounterLog.Add(bbCodeMessage);
-      this.EmitSignal("EncounterLogMessageAdded", bbCodeMessage, EncounterState.EncounterLogSize);
+      this.EmitSignal(nameof(EncounterLogMessageAdded), bbCodeMessage, EncounterState.EncounterLogSize);
+    }
+
+    public void ZoomIn() {
+      Camera2D cam = (Camera2D)GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP")[0];
+      var oldZoom = cam.Zoom;
+      // If you zoom past 0 it appears to invert, but we should stop it before it gets there.
+      if (oldZoom.x > .4f) {
+        cam.Zoom = new Vector2(oldZoom.x - .2f, oldZoom.y - .2f);
+      }
+    }
+
+    public void ZoomOut() {
+      Camera2D cam = (Camera2D)GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP")[0];
+      var oldZoom = cam.Zoom;
+      cam.Zoom = new Vector2(oldZoom.x + .2f, oldZoom.y + .2f);
+    }
+
+    public void ZoomReset() {
+      Camera2D cam = (Camera2D)GetTree().GetNodesInGroup("ENCOUNTER_CAMERA_GROUP")[0];
+      cam.Zoom = new Vector2(1f, 1f);
     }
 
     public static EncounterState Create(string saveFilePath) {
       var state = _encounterPrefab.Instance() as EncounterState;
       state.SaveFilePath = saveFilePath;
       return state;
+    }
+
+    // Should be for testing purposes only!
+    public static EncounterState CreateWithoutSaving() {
+      return _encounterPrefab.Instance() as EncounterState;
     }
 
     public void SetStateForNewGame() {
@@ -346,8 +465,17 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         var camera = new Camera2D();
         camera.AddToGroup("ENCOUNTER_CAMERA_GROUP");
         camera.Current = true;
-        Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
+        this.Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
       }
+      this.UpdateDangerMap();
+
+      // Set the background image - stretch it out so that it covers visible OOB areas too.
+      var background = GetNode<Sprite>("Background");
+      var pixelsWidth = PositionComponent.STEP_X * this.MapWidth + PositionComponent.START_X;
+      var pixelsHeight = PositionComponent.STEP_Y * this.MapWidth + PositionComponent.START_Y;
+      background.Position = new Vector2(pixelsWidth / 2, pixelsHeight / 2);
+      background.RegionEnabled = true;
+      background.RegionRect = new Rect2(new Vector2(0, 0), pixelsWidth * 2, pixelsHeight * 2);
     }
 
     // TODO: Move into map gen & save/load
@@ -380,7 +508,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       player.GetComponent<ActionTimeComponent>().SetNextTurnAtTo(0);
 
       // TODO: Map gen seed properly
-      EncounterStateBuilder.PopulateStateForLevel(player, dungeonLevel, this, new Random(1));
+      var seed = new Random().Next();
+      GD.Print("Seed:", seed);
+      EncounterStateBuilder.PopulateStateForLevel(player, dungeonLevel, this, new Random(seed));
 
       // TODO: save/load the state of rand for reproducibility?
       this.EncounterRand = new Random(1);
@@ -395,10 +525,12 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       // Populate all our initial caches
       this.LogMessage(string.Format("Level {0} started!", dungeonLevel));
-      // Init FoW overlay as all back
-      this.InitFoWOverlay();
       this.UpdateFoVAndFoW();
+      this.InitFoWOverlay();
       this.UpdatePlayerOverlays();
+      if (this.IsInsideTree()) {
+        this.UpdateDangerMap();
+      }
     }
 
     public void NotifyPlayerVictory() {
@@ -434,7 +566,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       EncounterState state = _encounterPrefab.Instance() as EncounterState;
 
       state.SaveFilePath = data.SaveFilePath;
-      // TODO: This populates the internal representation but doesn't print; print old messages
+      // This populates the representation, but does not print - see EncounterScene._Ready() for the display code.
       state._encounterLog = data.EncounterLog;
       state.MapWidth = data.MapWidth;
       state.MapHeight = data.MapHeight;
@@ -465,11 +597,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       camera.Current = true;
       state.Player.GetComponent<PositionComponent>().GetNode<Sprite>("Sprite").AddChild(camera);
 
-      // Init FoW overlay as all back
-      state.InitFoWOverlay();
       state.UpdateFoVAndFoW();
-      // TODO: when you load it doesn't show paths until after one move for some reason
-      // 's prolly something obvious and dumb
+      state.InitFoWOverlay();
       state.UpdatePlayerOverlays();
 
       return state;

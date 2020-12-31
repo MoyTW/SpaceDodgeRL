@@ -1,63 +1,94 @@
 using Godot;
-using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.entities;
-using System;
+using SpaceDodgeRL.scenes.singletons;
 using System.Collections.Generic;
 using System.Linq;
 
-public class InventoryMenu : VBoxContainer {
-  private static PackedScene _inventoryPrefab = GD.Load<PackedScene>("res://scenes/encounter/InventoryEntry.tscn");
+namespace SpaceDodgeRL.scenes.encounter {
+  public class InventoryMenu : BaseMenu {
+    private static PackedScene _inventoryPrefab = GD.Load<PackedScene>("res://scenes/encounter/InventoryEntry.tscn");
 
-  private Button _closeButton;
-  private Dictionary<string, InventoryEntry> _displayedIdsToEntries;
+    private Button _closeButton;
+    public List<InventoryEntry> _inventoryEntries;
 
-  public override void _Ready() {
-    _closeButton = this.GetNode<Button>("Columns/CloseButton");
-    _closeButton.Connect("pressed", this, nameof(OnCloseButtonPressed));
 
-    _displayedIdsToEntries = new Dictionary<string, InventoryEntry>();
-  }
+    public override void _Ready() {
+      base._Ready();
+      _closeButton = GetNode<Button>("Columns/CloseButton");
+      _closeButton.Connect("pressed", this, nameof(OnCloseButtonPressed));
+      this.RegisterHoverable(_closeButton);
 
-  public void PrepMenu(InventoryComponent inventory) {
-    _closeButton.GrabFocus();
-
-    // Do a dumb full pass on both to diff & add/remove
-    var inventoryIdsToEntities = inventory.StoredItems.ToDictionary(e => e.EntityId, e => e);
-
-    var toRemoveThese = _displayedIdsToEntries.Where(e => !inventoryIdsToEntities.ContainsKey(e.Key)).Select(e => e.Key).ToList();
-    foreach(string toRemove in toRemoveThese) {
-      _displayedIdsToEntries[toRemove].QueueFree();
-      _displayedIdsToEntries.Remove(toRemove);
+      _inventoryEntries = new List<InventoryEntry>();
     }
 
-    var toAddThese = inventoryIdsToEntities.Where(e => !_displayedIdsToEntries.ContainsKey(e.Key)).ToList();
-    foreach(KeyValuePair<string, Entity> held in toAddThese) {
-      var newEntry = _inventoryPrefab.Instance() as InventoryEntry;
-      newEntry.PopulateData(held.Key, held.Value.EntityName, "TODO: Item descriptions");
-      newEntry.Connect(nameof(InventoryEntry.UseItemSelected), this, nameof(OnUseButtonPressed), new Godot.Collections.Array{ held.Key });
+    private void DisplaySpace(InventoryComponent inventory) {
+      var spaceLabel = GetNode<Label>("Header/HeaderHBox/SpaceHeader");
+      spaceLabel.Text = string.Format("({0}/{1})", inventory.InventoryUsed, inventory.InventorySize);
+    }
 
-      this._displayedIdsToEntries[held.Key] = newEntry;
+    private void ResizeEntriesToInventorySize(int inventorySize) {
+      if (_inventoryEntries.Count != inventorySize) {
+        foreach (var entry in _inventoryEntries) {
+          entry.QueueFree();
+        }
+        _inventoryEntries.Clear();
 
-      // TODO: A less fixed layout
-      // TODO: When you use an item, it should collapse the column instead of leaving a hole - maybe we should just redraw it all?
-      if (this._displayedIdsToEntries.Count < 10) {
-        GetNode<VBoxContainer>("Columns/LeftColumn").AddChild(newEntry);
-      } else if (this._displayedIdsToEntries.Count < 20) {
-        GetNode<VBoxContainer>("Columns/MiddleColumn").AddChild(newEntry);
-      } else {
-        GetNode<VBoxContainer>("Columns/RightColumn").AddChild(newEntry);
+        for (int i = 0; i < inventorySize; i++) {
+          var newEntry = _inventoryPrefab.Instance() as InventoryEntry;
+          this.RegisterHoverable(newEntry);
+          newEntry.Connect(nameof(InventoryEntry.UseItemSelected), this, nameof(OnUseButtonPressed), new Godot.Collections.Array { newEntry });
+          _inventoryEntries.Add(newEntry);
+
+          if (i < 9) {
+            GetNode<VBoxContainer>("Columns/LeftColumn").AddChild(newEntry);
+          } else if (i < 18) {
+            GetNode<VBoxContainer>("Columns/MiddleColumn").AddChild(newEntry);
+          } else {
+            GetNode<VBoxContainer>("Columns/RightColumn").AddChild(newEntry);
+          }
+        }
       }
     }
-  }
 
-  private void OnUseButtonPressed(string entityId) {
-    var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-    sceneManager.HandleItemToUseSelected(entityId);
-  }
+    public void PrepMenu(InventoryComponent inventory) {
+      _closeButton.GrabFocus();
 
-  private void OnCloseButtonPressed() {
-    var sceneManager = (SceneManager)GetNode("/root/SceneManager");
-    sceneManager.ReturnToPreviousScene();
+      DisplaySpace(inventory);
+      ResizeEntriesToInventorySize(inventory.InventorySize);
+
+      var storedItems = inventory.StoredItems.ToList();
+      for (int i = 0; i < _inventoryEntries.Count; i++) {
+        if (i < storedItems.Count) {
+          _inventoryEntries[i].Show();
+          var item = storedItems[i];
+          var displayComponent = item.GetComponent<DisplayComponent>();
+          _inventoryEntries[i].SetData(item.EntityId, item.EntityName, displayComponent.Description, displayComponent.TexturePath);
+        } else {
+          _inventoryEntries[i].Hide();
+        }
+      }
+    }
+
+    public override void _UnhandledKeyInput(InputEventKey @event) {
+      if (@event.IsActionPressed("ui_cancel", true)) {
+        OnCloseButtonPressed();
+        return;
+      }
+    }
+
+    private void OnUseButtonPressed(InventoryEntry entryPressed) {
+      var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+      sceneManager.HandleItemToUseSelected(entryPressed.EntityId);
+    }
+
+    private void OnCloseButtonPressed() {
+      var sceneManager = (SceneManager)GetNode("/root/SceneManager");
+      sceneManager.ReturnToPreviousScene();
+    }
+
+    public override void HandleNeedsFocusButNoFocusSet() {
+      this._closeButton.GrabFocus();
+    }
   }
 }

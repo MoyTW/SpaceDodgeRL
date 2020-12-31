@@ -1,20 +1,38 @@
 using Godot;
 
-public class InventoryEntry : CenterContainer {
-  [Export]
-  public string EntityId { get; private set; }
+namespace SpaceDodgeRL.scenes.encounter {
+  public class InventoryEntry : EntryButton {
+    public string EntityId { get; private set; }
 
-  [Signal]
-  public delegate void UseItemSelected();
+    [Signal]
+    public delegate void UseItemSelected();
 
-  public void PopulateData(string entityId, string name, string description) {
-    this.EntityId = entityId;
-    this.GetNode<Label>("HorizontalDivider/EntryText/EntryName").Text = name;
-    this.GetNode<Label>("HorizontalDivider/EntryText/EntryDescription").Text = description;
-    this.GetNode<Button>("HorizontalDivider/EntryUseButton").Connect("pressed", this, nameof(OnUseButtonPressed));
-  }
+    private Label _nameLabel;
+    private Label _descriptionLabel;
+    private TextureRect _textureRect;
 
-  private void OnUseButtonPressed() {
-    EmitSignal(nameof(UseItemSelected));
+    public override void _Ready() {
+      base._Ready();
+      Connect("pressed", this, nameof(OnUseButtonPressed));
+    }
+
+    public void SetData(string entityId, string name, string description, string texturePath) {
+      EntityId = entityId;
+
+      if (_nameLabel == null) {
+        _nameLabel = GetNode<Label>("HBoxContainer/VBoxContainer/EntryName");
+        _descriptionLabel = GetNode<Label>("HBoxContainer/EntryDescription");
+        _textureRect = GetNode<TextureRect>("HBoxContainer/VBoxContainer/CenterContainer/TextureRect");
+      }
+
+      _nameLabel.Text = name;
+      _descriptionLabel.Text = description;
+      _textureRect.Texture = GD.Load<Texture>(texturePath);
+      OnFocusExited();
+    }
+
+    private void OnUseButtonPressed() {
+      EmitSignal(nameof(UseItemSelected));
+    }
   }
 }

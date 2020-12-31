@@ -1,80 +1,119 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/encounter/AutopilotMenu.cs" type="Script" id=1]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=2]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Regular.tres" type="DynamicFont" id=3]
+[ext_resource path="res://resources/menu_theme.tres" type="Theme" id=4]
+[ext_resource path="res://resources/ui/autopilot.png" type="Texture" id=5]
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=6]
 
-[node name="AutopilotMenu" type="HBoxContainer"]
+[sub_resource type="DynamicFont" id=1]
+size = 29
+font_data = ExtResource( 6 )
+
+[node name="AutopilotMenu" type="TextureRect"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 4 )
+texture = ExtResource( 5 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SystemMap" type="Container" parent="."]
-margin_right = 680.0
-margin_bottom = 600.0
+[node name="SystemMap" type="Control" parent="."]
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = 144.0
+margin_right = 880.0
+margin_bottom = -16.0
+rect_min_size = Vector2( 864, 864 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 
+[node name="YouAreHereLabel" type="Label" parent="SystemMap"]
+margin_right = 40.0
+margin_bottom = 20.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "<- You Are Here"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="SidebarContainer" type="VBoxContainer" parent="."]
-margin_left = 684.0
-margin_right = 1024.0
-margin_bottom = 600.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = 16.0
+margin_right = -400.0
+margin_bottom = -897.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="SidebarContainer"]
+margin_right = 864.0
+margin_bottom = 36.0
+custom_fonts/font = SubResource( 1 )
+text = "AUTOPILOT"
+align = 1
 
 [node name="Instructions" type="RichTextLabel" parent="SidebarContainer"]
-margin_right = 340.0
-margin_bottom = 105.0
+margin_top = 40.0
+margin_right = 864.0
+margin_bottom = 82.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 custom_fonts/bold_font = ExtResource( 2 )
 custom_fonts/normal_font = ExtResource( 3 )
 bbcode_enabled = true
-bbcode_text = "
-[b]AUTOPILOT[/b]
-
-Press the designated button to autopilot to the target zone"
-text = "
-AUTOPILOT
-
-Press the designated button to autopilot to the target zone"
+bbcode_text = "Press the designated button to autopilot to the target zone. Autopilot will stop when enemies are sighted."
+text = "Press the designated button to autopilot to the target zone. Autopilot will stop when enemies are sighted."
 fit_content_height = true
 
 [node name="YouAreHereLabel" type="RichTextLabel" parent="SidebarContainer"]
-margin_top = 109.0
-margin_right = 340.0
-margin_bottom = 151.0
+margin_top = 86.0
+margin_right = 864.0
+margin_bottom = 107.0
 custom_fonts/bold_font = ExtResource( 2 )
 custom_fonts/normal_font = ExtResource( 3 )
 bbcode_enabled = true
-bbcode_text = "You are currently in [b]An Unknown Zone[/b]"
-text = "You are currently in An Unknown Zone"
+bbcode_text = "You are in [b]Unknown Sector[/b],  [b]Unknown Zone[/b]"
+text = "You are in Unknown Sector,  Unknown Zone"
 fit_content_height = true
 
-[node name="ButtonConsole" type="HBoxContainer" parent="SidebarContainer"]
-margin_top = 155.0
-margin_right = 340.0
-margin_bottom = 175.0
+[node name="BottomSpacer" type="Control" parent="SidebarContainer"]
+margin_top = 111.0
+margin_right = 864.0
+margin_bottom = 111.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="DynamicButtonsContainer" type="VBoxContainer" parent="SidebarContainer/ButtonConsole"]
-margin_right = 258.0
+[node name="ButtonConsole" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 896.0
+margin_top = 64.0
+margin_right = -16.0
+margin_bottom = -16.0
+custom_constants/separation = 16
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DynamicButtonsContainer" type="VBoxContainer" parent="ButtonConsole"]
+margin_right = 272.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
+custom_constants/separation = 16
 
-[node name="CloseButton" type="Button" parent="SidebarContainer/ButtonConsole"]
-margin_left = 262.0
-margin_right = 340.0
-margin_bottom = 20.0
+[node name="CloseButton" type="Button" parent="ButtonConsole"]
+margin_left = 288.0
+margin_right = 368.0
+margin_bottom = 944.0
+rect_min_size = Vector2( 80, 0 )
 size_flags_vertical = 3
-text = "Close Map"
-
-[node name="BottomSpacer" type="Control" parent="SidebarContainer"]
-margin_top = 179.0
-margin_right = 340.0
-margin_bottom = 600.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+text = "Close"

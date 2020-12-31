@@ -1,27 +1,245 @@
+
 * Session 2020-11-30 7a849c156b2f23bfdb8cd8d324f6a2de792a56a1
-+ the map menu gets really hard to read at big resolutions
++ FIXED: the map menu gets really hard to read at big resolutions
   - buttons get spaced out
   - hard to tell which "GO" correlated with which button
-+ ESCAPE should close the map
-+ Eventually the scroll in the event log freezes
-+ Destroyer seems to fire, but the shot hangs (are they in the same tick as player?)
-+ I could really use an "autoloot sector" button!
-+ I think...it broke when I took up to my limit in items? yep, InventoryFullCannotStoreException
++ FIXED: ESCAPE should close the map (& other screens)
++ FIXED: Eventually the scroll in the event log freezes
++ FIXED: Destroyer seems to fire, but the shot hangs (are they in the same tick as player?)
++ FIXED: I could really use an "autoloot sector" button!
++ FIXED: I think...it broke when I took up to my limit in items? yep, InventoryFullCannotStoreException
   - I could use a readout on inventory size, that seems helpful
 + Well game crashed, I'll patch that and continue
 + fixed, confirmed
-+ sometimes cutting beam laser finishes SO FAST you don't even see it
++ FIXED: sometimes cutting beam laser finishes SO FAST you don't even see it
   - basically if you're right up next to a guy
   - this is probably the same with a shot that hits you as you're right next to something
   - fix that Tween timing issue?
-+ even the inventory doesn't tell you how many slots you have left, that's definitely bad
-+ inventory still has TODO: item descriptions, rip
-+ there are white squares for...I think items that you've picked up? that vanish when you enter sight
-+ FoW resets when you load
-+ projectile paths not drawn when you load
-+ newly picked-up items go to the last column in the inventory?
++ FIXED: even the inventory doesn't tell you how many slots you have left, that's definitely bad
++ FIXED: inventory still has FIXED: item descriptions, rip
++ TODO: there are white squares for...I think items that you've picked up? that vanish when you enter sight
++ FIXED: FoW resets when you load
++ FIXED: projectile paths not drawn when you load
++ FIXED: newly picked-up items go to the last column in the inventory?
   - if you use an item in the left column then pick an item up it goes to the right?
-+ you can't hold down button to scroll your menu buttons...annoying!
-+ intel doesn't auto-use which is annoying
-+ path danger doesn't take into account collision
++ TODO: you can't hold down button to scroll your menu buttons...annoying!
++ FIXED: intel doesn't auto-use which is annoying
++ FIXED: path danger doesn't take into account collision
 + ending for now ~level 5
++ playing more
++ it'd be really sweet if the readout told you when you picked items up
++ FIXED: right...I have the seed the same for every level. should fix that.
++ TODO: carriers are pretty lol to fight, prioritize enemies that you can kill in one hit?
++ FIXED: it doesn't tell you what sector you're in anywhere except for the starting log scroll
++ Approaching Infinity has its log reversed (new entries at top) - uh. wait. what's standard?
++ FIXED: somehow switching levels keeps the danger map from previous level...?
+  - ah! it went away after switching to the save screen
+  - probably is: jump under fire doesn't clear danger map properly
++ FIXED: jump point can spawn under satellite lol
+  - well THAT killed my run, RIP run
++ EMP disable is ABSURDLY long on some of the higher-tier enemies
+  - Destroyer in particular
+
+* Session 2020-12-02 3a6c655cd26edb289da3390d656770784c737837
++ FIXED: crash with NPE:
+E 0:01:11.273   void SpaceDodgeRL.library.encounter.rulebook.Rulebook.Attack(SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.encounter.state.EncounterState ): System.NullReferenceException: Object reference not set to an instance of an object.
+  <C++ Error>   Unhandled exception
+  <C++ Source>  C:\Users\Travis Moy\Projects\Godot\SpaceDodgeRL\library\encounter\rulebook\Rulebook.cs:124 @ void SpaceDodgeRL.library.encounter.rulebook.Rulebook.Attack(SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+  <Stack Trace> Rulebook.cs:124 @ void SpaceDodgeRL.library.encounter.rulebook.Rulebook.Attack(SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.entities.Entity , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+                Rulebook.cs:152 @ Boolean SpaceDodgeRL.library.encounter.rulebook.Rulebook.ResolveMove(SpaceDodgeRL.library.encounter.rulebook.actions.MoveAction , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+                Rulebook.cs:18 @ Boolean SpaceDodgeRL.library.encounter.rulebook.Rulebook+<>c.<.cctor>b__17_2(SpaceDodgeRL.library.encounter.rulebook.EncounterAction , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+                Rulebook.cs:31 @ Boolean SpaceDodgeRL.library.encounter.rulebook.Rulebook.ResolveAction(SpaceDodgeRL.library.encounter.rulebook.EncounterAction , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+                Rulebook.cs:51 @ void SpaceDodgeRL.library.encounter.rulebook.Rulebook+<>c__DisplayClass3_0.<ResolveActionsAndEndTurn>b__0(SpaceDodgeRL.library.encounter.rulebook.EncounterAction )()
+                :0 @ void System.Collections.Generic.List`1[[SpaceDodgeRL.library.encounter.rulebook.EncounterAction, SpaceDodgeRL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]].ForEach(System.Action`1[SpaceDodgeRL.library.encounter.rulebook.EncounterAction] )()
+                Rulebook.cs:51 @ void SpaceDodgeRL.library.encounter.rulebook.Rulebook.ResolveActionsAndEndTurn(System.Collections.Generic.List`1[SpaceDodgeRL.library.encounter.rulebook.EncounterAction] , SpaceDodgeRL.scenes.encounter.state.EncounterState )()
+                EncounterRunner.cs:177 @ void SpaceDodgeRL.scenes.encounter.EncounterRunner.RunTurn(SpaceDodgeRL.scenes.encounter.state.EncounterState , SpaceDodgeRL.scenes.InputHandler )()
+                EncounterRunner.cs:28 @ void SpaceDodgeRL.scenes.encounter.EncounterRunner._Process(Single )()
++ error cause:
+  - immediately go to zone 6 every time
+  - travel up
+  - at sector ~6? the one with destroyers, kill [something]?
+  - get error in - OH! OK
++ error reason: `projectileSource` was null?
+  - OH! ok: if an entity gets destroyed, but then their bullet kills something after they're destroyed, it will error out, because they'll be out of the State map!
+
+* Session 2020-12-11 ccc366d6d2895f049f56c30309afcf76523a4710
++ TODO: Place map of level generation seeds into the save file, so we can run it back if there's a bug
++ FIXED: Inventory screen items with short descriptions/long descriptions are differently-sized
++ ADDRESSED: Frigates with cannon shells can move, fire, and hit you with no recourse on your part! Rethink projectile timings, that seems...bad.
+  - Also you won't notice because they're resolved entirely in one frame so you don't see it drawing paths at you! ADDRESSED: that is very bad.
+  - On the other hand you *can* counter this and the damage isn't unavoidable - move away from them on their turn
+  - FIXED: Indicate if an enemy will move before your next turn?
++ TODO: Batteries kind of suck, since you have to burn a turn to use them and turns are very valuable!
++ FIXED: It looks like it's shoving new inventory items into the far-right column always?
++ I died to a carrier, RIP
+  - I thought I was taking no damage but apparently I was! huh. ok then. ...I could really use a replay of the game there because I have no idea what killed me.
+
+** DONE Issue: projectile feedback & paths
+
+So, what's happening with the laser not showing up/fighter cannons hitting you
+with no visual feedback:
+
+EncounterRunner.RunTurn(...) runs `numTurnsToRun` entities every
+frame. `numTurnsToRun` is set to 15. If you fire a laser projectile, it will
+resolve at speed 0, therefore being created, moving, and destroyed (on impact)
+within those 15 turns to run. Being created and destroyed within the same frame,
+it's really hard to see (it *does* flash a '*' onto your character but nothing
+else) and it never draws a danger path.
+
+The same thing is happening with cannon shells from fighters! You don't see
+anything drawn to the screen because the calculation all happens within a single
+frame.
+
+There are a couple of approaches I'm thinking of:
++ Put a stopper on RunTurn such that it stops running if it exits the tick it
+  started on. This doesn't actually solve our laser problem, because the laser
+  will resolve on exactly the same tick as the player, so we'd have to
+  special-case 0-speed entities (which is nasty-ish but we can do). It would
+  ensure every projectile, regardless of speed, would look like it's travelling
+  at the same speed, and would significantly increase turn times (1 frame per
+  turn taken by projectile...which would end up as, like, 4 frames for a
+  25-speed projectile? so not that much).
+    - This doesn't work - it does show the paths but it's too fast for the eye
+      to reliably track (I mean it's literally, like, two frames for a cannon
+      shot if you're close to the fighter, so no duh it's too fast)
++ Do all the calculations in one sum but limit the turn duration to a minimum
+  time of, I dunno, 100ms? so that we can ensure multiple frames and visual
+  feedback. This requires the sprites be decoupled from the state of the map,
+  mind, such that they can exist for the UI while not existing on the
+  entity. This would fix the tweening issue we have though!
++ Resolve all the calculations ASAP but move entities and projectiles in
+  different - wait, no, this is exactly the same as the above, but with an added
+  "and now the projectiles move".
+
+One thing to note is we *cannot* have a fixed "n ticks -> real-time" conversion,
+because the cutting laser must have 0 ticks and still display. Is there a way to
+get around this by modifying the way the cutting laser works?
+
+After thinking about it; no, not really. Okay then.
+
+We should conceptualize the draw display as serving the task of "show the player
+all actions that happened between their last input and the state at the start of
+their next input" - therefore we should feel unconstrained by the simulation so
+long as it accurately gives the player that information.
+
+* Session 2020-12-12 05df03376f2860baf938e8eec67a1879e8d3337c
+** seeds
+1: 445841002
+2: 771852981
+3: 1977636596
+4: 894846129
+5: 2085172750
+6: 950639662
+7: 1948012421
+8: 776374627
+9: 577262009
+10: 737878395
+** notes
++ Fighters are kinda ferocious if you don't play carefully around them! 6 damage a pop is not trivial!
++ TODO: If level-up screen comes up while projectiles are on screen/enemies are moving, they get offset from their squares
+  - I guess the Tween is paged away from before it finishes?
++ Fighters get waaaaay easier to deal with when you enter one-shot territory
++ Done for day now
++ FIXED: Inventory screen re-columnizes items when you save/quit - should be consistent across games!
++ TODO: White squares showing up again - is this on load? They vanish when I tab away (?) and re-tab in (?)
+  - I don't have any code that explicitly sets white squares do I?
++ TODO: Carrier - if you are 4 squares away and move towards a carrier, it can spawn a fighter and the fighter can blap you for 6 damage
+  - That's pretty unfair, it's unavoidable damage! Do we want to do something like batch the fighter launches?
++ Cruiser railguns don't reach players at max laser range, so if you can take the shotgun shells you can just sort of sit at range and pattern them to death with zero risk! Change this?
++ TODO: Small cannon shots shown as 0-danger when under read paint, despite being fully able to hit you, is there something wrong with my danger calcs?
++ TODO: It'd be really nice for a buff duration screen!
++ When you reach carrier & screening force it gets really choppy, it doesn't degrade performance very gracefully
++ TODO: On main map a "you are here" and maybe a minimap even? It's hard to know "What zones will autopilot bring me through to get to the jump point"
++ It gets really brutal near the end! You pretty much have to hoard items in the early-game and then pop them all at once to get through that.
++ FIXED: If a fighter moves into you and fires you don't see any visible feedback even on high turn times!
+  - Funny...it certainly has multiple frames.
++ FIXED: High turn times introduce noticable input lag, even when they shouldn't.
+
+** ADDRESSED: Issue: 'instant' projectile creation & destruction
+
+Okay, so, we fixed the laser issue by splitting it out into its own 'turn' that
+always takes 'turn_time' frames to resolve. Cool. How do we fix the issue of 'a
+projectile launches on the same turn, instantly hits the player, and vanishes'?
+
+THe issue isn't "this is displayed for too few frames" but "this is displayed
+for zero frames". Because it happens on the same frame, because we batch all
+turns (exclusing zero-length turns) into one frame. In fact, it happens on the
+same *tick* - that is, in game-engine-logic, it's spent literally zero ticks
+existing! It gets plopped into the timeline directly after the firing entity,
+immediately executes its turn, and in the execution of its turn destroys itself
+against the target. So there's even if we do something like 'tie the tick rate
+to a constant frame rate' it doesn't work out because no game time passes
+between creation and destruction, it's an instant action.
+
+Gnarly! Such are the issues with UI, I guess. If I could just do all the game
+logic and magically wave a wand and say "UI Be Done!" I'd be real happy. Then
+again, if such a thing were possible, programmers would be out of a job, so I
+guess I'd be less happy about that (at least in the short term) though maybe
+society as a whole wold be happier.
+
+Anyways.
+
+We do *not* want the framerate to be tied to the number of items on the screen
+(though this is possibly unavoidable in laggy situations). Therefore we do *not*
+want to say "every entity gets their own display turn" or something similar - I
+admit we are doing that with zero-length entities but right now there's only one
+player. For example, we specifically don't want six entities sitting up against
+the player firing to take more time than one entity sitting up against the
+player and firing.
+
+*** Changes
+
+Ok, so, I made it so:
++ Tween time synced with turn time
++ Tweens always fully complete
++ Laser (0-pt action actually) always takes 2 turns to give Tween & danger map
+  time to resolve
++ Damage to player always takes an entire turn to give the player time to see
+
+I'm not confident in the way this plays but at least it means you never get 6
+pts of invisible damage from a fighter next to you which is really important!
+
+* FIXED: OOB crash - b9c682ab3009dae1dc763680ba1baff0cf6fe173
+
+E 0:00:16.320   SpaceDodgeRL.scenes.entities.Entity SpaceDodgeRL.scenes.encounter.state.EncounterState.BlockingEntityAtPosition(Int32 , Int32 ): System.NotImplementedException: out of bounds
+  <C++ Error>   Unhandled exception
+  <C++ Source>  C:\Users\Travis Moy\Projects\Godot\SpaceDodgeRL\scenes\encounter\state\EncounterState.cs:168 @ SpaceDodgeRL.scenes.entities.Entity SpaceDodgeRL.scenes.encounter.state.EncounterState.BlockingEntityAtPosition(Int32 , Int32 )()
+  <Stack Trace> EncounterState.cs:168 @ SpaceDodgeRL.scenes.entities.Entity SpaceDodgeRL.scenes.encounter.state.EncounterState.BlockingEntityAtPosition(Int32 , Int32 )()
+                EncounterRunner.cs:172 @ void SpaceDodgeRL.scenes.encounter.EncounterRunner.RunTurn(SpaceDodgeRL.scenes.encounter.state.EncounterState , SpaceDodgeRL.scenes.InputHandler )()
+                EncounterRunner.cs:38 @ void SpaceDodgeRL.scenes.encounter.EncounterRunner._Process(Single )()
+
+Okay, apparently if you mouse OOB it explodes. Fair 'nuff. Gotta get that fixed.
+* Session 2020-12-22 bdb6e4bb83d81b83e408078ccc02b3cf4ffa2169
++ Scaling changes the UI size and also doesn't actually make it bigger
+  - Ideally we'd have an option to scale the UI and the gameworld separately
+  - Options could be
+    - Resolution
+    - UI scale (scales ALL fonts)
+    - Game area scale (zoom in & out basically...so, yeah, it's just camera zoom)
+
+* Session 2020-12-29 7969c0cdbe6bab7f27c62ded32b649d6bf258f85
++ FIXED: In autopilot readout if items = 3 & feeatures = 1, runs right off the
+  side of the screen. rip. put a sizer on them sprites.
++ TODO: You can't expand the play space horizontally it's basically fixed
+  resolution.
++ TODO: sometimes diagonal shots don't go where you expect - for example if you
+  diagonally shoot at a SW enemy and there's an asteroid to W it will hit the
+  asteroid. I guess this is because shots don't actually do diagonals but do
+  4-directional paths.
++ FIXED: Item sprites are drawn over ship sprites whereas opposite should be true
++ DONE: You Are Here on the autopilot map
++ DONE: Draw sprites on inventory page? (sprite + name on left, description
+  right maybe?)
++ TODO: You (and enemies) are willing to shoot straight into asteroids
++ TODO: Autoexplore should end at jump gate if present
++ DONE: Make it obvious that autopilot -> kill -> autoexplore is intended
+  gameplay flow somehow (add "AUTOEXPLORE ZONE" button to autopilot screen?
+  upper right has some empty space)
++ FIXED: Your scan cursor is seriously off-center; re-work that
+  - DONE: Make a full playthrough with mouse only
+** Bugs while in process of fixing some of the above issues
++ TODO: If you hover over a zone in one run of the autopilot menu, and then exit
+  the autopilot menu & switch zones, then open the menu again and move the
+  mouse, it will crash with "Cannot access a disposed object". Makes sense - we
+  redo the entire scene and throw away all the old stuff every time we switch
+  zones...

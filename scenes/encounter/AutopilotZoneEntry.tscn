@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=1]
+[ext_resource path="res://resources/menu_theme.tres" type="Theme" id=2]
+[ext_resource path="res://scenes/encounter/AutopilotZoneEntry.cs" type="Script" id=3]
+
+[node name="AutopilotZoneEntry" type="Button"]
+margin_right = 256.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 256, 80 )
+theme = ExtResource( 2 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ReadoutContainer" type="VBoxContainer" parent="."]
+margin_right = 256.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 256, 80 )
+size_flags_horizontal = 3
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NameEncounterBar" type="HBoxContainer" parent="ReadoutContainer"]
+margin_right = 256.0
+margin_bottom = 43.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+
+[node name="ZoneNameLabel" type="Label" parent="ReadoutContainer/NameEncounterBar"]
+margin_top = 5.0
+margin_right = 90.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 32 )
+custom_fonts/font = ExtResource( 1 )
+text = "Zone Name"
+valign = 1
+
+[node name="ZoneEncounterLabel" type="Label" parent="ReadoutContainer/NameEncounterBar"]
+margin_left = 94.0
+margin_right = 256.0
+margin_bottom = 43.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+text = "one line and then more text"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="ItemsFeaturesBar" type="HBoxContainer" parent="ReadoutContainer"]
+margin_top = 43.0
+margin_right = 256.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+size_flags_vertical = 3

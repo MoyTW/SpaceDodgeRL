@@ -5,21 +5,21 @@ namespace SpaceDodgeRL.library.encounter {
 
   public static class EncounterPathBuilder {
 
-    public static EncounterPath BuildStraightLinePath(EncounterPosition start, EncounterPosition target, int numSteps = 100) {
-      return new EncounterPath(StraightLine(start, target, numSteps));
+    public static EncounterPath BuildStraightLinePath(EncounterPosition start, EncounterPosition target, int maxSteps=100, bool endsAtTarget=false) {
+      return new EncounterPath(StraightLine(start, target, maxSteps, endsAtTarget));
     }
 
     public static EncounterPath BuildReverseLinePath(EncounterPosition start, EncounterPosition target, int overshoot) {
       var distance = (int)Math.Ceiling(start.DistanceTo(target));
 
-      var outwardPath = StraightLine(start, target, numSteps: distance + overshoot);
-      var reversePath = StraightLine(outwardPath[outwardPath.Count - 2], start, numSteps: distance + overshoot);
+      var outwardPath = StraightLine(start, target, numSteps: distance + overshoot, endsAtTarget: false);
+      var reversePath = StraightLine(outwardPath[outwardPath.Count - 2], start, numSteps: distance + overshoot, endsAtTarget: false);
       reversePath.RemoveAt(reversePath.Count - 1);
       outwardPath.AddRange(reversePath);
       return new EncounterPath(outwardPath);
     }
 
-    private static List<EncounterPosition> StraightLine(EncounterPosition start, EncounterPosition end, int numSteps) {
+    private static List<EncounterPosition> StraightLine(EncounterPosition start, EncounterPosition end, int numSteps, bool endsAtTarget) {
       List<EncounterPosition> acc = new List<EncounterPosition>();
       acc.Add(start);
 
@@ -35,18 +35,25 @@ namespace SpaceDodgeRL.library.encounter {
       int steps = 0;
 
       while (steps < numSteps) {
+        EncounterPosition newPosition;
         if (isVertical) {
           cY += yErr;
-          acc.Add(new EncounterPosition(cX, cY));
+          newPosition = new EncounterPosition(cX, cY);
         } else if (error >= 0.5f) {
           cY += yErr;
           error -= 1f;
-          acc.Add(new EncounterPosition(cX, cY));
+          newPosition = new EncounterPosition(cX, cY);
         } else {
           cX += xDiff;
           error += dError;
-          acc.Add(new EncounterPosition(cX, cY));
+          newPosition = new EncounterPosition(cX, cY);
         }
+
+        acc.Add(newPosition);
+        if (endsAtTarget && newPosition == end) {
+          break;
+        }
+
         steps += 1;
       }
 

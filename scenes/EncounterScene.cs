@@ -10,26 +10,38 @@ namespace SpaceDodgeRL.scenes {
   public class EncounterScene : Container {
     public EncounterState EncounterState { get; private set; }
     private Viewport encounterViewport;
+    public InputHandler inputHandler;
     private EncounterRunner encounterRunner;
-    // TODO: Encounter log sometimes stops updating - unsure why, I think it has to do with not cycling properly when you get to
-    // max number of messages
-    private RichTextLabel encounterLogLabel;
 
     public override void _Ready() {
-      encounterViewport = GetNode<Viewport>("SceneFrame/ViewportContainer/EncounterViewport");
-      encounterLogLabel = GetNode<RichTextLabel>("SceneFrame/BottomUIContainer/EncounterLogLabel");
+      this.encounterViewport = GetNode<Viewport>("SceneFrame/SceneVBox/EncounterViewportContainer/EncounterViewport");
 
-      encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
-      encounterRunner.inputHandlerRef = GetNode<InputHandler>("InputHandler");
+      this.inputHandler = GetNode<InputHandler>("InputHandler");
+
+      this.encounterRunner = GetNode<EncounterRunner>("EncounterRunner");
+      this.encounterRunner.inputHandlerRef = this.inputHandler;
 
       if (this.EncounterState == null) {
         throw new NotImplementedException("must call SetEncounterState before adding to tree");
       }
       this.encounterViewport.AddChild(this.EncounterState);
       this.encounterRunner.SetEncounterState(this.EncounterState);
+      this.GetNode<MenuButtonBar>("SceneFrame/SceneVBox/MenuButtonBar").SetState(this.EncounterState, inputHandler);
+
       // Hook up the UI
       this.EncounterState.Connect(nameof(EncounterState.EncounterLogMessageAdded), this, nameof(OnEncounterLogMessageAdded));
       this.encounterRunner.Connect(nameof(EncounterRunner.TurnEnded), this, nameof(OnTurnEnded));
+      // TODO: Add keyboard look via "s"
+      this.encounterRunner.Connect(nameof(EncounterRunner.PositionScanned), this, nameof(OnPositionScanned));
+      var viewportContainer = GetNode<ViewportContainer>("SceneFrame/SceneVBox/EncounterViewportContainer");
+      viewportContainer.Connect(nameof(EncounterViewportContainer.MousedOverPosition), this, nameof(OnMousedOverPosition));
+      viewportContainer.Connect(nameof(EncounterViewportContainer.ActionSelected), this, nameof(OnActionSelected));
+      // Since we can't have the state broadcast its events before we connect, we instead pull log messages; this will be empty
+      // on new game and populated on load.
+      foreach (var logMessage in this.EncounterState.EncounterLog) {
+        this.OnEncounterLogMessageAdded(logMessage, int.MaxValue);
+      }
+
       OnTurnEnded();
     }
 
@@ -44,35 +56,24 @@ namespace SpaceDodgeRL.scenes {
       this.EncounterState = state;
     }
 
-    // TODO: Decide if this is better placed directly onto the log label
-    // TODO: I think there's an issue where it stops updating after it hits its size limit
     private void OnEncounterLogMessageAdded(string bbCodeMessage, int encounterLogSize) {
-      if (encounterLogLabel.GetLineCount() > encounterLogSize) {
-        encounterLogLabel.RemoveLine(0);
-      }
-      encounterLogLabel.AppendBbcode(bbCodeMessage + "\n");
+      this.GetNode<SidebarDisplay>("SceneFrame/SidebarDisplay").AddEncounterLogMessage(bbCodeMessage, encounterLogSize);
     }
 
     private void OnTurnEnded() {
-      var player = this.EncounterState.Player;
+      this.GetNode<SidebarDisplay>("SceneFrame/SidebarDisplay").RefreshStats(this.EncounterState);
+    }
 
-      var playerDefenderComponent = player.GetComponent<DefenderComponent>();
-      var newHPText = String.Format("HP: {0}/{1}", playerDefenderComponent.CurrentHp, playerDefenderComponent.MaxHp);
-      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/HPLabel").Text = newHPText;
+    private void OnPositionScanned(int x, int y, Entity entity) {
+      this.GetNode<SidebarDisplay>("SceneFrame/SidebarDisplay").DisplayScannedEntity(x, y, entity);
+    }
 
-      var playerComponent = player.GetComponent<PlayerComponent>();
-      var newAttackPowerText = String.Format("Cutting laser power: {0}", playerComponent.CuttingLaserPower);
-      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/AttackPowerLabel").Text = newAttackPowerText;
+    private void OnMousedOverPosition(int x, int y) {
+      this.inputHandler.TryInsertInputAction(new InputHandler.ScanInputAction(x, y));
+    }
 
-      var speedComponent = player.GetComponent<SpeedComponent>();
-      var newSpeedText = String.Format("Speed: {0}", speedComponent.Speed);
-      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsLeftColumn/SpeedLabel").Text = newSpeedText;
-
-      var xpComponent = player.GetComponent<XPTrackerComponent>();
-      var newLevelText = string.Format("Level: {0}", xpComponent.Level);
-      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/LevelLabel").Text = newLevelText;
-      var newXPText = string.Format("Experience: {0} / {1}", xpComponent.XP, xpComponent.NextLevelAtXP);
-      GetNode<Label>("SceneFrame/BottomUIContainer/StatsHBox/StatsRightColumn/ExperienceLabel").Text = newXPText;
+    private void OnActionSelected(string actionMapping) {
+      this.inputHandler.TryInsertInputAction(new InputHandler.InputAction(actionMapping));
     }
 
     // This could probably be a signal.

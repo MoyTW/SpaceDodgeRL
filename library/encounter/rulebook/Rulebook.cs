@@ -1,6 +1,7 @@
 using Godot;
 using SpaceDodgeRL.library.encounter.rulebook.actions;
 using SpaceDodgeRL.scenes.components;
+using SpaceDodgeRL.scenes.components.AI;
 using SpaceDodgeRL.scenes.components.use;
 using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.entities;
@@ -14,6 +15,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     // ...can't I just do <> like I can in Kotlin? C# why you no let me do this. Probably because "evolving languages are hard".
     private static Dictionary<ActionType, Func<EncounterAction, EncounterState, bool>> _actionMapping = new Dictionary<ActionType, Func<EncounterAction, EncounterState, bool>>() {
       { ActionType.AUTOPILOT_BEGIN, (a, s) => ResolveAutopilotBegin(a as AutopilotBeginAction, s) },
+      { ActionType.AUTOPILOT_CONTINUE, (a, s) => ResolveAutopilotContinue(a as AutopilotContinueAction, s) },
       { ActionType.AUTOPILOT_END, (a, s) => ResolveAutopilotEnd(a as AutopilotEndAction, s) },
       { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
       { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
@@ -36,7 +38,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       if (entity != null) {
         var actionTimeComponent = entity.GetComponent<ActionTimeComponent>();
         actionTimeComponent.EndTurn(entity.GetComponent<SpeedComponent>(), entity.GetComponent<StatusEffectTrackerComponent>());
-        state.UpdateTimelineForEntity(entity);
+        state.EntityHasEndedTurn(entity);
         return true;
       } else {
         return false;
@@ -56,42 +58,187 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
-    private static bool ResolveAutopilotBegin(AutopilotBeginAction action, EncounterState state) {
+    private static bool ResolveAutopilotBeginTravel(AutopilotBeginAction action, EncounterState state) {
       var playerPosition = state.Player.GetComponent<PositionComponent>().EncounterPosition;
       EncounterZone zone = state.GetZoneById(action.ZoneId);
 
       var foundPath = Pathfinder.AStarWithNewGrid(playerPosition, zone.Center, state, 9000);
       int autopilotTries = 0;
       while (foundPath == null && autopilotTries < 5) {
-        foundPath = Pathfinder.AStarWithNewGrid(playerPosition, zone.RandomUnblockedPosition(state.EncounterRand, state), state, 9000);
+        foundPath = Pathfinder.AStarWithNewGrid(playerPosition, zone.RandomEmptyPosition(state.EncounterRand, state), state, 9000);
         autopilotTries++;
       }
       if (foundPath != null && autopilotTries > 0) {
         state.LogMessage(String.Format("Autopilot could not find path to center of [b]{0}[/b]; autopiloting to randomly chosen position in [b]{0}[/b].", zone.ZoneName));
-        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(new EncounterPath(foundPath));
+        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPathForTravel(new EncounterPath(foundPath));
         return true;
       } else if (foundPath != null) {
         state.LogMessage(String.Format("Autopiloting to [b]{0}[/b]", zone.ZoneName));
-        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPath(new EncounterPath(foundPath));
+        state.Player.GetComponent<PlayerComponent>().LayInAutopilotPathForTravel(new EncounterPath(foundPath));
         return true;
       } else {
-        state.LogMessage(String.Format("Autopilot failed to plot course to to [b]{0}[/b]", zone.ZoneName));
+        state.LogMessage(String.Format("Autopilot failed to plot course to to [b]{0}[/b]", zone.ZoneName), failed: true);
         return false;
       }
     }
 
+    private static bool ResolveAutopilotBeginExplore(AutopilotBeginAction action, EncounterState state) {
+      var playerComponent = state.Player.GetComponent<PlayerComponent>();
+      playerComponent.BeginAutoexploring(action.ZoneId);
+      return true;
+    }
+
+    private static bool ResolveAutopilotBegin(AutopilotBeginAction action, EncounterState state) {
+      if (action.Mode == AutopilotMode.TRAVEL) {
+        return ResolveAutopilotBeginTravel(action, state);
+      } else if (action.Mode == AutopilotMode.EXPLORE) {
+        return ResolveAutopilotBeginExplore(action, state);
+      } else {
+        throw new NotImplementedException(string.Format("Rulebook doesn't know how to handle autopilot mode {0}", action.Mode));
+      }
+    }
+
+    private static bool PlayerSeesEnemies(EncounterState state) {
+      return state.FoVCache.VisibleCells
+          .Select(cell => state.EntitiesAtPosition(cell.X, cell.Y))
+          .Any(entitiesAtPosition => entitiesAtPosition.Any(e => e.GetComponent<AIComponent>() != null &&
+                                                                 !(e.GetComponent<PathAIComponent>() is PathAIComponent)));
+    }
+
+    private static bool ResolveAutopilotContinueTravel(EncounterState state) {
+      var player = state.Player;
+      var path = state.Player.GetComponent<PlayerComponent>().AutopilotPath;
+
+      if (PlayerSeesEnemies(state)) {
+        ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
+        return false;
+      } else if (!path.AtEnd) {
+        Rulebook.ResolveAction(new MoveAction(player.EntityId, path.Step()), state);
+        return true;
+      } else {
+        ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.TASK_COMPLETED), state);
+        return false;
+      }
+    }
+
+    /**
+     * A zone is considered "explored" when:
+     * 1: All storables have been found
+     *   1a: If your inventory is not full, all storable items have been picked up
+     * 2: All non-storable features have been seen
+     *
+     * Actual % of FoW revealed is not important. This is kinda cheaty, because it implies the autopilot knows intel for the
+     * area, but also, who cares? It's fine. Likewise it doesn't factor into account having destroyed the enemies because if
+     * there is an encounter, you'll definitely run into it!
+     */
+    private static bool ResolveAutopilotContinueExplore(EncounterState state) {
+      var player = state.Player;
+      var playerComponent = player.GetComponent<PlayerComponent>();
+      var playerPos = player.GetComponent<PositionComponent>().EncounterPosition;
+      var path = playerComponent.AutopilotPath;
+
+      var zone = state.GetZoneById(playerComponent.AutopilotZoneId);
+      var nextUngottenStorable =
+        zone.ReadoutItems.Concat(zone.ReadoutFeatures)
+                         .FirstOrDefault(i => state.GetEntityById(i.EntityId) != null && 
+                                              state.GetEntityById(i.EntityId).GetComponent<StorableComponent>() != null);
+      var nextUnexplored =
+        zone.ReadoutItems.Concat(zone.ReadoutFeatures)
+                         .Where(r => state.GetEntityById(r.EntityId) != null)
+                         .Select(r => state.GetEntityById(r.EntityId))
+                         .Where(e => !state.IsExplored(e.GetComponent<PositionComponent>().EncounterPosition))
+                         .FirstOrDefault();
+
+      if (PlayerSeesEnemies(state)) {
+        ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
+        return false;
+      } // If you are already on a path, progress on the path
+      else if (path != null) {
+        if (path.AtEnd) {
+          playerComponent.ClearAutopilotPath();
+          return false;
+        } else {
+          Rulebook.ResolveAction(new MoveAction(player.EntityId, path.Step()), state);
+          return true;
+        }
+      } // If you're on top of a storable item, get it
+      else if (state.EntitiesAtPosition(playerPos.X, playerPos.Y).Any(e => e.GetComponent<StorableComponent>() != null)) {
+        var nextStorable = state.EntitiesAtPosition(playerPos.X, playerPos.Y).First(e => e.GetComponent<StorableComponent>() != null);
+        if (ResolveAction(new GetItemAction(player.EntityId), state)) {
+          return true;
+        } else {
+          // TODO: Allow player to autoexplore even if their inventory is full!
+          ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.INVENTORY_FULL), state);
+          return false;
+        }
+      } // If there are any storable items, move towards them
+      else if (nextUngottenStorable != null) {
+        var nextPos = state.GetEntityById(nextUngottenStorable.EntityId).GetComponent<PositionComponent>().EncounterPosition;
+        var foundPath = Pathfinder.AStarWithNewGrid(playerPos, nextPos, state, 900);
+        if (foundPath == null) {
+          ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.NO_PATH), state);
+          return false;
+        } else {
+          foundPath.Add(nextPos);
+          playerComponent.LayInAutopilotPathForExploration(new EncounterPath(foundPath));
+          return true;
+        }
+      } // If there are any explored features go to them
+      else if (nextUnexplored != null) {
+        var nextPos = state.GetEntityById(nextUnexplored.EntityId).GetComponent<PositionComponent>().EncounterPosition;
+        var foundPath = Pathfinder.AStarWithNewGrid(playerPos, nextPos, state, 900);
+        if (foundPath == null) {
+          ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.NO_PATH), state);
+          return false;
+        } else {
+          playerComponent.LayInAutopilotPathForExploration(new EncounterPath(foundPath));
+          return true;
+        }
+      } // Otherwise you're done!
+      else {
+        ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.TASK_COMPLETED), state);
+        return false;
+      }
+    }
+
+    /**
+     * Handles autopilot according to player's internal state. Returns true if autopilot continues, false if it is ended.
+     */
+    private static bool ResolveAutopilotContinue(AutopilotContinueAction action, EncounterState state) {
+      var mode = state.Player.GetComponent<PlayerComponent>().ActiveAutopilotMode;
+      if (mode == AutopilotMode.TRAVEL) {
+        return ResolveAutopilotContinueTravel(state);
+      } else if (mode == AutopilotMode.EXPLORE) {
+        return ResolveAutopilotContinueExplore(state);
+      } else {
+        throw new NotImplementedException(string.Format("Rulebook doesn't know how to handle autopilot mode {0}", mode));
+      }
+    }
+
     private static bool ResolveAutopilotEnd(AutopilotEndAction action, EncounterState state) {
-      state.Player.GetComponent<PlayerComponent>().StopAutopiloting();
+      var playerComponent = state.Player.GetComponent<PlayerComponent>();
 
       if (action.Reason == AutopilotEndReason.PLAYER_INPUT) {
         state.LogMessage(String.Format("Autopilot ending - [b]overridden by pilot[/b]"));
       } else if (action.Reason == AutopilotEndReason.ENEMY_DETECTED) {
         state.LogMessage(String.Format("Autopilot ending - [b]enemy detected[/b]"));
-      } else if (action.Reason == AutopilotEndReason.DESTINATION_REACHED) {
-        state.LogMessage(String.Format("Autopilot ending - [b]destination reached[/b]"));
+      } else if (action.Reason == AutopilotEndReason.TASK_COMPLETED) {
+        if (playerComponent.ActiveAutopilotMode == AutopilotMode.TRAVEL) {
+          state.LogMessage(String.Format("Autopilot ending - [b]travel completed[/b]"));
+        } else if (playerComponent.ActiveAutopilotMode == AutopilotMode.EXPLORE) {
+          state.LogMessage(String.Format("Autopilot ending - [b]exploration completed[/b]"));
+        } else {
+          throw new NotImplementedException("no such explore mode known");
+        }
+      } else if (action.Reason == AutopilotEndReason.INVENTORY_FULL) {
+        state.LogMessage(String.Format("Autopilot ending - [b]inventory was full[/b]"));
+      } else if (action.Reason == AutopilotEndReason.NO_PATH) {
+        state.LogMessage(String.Format("Autopilot ending - [b]path to next location blocked[/b]"));
       } else {
         throw new NotImplementedException("no such matching clause for enum");
       }
+
+      state.Player.GetComponent<PlayerComponent>().StopAutopiloting();
 
       return true;
     }
@@ -121,7 +268,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
           // Assign XP to the entity that fired the projectile
           var projectileSource = state.GetEntityById(attackerComponent.SourceEntityId);
           var xpValueComponent = defender.GetComponent<XPValueComponent>();
-          if (xpValueComponent != null && projectileSource.GetComponent<XPTrackerComponent>() != null) {
+          if (projectileSource != null && xpValueComponent != null && projectileSource.GetComponent<XPTrackerComponent>() != null) {
             projectileSource.GetComponent<XPTrackerComponent>().AddXP(xpValueComponent.XPValue);
             logMessage += String.Format(" [b]{0}[/b] gains {1} XP!", projectileSource.EntityName, xpValueComponent.XPValue);
           }
@@ -151,13 +298,16 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         if (actorCollision.OnCollisionAttack) {
           Attack(actor, blocker, state);
         }
-        // TODO: This causes the projectile to vanish, which is...awkward, visually, since we're Tweening it at the time!
         if (actorCollision.OnCollisionSelfDestruct) {
+          state.TeleportEntity(actor, action.TargetPosition, ignoreCollision: true);
+          if (state.FoVCache.IsVisible(action.TargetPosition)) {
+            positionComponent.PlayExplosion();
+          }
           ResolveAction(new SelfDestructAction(action.ActorId), state);
         }
         return true;
       } else {
-        state.TeleportEntity(actor, action.TargetPosition);
+        state.TeleportEntity(actor, action.TargetPosition, ignoreCollision: false);
         return true;
       }
     }
@@ -184,10 +334,18 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
                       .FirstOrDefault(e => e.GetComponent<StorableComponent>() != null);
 
       if (item == null) {
+        state.LogMessage("No item found!", failed: true);
         return false;
+      } else if (item.GetComponent<UsableComponent>() != null && item.GetComponent<UsableComponent>().UseOnGet) {
+        // The responsibility for removing/not removing the usable from the EncounterState is in the usage code.
+        bool successfulUsage = ResolveUse(new UseAction(actor.EntityId, item.EntityId, false), state);
+        if (!successfulUsage) {
+          GD.PrintErr(string.Format("Item {0} was not successfully used after being picked up!", item.EntityName));
+        }
+        return true;
       } else if (!inventoryComponent.CanFit(item)) {
         state.LogMessage(string.Format("[b]{0}[/b] can't fit the [b]{1}[/b] in its inventory!",
-          actor.EntityName, item.EntityName));
+          actor.EntityName, item.EntityName), failed: true);
         return false;
       } else {
         state.RemoveEntity(item);
@@ -239,19 +397,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       return true;
     }
 
-    // TODO: Consider putting all these effects under UsableComponent, instead of keeping them as components
-    private static bool ResolveUse(UseAction action, EncounterState state) {
-      // We assume that the used entity must be in the inventory of the user - this is pretty fragile and might change.
-      var user = state.GetEntityById(action.ActorId);
-      var userInventory = user.GetComponent<InventoryComponent>();
-      var usable = userInventory.StoredEntityById(action.UsableId);
-
-      if (usable.GetComponent<UsableComponent>() == null) {
-        throw new NotImplementedException("can't use non-usable thing TODO: Handle better!");
-      }
-
-      state.LogMessage(string.Format("{0} used {1}!", user.EntityName, usable.EntityName));
-
+    private static void ResolveUseEffects(Entity user, Entity usable, EncounterState state) {
       // We keep this logic here instead of in the component itself because the component should have only state data. That said
       // we shouldn't keep it, like, *here* here, 'least not indefinitely.
       var useEffectHeal = usable.GetComponent<UseEffectHealComponent>();
@@ -317,9 +463,32 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
           }
         }
       }
+    }
+
+    // TODO: Consider putting all these effects under UsableComponent, instead of keeping them as components
+    private static bool ResolveUse(UseAction action, EncounterState state) {
+      var user = state.GetEntityById(action.ActorId);
+
+      // This is another issue that'd be solved with a global Entity lookup - though not the removal part.
+      Entity usable = null;
+      if (action.FromInventory) {
+        var userInventory = user.GetComponent<InventoryComponent>();
+        usable = userInventory.StoredEntityById(action.UsableId);
+        userInventory.RemoveEntity(usable);
+      } else {
+        usable = state.GetEntityById(action.UsableId);
+        state.RemoveEntity(usable);
+      }
+
+      if (usable.GetComponent<UsableComponent>() == null) {
+        throw new NotImplementedException("can't use non-usable thing TODO: Handle better!");
+      }
+
+      state.LogMessage(string.Format("{0} used {1}!", user.EntityName, usable.EntityName));
+
+      ResolveUseEffects(user, usable, state);
 
       // We assume all items are single-use; this will change if I deviate from the reference implementation!
-      userInventory.RemoveEntity(usable);
       usable.QueueFree();
       return true;
     }
@@ -333,6 +502,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.WriteToFile();
         return true;
       } else {
+        state.LogMessage("No jump point found!", failed: true);
         return false;
       }
     }

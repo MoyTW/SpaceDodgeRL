@@ -1,0 +1,435 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://resources/tex_test.tres" type="Texture" id=1]
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Regular.tres" type="DynamicFont" id=2]
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=3]
+[ext_resource path="res://resources/ui/menu.png" type="Texture" id=4]
+[ext_resource path="res://scenes/encounter/SidebarDisplay.cs" type="Script" id=5]
+[ext_resource path="res://resources/menu_theme.tres" type="Theme" id=6]
+[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=7]
+
+[sub_resource type="DynamicFont" id=1]
+size = 64
+font_data = ExtResource( 7 )
+
+[node name="SidebarBackground" type="TextureRect"]
+margin_right = 432.0
+margin_bottom = 1024.0
+grow_horizontal = 0
+texture = ExtResource( 4 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SidebarVBox" type="VBoxContainer" parent="."]
+margin_left = 16.0
+margin_right = 416.0
+margin_bottom = 1008.0
+rect_min_size = Vector2( 400, 1008 )
+size_flags_horizontal = 0
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StatsAndPositionHBox" type="HBoxContainer" parent="SidebarVBox"]
+margin_right = 400.0
+margin_bottom = 256.0
+rect_min_size = Vector2( 0, 256 )
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StatsBlock" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox"]
+margin_right = 198.0
+margin_bottom = 256.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="StatsSpacer" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_right = 198.0
+margin_bottom = 14.0
+
+[node name="ShipStatsHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 18.0
+margin_right = 198.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+custom_fonts/font = ExtResource( 3 )
+text = "Ship Status"
+align = 1
+
+[node name="HPLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 42.0
+margin_right = 198.0
+margin_bottom = 62.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "HPLabel"
+align = 1
+
+[node name="AttackPowerLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 66.0
+margin_right = 198.0
+margin_bottom = 86.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "AttackPowerLabel"
+align = 1
+
+[node name="LaserRangeLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 90.0
+margin_right = 198.0
+margin_bottom = 110.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "Laser Range: 3"
+align = 1
+
+[node name="SpeedLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 114.0
+margin_right = 198.0
+margin_bottom = 134.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "SpeedLabel"
+align = 1
+
+[node name="InventoryLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 138.0
+margin_right = 198.0
+margin_bottom = 158.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "InventoryLabel"
+align = 1
+
+[node name="CrewStatusHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 162.0
+margin_right = 198.0
+margin_bottom = 182.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+custom_fonts/font = ExtResource( 3 )
+text = "Pilot Status"
+align = 1
+
+[node name="LevelLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 186.0
+margin_right = 198.0
+margin_bottom = 206.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "LevelLabel"
+align = 1
+
+[node name="ExperienceLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/StatsBlock"]
+margin_top = 210.0
+margin_right = 198.0
+margin_bottom = 230.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "ExperienceLabel"
+align = 1
+
+[node name="PositionBlock" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox"]
+margin_left = 202.0
+margin_right = 400.0
+margin_bottom = 256.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PositionSpacer" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_right = 198.0
+margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TurnReadoutLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 18.0
+margin_right = 198.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "TurnReadoutLabel"
+align = 1
+
+[node name="PositionHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 42.0
+margin_right = 198.0
+margin_bottom = 62.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+custom_fonts/font = ExtResource( 3 )
+text = "Current Position"
+align = 1
+
+[node name="SectorLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 66.0
+margin_right = 198.0
+margin_bottom = 86.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "SectorLabel"
+align = 1
+
+[node name="PositionLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 90.0
+margin_right = 198.0
+margin_bottom = 110.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "PositionLabel"
+align = 1
+
+[node name="ZoneHeaderLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 114.0
+margin_right = 198.0
+margin_bottom = 134.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+custom_fonts/font = ExtResource( 3 )
+text = "Zone Header"
+align = 1
+
+[node name="ZoneBlock" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock"]
+margin_top = 138.0
+margin_right = 198.0
+margin_bottom = 233.0
+
+[node name="EnemiesWarningContainer" type="HBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock"]
+margin_right = 198.0
+margin_bottom = 43.0
+
+[node name="EnemiesWarningLabel" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/EnemiesWarningContainer"]
+margin_right = 198.0
+margin_bottom = 43.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 20.0
+theme = ExtResource( 6 )
+text = "Ever Victorious Army"
+align = 1
+autowrap = true
+
+[node name="ItemsFeatureReadout" type="HBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock"]
+margin_top = 47.0
+margin_right = 198.0
+margin_bottom = 95.0
+
+[node name="ZoneItemReadout" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout"]
+margin_right = 88.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ZoneItemHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout"]
+margin_right = 88.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "Items"
+align = 1
+autowrap = true
+
+[node name="ZoneItems" type="HBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout"]
+margin_top = 24.0
+margin_right = 88.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ZoneItemSpacer1" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout/ZoneItems"]
+margin_top = 5.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+
+[node name="ZoneItem1" type="TextureRect" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout/ZoneItems"]
+margin_left = 4.0
+margin_right = 28.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="ZoneItem2" type="TextureRect" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout/ZoneItems"]
+margin_left = 32.0
+margin_right = 56.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="ZoneItem3" type="TextureRect" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout/ZoneItems"]
+margin_left = 60.0
+margin_right = 84.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="ZoneItemSpacer2" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneItemReadout/ZoneItems"]
+margin_left = 88.0
+margin_top = 5.0
+margin_right = 88.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+
+[node name="ZoneFeaturesReadout" type="VBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout"]
+margin_left = 92.0
+margin_right = 198.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.2
+
+[node name="ZoneFeatureHeader" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout"]
+margin_right = 106.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+text = "Features"
+align = 1
+autowrap = true
+
+[node name="ZoneFeatures" type="HBoxContainer" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout"]
+margin_top = 24.0
+margin_right = 106.0
+margin_bottom = 48.0
+
+[node name="ZoneFeatureSpacer" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout/ZoneFeatures"]
+margin_top = 5.0
+margin_right = 23.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+
+[node name="ZoneFeature1" type="TextureRect" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout/ZoneFeatures"]
+margin_left = 27.0
+margin_right = 51.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="ZoneFeature2" type="TextureRect" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout/ZoneFeatures"]
+margin_left = 55.0
+margin_right = 79.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="ZoneFeatureSpacer2" type="Label" parent="SidebarVBox/StatsAndPositionHBox/PositionBlock/ZoneBlock/ItemsFeatureReadout/ZoneFeaturesReadout/ZoneFeatures"]
+margin_left = 83.0
+margin_top = 5.0
+margin_right = 106.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+
+[node name="ScanOptionBlock" type="VBoxContainer" parent="SidebarVBox"]
+margin_top = 260.0
+margin_right = 400.0
+margin_bottom = 528.0
+rect_min_size = Vector2( 0, 268 )
+size_flags_horizontal = 3
+size_flags_vertical = 0
+size_flags_stretch_ratio = 0.19
+
+[node name="ScanBlockHeader" type="Label" parent="SidebarVBox/ScanOptionBlock"]
+margin_right = 400.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+custom_fonts/font = ExtResource( 3 )
+text = "Scan Readout"
+align = 1
+
+[node name="NoEntityScannedLabel" type="Label" parent="SidebarVBox/ScanOptionBlock"]
+visible = false
+margin_top = 24.0
+margin_right = 400.0
+margin_bottom = 187.0
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+custom_fonts/font = SubResource( 1 )
+text = "NO ENTITY SCANNED"
+align = 1
+autowrap = true
+
+[node name="ScanBlock" type="VBoxContainer" parent="SidebarVBox/ScanOptionBlock"]
+margin_top = 24.0
+margin_right = 400.0
+margin_bottom = 268.0
+size_flags_vertical = 3
+
+[node name="ReadoutTextureName" type="HBoxContainer" parent="SidebarVBox/ScanOptionBlock/ScanBlock"]
+margin_right = 400.0
+margin_bottom = 64.0
+
+[node name="ReadoutTextureRect" type="TextureRect" parent="SidebarVBox/ScanOptionBlock/ScanBlock/ReadoutTextureName"]
+margin_right = 198.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+size_flags_horizontal = 3
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+
+[node name="ScanReadoutName" type="Label" parent="SidebarVBox/ScanOptionBlock/ScanBlock/ReadoutTextureName"]
+margin_left = 202.0
+margin_right = 400.0
+margin_bottom = 64.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource( 6 )
+custom_fonts/font = ExtResource( 3 )
+text = "Entity Name"
+valign = 1
+
+[node name="DescriptionLabel" type="RichTextLabel" parent="SidebarVBox/ScanOptionBlock/ScanBlock"]
+margin_top = 68.0
+margin_right = 400.0
+margin_bottom = 244.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 6 )
+bbcode_enabled = true
+bbcode_text = "Description Goes Here"
+text = "Description Goes Here"
+
+[node name="EncounterLogLabel" type="RichTextLabel" parent="SidebarVBox"]
+margin_top = 532.0
+margin_right = 400.0
+margin_bottom = 1008.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 6 )
+custom_fonts/bold_font = ExtResource( 3 )
+custom_fonts/normal_font = ExtResource( 2 )
+bbcode_enabled = true
+scroll_following = true

@@ -28,13 +28,11 @@ namespace SpaceDodgeRL.tests.scenes.components {
       var path = new EncounterPath(new List<EncounterPosition>() { new EncounterPosition(15, 53) });
 
       var component = PlayerComponent.Create();
-      component.LayInAutopilotPath(path);
+      component.LayInAutopilotPathForTravel(path);
       component.RegisterIntel(3);
       string saved = component.Save();
 
       var newComponent = PlayerComponent.Create(saved);
-
-      _output.WriteLine(saved);
 
       Assert.Equal(component.KnowsIntel(0), newComponent.KnowsIntel(0));
       Assert.Equal(component.KnowsIntel(1), newComponent.KnowsIntel(1));
@@ -42,8 +40,24 @@ namespace SpaceDodgeRL.tests.scenes.components {
       Assert.Equal(component.KnowsIntel(3), newComponent.KnowsIntel(3));
       Assert.Equal(component.CuttingLaserRange, newComponent.CuttingLaserRange);
       Assert.Equal(component.BaseCuttingLaserPower, newComponent.BaseCuttingLaserPower);
-      Assert.Equal(component.IsAutopiloting, newComponent.IsAutopiloting);
+      Assert.Equal(component.ActiveAutopilotMode, newComponent.ActiveAutopilotMode);
       Assert.Equal(component.AutopilotPath.CurrentPosition, newComponent.AutopilotPath.CurrentPosition);
+    }
+
+    [Fact]
+    public void SerializesAndDeserializesAutopilotZoneCorrectly() {
+      var zoneId = "123854";
+
+      var component = PlayerComponent.Create();
+      component.BeginAutoexploring(zoneId);
+
+      string saved = component.Save();
+      var newComponent = PlayerComponent.Create(saved);
+
+      Assert.Equal(component.ActiveAutopilotMode, newComponent.ActiveAutopilotMode);
+      Assert.Null(component.AutopilotPath);
+      Assert.Equal(component.AutopilotPath, newComponent.AutopilotPath);
+      Assert.Equal(component.AutopilotZoneId, newComponent.AutopilotZoneId);
     }
 
     [Fact]

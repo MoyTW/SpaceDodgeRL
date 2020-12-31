@@ -1,3 +1,4 @@
+using SpaceDodgeRL.library;
 using SpaceDodgeRL.library.encounter;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -5,11 +6,13 @@ using System.Collections.ObjectModel;
 namespace SpaceDodgeRL.scenes.encounter.state {
 
   public class FoVCache {
+    private static RPASCalculator rpasCalc = new RPASCalculator();
     private int timesCalledContains = 0;
     private int _x, _y;
     private bool[,] _visibleCells;
-    public ReadOnlyCollection<EncounterPosition> VisibleCells { get {
-      List<EncounterPosition> asPositions = new List<EncounterPosition>();
+    public HashSet<EncounterPosition> VisibleCells { get {
+      HashSet<EncounterPosition> asPositions = new HashSet<EncounterPosition>();
+
       for (int x = 0; x < _visibleCells.GetLength(0); x++) {
         for (int y = 0; y < _visibleCells.GetLength(1); y++) {
           if (_visibleCells[x, y]) {
@@ -17,10 +20,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
           }
         }
       }
-      return asPositions.AsReadOnly();
+      return asPositions;
     } }
 
-    public bool Contains(int x, int y) {
+    public bool IsVisible(EncounterPosition position) {
+      return this.IsVisible(position.X, position.Y);
+    }
+
+    public bool IsVisible(int x, int y) {
       int cX = x - _x;
       int cY = y - _y;
       if (cX >= 0 && cX < _visibleCells.GetLength(0) && cY >= 0 && cY < _visibleCells.GetLength(1)) {
@@ -41,12 +48,10 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       int _y = center.Y - radius;
       bool[,] visibleCells = new bool[radius * 2 + 1, radius * 2 + 1];
 
-      // TODO: Implement actual FoV calculations
-      for (int x = center.X - radius; x <= center.X + radius; x++) {
-        for (int y = center.Y - radius; y <= center.Y + radius; y++) {
-          if (center.DistanceTo(x, y) <= radius && state.IsInBounds(x, y)) {
-            visibleCells[x - _x, y - _y] = true;
-          }
+      var visible = rpasCalc.CalcVisibleCellsFrom(center.X, center.Y, radius, state.IsPositionVisible);
+      foreach((int, int) pos in visible) {
+        if (state.IsInBounds(pos.Item1, pos.Item2)) {
+          visibleCells[pos.Item1 - _x, pos.Item2 - _y] = true;
         }
       }
 

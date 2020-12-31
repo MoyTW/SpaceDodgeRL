@@ -11,30 +11,37 @@ using SpaceDodgeRL.scenes.components.use;
 namespace SpaceDodgeRL.scenes.entities {
 
   public static class EntityBuilder {
+    private static int ENTITY_Z_INDEX = 2;
+    private static int PROJECTILE_Z_INDEX = 1;
+    private static int ITEM_Z_INDEX = 0;
 
-    private static string _bPath = "res://resources/atlas_b.tres";
-    private static string _iPath = "res://resources/atlas_i.tres";
-    private static string _tPath = "res://resources/atlas_t.tres";
-    private static string _FPath = "res://resources/atlas_F.tres";
-    private static string _JPath = "res://resources/atlas_J.tres";
-    private static string _AtSignPath = "res://resources/atlas_@.tres";
-    private static string _StarPath = "res://resources/atlas_Star.tres";
-    private static string _hashSignPath = "res://resources/atlas_HashSign.tres";
+    private static string _texCarrierPath = "res://resources/sprites/carrier.png";
+    private static string _texCruiserPath = "res://resources/sprites/cruiser.png";
+    private static string _texDestroyerPath = "res://resources/sprites/destroyer.png";
+    private static string _texDiplomatPath = "res://resources/sprites/diplomat.png";
+    private static string _texEdgeBlockerPath = "res://resources/sprites/edge_blocker.png";
+    private static string _texGunshipPath = "res://resources/sprites/gunship.png";
+    private static string _texFighterPath = "res://resources/sprites/fighter.png";
+    private static string _texFrigatePath = "res://resources/sprites/frigate.png";
+    private static string _texIntelPath = "res://resources/sprites/intel.png";
+    private static string _texJumpPointPath = "res://resources/sprites/jump_point.png";
+    private static string _texPlayerPath = "res://resources/sprites/player.png";
+    private static string _texSatellitePath = "res://resources/sprites/asteroid.png";
+    private static string _texScoutPath = "res://resources/sprites/scout.png";
 
-    private static string _texCarrierPath = "res://resources/tex_carrier.tres";
-    private static string _texCruiserPath = "res://resources/tex_cruiser.tres";
-    private static string _texDestroyerPath = "res://resources/tex_destroyer.tres";
-    private static string _texEMPPath = "res://resources/tex_EMP.tres";
-    private static string _texDiplomatPath = "res://resources/tex_diplomat.tres";
-    private static string _texGunshipPath = "res://resources/tex_gunship.tres";
-    private static string _texFrigatePath = "res://resources/tex_frigate.tres";
-    private static string _texScoutPath = "res://resources/tex_scout.tres";
-    private static string _texSmallCannonPath = "res://resources/tex_small_cannon.tres";
-    private static string _texSmallGatlingPath = "res://resources/tex_small_gatling.tres";
-    private static string _texSmallShotgunPath = "res://resources/tex_small_shotgun.tres";
-    private static string _texRailgunPath = "res://resources/tex_railgun.tres";
-    private static string _texRedPaintPath = "res://resources/tex_red_paint.tres";
-    private static string _texReverserPath = "res://resources/tex_reverser.tres";
+    // Items
+    private static string _texBatteryPath = "res://resources/sprites/item/battery.png";
+    private static string _texDuctTapePath = "res://resources/sprites/item/duct_tape.png";
+    private static string _texEMPPath = "res://resources/sprites/item/emp.png";
+    private static string _texRedPaintPath = "res://resources/sprites/item/red_paint.png";
+
+    // Projectiles
+    private static string _texCuttingLaserPath = "res://resources/sprites/projectile/cutting_laser.png";
+    private static string _texSmallCannonPath = "res://resources/sprites/projectile/small_cannon.png";
+    private static string _texSmallGatlingPath = "res://resources/sprites/projectile/small_gatling.png";
+    private static string _texSmallShotgunPath = "res://resources/sprites/projectile/small_shotgun.png";
+    private static string _texRailgunPath = "res://resources/sprites/projectile/railgun.png";
+    private static string _texReverserPath = "res://resources/sprites/projectile/reverser.png";
 
     private class ProjectileDisplayData {
       public ProjectileType Type { get; }
@@ -49,7 +56,7 @@ namespace SpaceDodgeRL.scenes.entities {
     }
 
     private static Dictionary<ProjectileType, ProjectileDisplayData> projectileTypeToProjectileDisplay = new Dictionary<ProjectileType, ProjectileDisplayData>() {
-      { ProjectileType.CUTTING_LASER, new ProjectileDisplayData(ProjectileType.CUTTING_LASER, "cutting laser beam", _StarPath) }, // TODO: Maybe change this?
+      { ProjectileType.CUTTING_LASER, new ProjectileDisplayData(ProjectileType.CUTTING_LASER, "cutting laser beam", _texCuttingLaserPath) },
       { ProjectileType.SMALL_CANNON, new ProjectileDisplayData(ProjectileType.SMALL_CANNON, "small cannon shell", _texSmallCannonPath) },
       { ProjectileType.SMALL_GATLING, new ProjectileDisplayData(ProjectileType.SMALL_GATLING, "small gatling shell", _texSmallGatlingPath) },
       { ProjectileType.SMALL_SHOTGUN, new ProjectileDisplayData(ProjectileType.SMALL_SHOTGUN, "small shotgun pellet", _texSmallShotgunPath) },
@@ -72,7 +79,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 10));
-      e.AddComponent(DisplayComponent.Create(_texScoutPath, false));
+      e.AddComponent(DisplayComponent.Create(_texScoutPath, "A small scout craft, armed with a shotgun.", false, ENTITY_Z_INDEX));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 75));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 30));
@@ -90,7 +97,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 30));
-      e.AddComponent(DisplayComponent.Create(_FPath, false));
+      e.AddComponent(DisplayComponent.Create(_texFighterPath, "An interceptor craft armed with a rapid-fire cannon.", false, ENTITY_Z_INDEX));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 125));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 50));
@@ -108,7 +115,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 4, maxHp: 50));
-      e.AddComponent(DisplayComponent.Create(_texGunshipPath, false));
+      e.AddComponent(DisplayComponent.Create(_texGunshipPath, "A sturdy gunship, armed with anti-fighter flak and a cannon.", false, ENTITY_Z_INDEX));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 100));
@@ -126,7 +133,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 10, maxHp: 150));
-      e.AddComponent(DisplayComponent.Create(_texFrigatePath, false));
+      e.AddComponent(DisplayComponent.Create(_texFrigatePath, "An escort ship sporting a reverser gun, as well as secondary batteries.", false, ENTITY_Z_INDEX));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 250));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 200));
@@ -144,7 +151,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 15, maxHp: 200));
-      e.AddComponent(DisplayComponent.Create(_texDestroyerPath, false));
+      e.AddComponent(DisplayComponent.Create(_texDestroyerPath, "A larger anti-fighter craft with a ferocious flak barrage.", false, ENTITY_Z_INDEX));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 300));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 500));
@@ -162,7 +169,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 10, maxHp: 300));
-      e.AddComponent(DisplayComponent.Create(_texCruiserPath, false));
+      e.AddComponent(DisplayComponent.Create(_texCruiserPath, "A heavily armed and armored behemoth with a ferocious railgun.", false, ENTITY_Z_INDEX));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 400));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 1000));
@@ -180,7 +187,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 500));
-      e.AddComponent(DisplayComponent.Create(_texCarrierPath, false));
+      e.AddComponent(DisplayComponent.Create(_texCarrierPath, "An extremely slow carrier, which launches fighters or scouts every action.", false, ENTITY_Z_INDEX));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 200));
       e.AddComponent(statusEffectTrackerComponent);
       e.AddComponent(XPValueComponent.Create(xpValue: 2000));
@@ -198,7 +205,7 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick));
       e.AddComponent(CollisionComponent.CreateDefaultActor());
       e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 100));
-      e.AddComponent(DisplayComponent.Create(_texDiplomatPath, false));
+      e.AddComponent(DisplayComponent.Create(_texDiplomatPath, "Your target, the diplomat!", false, ENTITY_Z_INDEX));
       e.AddComponent(OnDeathComponent.Create(new List<string>() { OnDeathEffectType.PLAYER_VICTORY }));
       e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
       e.AddComponent(statusEffectTrackerComponent);
@@ -210,9 +217,9 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateExtraBatteryEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "extra battery");
 
-      e.AddComponent(DisplayComponent.Create(_bPath, true));
+      e.AddComponent(DisplayComponent.Create(_texBatteryPath, "An extra battery for your weapons. Gives 20 power for 450 ticks.", true, ITEM_Z_INDEX));
       e.AddComponent(StorableComponent.Create());
-      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UsableComponent.Create(useOnGet: false));
       e.AddComponent(UseEffectBoostPowerComponent.Create(boostPower: 20, duration: 450));
 
       return e;
@@ -221,9 +228,9 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateDuctTapeEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "duct tape");
 
-      e.AddComponent(DisplayComponent.Create(_tPath, true));
+      e.AddComponent(DisplayComponent.Create(_texDuctTapePath, "Some duct tape. Heals 10 HP.", true, ITEM_Z_INDEX));
       e.AddComponent(StorableComponent.Create());
-      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UsableComponent.Create(useOnGet: false));
       e.AddComponent(UseEffectHealComponent.Create(healpower: 10));
 
       return e;
@@ -232,11 +239,9 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateRedPaintEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "red paint");
 
-      // TODO: I put it down as 'r', but that's the same as the reverser shot. Well we'll replace all the sprites anwyays
-      // if I do make it pretty.
-      e.AddComponent(DisplayComponent.Create(_texRedPaintPath, true));
+      e.AddComponent(DisplayComponent.Create(_texRedPaintPath, "Reduces turn time by 75 for 300 ticks (minimum time is 1).", true, ITEM_Z_INDEX));
       e.AddComponent(StorableComponent.Create());
-      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UsableComponent.Create(useOnGet: false));
       e.AddComponent(UseEffectBoostSpeedComponent.Create(boostPower: 75, duration: 300));
 
       return e;
@@ -245,9 +250,9 @@ namespace SpaceDodgeRL.scenes.entities {
     private static Entity CreateEMPEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "EMP");
 
-      e.AddComponent(DisplayComponent.Create(_texEMPPath, true));
+      e.AddComponent(DisplayComponent.Create(_texEMPPath, "An EMP burst. Disables enemies for 10 turns in radius 20.", true, ITEM_Z_INDEX));
       e.AddComponent(StorableComponent.Create());
-      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UsableComponent.Create(useOnGet: false));
       // I seriously put 20 radius 10 turns? That's enough time to mop up an entire encounter!
       e.AddComponent(UseEffectEMPComponent.Create(radius: 20, disableTurns: 10));
 
@@ -296,15 +301,15 @@ namespace SpaceDodgeRL.scenes.entities {
       var statusEffectTrackerComponent = StatusEffectTrackerComponent.Create();
 
       e.AddComponent(ActionTimeComponent.Create(currentTick));
-      e.AddComponent(CollisionComponent.Create(true, false));
-      e.AddComponent(DefenderComponent.Create(0, 100));
-      e.AddComponent(DisplayComponent.Create(_AtSignPath, false));
+      e.AddComponent(CollisionComponent.Create(blocksMovement: true, blocksVision: false));
+      e.AddComponent(DefenderComponent.Create(baseDefense: 0, maxHp: 100, isInvincible: false));
+      e.AddComponent(DisplayComponent.Create(_texPlayerPath, "It's you!", false, ENTITY_Z_INDEX));
       e.AddComponent(InventoryComponent.Create(inventorySize: 26));
       e.AddComponent(OnDeathComponent.Create(new List<string>() { OnDeathEffectType.PLAYER_DEFEAT }));
       e.AddComponent(PlayerComponent.Create());
       e.AddComponent(SpeedComponent.Create(baseSpeed: 100));
       e.AddComponent(statusEffectTrackerComponent);
-      e.AddComponent(XPTrackerComponent.Create(200, 150));
+      e.AddComponent(XPTrackerComponent.Create(levelUpBase: 200, levelUpFactor: 150));
 
       return e;
     }
@@ -319,18 +324,18 @@ namespace SpaceDodgeRL.scenes.entities {
       e.AddComponent(ActionTimeComponent.Create(currentTick)); // Should it go instantly or should it wait for its turn...?
       e.AddComponent(AttackerComponent.Create(source.EntityId, power));
       e.AddComponent(CollisionComponent.Create(false, false, true, true));
-      e.AddComponent(DisplayComponent.Create(displayData.TexturePath, false));
+      e.AddComponent(DisplayComponent.Create(displayData.TexturePath, "A projectile.", false, PROJECTILE_Z_INDEX));
       e.AddComponent(SpeedComponent.Create(speed));
 
       return e;
     }
 
-    public static Entity CreateMapWallEntity() {
-      var e = CreateEntity(Guid.NewGuid().ToString(), "map wall");
+    public static Entity CreateEdgeBlockerEntity() {
+      var e = CreateEntity(Guid.NewGuid().ToString(), "boundary sign");
 
       e.AddComponent(CollisionComponent.Create(true, false));
       e.AddComponent(DefenderComponent.Create(0, 100, logDamage: false, isInvincible: true));
-      e.AddComponent(DisplayComponent.Create(_StarPath, true));
+      e.AddComponent(DisplayComponent.Create(_texEdgeBlockerPath, "Trying to run away, eh? Get back to your mission!", true, ENTITY_Z_INDEX));
 
       return e;
     }
@@ -339,8 +344,8 @@ namespace SpaceDodgeRL.scenes.entities {
       var e = CreateEntity(Guid.NewGuid().ToString(), "satellite");
 
       e.AddComponent(CollisionComponent.Create(blocksMovement: true, blocksVision: true));
-      e.AddComponent(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, logDamage: false));
-      e.AddComponent(DisplayComponent.Create(_hashSignPath, true));
+      e.AddComponent(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, isInvincible: true, logDamage: false));
+      e.AddComponent(DisplayComponent.Create(_texSatellitePath, "Space junk. Blocks movement and projectiles. Cannot be destroyed.", true, ENTITY_Z_INDEX));
 
       return e;
     }
@@ -348,7 +353,7 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateStairsEntity() {
       var e = CreateEntity(Guid.NewGuid().ToString(), "jump point");
 
-      e.AddComponent(DisplayComponent.Create(_JPath, true));
+      e.AddComponent(DisplayComponent.Create(_texJumpPointPath, "The jump point to the next sector.", true, ITEM_Z_INDEX));
       e.AddComponent(StairsComponent.Create());
 
       return e;
@@ -357,9 +362,9 @@ namespace SpaceDodgeRL.scenes.entities {
     public static Entity CreateIntelEntity(int targetDungeonLevel) {
       var e = CreateEntity(Guid.NewGuid().ToString(), "intel for sector " + targetDungeonLevel);
 
-      e.AddComponent(DisplayComponent.Create(_iPath, true));
+      e.AddComponent(DisplayComponent.Create(_texIntelPath, "Intel! Gives you zone information for the next sector. You want this.", true, ITEM_Z_INDEX));
       e.AddComponent(StorableComponent.Create());
-      e.AddComponent(UsableComponent.Create());
+      e.AddComponent(UsableComponent.Create(useOnGet: true));
       e.AddComponent(UseEffectAddIntelComponent.Create(targetDungeonLevel));
 
       return e;

@@ -9,12 +9,14 @@ using SpaceDodgeRL.scenes.entities;
 namespace SpaceDodgeRL.scenes.encounter.state {
 
   public class EntityReadout {
+    [JsonInclude] public string EntityId { get; private set; }
     [JsonInclude] public string EntityName { get; private set; }
     [JsonInclude] public string TexturePath { get; private set; }
 
     public EntityReadout() { }
 
     public EntityReadout(Entity entity) {
+      this.EntityId = entity.EntityId;
       this.EntityName = entity.EntityName;
       this.TexturePath = entity.GetComponent<DisplayComponent>().TexturePath;
     }
@@ -62,19 +64,23 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       this.Center = new EncounterPosition((this.X1 + this.X2) / 2, (this.Y1 + this.Y2) / 2);
     }
 
-    public EncounterPosition RandomUnblockedPosition(Random seededRand, EncounterState state) {
+    public EncounterPosition RandomEmptyPosition(Random seededRand, EncounterState state) {
       int attempts = 0;
       while (attempts < MAX_UNBLOCKED_POSITION_ATTEMPTS) {
         int x = seededRand.Next(this.Width);
         int y = seededRand.Next(this.Height);
 
-        if (!state.IsPositionBlocked(this.X1 + x, this.Y1 + y)) {
+        if (state.EntitiesAtPosition(this.X1 + x, this.Y1 + y).Count == 0) {
           return new EncounterPosition(this.X1 + x, this.Y1 + y);
         } else {
           attempts++;
         }
       }
       throw new NotImplementedException("ok really we should probably handle this sanely but 250 attemps it a lotta attempts!");
+    }
+
+    public bool Contains(int x, int y) {
+      return this.X1 <= x && this.X2 >= x && this.Y1 <= y && this.Y2 >= y;
     }
 
     public bool Intersects(EncounterZone other) {
