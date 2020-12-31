@@ -34,7 +34,8 @@ namespace SpaceDodgeRL.library {
     }
 
     public HashSet<(int, int)> CalcVisibleCellsFrom(int x, int y, int radius, Func<int, int, bool> isTransparent) {
-      var cells = VisibleCellsInQuadrantFrom(x, y, 1, 1, radius, isTransparent);
+      var cells = new HashSet<(int, int)>{ (x, y) };
+      cells.UnionWith(VisibleCellsInQuadrantFrom(x, y, 1, 1, radius, isTransparent));
       cells.UnionWith(VisibleCellsInQuadrantFrom(x, y, 1, -1, radius, isTransparent));
       cells.UnionWith(VisibleCellsInQuadrantFrom(x, y, -1, 1, radius, isTransparent));
       cells.UnionWith(VisibleCellsInQuadrantFrom(x, y, -1, -1, radius, isTransparent));
