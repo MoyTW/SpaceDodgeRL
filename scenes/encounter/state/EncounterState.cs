@@ -58,6 +58,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     private List<PositionComponent> _animatingSprites = new List<PositionComponent>();
     private DynamicFont _damageFont;
     private List<Label> _damageLabels = new List<Label>();
+    public bool HasAnimatingSprites { get {
+      foreach (Entity e in this.PositionEntities()) {
+        if (e.GetComponent<PositionComponent>().IsAnimating) {
+          return true;
+        }
+      }
+      return this._animatingSprites.Count > 0;
+    } }
 
     public override void _Process(float delta) {
       foreach(var c in this._animatingSprites) {

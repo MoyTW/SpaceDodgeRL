@@ -153,7 +153,7 @@ long as it accurately gives the player that information.
 + It gets really brutal near the end! You pretty much have to hoard items in the early-game and then pop them all at once to get through that.
 + FIXED: If a fighter moves into you and fires you don't see any visible feedback even on high turn times!
   - Funny...it certainly has multiple frames.
-+ TODO: High turn times introduce noticable input lag, even when they shouldn't.
++ FIXED: High turn times introduce noticable input lag, even when they shouldn't.
 
 ** ADDRESSED: Issue: 'instant' projectile creation & destruction
 

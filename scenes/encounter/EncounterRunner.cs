@@ -34,8 +34,10 @@ namespace SpaceDodgeRL.scenes.encounter {
     public override void _Process(float delta) {
       // Special-case for fast (1 frame per action) autopiloting
       var isAutopiloting = this._encounterState.Player.GetComponent<PlayerComponent>().ActiveAutopilotMode != AutopilotMode.OFF;
+      // If it's the player's turn, and there are no animating sprites, we don't need to wait on input for the whole timer
+      var isReadyForPlayerInput = IsPlayerTurn(this._encounterState) && !this._encounterState.HasAnimatingSprites;
 
-      if (isAutopiloting || msUntilTurn <= 0) {
+      if (isAutopiloting || msUntilTurn <= 0 || isReadyForPlayerInput) {
         RunTurn(this._encounterState, inputHandlerRef);
         msUntilTurn = this._gameSettings.TurnTimeMs / 1000f;
       } else {
@@ -96,6 +98,10 @@ namespace SpaceDodgeRL.scenes.encounter {
     private void PlayerWait(EncounterState state) {
       var waitAction = new WaitAction(state.Player.EntityId);
       PlayerExecuteTurnEndingAction(waitAction, state);
+    }
+
+    private bool IsPlayerTurn(EncounterState state) {
+      return state.NextEntity.IsInGroup(PlayerComponent.ENTITY_GROUP);
     }
 
     private void RunTurn(EncounterState state, InputHandler inputHandler) {
