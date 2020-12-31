@@ -32,17 +32,7 @@ namespace SpaceDodgeRL.scenes.components {
     } }
 
     private EncounterPosition _encounterPosition = new EncounterPosition(int.MinValue, int.MinValue);
-    public EncounterPosition EncounterPosition {
-      get => _encounterPosition;
-      set {
-        var dx = value.X - _encounterPosition.X;
-        var dy = value.Y - _encounterPosition.Y;
-        RotateSpriteTowards(dx, dy);
-
-        _encounterPosition = value;
-        Tween(IndexToVector(value.X, value.Y));
-      }
-    }
+    public EncounterPosition EncounterPosition { get => _encounterPosition; }
 
     public bool IsAnimating { get {
       var encounterPosition = IndexToVector(this.EncounterPosition.X, this.EncounterPosition.Y);
@@ -67,6 +57,21 @@ namespace SpaceDodgeRL.scenes.components {
     public static PositionComponent Create(string saveData) {
       var loaded = JsonSerializer.Deserialize<SaveData>(saveData);
       return PositionComponent.Create(loaded.EncounterPosition, loaded.TexturePath, loaded.ZIndex);
+    }
+
+    public void SetEncounterPosition(EncounterPosition position, bool show) {
+      var dx = position.X - _encounterPosition.X;
+      var dy = position.Y - _encounterPosition.Y;
+      RotateSpriteTowards(dx, dy);
+
+      _encounterPosition = position;
+      Tween(IndexToVector(position.X, position.Y));
+
+      if (show) {
+        this.Show();
+      } else {
+        this.Hide();
+      }
     }
 
     public void Show() {

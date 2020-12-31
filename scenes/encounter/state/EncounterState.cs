@@ -300,7 +300,8 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       var oldPosition = positionComponent.EncounterPosition;
 
       this._encounterTiles[oldPosition.X, oldPosition.Y].RemoveEntity(entity);
-      positionComponent.EncounterPosition = targetPosition;
+      bool shouldBeVisible = entity.GetComponent<DisplayComponent>().VisibleInFoW || this.FoVCache.IsVisible(targetPosition);
+      positionComponent.SetEncounterPosition(targetPosition, shouldBeVisible);
       this._encounterTiles[targetPosition.X, targetPosition.Y].AddEntity(entity);
     }
 
