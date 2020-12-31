@@ -5,6 +5,7 @@ using SpaceDodgeRL.scenes.components.AI;
 using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
 
@@ -22,26 +23,18 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     /**
-     * Displays the danger map on the "DangerMap" TileMap.
+     * Displays the danger map on the "DangerMap" TileMap. Sums the probable (get to that in a moment) damage the player would
+     * take from being on the given square on their next turn.
      *
-     * "Danger" is kind of tricky, because it's not binary. We have several basic states:
-     * 1: Safe - no projectile path crosses this tile at all
-     * 2: Dangerous - a projectile path crosses this tile, and cannot be stopped from doing so (see below)
-     * 3: Now safe, possibly dangerous - there is an obstruction in between the tile and the projectile, but the obstruction may
-     *    move or be destroyed before the projectile hits it.
-     * 4: Now dangerous, possibly safe - there is no obstruction, but there is the possibility of something moving between the
-     *    projectile and the tile before the projectile finishes its movement.
+     * "Danger" is kind of tricky, because the possible danger can be influenced by enemy movement. For example, a railgun shot
+     * can be intercepted by a scout, rendering all tiles in its path 'safe', but we have no idea if the scout will or won't move
+     * onto that square. Our current rule is "You can never get hit on a safe square, but can sometimes avoid getting hit on a
+     * dangerous square." So, we stop a projectile path if it would hit a satellite, but don't stop if it would hit a cruiser,
+     * even if the cruiser wouldn't have time to move, because it might be destroyed by another projectile and then let the
+     * projectile pass.
      *
-     * The current rule should be "You can never get hit on a safe square, but can sometimes avoid getting hit on a dangerous
-     * square."
-     *
-     * With an infinite-speed projectile, cases 3 & 4 cease to exist; however all enemy projectiles have travel time. Therefore
-     * you're going to have a lot of states 3 & 4! At the moment we should err on marking dangerous by default, but we should
-     * come back to this and think about if we can have a different color/status to 3 & 4. Likewise, we currently do not attempt
-     * to distinguish between "you will take a shotgun shell if you move here" and "you're gonna get pasted by 4 railgun shots",
-     * which is another aspect that the danger map currently flattens.
-     *
-     * TODO: work out how to display blocking projectiles and danger magnitudes
+     * While you could theoretically simulate to the maximum possible fidelity, such that you don't paint it if the cruiser has
+     * HP than it could possibly take in a round and do if it doesn't, that doesn't seem worth it.
      */
     public void UpdateAllTiles(EncounterState state) {
       var pathEntities = GetTree().GetNodesInGroup(PathAIComponent.ENTITY_GROUP);
@@ -56,7 +49,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         var dangerPositions = CalcDangerPositions(pathEntity, timeToNextPlayerMove);
 
         RotateSpriteTowardsDestination(pathEntity, dangerPositions);
-        foreach (EncounterPosition dangerPosition in dangerPositions) {
+        foreach (EncounterPosition dangerPosition in dangerPositions.Where(p => state.FoVCache.IsVisible(p))) {
           // If we have a fully immobile, invincible entity at the position we stop the path - otherwise we still draw it.
           var blockingEntity = state.BlockingEntityAtPosition(dangerPosition.X, dangerPosition.Y);
           if (blockingEntity != null &&
