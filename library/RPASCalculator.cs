@@ -56,7 +56,7 @@ namespace SpaceDodgeRL.library {
         int numCellsInRow = iteration + 1;
         double angleAllocation = 1.0f / (double)numCellsInRow;
 
-        for (int step = 0; step < iteration; step++) {
+        for (int step = 0; step < numCellsInRow; step++) {
           var cell = CellAt(centerX, centerY, quadX, quadY, step, iteration, isVertical);
 
           if (CellInRadius(centerX, centerY, cell, radius)) {
