@@ -47,6 +47,17 @@ namespace SpaceDodgeRL.scenes.entities {
         entity.AddComponent(component);
       }
 
+      // TODO: Formalize this into a "template" concept
+      if (entity.EntityName == "boundary sign") {
+        entity.AddComponent(CollisionComponent.Create(true, false));
+        entity.AddComponent(DefenderComponent.Create(0, 100, logDamage: false, isInvincible: true));
+        entity.AddComponent(DisplayComponent.Create("res://resources/sprites/edge_blocker.png", "Trying to run away, eh? Get back to your mission!", true, 2));
+      } else if (entity.EntityName == "satellite") {
+        entity.AddComponent(CollisionComponent.Create(blocksMovement: true, blocksVision: true));
+        entity.AddComponent(DefenderComponent.Create(baseDefense: int.MaxValue, maxHp: int.MaxValue, isInvincible: true, logDamage: false));
+        entity.AddComponent(DisplayComponent.Create("res://resources/sprites/asteroid.png", "Space junk. Blocks movement and projectiles. Cannot be destroyed.", true, 2));
+      }
+
       return entity;
     }
 
@@ -130,6 +141,16 @@ namespace SpaceDodgeRL.scenes.entities {
         this.EntityId = entity.EntityId;
         this.EntityName = entity.EntityName;
         this.Components = entity._Components;
+
+        if (entity.EntityName == "boundary sign") {
+          var positionComponent = entity.GetComponent<PositionComponent>();
+          this.Components.Clear();
+          this.Components.Add(positionComponent);
+        } else if (entity.EntityName == "satellite") {
+          var positionComponent = entity.GetComponent<PositionComponent>();
+          this.Components.Clear();
+          this.Components.Add(positionComponent);
+        }
       }
     }
   }
