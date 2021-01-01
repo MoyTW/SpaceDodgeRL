@@ -199,28 +199,16 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         throw new NotImplementedException("out of bounds");
       }
 
-      // It's a little silly to have this calculated on first invocation instead of on creation/on load; in practice computers
-      // are fast and this is unnoticable; it might be annoying to track down six months from now if I'm still working on it
-      // though...it'd definitely be annoying if somebody else was working on it!
-      var closestZoneId = this._encounterTiles[x, y].ClosestZoneId;
-      if (closestZoneId == null) {
-        for (int tx = 0; tx < this.MapWidth; tx++) {
-          for (int ty = 0; ty < this.MapHeight; ty++) {
-            EncounterZone closestZone = null;
-            float smallestDistance = float.MaxValue;
-            foreach (EncounterZone zone in this.Zones) {
-              var distance = zone.Center.DistanceTo(tx, ty);
-              if (distance < smallestDistance) {
-                smallestDistance = distance;
-                closestZone = zone;
-              }
-            }
-            this._encounterTiles[tx, ty].ClosestZoneId = closestZone.ZoneId;
-          }
+      EncounterZone closestZone = null;
+      float smallestDistance = float.MaxValue;
+      foreach (EncounterZone zone in this.Zones) {
+        var distance = zone.Center.DistanceTo(x, y);
+        if (distance < smallestDistance) {
+          smallestDistance = distance;
+          closestZone = zone;
         }
-        closestZoneId = this._encounterTiles[x, y].ClosestZoneId;
       }
-      return this.GetZoneById(closestZoneId);
+      return closestZone;
     }
 
     /**

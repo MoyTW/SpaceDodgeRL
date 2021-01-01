@@ -25,7 +25,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
     }
     public bool Explored { get; set; } = false;
-    public string ClosestZoneId { get; set; }
 
     private List<Entity> _entities = new List<Entity>();
     public ReadOnlyCollection<Entity> Entities { get => _entities.AsReadOnly(); }
@@ -40,7 +39,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     public class SaveData {
       public bool Explored { get; set; }
       public List<string> EntityIds { get; set; }
-      public string ClosestZoneId { get; set; }
     }
 
     public static EncounterTile FromSaveData(SaveData data, Dictionary<string, Entity> entitiesById) {
@@ -49,7 +47,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       foreach (var entityId in data.EntityIds) {
         tile.AddEntity(entitiesById[entityId]);
       }
-      tile.ClosestZoneId = data.ClosestZoneId;
       return tile;
     }
 
@@ -57,7 +54,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       var data = new SaveData();
       data.Explored = this.Explored;
       data.EntityIds = this._entities.Select(e => e.EntityId).ToList();
-      data.ClosestZoneId = this.ClosestZoneId;
       return data;
     }
   }
