@@ -25,7 +25,6 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       }
     }
     public bool Explored { get; set; } = false;
-    public string ClosestZoneId { get; set; }
 
     private List<Entity> _entities = new List<Entity>();
     public ReadOnlyCollection<Entity> Entities { get => _entities.AsReadOnly(); }
@@ -37,28 +36,17 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       _entities.Remove(entity);
     }
 
-    public class SaveData {
-      public bool Explored { get; set; }
-      public List<string> EntityIds { get; set; }
-      public string ClosestZoneId { get; set; }
-    }
-
-    public static EncounterTile FromSaveData(SaveData data, Dictionary<string, Entity> entitiesById) {
+    // For reasons of save size, we only save explored data from our tile map. This is because the entity list can be derived
+    // from the components of the entities trivially, so we don't need to store them in the tiles as well.
+    public static EncounterTile FromSaveData(bool explored, List<Entity> entities) {
       var tile = new EncounterTile();
-      tile.Explored = data.Explored;
-      foreach (var entityId in data.EntityIds) {
-        tile.AddEntity(entitiesById[entityId]);
+      tile.Explored = explored;
+      if (entities != null) {
+        foreach (var entity in entities) {
+          tile.AddEntity(entity);
+        }
       }
-      tile.ClosestZoneId = data.ClosestZoneId;
       return tile;
-    }
-
-    public SaveData ToSaveData() {
-      var data = new SaveData();
-      data.Explored = this.Explored;
-      data.EntityIds = this._entities.Select(e => e.EntityId).ToList();
-      data.ClosestZoneId = this.ClosestZoneId;
-      return data;
     }
   }
 }

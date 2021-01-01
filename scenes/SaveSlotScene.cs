@@ -1,8 +1,10 @@
 using Godot;
+using SpaceDodgeRL.library;
 using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.singletons;
 using System;
+using System.Diagnostics;
 
 public class SaveSlotScene : HBoxContainer {
   private static PackedScene _encounterPrefab = GD.Load<PackedScene>("res://scenes/EncounterScene.tscn");
@@ -87,12 +89,18 @@ public class SaveSlotScene : HBoxContainer {
     } else {
       var scene = _encounterPrefab.Instance() as EncounterScene;
 
+      Stopwatch stopwatch = new Stopwatch();
+      stopwatch.Start();
+
       Godot.File file = new Godot.File();
       file.Open(this.SaveLocation, File.ModeFlags.Read);
       var saveData = file.GetAsText();
+      saveData = StringCompression.DecompressString(saveData);
       file.Close();
 
       var oldState = EncounterState.FromSaveData(saveData);
+      stopwatch.Stop();
+      GD.Print("SaveSlotScene load completed, elapsed ms: ", stopwatch.ElapsedMilliseconds);
       scene.SetEncounterState(oldState);
 
       var sceneManager = (SceneManager)GetNode("/root/SceneManager");

@@ -1,4 +1,5 @@
 using Godot;
+using SpaceDodgeRL.library;
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
@@ -6,7 +7,9 @@ using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
@@ -198,28 +201,16 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         throw new NotImplementedException("out of bounds");
       }
 
-      // It's a little silly to have this calculated on first invocation instead of on creation/on load; in practice computers
-      // are fast and this is unnoticable; it might be annoying to track down six months from now if I'm still working on it
-      // though...it'd definitely be annoying if somebody else was working on it!
-      var closestZoneId = this._encounterTiles[x, y].ClosestZoneId;
-      if (closestZoneId == null) {
-        for (int tx = 0; tx < this.MapWidth; tx++) {
-          for (int ty = 0; ty < this.MapHeight; ty++) {
-            EncounterZone closestZone = null;
-            float smallestDistance = float.MaxValue;
-            foreach (EncounterZone zone in this.Zones) {
-              var distance = zone.Center.DistanceTo(tx, ty);
-              if (distance < smallestDistance) {
-                smallestDistance = distance;
-                closestZone = zone;
-              }
-            }
-            this._encounterTiles[tx, ty].ClosestZoneId = closestZone.ZoneId;
-          }
+      EncounterZone closestZone = null;
+      float smallestDistance = float.MaxValue;
+      foreach (EncounterZone zone in this.Zones) {
+        var distance = zone.Center.DistanceTo(x, y);
+        if (distance < smallestDistance) {
+          smallestDistance = distance;
+          closestZone = zone;
         }
-        closestZoneId = this._encounterTiles[x, y].ClosestZoneId;
       }
-      return this.GetZoneById(closestZoneId);
+      return closestZone;
     }
 
     /**
@@ -547,9 +538,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       public List<string> EncounterLog { get; set; }
       public int MapWidth { get; set; }
       public int MapHeight { get; set; }
-      public EncounterTile.SaveData[][] EncounterTiles { get; set; }
+      public List<Entity> Entities { get; set; }
+      public string EncounterTileExploration { get; set; }
       public List<EncounterZone> Zones { get; set; }
-      public Dictionary<string, Entity> EntitiesById { get; set; }
       public Dictionary<string, bool> ActivationTracker { get; set; }
       public string RunStatus { get; set; }
       public ActionTimeline.SaveData ActionTimeline { get; set; }
@@ -562,7 +553,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     public static EncounterState FromSaveData(string saveData) {
+      Stopwatch stopwatch = new Stopwatch();
+      stopwatch.Start();
+
+      Stopwatch deserializer = new Stopwatch();
+      deserializer.Start();
       SaveData data = JsonSerializer.Deserialize<SaveData>(saveData);
+      deserializer.Stop();
+      GD.Print("Deserialization ms: ", deserializer.ElapsedMilliseconds);
       EncounterState state = _encounterPrefab.Instance() as EncounterState;
 
       state.SaveFilePath = data.SaveFilePath;
@@ -570,21 +568,39 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state._encounterLog = data.EncounterLog;
       state.MapWidth = data.MapWidth;
       state.MapHeight = data.MapHeight;
+
+      Dictionary<EncounterPosition, List<Entity>> entitiesToPositions = new Dictionary<EncounterPosition, List<Entity>>();
+      Dictionary<string, Entity> entitiesById = new Dictionary<string, Entity>();
+      foreach (var entity in data.Entities) {
+        entitiesById.Add(entity.EntityId, entity);
+        var positionComponent = entity.GetComponent<PositionComponent>();
+        if (positionComponent != null) {
+          if (!entitiesToPositions.ContainsKey(positionComponent.EncounterPosition)) {
+            entitiesToPositions[positionComponent.EncounterPosition] = new List<Entity>();
+          }
+          entitiesToPositions[positionComponent.EncounterPosition].Add(entity);
+        }
+      }
+
       state._encounterTiles = new EncounterTile[data.MapHeight, data.MapHeight];
       for (int x = 0; x < data.MapWidth; x++) {
         for (int y = 0; y < data.MapHeight; y++) {
-          state._encounterTiles[x, y] = EncounterTile.FromSaveData(data.EncounterTiles[x][y], data.EntitiesById);
+          var pos = new EncounterPosition(x, y);
+          bool explored = data.EncounterTileExploration[x * data.MapWidth + y] == 'x';
+          List<Entity> entities = entitiesToPositions.ContainsKey(pos) ? entitiesToPositions[pos] : null;
+          state._encounterTiles[x, y] = EncounterTile.FromSaveData(explored, entities);
         }
       }
+
       state._zones = data.Zones;
-      state._entitiesById = data.EntitiesById;
-      foreach (var entity in data.EntitiesById.Values) {
+      state._entitiesById = entitiesById;
+      foreach (var entity in data.Entities) {
         state.AddChild(entity);
       }
       state._activationTracker = data.ActivationTracker;
       state.RunStatus = data.RunStatus != null ? data.RunStatus : EncounterState.RUN_STATUS_RUNNING;
-      state._actionTimeline = ActionTimeline.FromSaveData(data.ActionTimeline, data.EntitiesById);
-      state.Player = data.EntitiesById[data.PlayerId];
+      state._actionTimeline = ActionTimeline.FromSaveData(data.ActionTimeline, entitiesById);
+      state.Player = entitiesById[data.PlayerId];
       // TODO: Dungeon height
       state.DungeonLevel = data.DungeonLevel;
 
@@ -601,14 +617,24 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state.InitFoWOverlay();
       state.UpdatePlayerOverlays();
 
+      stopwatch.Stop();
+      GD.Print("EncounterState saveData -> EncounterState completed, elapsed time: ", stopwatch.ElapsedMilliseconds);
+
       return state;
     }
 
     public void WriteToFile() {
+      Stopwatch stopwatch = new Stopwatch();
+      stopwatch.Start();
+
       Godot.File write = new Godot.File();
       write.Open(this.SaveFilePath, File.ModeFlags.Write);
-      write.StoreString(this.ToSaveData());
+      string saveString = this.ToSaveData();
+      saveString = StringCompression.CompressString(saveString);
+      write.StoreString(saveString);
       write.Close();
+
+      GD.Print("EncounterState file writed completed, elapsed time: ", stopwatch.ElapsedMilliseconds);
     }
 
     private string ToSaveData() {
@@ -618,15 +644,21 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       data.EncounterLog = this._encounterLog;
       data.MapWidth = this.MapWidth;
       data.MapHeight = this.MapHeight;
-      data.EncounterTiles = new EncounterTile.SaveData[data.MapWidth][];
+
+      StringBuilder builder = new StringBuilder();
       for (int x = 0; x < data.MapWidth; x++) {
-        data.EncounterTiles[x] = new EncounterTile.SaveData[data.MapHeight];
         for (int y = 0; y < data.MapHeight; y++) {
-          data.EncounterTiles[x][y] = this._encounterTiles[x, y].ToSaveData();
+          if (this._encounterTiles[x, y].Explored) {
+            builder.Append('x');
+          } else {
+            builder.Append('o');
+          }
         }
       }
+      data.EncounterTileExploration = builder.ToString();
+
       data.Zones = this._zones;
-      data.EntitiesById = this._entitiesById;
+      data.Entities = this._entitiesById.Values.ToList();
       data.ActivationTracker = this._activationTracker;
       data.RunStatus = this.RunStatus;
       data.ActionTimeline = this._actionTimeline.ToSaveData();
