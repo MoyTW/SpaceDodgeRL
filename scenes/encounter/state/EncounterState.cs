@@ -538,7 +538,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       public int MapHeight { get; set; }
       public List<EncounterTile.SaveData> EncounterTiles { get; set; }
       public List<EncounterZone> Zones { get; set; }
-      public Dictionary<string, Entity> EntitiesById { get; set; }
+      public List<Entity> Entities { get; set; }
       public Dictionary<string, bool> ActivationTracker { get; set; }
       public string RunStatus { get; set; }
       public ActionTimeline.SaveData ActionTimeline { get; set; }
@@ -575,18 +575,22 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       // There are formats that I could store that would let me easily index into the sparse array but I'm worried mostly about
       // the disk transfer, since I think that's the major issue with the slow browser loads...but I don't actually know how to
       // profile the HTML5 version of the game! so! actually who knows, that's just a guess!
+      Dictionary<string, Entity> entitiesById = new Dictionary<string, Entity>();
+      foreach (var entity in data.Entities) {
+        entitiesById.Add(entity.EntityId, entity);
+      }
       foreach(var tileData in data.EncounterTiles) {
-        state._encounterTiles[tileData.X, tileData.Y] = EncounterTile.FromSaveData(tileData, data.EntitiesById);
+        state._encounterTiles[tileData.X, tileData.Y] = EncounterTile.FromSaveData(tileData, entitiesById);
       }
       state._zones = data.Zones;
-      state._entitiesById = data.EntitiesById;
-      foreach (var entity in data.EntitiesById.Values) {
+      state._entitiesById = entitiesById;
+      foreach (var entity in data.Entities) {
         state.AddChild(entity);
       }
       state._activationTracker = data.ActivationTracker;
       state.RunStatus = data.RunStatus != null ? data.RunStatus : EncounterState.RUN_STATUS_RUNNING;
-      state._actionTimeline = ActionTimeline.FromSaveData(data.ActionTimeline, data.EntitiesById);
-      state.Player = data.EntitiesById[data.PlayerId];
+      state._actionTimeline = ActionTimeline.FromSaveData(data.ActionTimeline, entitiesById);
+      state.Player = entitiesById[data.PlayerId];
       // TODO: Dungeon height
       state.DungeonLevel = data.DungeonLevel;
 
@@ -639,7 +643,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
         }
       }
       data.Zones = this._zones;
-      data.EntitiesById = this._entitiesById;
+      data.Entities = this._entitiesById.Values.ToList();
       data.ActivationTracker = this._activationTracker;
       data.RunStatus = this.RunStatus;
       data.ActionTimeline = this._actionTimeline.ToSaveData();
