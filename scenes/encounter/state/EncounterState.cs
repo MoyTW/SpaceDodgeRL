@@ -536,7 +536,7 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       public List<string> EncounterLog { get; set; }
       public int MapWidth { get; set; }
       public int MapHeight { get; set; }
-      public EncounterTile.SaveData[][] EncounterTiles { get; set; }
+      public List<EncounterTile.SaveData> EncounterTiles { get; set; }
       public List<EncounterZone> Zones { get; set; }
       public Dictionary<string, Entity> EntitiesById { get; set; }
       public Dictionary<string, bool> ActivationTracker { get; set; }
@@ -569,8 +569,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state._encounterTiles = new EncounterTile[data.MapHeight, data.MapHeight];
       for (int x = 0; x < data.MapWidth; x++) {
         for (int y = 0; y < data.MapHeight; y++) {
-          state._encounterTiles[x, y] = EncounterTile.FromSaveData(data.EncounterTiles[x][y], data.EntitiesById);
+          state._encounterTiles[x, y] = new EncounterTile();
         }
+      }
+      // There are formats that I could store that would let me easily index into the sparse array but I'm worried mostly about
+      // the disk transfer, since I think that's the major issue with the slow browser loads...but I don't actually know how to
+      // profile the HTML5 version of the game! so! actually who knows, that's just a guess!
+      foreach(var tileData in data.EncounterTiles) {
+        state._encounterTiles[tileData.X, tileData.Y] = EncounterTile.FromSaveData(tileData, data.EntitiesById);
       }
       state._zones = data.Zones;
       state._entitiesById = data.EntitiesById;
@@ -622,11 +628,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       data.EncounterLog = this._encounterLog;
       data.MapWidth = this.MapWidth;
       data.MapHeight = this.MapHeight;
-      data.EncounterTiles = new EncounterTile.SaveData[data.MapWidth][];
+
+      data.EncounterTiles = new List<EncounterTile.SaveData>();
       for (int x = 0; x < data.MapWidth; x++) {
-        data.EncounterTiles[x] = new EncounterTile.SaveData[data.MapHeight];
         for (int y = 0; y < data.MapHeight; y++) {
-          data.EncounterTiles[x][y] = this._encounterTiles[x, y].ToSaveData();
+          var saveData = this._encounterTiles[x, y].ToSaveData(x, y);
+          if (saveData != null) {
+            data.EncounterTiles.Add(saveData);
+          }
         }
       }
       data.Zones = this._zones;

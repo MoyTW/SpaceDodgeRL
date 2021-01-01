@@ -37,8 +37,17 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     public class SaveData {
+      public int X { get; set; }
+      public int Y { get; set; }
       public bool Explored { get; set; }
       public List<string> EntityIds { get; set; }
+
+      public SaveData(int x, int y, bool explored, List<string> entityIds) {
+        this.X = x;
+        this.Y = y;
+        this.Explored = explored;
+        this.EntityIds = entityIds;
+      }
     }
 
     public static EncounterTile FromSaveData(SaveData data, Dictionary<string, Entity> entitiesById) {
@@ -50,11 +59,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       return tile;
     }
 
-    public SaveData ToSaveData() {
-      var data = new SaveData();
-      data.Explored = this.Explored;
-      data.EntityIds = this._entities.Select(e => e.EntityId).ToList();
-      return data;
+    // Returns null if there's nothing interesting in the array
+    public SaveData ToSaveData(int x, int y) {
+      if (!this.Explored && this.Entities.Count == 0) {
+        return null;
+      } else {
+        var entityIds = this._entities.Select(e => e.EntityId).ToList();
+        return new SaveData(x, y, this.Explored, entityIds);
+      }
     }
   }
 }
