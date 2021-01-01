@@ -6,6 +6,7 @@ using SpaceDodgeRL.scenes.entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 
@@ -562,7 +563,14 @@ namespace SpaceDodgeRL.scenes.encounter.state {
     }
 
     public static EncounterState FromSaveData(string saveData) {
+      Stopwatch stopwatch = new Stopwatch();
+      stopwatch.Start();
+
+      Stopwatch deserializer = new Stopwatch();
+      deserializer.Start();
       SaveData data = JsonSerializer.Deserialize<SaveData>(saveData);
+      deserializer.Stop();
+      GD.Print("Deserialization ms: ", deserializer.ElapsedMilliseconds);
       EncounterState state = _encounterPrefab.Instance() as EncounterState;
 
       state.SaveFilePath = data.SaveFilePath;
@@ -601,14 +609,22 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state.InitFoWOverlay();
       state.UpdatePlayerOverlays();
 
+      stopwatch.Stop();
+      GD.Print("EncounterState saveData -> EncounterState completed, elapsed time: ", stopwatch.ElapsedMilliseconds);
+
       return state;
     }
 
     public void WriteToFile() {
+      Stopwatch stopwatch = new Stopwatch();
+      stopwatch.Start();
+
       Godot.File write = new Godot.File();
       write.Open(this.SaveFilePath, File.ModeFlags.Write);
       write.StoreString(this.ToSaveData());
       write.Close();
+
+      GD.Print("EncounterState file writed completed, elapsed time: ", stopwatch.ElapsedMilliseconds);
     }
 
     private string ToSaveData() {
