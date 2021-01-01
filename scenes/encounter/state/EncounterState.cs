@@ -1,4 +1,5 @@
 using Godot;
+using SpaceDodgeRL.library;
 using SpaceDodgeRL.library.encounter;
 using SpaceDodgeRL.scenes.components;
 using SpaceDodgeRL.scenes.components.AI;
@@ -628,7 +629,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
 
       Godot.File write = new Godot.File();
       write.Open(this.SaveFilePath, File.ModeFlags.Write);
-      write.StoreString(this.ToSaveData());
+      string saveString = this.ToSaveData();
+      saveString = StringCompression.CompressString(saveString);
+      write.StoreString(saveString);
       write.Close();
 
       GD.Print("EncounterState file writed completed, elapsed time: ", stopwatch.ElapsedMilliseconds);

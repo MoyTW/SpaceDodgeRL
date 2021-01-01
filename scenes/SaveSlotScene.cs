@@ -1,4 +1,5 @@
 using Godot;
+using SpaceDodgeRL.library;
 using SpaceDodgeRL.scenes;
 using SpaceDodgeRL.scenes.encounter.state;
 using SpaceDodgeRL.scenes.singletons;
@@ -94,6 +95,7 @@ public class SaveSlotScene : HBoxContainer {
       Godot.File file = new Godot.File();
       file.Open(this.SaveLocation, File.ModeFlags.Read);
       var saveData = file.GetAsText();
+      saveData = StringCompression.DecompressString(saveData);
       file.Close();
 
       var oldState = EncounterState.FromSaveData(saveData);
