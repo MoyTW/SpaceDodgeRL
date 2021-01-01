@@ -36,37 +36,17 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       _entities.Remove(entity);
     }
 
-    public class SaveData {
-      public int X { get; set; }
-      public int Y { get; set; }
-      public bool Explored { get; set; }
-      public List<string> EntityIds { get; set; }
-
-      public SaveData(int x, int y, bool explored, List<string> entityIds) {
-        this.X = x;
-        this.Y = y;
-        this.Explored = explored;
-        this.EntityIds = entityIds;
-      }
-    }
-
-    public static EncounterTile FromSaveData(SaveData data, Dictionary<string, Entity> entitiesById) {
+    // For reasons of save size, we only save explored data from our tile map. This is because the entity list can be derived
+    // from the components of the entities trivially, so we don't need to store them in the tiles as well.
+    public static EncounterTile FromSaveData(bool explored, List<Entity> entities) {
       var tile = new EncounterTile();
-      tile.Explored = data.Explored;
-      foreach (var entityId in data.EntityIds) {
-        tile.AddEntity(entitiesById[entityId]);
+      tile.Explored = explored;
+      if (entities != null) {
+        foreach (var entity in entities) {
+          tile.AddEntity(entity);
+        }
       }
       return tile;
-    }
-
-    // Returns null if there's nothing interesting in the array
-    public SaveData ToSaveData(int x, int y) {
-      if (!this.Explored && this.Entities.Count == 0) {
-        return null;
-      } else {
-        var entityIds = this._entities.Select(e => e.EntityId).ToList();
-        return new SaveData(x, y, this.Explored, entityIds);
-      }
     }
   }
 }

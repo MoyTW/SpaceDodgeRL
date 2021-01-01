@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 
 namespace SpaceDodgeRL.scenes.encounter.state {
@@ -536,9 +537,9 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       public List<string> EncounterLog { get; set; }
       public int MapWidth { get; set; }
       public int MapHeight { get; set; }
-      public List<EncounterTile.SaveData> EncounterTiles { get; set; }
-      public List<EncounterZone> Zones { get; set; }
       public List<Entity> Entities { get; set; }
+      public string EncounterTileExploration { get; set; }
+      public List<EncounterZone> Zones { get; set; }
       public Dictionary<string, bool> ActivationTracker { get; set; }
       public string RunStatus { get; set; }
       public ActionTimeline.SaveData ActionTimeline { get; set; }
@@ -566,22 +567,30 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       state._encounterLog = data.EncounterLog;
       state.MapWidth = data.MapWidth;
       state.MapHeight = data.MapHeight;
-      state._encounterTiles = new EncounterTile[data.MapHeight, data.MapHeight];
-      for (int x = 0; x < data.MapWidth; x++) {
-        for (int y = 0; y < data.MapHeight; y++) {
-          state._encounterTiles[x, y] = new EncounterTile();
-        }
-      }
-      // There are formats that I could store that would let me easily index into the sparse array but I'm worried mostly about
-      // the disk transfer, since I think that's the major issue with the slow browser loads...but I don't actually know how to
-      // profile the HTML5 version of the game! so! actually who knows, that's just a guess!
+
+      Dictionary<EncounterPosition, List<Entity>> entitiesToPositions = new Dictionary<EncounterPosition, List<Entity>>();
       Dictionary<string, Entity> entitiesById = new Dictionary<string, Entity>();
       foreach (var entity in data.Entities) {
         entitiesById.Add(entity.EntityId, entity);
+        var positionComponent = entity.GetComponent<PositionComponent>();
+        if (positionComponent != null) {
+          if (!entitiesToPositions.ContainsKey(positionComponent.EncounterPosition)) {
+            entitiesToPositions[positionComponent.EncounterPosition] = new List<Entity>();
+          }
+          entitiesToPositions[positionComponent.EncounterPosition].Add(entity);
+        }
       }
-      foreach(var tileData in data.EncounterTiles) {
-        state._encounterTiles[tileData.X, tileData.Y] = EncounterTile.FromSaveData(tileData, entitiesById);
+
+      state._encounterTiles = new EncounterTile[data.MapHeight, data.MapHeight];
+      for (int x = 0; x < data.MapWidth; x++) {
+        for (int y = 0; y < data.MapHeight; y++) {
+          var pos = new EncounterPosition(x, y);
+          bool explored = data.EncounterTileExploration[x * data.MapWidth + y] == 'x';
+          List<Entity> entities = entitiesToPositions.ContainsKey(pos) ? entitiesToPositions[pos] : null;
+          state._encounterTiles[x, y] = EncounterTile.FromSaveData(explored, entities);
+        }
       }
+
       state._zones = data.Zones;
       state._entitiesById = entitiesById;
       foreach (var entity in data.Entities) {
@@ -633,15 +642,18 @@ namespace SpaceDodgeRL.scenes.encounter.state {
       data.MapWidth = this.MapWidth;
       data.MapHeight = this.MapHeight;
 
-      data.EncounterTiles = new List<EncounterTile.SaveData>();
+      StringBuilder builder = new StringBuilder();
       for (int x = 0; x < data.MapWidth; x++) {
         for (int y = 0; y < data.MapHeight; y++) {
-          var saveData = this._encounterTiles[x, y].ToSaveData(x, y);
-          if (saveData != null) {
-            data.EncounterTiles.Add(saveData);
+          if (this._encounterTiles[x, y].Explored) {
+            builder.Append('x');
+          } else {
+            builder.Append('o');
           }
         }
       }
+      data.EncounterTileExploration = builder.ToString();
+
       data.Zones = this._zones;
       data.Entities = this._entitiesById.Values.ToList();
       data.ActivationTracker = this._activationTracker;
