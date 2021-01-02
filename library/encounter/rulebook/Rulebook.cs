@@ -142,12 +142,13 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         zone.ReadoutItems.Concat(zone.ReadoutFeatures)
                          .FirstOrDefault(i => state.GetEntityById(i.EntityId) != null && 
                                               state.GetEntityById(i.EntityId).GetComponent<StorableComponent>() != null);
-      var nextUnexplored =
-        zone.ReadoutItems.Concat(zone.ReadoutFeatures)
-                         .Where(r => state.GetEntityById(r.EntityId) != null)
-                         .Select(r => state.GetEntityById(r.EntityId))
-                         .Where(e => !state.IsExplored(e.GetComponent<PositionComponent>().EncounterPosition))
-                         .FirstOrDefault();
+      // We rely on the fact that there's no ungettable features other than stairs, and that there's only one stair, to make this
+      // work. If there were multiple ungettable features you'd want to put them into a list and autopilot between them so you
+      // could cycle the 'x' button to find the one you want.
+      var stairs = zone.ReadoutFeatures.FirstOrDefault(r =>
+        state.GetEntityById(r.EntityId).GetComponent<StairsComponent>() != null &&
+        state.GetEntityById(r.EntityId).GetComponent<PositionComponent>().EncounterPosition != playerPos
+      );
 
       if (PlayerSeesEnemies(state)) {
         ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.ENEMY_DETECTED), state);
@@ -183,14 +184,15 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
           playerComponent.LayInAutopilotPathForExploration(new EncounterPath(foundPath));
           return true;
         }
-      } // If there are any explored features go to them
-      else if (nextUnexplored != null) {
-        var nextPos = state.GetEntityById(nextUnexplored.EntityId).GetComponent<PositionComponent>().EncounterPosition;
+      } // If this is the stairs zone, go to the stairs
+      else if (stairs != null) {
+        var nextPos = state.GetEntityById(stairs.EntityId).GetComponent<PositionComponent>().EncounterPosition;
         var foundPath = Pathfinder.AStarWithNewGrid(playerPos, nextPos, state, 900);
         if (foundPath == null) {
           ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.NO_PATH), state);
           return false;
         } else {
+          foundPath.Add(nextPos);
           playerComponent.LayInAutopilotPathForExploration(new EncounterPath(foundPath));
           return true;
         }

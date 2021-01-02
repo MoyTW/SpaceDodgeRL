@@ -231,7 +231,7 @@ Okay, apparently if you mouse OOB it explodes. Fair 'nuff. Gotta get that fixed.
 + DONE: Draw sprites on inventory page? (sprite + name on left, description
   right maybe?)
 + TODO: You (and enemies) are willing to shoot straight into asteroids
-+ TODO: Autoexplore should end at jump gate if present
++ FIXED: Autoexplore should end at jump gate if present
 + DONE: Make it obvious that autopilot -> kill -> autoexplore is intended
   gameplay flow somehow (add "AUTOEXPLORE ZONE" button to autopilot screen?
   upper right has some empty space)
