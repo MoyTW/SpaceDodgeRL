@@ -243,3 +243,8 @@ Okay, apparently if you mouse OOB it explodes. Fair 'nuff. Gotta get that fixed.
   mouse, it will crash with "Cannot access a disposed object". Makes sense - we
   redo the entire scene and throw away all the old stuff every time we switch
   zones...
+
+* Session 2021-01-01 667f0574ef791a88996c2721700007287d191763
++ TODO: If you load up a map sprites that are in explored, but not visible tiles
+  are hidden. Should go and tick off all those on load.
+
