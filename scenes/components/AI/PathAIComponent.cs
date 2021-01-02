@@ -30,7 +30,7 @@ namespace SpaceDodgeRL.scenes.components.AI {
 
     public List<EncounterAction> DecideNextAction(EncounterState state, Entity parent) {
       if (Path.AtEnd) {
-        return new List<EncounterAction>() { new SelfDestructAction(parent.EntityId) };
+        return new List<EncounterAction>() { new DestroyAction(parent.EntityId) };
       } else {
         var nextPosition = Path.Step();
         return new List<EncounterAction>() { new MoveAction(parent.EntityId, nextPosition) };

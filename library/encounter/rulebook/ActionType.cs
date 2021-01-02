@@ -9,7 +9,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
     FIRE_PROJECTILE,
     GET_ITEM,
     MOVE,
-    SELF_DESTRUCT,
+    DESTROY,
     SPAWN_ENTITY,
     USE,
     USE_STAIRS,

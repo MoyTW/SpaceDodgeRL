@@ -20,7 +20,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       { ActionType.MOVE, (a, s) => ResolveMove(a as MoveAction, s) },
       { ActionType.FIRE_PROJECTILE, (a, s) => ResolveFireProjectile(a as FireProjectileAction, s) },
       { ActionType.GET_ITEM, (a, s) => ResolveGetItem(a as GetItemAction, s) },
-      { ActionType.SELF_DESTRUCT, (a, s) => ResolveSelfDestruct(a as SelfDestructAction, s) },
+      { ActionType.DESTROY, (a, s) => ResolveDestroy(a as DestroyAction, s) },
       { ActionType.SPAWN_ENTITY, (a, s) => ResolveSpawnEntity(a as SpawnEntityAction, s) },
       { ActionType.USE, (a, s) => ResolveUse(a as UseAction, s) },
       { ActionType.USE_STAIRS, (a, s) => ResolveUseStairs(a as UseStairsAction, s) },
@@ -274,8 +274,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
           }
 
           LogAttack(defenderComponent, logMessage, state);
-          // TODO: Change "SelfDestructAction" to "RemoveAction" or something & add a toggle/line for log text?
-          ResolveAction(new SelfDestructAction(defender.EntityId), state);
+          ResolveAction(new DestroyAction(defender.EntityId), state);
         } else {
           var logMessage = string.Format("[b]{0}[/b] hits [b]{1}[/b] for {2} damage!",
             attacker.EntityName, defender.EntityName, damage);
@@ -303,7 +302,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
           if (state.FoVCache.IsVisible(action.TargetPosition)) {
             positionComponent.PlayExplosion();
           }
-          ResolveAction(new SelfDestructAction(action.ActorId), state);
+          ResolveAction(new DestroyAction(action.ActorId), state);
         }
         return true;
       } else {
@@ -369,7 +368,7 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
-    private static bool ResolveSelfDestruct(SelfDestructAction action, EncounterState state) {
+    private static bool ResolveDestroy(DestroyAction action, EncounterState state) {
       Entity entity = state.GetEntityById(action.ActorId);
 
       var onDeathComponent = entity.GetComponent<OnDeathComponent>();
