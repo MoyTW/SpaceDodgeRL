@@ -164,6 +164,8 @@ namespace SpaceDodgeRL.scenes.encounter {
           this._sceneManager.ShowCharacterMenu(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.ESCAPE_MENU) {
           this._sceneManager.ShowEscapeMenu(state);
+        } else if (action != null && action.Mapping == InputHandler.ActionMapping.HELP_MENU) {
+          this._sceneManager.ShowHelpMenu();
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.INVENTORY) {
           this._sceneManager.ShowInventoryMenu(state);
         } else if (action != null && action.Mapping == InputHandler.ActionMapping.USE_STAIRS) {

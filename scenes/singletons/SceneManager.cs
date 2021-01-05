@@ -18,6 +18,7 @@ namespace SpaceDodgeRL.scenes.singletons {
     private CreditsMenu _creditsMenu;
     private DefeatMenu _defeatMenu;
     private EscapeMenu _escapeMenu;
+    private HelpMenu _helpMenu;
     private InventoryMenu _inventoryMenu;
     private SettingsMenu _settingsMenu;
     private VictoryMenu _victoryMenu;
@@ -32,6 +33,7 @@ namespace SpaceDodgeRL.scenes.singletons {
       _creditsMenu = GD.Load<PackedScene>("res://scenes/CreditsMenu.tscn").Instance() as CreditsMenu;
       _defeatMenu = GD.Load<PackedScene>("res://scenes/encounter/DefeatMenu.tscn").Instance() as DefeatMenu;
       _escapeMenu = GD.Load<PackedScene>("res://scenes/encounter/EscapeMenu.tscn").Instance() as EscapeMenu;
+      _helpMenu = GD.Load<PackedScene>("res://scenes/encounter/HelpMenu.tscn").Instance() as HelpMenu;
       _inventoryMenu = GD.Load<PackedScene>("res://scenes/encounter/InventoryMenu.tscn").Instance() as InventoryMenu;
       _settingsMenu = GD.Load<PackedScene>("res://scenes/SettingsMenu.tscn").Instance() as SettingsMenu;
       _victoryMenu = GD.Load<PackedScene>("res://scenes/encounter/VictoryMenu.tscn").Instance() as VictoryMenu;
@@ -111,6 +113,19 @@ namespace SpaceDodgeRL.scenes.singletons {
     private void DeferredShowEscapeMenu(EncounterState state) {
       DeferredSwitchScene(_escapeMenu);
       _escapeMenu.PrepMenu(state);
+    }
+
+    #endregion
+
+    #region Help Menu
+
+    public void ShowHelpMenu() {
+      CallDeferred(nameof(DeferredShowHelpMenu));
+    }
+
+    private void DeferredShowHelpMenu() {
+      DeferredSwitchScene(_helpMenu);
+      _helpMenu.PrepMenu();
     }
 
     #endregion

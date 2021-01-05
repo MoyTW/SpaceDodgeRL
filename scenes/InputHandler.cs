@@ -35,6 +35,7 @@ namespace SpaceDodgeRL.scenes {
       public static string AUTOEXPLORE = "encounter_autoexplore";
       public static string CHARACTER = "encounter_character_menu";
       public static string ESCAPE_MENU = "encounter_escape_menu";
+      public static string HELP_MENU = "encounter_help_menu";
       public static string INVENTORY = "encounter_inventory_menu";
       public static string USE_STAIRS = "encounter_use_stairs";
       public static string GET_ITEM = "encounter_get_item";
@@ -47,8 +48,8 @@ namespace SpaceDodgeRL.scenes {
       public static string SCAN_POSITION = "scan_position";
       // PERF: make a set if perf bad?
       public static string[] AllMappings = new string[] { MOVE_N, MOVE_NE, MOVE_E, MOVE_SE, MOVE_S, MOVE_SW, MOVE_W, MOVE_NW,
-        WAIT, AUTOPILOT, AUTOEXPLORE, CHARACTER, ESCAPE_MENU, INVENTORY, USE_STAIRS, GET_ITEM, USE_ITEM, ZOOM_IN, ZOOM_OUT,
-        ZOOM_RESET
+        WAIT, AUTOPILOT, AUTOEXPLORE, CHARACTER, ESCAPE_MENU, HELP_MENU, INVENTORY, USE_STAIRS, GET_ITEM, USE_ITEM, ZOOM_IN,
+        ZOOM_OUT, ZOOM_RESET
       };
     }
 
