@@ -136,7 +136,7 @@ long as it accurately gives the player that information.
 10: 737878395
 ** notes
 + Fighters are kinda ferocious if you don't play carefully around them! 6 damage a pop is not trivial!
-+ TODO: If level-up screen comes up while projectiles are on screen/enemies are moving, they get offset from their squares
++ FIXED: If level-up screen comes up while projectiles are on screen/enemies are moving, they get offset from their squares
   - I guess the Tween is paged away from before it finishes?
 + Fighters get waaaaay easier to deal with when you enter one-shot territory
 + Done for day now
@@ -146,10 +146,10 @@ long as it accurately gives the player that information.
 + TODO: Carrier - if you are 4 squares away and move towards a carrier, it can spawn a fighter and the fighter can blap you for 6 damage
   - That's pretty unfair, it's unavoidable damage! Do we want to do something like batch the fighter launches?
 + Cruiser railguns don't reach players at max laser range, so if you can take the shotgun shells you can just sort of sit at range and pattern them to death with zero risk! Change this?
-+ TODO: Small cannon shots shown as 0-danger when under read paint, despite being fully able to hit you, is there something wrong with my danger calcs?
++ FIXED: Small cannon shots shown as 0-danger when under read paint, despite being fully able to hit you, is there something wrong with my danger calcs?
 + TODO: It'd be really nice for a buff duration screen!
 + When you reach carrier & screening force it gets really choppy, it doesn't degrade performance very gracefully
-+ TODO: On main map a "you are here" and maybe a minimap even? It's hard to know "What zones will autopilot bring me through to get to the jump point"
++ FIXED: On main map a "you are here" and maybe a minimap even? It's hard to know "What zones will autopilot bring me through to get to the jump point"
 + It gets really brutal near the end! You pretty much have to hoard items in the early-game and then pop them all at once to get through that.
 + FIXED: If a fighter moves into you and fires you don't see any visible feedback even on high turn times!
   - Funny...it certainly has multiple frames.
