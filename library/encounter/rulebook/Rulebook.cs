@@ -473,14 +473,20 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       if (action.FromInventory) {
         var userInventory = user.GetComponent<InventoryComponent>();
         usable = userInventory.StoredEntityById(action.UsableId);
-        userInventory.RemoveEntity(usable);
+        if (usable.GetComponent<UsableComponent>() == null) {
+          state.LogMessage(string.Format("{0} is not usable!", usable.EntityName), failed: true);
+          return false;
+        } else {
+          userInventory.RemoveEntity(usable);
+        }
       } else {
         usable = state.GetEntityById(action.UsableId);
-        state.RemoveEntity(usable);
-      }
-
-      if (usable.GetComponent<UsableComponent>() == null) {
-        throw new NotImplementedException("can't use non-usable thing TODO: Handle better!");
+        if (usable.GetComponent<UsableComponent>() == null) {
+          state.LogMessage(string.Format("{0} is not usable!", usable.EntityName), failed: true);
+          return false;
+        } else {
+          state.RemoveEntity(usable);
+        }
       }
 
       state.LogMessage(string.Format("{0} used {1}!", user.EntityName, usable.EntityName));
