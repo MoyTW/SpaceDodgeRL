@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Regular.tres" type="DynamicFont" id=1]
-[ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode_Bold.tres" type="DynamicFont" id=2]
 [ext_resource path="res://resources/fonts/Fira_Code_v5.2/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://scenes/IntroMenuScene.cs" type="Script" id=4]
 [ext_resource path="res://scenes/SaveSlotScene.tscn" type="PackedScene" id=5]
@@ -31,49 +30,37 @@ __meta__ = {
 }
 
 [node name="Title" type="Label" parent="CenterContainer"]
-margin_top = 18.0
-margin_right = 860.0
-margin_bottom = 58.0
+margin_right = 640.0
+margin_bottom = 40.0
 custom_fonts/font = SubResource( 1 )
-text = "Untitled Godot Space Dodging Roguelike Game"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Subtitle" type="Label" parent="CenterContainer"]
-margin_top = 62.0
-margin_right = 860.0
-margin_bottom = 82.0
-custom_fonts/font = ExtResource( 2 )
-text = "Make A Credits Scene & Credit Master484 for the explosion art"
+text = "Untitled Space Dodging Roguelike"
 align = 1
-valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SaveSlot1" parent="CenterContainer" instance=ExtResource( 5 )]
-margin_top = 86.0
-margin_right = 860.0
-margin_bottom = 106.0
+margin_top = 44.0
+margin_right = 640.0
+margin_bottom = 64.0
 SlotNumber = 1
 
 [node name="SaveSlot2" parent="CenterContainer" instance=ExtResource( 5 )]
-margin_top = 110.0
-margin_right = 860.0
-margin_bottom = 130.0
+margin_top = 68.0
+margin_right = 640.0
+margin_bottom = 88.0
 SlotNumber = 2
 
 [node name="SaveSlot3" parent="CenterContainer" instance=ExtResource( 5 )]
-margin_top = 134.0
-margin_right = 860.0
-margin_bottom = 154.0
+margin_top = 92.0
+margin_right = 640.0
+margin_bottom = 112.0
 SlotNumber = 3
 
 [node name="SettingsButton" type="Button" parent="CenterContainer"]
-margin_top = 158.0
-margin_right = 860.0
-margin_bottom = 178.0
+margin_top = 116.0
+margin_right = 640.0
+margin_bottom = 136.0
 custom_fonts/font = ExtResource( 1 )
 text = "Game Settings"
 __meta__ = {
@@ -81,9 +68,9 @@ __meta__ = {
 }
 
 [node name="CreditsButton" type="Button" parent="CenterContainer"]
-margin_top = 182.0
-margin_right = 860.0
-margin_bottom = 202.0
+margin_top = 140.0
+margin_right = 640.0
+margin_bottom = 160.0
 custom_fonts/font = ExtResource( 1 )
 text = "Credits"
 __meta__ = {
@@ -91,8 +78,8 @@ __meta__ = {
 }
 
 [node name="ExitButton" type="Button" parent="CenterContainer"]
-margin_top = 206.0
-margin_right = 860.0
-margin_bottom = 226.0
+margin_top = 164.0
+margin_right = 640.0
+margin_bottom = 184.0
 custom_fonts/font = ExtResource( 1 )
 text = "Exit To Desktop"
