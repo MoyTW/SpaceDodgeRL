@@ -41,8 +41,7 @@ namespace SpaceDodgeRL.scenes.encounter {
     }
 
     private void OnHelpButtonPressed() {
-      GD.Print("Help button pressed: TODO actually implement a help screen");
-      //this._inputHandler.TryInsertInputAction(new InputHandler.InputAction(InputHandler.ActionMapping.HELP));
+      this._inputHandler.TryInsertInputAction(new InputHandler.InputAction(InputHandler.ActionMapping.HELP_MENU));
     }
 
     private void OnAutopilotButtonPressed() {
