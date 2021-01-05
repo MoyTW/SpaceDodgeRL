@@ -11,7 +11,6 @@ namespace SpaceDodgeRL.scenes.components {
   public class InventoryComponent : Component {
     public static readonly string ENTITY_GROUP = "INVENTORY_COMPONENT_GROUP";
     public string EntityGroup => ENTITY_GROUP;
-    public static readonly string ENTITY_IN_INVENTORY_GROUP = "ENTITY_IN_INVENTORY_GROUP";
 
     [JsonInclude] public List<Entity> _StoredEntities { get; private set; } = new List<Entity>();
     [JsonIgnore] public ReadOnlyCollection<Entity> StoredItems { get => this._StoredEntities.AsReadOnly(); }
@@ -52,16 +51,12 @@ namespace SpaceDodgeRL.scenes.components {
         throw new InventoryAlreadyHasItemException();
       }
       this._StoredEntities.Add(entity);
-      entity.AddToGroup(ENTITY_IN_INVENTORY_GROUP);
     }
     public class InventoryFullCannotStoreItemException : Exception {}
     public class InventoryAlreadyHasItemException : Exception {}
 
     public void RemoveEntity(Entity entity) {
       this._StoredEntities.Remove(entity);
-      // TODO: BUG - When you save/load it doesn't add in group; I mean we may as well just nuke the
-      // ENTITY_IN_INVENTORY_GROUP tag altogether 'till we need it?
-      entity.RemoveFromGroup(ENTITY_IN_INVENTORY_GROUP);
     }
 
     public string Save() {
