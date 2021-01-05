@@ -168,7 +168,6 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         if (ResolveAction(new GetItemAction(player.EntityId), state)) {
           return true;
         } else {
-          // TODO: Allow player to autoexplore even if their inventory is full!
           ResolveAction(new AutopilotEndAction(player.EntityId, AutopilotEndReason.INVENTORY_FULL), state);
           return false;
         }
@@ -443,9 +442,6 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
         state.LogMessage(String.Format("EMP detonated in radius {0} - disables {1} turns!",
           useEffectEMP.Radius, useEffectEMP.DisableTurns));
         var userPosition = user.GetComponent<PositionComponent>().EncounterPosition;
-        // TODO: Make util code for "for each cell in radius"? we have at least one VERY similar invocation in calculating player
-        // overlays, and probably also would have it in the player laser targeting too
-        // TODO: boy is this just flat-out ugly
         for (int x = userPosition.X - useEffectEMP.Radius; x <= userPosition.X + useEffectEMP.Radius; x++) {
           for (int y = userPosition.Y - useEffectEMP.Radius; y <= userPosition.Y + useEffectEMP.Radius; y++) {
             var distance = userPosition.DistanceTo(x, y);
@@ -466,7 +462,9 @@ namespace SpaceDodgeRL.library.encounter.rulebook {
       }
     }
 
-    // TODO: Consider putting all these effects under UsableComponent, instead of keeping them as components
+    // Currently, each use effect is its own component. If we run into a case where we have too many effects, we can push the
+    // effects into the usable component itself, similarly to status effects (though status effects are their own mess right now)
+    // which would probably be better for building on.
     private static bool ResolveUse(UseAction action, EncounterState state) {
       var user = state.GetEntityById(action.ActorId);
 
